@@ -17,19 +17,17 @@
   "cannabis"
  ],
  "made": {
-  "on": "2026-11-22",
+  "on": "2026-11-27",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
-   "writer": "gemini:gemma-4-26b-a4b-it",
-   "checker": "groq:openai/gpt-oss-120b",
-   "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3.5-flash-lite",
-   "also2": "gemini:gemini-3.6-flash",
-   "team": "team K",
-   "reader_2": "gemini:gemini-3.5-flash-lite",
-   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
+   "reader": "openrouter:openai/gpt-oss-120b",
+   "writer": "openrouter:meta-llama/llama-3.3-70b-instruct",
+   "checker": "openrouter:openai/gpt-6-luna",
+   "planner": "openrouter:openai/gpt-oss-120b",
+   "team": "team R",
+   "reader_2": "openrouter:openai/gpt-oss-120b",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "45007253344",
+  "run": "45955681944",
   "read_seconds": 100,
   "from": {
    "papers": 2,
@@ -37,20 +35,115 @@
    "official": 0
   },
   "neurons": 0.0,
-  "seconds": 385
+  "seconds": 201
  },
- "status": "published",
- "why": "passed every gate",
+ "status": "none",
+ "why": "the second reader did not accept the answer",
  "gates": {
-  "read": "6 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
-  "panel": "further readers, each of which must accept every sentence too: gemini-3.5-flash-lite accepted 4 of 4; gemini-3.6-flash accepted 4 of 4",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.89, but 0.99, how1 0.75, how2 0.20",
-  "check": "every sentence kept was accepted by the second reader (groq:openai/gpt-oss-120b) and by gemini:gemini-3.5-flash-lite and by gemini:gemini-3.6-flash; 1 How-do-we-know line(s) dropped; it also found that the short answer answers the question and that the But is about that answer",
-  "rules": "nothing against it",
-  "checked": "set beside the checked claims of the same page: nothing against them"
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-120b read from there",
+  "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
+  "read": "6 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 0 official page(s), 0 paper(s) read in summary only",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.41, but 0.88, how1 0.91, how2 0.73",
+  "check": "short: NOT accepted: The passages say cannabinoids generally interact with CB1 and CB2, and separately associate CB1R/ECS with appetite, learning and memory, anxiety, and depression; they do not establish the sentence’s combined claim about cannabis influencing; but: NOT accepted: it is about something else than the short answer (Sentence 1 directly addresses how cannabis works in the brain, though it is not supported as phrased. Sentence 2 concerns uncertainty about glia-produced endocannabinoids and synaptic transmission, not a limitation on sentence 1’s claims.); how1: NOT accepted: The passages describe a literature search and state a general mechanism in a later section, but do not say the review found this as a result. This also repeats the editorially rejected framing of review background or explanation as somethin; how2: accepted"
  },
  "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "zou_2018",
+    "type": "article-journal",
+    "title": "Cannabinoid receptors and the endocannabinoid system: Signaling and function in the central nervous system",
+    "author": [
+     {
+      "family": "Zou",
+      "given": "Shenglong"
+     },
+     {
+      "family": "Kumar",
+      "given": "Ujendra"
+     }
+    ],
+    "container-title": "International Journal of Molecular Sciences",
+    "issued": {
+     "date-parts": [
+      [
+       2018
+      ]
+     ]
+    },
+    "DOI": "10.3390/ijms19030833",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-27",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-27"
+     }
+    },
+    "volume": "19",
+    "issue": "3",
+    "number": "833",
+    "PMCID": "PMC5877694"
+   },
+   "doi": "10.3390/ijms19030833",
+   "pmcid": "PMC5877694",
+   "title": "Cannabinoid Receptors and the Endocannabinoid System: Signaling and Function in the Central Nervous System",
+   "year": 2018,
+   "journal": "International journal of molecular sciences",
+   "kind": "review",
+   "people": false,
+   "near": 0.68,
+   "money": [
+    "The authors declare no conflict of interest."
+   ],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "In this review, we briefly summarized our knowledge of cannabinoids and the endocannabinoid system, focusing on the CB1R and the CNS",
+    "text": "Review of cannabinoid receptors in the central nervous system"
+   },
+   "findings": [
+    {
+     "passage": 9,
+     "where": "4. Endocannabinoid-Mediated Signaling",
+     "quote": "The first conclusive evidence supporting retrograde endocannabinoid signaling came from the observation of depolarization‑induced suppression of inhibition (DSI)/excitation (DSE).",
+     "text": "Cannabinoid signaling in the brain includes retrograde signaling that suppresses inhibition or excitation.",
+     "id": "F1",
+     "second_hand": ""
+    },
+    {
+     "passage": 12,
+     "where": "4. Endocannabinoid-Mediated Signaling",
+     "quote": "Endocannabinoids are prominently involved in the suppression of synaptic transmission through multiple mechanisms, independent of synaptic nature or transmission duration.",
+     "text": "Endocannabinoids suppress synaptic transmission by various mechanisms regardless of synapse type.",
+     "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 23,
+     "where": "7. Physiological and Pathological Roles of the CB1R",
+     "quote": "CB1R and the endocannabinoid system are largely involved in various aspects of central neural activities and disorders, including appetite, learning and memory, anxiety, depression, schizophrenia, stroke, multiple sclerosis, neurodegeneration, epilepsy, and addiction.",
+     "text": "Activation of CB1R influences many brain functions such as appetite, learning, memory, mood, and susceptibility to neurological disorders.",
+     "id": "F3",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 12,
+     "where": "4. Endocannabinoid-Mediated Signaling",
+     "quote": "it is not clear yet whether these endocannabinoids are involved in the modulation of synaptic transmission.",
+     "text": "It remains uncertain whether endocannabinoids produced by microglia or astrocytes modulate synaptic transmission.",
+     "id": "L1",
+     "second_hand": "Previous studies have shown that microglial cells and astrocytes are able to produce their own 2-AG or AEA, although it is not clear yet whether these endocannabinoids are involved"
+    }
+   ],
+   "tag": "A"
+  },
   {
    "read": "full",
    "ref": {
@@ -101,10 +194,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-22",
+     "verified_on": "2026-11-27",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-22"
+      "checked_on": "2026-11-27"
      }
     },
     "volume": "19",
@@ -128,137 +221,40 @@
     "passage": 1,
     "where": "Abstract",
     "quote": "A comprehensive literature search was conducted to identify articles investigating the therapeutic potential of CBD and cannabis in selected disorders.",
-    "text": "A comprehensive literature search investigating the therapeutic potential of CBD and cannabis in selected mental and neurological disorders."
+    "text": "Literature review of preclinical and clinical studies on CBD and cannabis"
    },
    "findings": [
     {
      "passage": 10,
      "where": "3. The Endocannabinoid System and CBD",
-     "quote": "In general, cannabinoids exert their effects through interactions with CB1 and CB2 receptors in the ECS, resulting in immunomodulatory, neuroprotective, antioxidant, analgesic, anxiolytic, and antiepileptic effects",
-     "text": "Cannabinoids generally work by interacting with CB1 and CB2 receptors in the endocannabinoid system to produce immunomodulatory, neuroprotective, antioxidant, analgesic, anxiolytic, and antiepileptic effects.",
-     "id": "F1",
+     "quote": "cannabinoids exert their effects through interactions with CB1 and CB2 receptors in the ECS, resulting in immunomodulatory, neuroprotective, antioxidant, analgesic, anxiolytic, and antiepileptic effects.",
+     "text": "Cannabis cannabinoids act on CB1 and CB2 receptors in the endocannabinoid system, producing neuroprotective and other neuromodulatory effects.",
+     "id": "F4",
      "second_hand": ""
     },
     {
      "passage": 10,
      "where": "3. The Endocannabinoid System and CBD",
-     "quote": "through interactions with serotonin (5-HT) receptors, leading to antidepressant and anxiolytic effects; and vanilloid-type TRPV receptors, resulting in reduced motor function, euphoria, analgesia, and immunomodulation.",
-     "text": "Cannabinoids also interact with serotonin receptors to produce antidepressant and anxiolytic effects, and with vanilloid-type TRPV receptors to cause reduced motor function, euphoria, analgesia, and immunomodulation.",
-     "id": "F2",
+     "quote": "through interactions with serotonin (5-HT) receptors, leading to antidepressant and anxiolytic effects",
+     "text": "Cannabis cannabinoids interact with serotonin receptors, leading to antidepressant and anxiolytic effects.",
+     "id": "F5",
      "second_hand": ""
     },
     {
      "passage": 55,
      "where": "9. Conclusions",
-     "quote": "CBD appears to act through multiple mechanisms, including modulation of the endocannabinoid system, serotonergic signaling, neuroinflammatory pathways, oxidative stress, and glutamatergic neurotransmission.",
-     "text": "CBD appears to function through multiple mechanisms, including modulating the endocannabinoid system, serotonergic signaling, neuroinflammatory pathways, oxidative stress, and glutamatergic neurotransmission.",
-     "id": "F3",
-     "second_hand": ""
-    }
-   ],
-   "limits": [
-    {
-     "passage": 10,
-     "where": "3. The Endocannabinoid System and CBD",
-     "quote": "The mechanism of action of cannabinoids is still under intensive investigation.",
-     "text": "The mechanism of action of cannabinoids is still being intensively investigated.",
-     "id": "L1",
-     "second_hand": ""
-    }
-   ],
-   "tag": "A"
-  },
-  {
-   "read": "full",
-   "ref": {
-    "id": "kitdumrongthum_2023",
-    "type": "article-journal",
-    "title": "An individuality of response to cannabinoids: Challenges in safety and efficacy of cannabis products",
-    "author": [
-     {
-      "family": "Kitdumrongthum",
-      "given": "Sarunya"
-     },
-     {
-      "family": "Trachootham",
-      "given": "Dunyaporn"
-     }
-    ],
-    "container-title": "Molecules",
-    "issued": {
-     "date-parts": [
-      [
-       2023
-      ]
-     ]
-    },
-    "DOI": "10.3390/molecules28062791",
-    "verification": {
-     "status": "metadata-verified",
-     "metadata_source": "crossref",
-     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
-     "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-22",
-     "retraction_check": {
-      "status": "clear",
-      "checked_on": "2026-11-22"
-     }
-    },
-    "volume": "28",
-    "issue": "6",
-    "number": "2791",
-    "PMCID": "PMC10058560"
-   },
-   "doi": "10.3390/molecules28062791",
-   "pmcid": "PMC10058560",
-   "title": "An Individuality of Response to Cannabinoids: Challenges in Safety and Efficacy of Cannabis Products",
-   "year": 2023,
-   "journal": "Molecules (Basel, Switzerland)",
-   "kind": "review",
-   "people": false,
-   "near": 0.649,
-   "money": [
-    "The authors declare no conflict of interest.",
-    "This research received no external funding."
-   ],
-   "design": {
-    "passage": 1,
-    "where": "Abstract",
-    "quote": "The purpose of this review is to highlight the concept of individual variations in response to cannabinoids, which leads to the challenge of establishing standard safe doses of cannabis products for the general population.",
-    "text": "a review of literature on individual variations in response to cannabinoids"
-   },
-   "findings": [
-    {
-     "passage": 23,
-     "where": "2. The Active Substances in Cannabis, the Endocannabinoid System (ECS), and Metabolism › 2.3. Cannabinoid Receptors and Cannabinoids Effects",
-     "quote": "CB1 is predominantly expressed in the central nervous system (CNS), which is the primary receptor responsive to ∆9-THC and contributes to the psychoactive effects of cannabis.",
-     "text": "The CB1 receptor is mainly found in the central nervous system and is the main receptor that responds to THC to cause psychoactive effects.",
-     "id": "F4",
-     "second_hand": ""
-    },
-    {
-     "passage": 40,
-     "where": "4. Chronic Toxicity of Cannabis Use › 4.3. Exposure to Cannabis Regardless of Route › 4.3.1. Cognitive Performance, Psychomotor Performance, and Psychopathology",
-     "quote": "THC binding to CB1 receptors can affect perception, cognition, motion, and related distress and psychotomimetic effects due to the selective adenylate cyclase activity suppression caused by CB1 activation.",
-     "text": "When THC binds to CB1 receptors, it suppresses adenylate cyclase activity, which can affect perception, cognition, motion, and cause distress or psychotomimetic effects.",
-     "id": "F5",
-     "second_hand": ""
-    },
-    {
-     "passage": 49,
-     "where": "5. Individuality of Response › 5.1. Biphasic Dose–Response",
-     "quote": "Exogenously applied synthetic THC (WIN 55212-2) regulates septohippocampal cholinergic neurotransmission in a biphasic, dose-dependent manner. A low dose of synthetic THC stimulates hippocampal ACh efflux, while a high dose inhibits hippocampal ACh efflux.",
-     "text": "In a laboratory, synthetic THC regulates neurotransmission in the hippocampus in a dose-dependent way, where low doses stimulate and high doses inhibit acetylcholine release.",
+     "quote": "CBD appears to act through multiple mechanisms, including modulation of the endocannabinoid system, serotonergic signaling, neuroinflammatory pathways, oxidative stress, and glutamatergic neurotransmission",
+     "text": "CBD works via modulation of the endocannabinoid system, serotonergic signaling, neuroinflammatory pathways, oxidative stress, and glutamatergic neurotransmission.",
      "id": "F6",
      "second_hand": ""
     }
    ],
    "limits": [
     {
-     "passage": 1,
-     "where": "Abstract",
-     "quote": "Based on the literature review, we found that the response to cannabis products depends on exposure factors (delivery route, duration, frequency, and interactions with food and drugs), individual factors (age, sex), and susceptibility factors",
-     "text": "The response to cannabis depends on various factors including exposure, individual characteristics, and genetic susceptibility.",
+     "passage": 30,
+     "where": "5. The Efficacy of CBD in Epilepsy Treatment",
+     "quote": "highlighting the need for future randomized, placebo-controlled studies to evaluate the anticonvulsant efficacy of these extracts and to distinguish their effects from those of concomitant antiepileptic therapy and placebo effects",
+     "text": "Further randomized, placebo‑controlled studies are needed to confirm the anticonvulsant efficacy of cannabis extracts.",
      "id": "L2",
      "second_hand": ""
     }
@@ -266,92 +262,9 @@
    "tag": "B"
   }
  ],
- "parts": [
-  {
-   "part": "short",
-   "text": "Cannabinoids work by interacting with CB1 and CB2 receptors, serotonin receptors, and TRPV receptors. THC binds to CB1 receptors in the central nervous system, which can affect perception, cognition, and motion.",
-   "uses": [
-    "F1",
-    "F2",
-    "F4",
-    "F5"
-   ],
-   "rests_on": [
-    {
-     "label": "F1",
-     "ref": "olea_2026",
-     "where": "3. The Endocannabinoid System and CBD",
-     "quote": "In general, cannabinoids exert their effects through interactions with CB1 and CB2 receptors in the ECS, resulting in immunomodulatory, neuroprotective, antioxidant, analgesic, anxiolytic, and antiepileptic effects",
-     "sha": "47bd24ed4985b2ae"
-    },
-    {
-     "label": "F2",
-     "ref": "olea_2026",
-     "where": "3. The Endocannabinoid System and CBD",
-     "quote": "through interactions with serotonin (5-HT) receptors, leading to antidepressant and anxiolytic effects; and vanilloid-type TRPV receptors, resulting in reduced motor function, euphoria, analgesia, and immunomodulation.",
-     "sha": "47bd24ed4985b2ae"
-    },
-    {
-     "label": "F4",
-     "ref": "kitdumrongthum_2023",
-     "where": "2. The Active Substances in Cannabis, the Endocannabinoid System (ECS), and Metabolism › 2.3. Cannabinoid Receptors and Cannabinoids Effects",
-     "quote": "CB1 is predominantly expressed in the central nervous system (CNS), which is the primary receptor responsive to ∆9-THC and contributes to the psychoactive effects of cannabis.",
-     "sha": "c00e0c0a15a628e0"
-    },
-    {
-     "label": "F5",
-     "ref": "kitdumrongthum_2023",
-     "where": "4. Chronic Toxicity of Cannabis Use › 4.3. Exposure to Cannabis Regardless of Route › 4.3.1. Cognitive Performance, Psychomotor Performance, and Psychopathology",
-     "quote": "THC binding to CB1 receptors can affect perception, cognition, motion, and related distress and psychotomimetic effects due to the selective adenylate cyclase activity suppression caused by CB1 activation.",
-     "sha": "f4381ddb1206aa79"
-    }
-   ]
-  },
-  {
-   "part": "but",
-   "text": "The mechanism of action of cannabinoids is still being intensively investigated.",
-   "uses": [
-    "L1"
-   ],
-   "rests_on": [
-    {
-     "label": "L1",
-     "ref": "olea_2026",
-     "where": "3. The Endocannabinoid System and CBD",
-     "quote": "The mechanism of action of cannabinoids is still under intensive investigation.",
-     "sha": "47bd24ed4985b2ae"
-    }
-   ]
-  },
-  {
-   "part": "how1",
-   "text": "A 2023 review of literature on individual variations in response to cannabinoids found that CB1 receptors in the central nervous system are the main receptors responding to THC.",
-   "uses": [
-    "DB",
-    "F4"
-   ],
-   "rests_on": [
-    {
-     "label": "DB",
-     "ref": "kitdumrongthum_2023",
-     "where": "Abstract",
-     "quote": "The purpose of this review is to highlight the concept of individual variations in response to cannabinoids, which leads to the challenge of establishing standard safe doses of cannabis products for the general population.",
-     "sha": "5233b41821b0e0a9"
-    },
-    {
-     "label": "F4",
-     "ref": "kitdumrongthum_2023",
-     "where": "2. The Active Substances in Cannabis, the Endocannabinoid System (ECS), and Metabolism › 2.3. Cannabinoid Receptors and Cannabinoids Effects",
-     "quote": "CB1 is predominantly expressed in the central nervous system (CNS), which is the primary receptor responsive to ∆9-THC and contributes to the psychoactive effects of cannabis.",
-     "sha": "c00e0c0a15a628e0"
-    }
-   ],
-   "quote": "CB1 is predominantly expressed in the central nervous system (CNS)",
-   "quote_ref": "kitdumrongthum_2023"
-  }
- ],
+ "parts": [],
  "complete": false,
- "missing": "The specific biological pathways for all effects are not fully detailed.",
+ "missing": "",
  "wanted": [
   {
    "doi": "10.2174/0113816128318194240918113954",
@@ -376,16 +289,37 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-22",
+   "lane": 19,
+   "status": "published",
+   "why": "passed every gate",
+   "short": "Cannabinoids work by interacting with CB1 and CB2 receptors, serotonin receptors, and TRPV receptors. THC binds to CB1 receptors in the central nervous system, which can affect perception, cognition, and motion.",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "Cannabinoid Receptors and the Endocannabinoid System: Signaling and Function in the Central Nervous System",
    "read": "full",
    "kind": "review",
    "at": "10.3390/ijms19030833",
-   "kept": 0,
-   "thrown": [],
-   "fault": "its full text could not be fetched (HTTPError)"
+   "kept": 3,
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "Cannabinoids act in the brain mainly through the CB1R, a G‑protein coupled receptor.",
+     "quote": "The biological effects of cannabinoids, the major constituents of the ancient medicinal plant Cannabis sativa (marijuana) are mediated by two members of the G-protein coupled receptor family, cannabin",
+     "why": "the sentence is not carried by its quote and passage"
+    },
+    {
+     "kind": "limit",
+     "text": "The function of CB2R in synaptic transmission is not yet clear.",
+     "quote": "the role of CB2R in endocannabinoid‑mediated synaptic transmission is still largely elusive.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   },
   {
    "title": "Cannabinoids: Role in Neurological Diseases and Psychiatric Disorders",
@@ -394,7 +328,7 @@
    "at": "10.3390/ijms26010152",
    "kept": 0,
    "thrown": [],
-   "fault": "its full text could not be fetched (HTTPError)"
+   "fault": "it was not read: the time this run has for reading was over"
   },
   {
    "title": "Cannabis and Cannabinoids: The Medical Potential of Cannabidiol in Mental and Neurological Disorders",
@@ -403,31 +337,14 @@
    "at": "10.3390/ph19081238",
    "kept": 3,
    "thrown": []
-  },
-  {
-   "title": "Cannabinoids, the Blood-Brain Barrier, and Neurodegeneration: Mechanisms, Dysregulation, and Therapeutic Perspectives",
-   "read": "full",
-   "kind": "review",
-   "at": "10.3390/biom16020225",
-   "kept": 0,
-   "thrown": [],
-   "fault": "its full text could not be fetched (HTTPError)"
-  },
-  {
-   "title": "An Individuality of Response to Cannabinoids: Challenges in Safety and Efficacy of Cannabis Products",
-   "read": "full",
-   "kind": "review",
-   "at": "10.3390/molecules28062791",
-   "kept": 3,
-   "thrown": []
   }
  ],
  "plan": {
   "short": [
-   "F1",
    "F4",
+   "F1",
    "F5",
-   "F2"
+   "F3"
   ],
   "direct": "",
   "but": [
@@ -449,59 +366,21 @@
   ],
   "unanswered": ""
  },
- "panel": {
-  "gemini:gemini-3.5-flash-lite": {
-   "short": [
-    true,
-    ""
-   ],
-   "but": [
-    true,
-    ""
-   ],
-   "how1": [
-    true,
-    ""
-   ],
-   "how2": [
-    true,
-    ""
-   ]
-  },
-  "gemini:gemini-3.6-flash": {
-   "short": [
-    true,
-    ""
-   ],
-   "but": [
-    true,
-    ""
-   ],
-   "how1": [
-    true,
-    ""
-   ],
-   "how2": [
-    true,
-    ""
-   ]
-  }
- },
  "panel_gap": [],
  "own": {
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.8912,
-   "but": 0.9873,
-   "how1": 0.7486,
-   "how2": 0.2021
+   "short": 0.4099,
+   "but": 0.8821,
+   "how1": 0.9128,
+   "how2": 0.7304
   },
   "scores_quotes_alone": {
-   "short": 0.8139,
-   "but": 0.9722,
-   "how1": 0.1036,
-   "how2": 0.8674
+   "short": 0.7006,
+   "but": 0.0178,
+   "how1": 0.278,
+   "how2": 0.9643
   }
  },
  "tries": [
@@ -511,177 +390,433 @@
    "parts": [
     {
      "part": "short",
-     "text": "Cannabinoids work by interacting with CB1 and CB2 receptors, serotonin receptors, and TRPV receptors. THC binds to CB1 receptors in the central nervous system to cause psychoactive effects and can affect perception, cognition, and motion.",
+     "text": "Cannabis works in the brain by acting on CB1 and CB2 receptors, influencing functions like appetite and mood, and interacting with serotonin receptors.",
      "rests_on": [
       {
-       "label": "F1",
-       "ref": "olea_2026",
-       "where": "3. The Endocannabinoid System and CBD",
-       "quote": "In general, cannabinoids exert their effects through interactions with CB1 and CB2 receptors in the ECS, resulting in immunomodulatory, neuroprotective, antioxidant, analgesic, anxiolytic, and antiepileptic effects",
-       "sha": "47bd24ed4985b2ae"
-      },
-      {
-       "label": "F2",
-       "ref": "olea_2026",
-       "where": "3. The Endocannabinoid System and CBD",
-       "quote": "through interactions with serotonin (5-HT) receptors, leading to antidepressant and anxiolytic effects; and vanilloid-type TRPV receptors, resulting in reduced motor function, euphoria, analgesia, and immunomodulation.",
-       "sha": "47bd24ed4985b2ae"
-      },
-      {
        "label": "F4",
-       "ref": "kitdumrongthum_2023",
-       "where": "2. The Active Substances in Cannabis, the Endocannabinoid System (ECS), and Metabolism › 2.3. Cannabinoid Receptors and Cannabinoids Effects",
-       "quote": "CB1 is predominantly expressed in the central nervous system (CNS), which is the primary receptor responsive to ∆9-THC and contributes to the psychoactive effects of cannabis.",
-       "sha": "c00e0c0a15a628e0"
+       "ref": "olea_2026",
+       "where": "3. The Endocannabinoid System and CBD",
+       "quote": "cannabinoids exert their effects through interactions with CB1 and CB2 receptors in the ECS, resulting in immunomodulatory, neuroprotective, antioxidant, analgesic, anxiolytic, and antiepileptic effects.",
+       "sha": "47bd24ed4985b2ae"
+      },
+      {
+       "label": "F1",
+       "ref": "zou_2018",
+       "where": "4. Endocannabinoid-Mediated Signaling",
+       "quote": "The first conclusive evidence supporting retrograde endocannabinoid signaling came from the observation of depolarization‑induced suppression of inhibition (DSI)/excitation (DSE).",
+       "sha": "70957d559b20e8f1"
       },
       {
        "label": "F5",
-       "ref": "kitdumrongthum_2023",
-       "where": "4. Chronic Toxicity of Cannabis Use › 4.3. Exposure to Cannabis Regardless of Route › 4.3.1. Cognitive Performance, Psychomotor Performance, and Psychopathology",
-       "quote": "THC binding to CB1 receptors can affect perception, cognition, motion, and related distress and psychotomimetic effects due to the selective adenylate cyclase activity suppression caused by CB1 activation.",
-       "sha": "f4381ddb1206aa79"
+       "ref": "olea_2026",
+       "where": "3. The Endocannabinoid System and CBD",
+       "quote": "through interactions with serotonin (5-HT) receptors, leading to antidepressant and anxiolytic effects",
+       "sha": "47bd24ed4985b2ae"
+      },
+      {
+       "label": "F3",
+       "ref": "zou_2018",
+       "where": "7. Physiological and Pathological Roles of the CB1R",
+       "quote": "CB1R and the endocannabinoid system are largely involved in various aspects of central neural activities and disorders, including appetite, learning and memory, anxiety, depression, schizophrenia, stroke, multiple sclerosis, neurodegeneration, epilepsy, and addiction.",
+       "sha": "ff5a970e0a1b8e24"
       }
      ],
      "ok": false,
-     "by": "a further reader",
-     "said": "a further reader (gemini-3.6-flash) did not accept it: The passage states that CB1 receptors contribute to the psychoactive effects of cannabis, not that THC binds to them to cause psychoactive effects."
+     "by": "the second reader",
+     "said": "The passages say cannabinoids interact with CB1 and CB2 receptors and serotonin receptors; they do not establish that cannabis itself works in the brain as stated. The CB1 passage lists appetite and anxiety/depression as areas of involvemen"
     },
     {
      "part": "but",
-     "text": "The mechanism of action of cannabinoids is still being intensively investigated.",
+     "text": "It remains uncertain whether endocannabinoids produced by microglia or astrocytes modulate synaptic transmission.",
      "rests_on": [
       {
        "label": "L1",
-       "ref": "olea_2026",
-       "where": "3. The Endocannabinoid System and CBD",
-       "quote": "The mechanism of action of cannabinoids is still under intensive investigation.",
-       "sha": "47bd24ed4985b2ae"
+       "ref": "zou_2018",
+       "where": "4. Endocannabinoid-Mediated Signaling",
+       "quote": "it is not clear yet whether these endocannabinoids are involved in the modulation of synaptic transmission.",
+       "sha": "7cdd4ed77d55f0e0"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer (Sentence 1 directly addresses how cannabis works in the brain. Sentence 2 concerns whether endocannabinoids produced by microglia or astrocytes modulate synaptic transmission, which does not limit sentence 1’s claims about receptor interact)"
     },
     {
      "part": "how1",
-     "text": "A 2023 review of literature on individual variations in response to cannabinoids found that CB1 receptors in the central nervous system respond to THC to cause psychoactive effects.",
+     "text": "A literature review of preclinical and clinical studies found cannabis cannabinoids act on CB1 and CB2 receptors.",
      "rests_on": [
       {
        "label": "DB",
-       "ref": "kitdumrongthum_2023",
-       "where": "Abstract",
-       "quote": "The purpose of this review is to highlight the concept of individual variations in response to cannabinoids, which leads to the challenge of establishing standard safe doses of cannabis products for the general population.",
-       "sha": "5233b41821b0e0a9"
-      },
-      {
-       "label": "F4",
-       "ref": "kitdumrongthum_2023",
-       "where": "2. The Active Substances in Cannabis, the Endocannabinoid System (ECS), and Metabolism › 2.3. Cannabinoid Receptors and Cannabinoids Effects",
-       "quote": "CB1 is predominantly expressed in the central nervous system (CNS), which is the primary receptor responsive to ∆9-THC and contributes to the psychoactive effects of cannabis.",
-       "sha": "c00e0c0a15a628e0"
-      }
-     ],
-     "ok": false,
-     "by": "a further reader",
-     "said": "a further reader (gemini-3.6-flash) did not accept it: The 2023 literature review's findings were about exposure, individual, and susceptibility factors affecting responses to cannabis, not that CB1 receptors respond to THC to cause psychoactive effects (which is general background information "
-    },
-    {
-     "part": "how2",
-     "text": "In a laboratory, synthetic THC regulates neurotransmission in the hippocampus by stimulating or inhibiting acetylcholine release depending on the dose.",
-     "rests_on": [
-      {
-       "label": "F6",
-       "ref": "kitdumrongthum_2023",
-       "where": "5. Individuality of Response › 5.1. Biphasic Dose–Response",
-       "quote": "Exogenously applied synthetic THC (WIN 55212-2) regulates septohippocampal cholinergic neurotransmission in a biphasic, dose-dependent manner. A low dose of synthetic THC stimulates hippocampal ACh efflux, while a high dose inhibits hippocampal ACh efflux.",
-       "sha": "f4eb3020efb1157b"
-      }
-     ],
-     "ok": false,
-     "by": "a further reader",
-     "said": "a further reader (gemini-3.6-flash) did not accept it: The passage mentions in vitro and in vivo studies, but does not state that this was conducted 'In a laboratory'."
-    },
-    {
-     "part": "how3",
-     "text": "A 2026 literature search found cannabinoids interact with CB1 and CB2 receptors, serotonin receptors, and TRPV receptors to produce various effects.",
-     "rests_on": [
-      {
-       "label": "DA",
        "ref": "olea_2026",
        "where": "Abstract",
        "quote": "A comprehensive literature search was conducted to identify articles investigating the therapeutic potential of CBD and cannabis in selected disorders.",
        "sha": "f1ccb72fd39bb886"
       },
       {
-       "label": "F1",
+       "label": "F4",
        "ref": "olea_2026",
        "where": "3. The Endocannabinoid System and CBD",
-       "quote": "In general, cannabinoids exert their effects through interactions with CB1 and CB2 receptors in the ECS, resulting in immunomodulatory, neuroprotective, antioxidant, analgesic, anxiolytic, and antiepileptic effects",
+       "quote": "cannabinoids exert their effects through interactions with CB1 and CB2 receptors in the ECS, resulting in immunomodulatory, neuroprotective, antioxidant, analgesic, anxiolytic, and antiepileptic effects.",
        "sha": "47bd24ed4985b2ae"
       },
       {
-       "label": "F2",
+       "label": "F5",
        "ref": "olea_2026",
        "where": "3. The Endocannabinoid System and CBD",
-       "quote": "through interactions with serotonin (5-HT) receptors, leading to antidepressant and anxiolytic effects; and vanilloid-type TRPV receptors, resulting in reduced motor function, euphoria, analgesia, and immunomodulation.",
+       "quote": "through interactions with serotonin (5-HT) receptors, leading to antidepressant and anxiolytic effects",
        "sha": "47bd24ed4985b2ae"
       },
       {
-       "label": "F3",
+       "label": "F6",
        "ref": "olea_2026",
        "where": "9. Conclusions",
-       "quote": "CBD appears to act through multiple mechanisms, including modulation of the endocannabinoid system, serotonergic signaling, neuroinflammatory pathways, oxidative stress, and glutamatergic neurotransmission.",
+       "quote": "CBD appears to act through multiple mechanisms, including modulation of the endocannabinoid system, serotonergic signaling, neuroinflammatory pathways, oxidative stress, and glutamatergic neurotransmission",
        "sha": "f560139134022321"
       }
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "The passages do not state that a 2026 literature search found cannabinoids interact with those receptors; the receptor interaction statements are not linked to a literature search."
+     "said": "The passages describe a literature search and summarize evidence about CBD’s potential benefits, but do not say that the review found cannabis cannabinoids act on CB1 and CB2 receptors. The receptor passage presents that as a general mechan"
+    },
+    {
+     "part": "how2",
+     "text": "A review of cannabinoid receptors in the central nervous system found endocannabinoids suppress synaptic transmission.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "zou_2018",
+       "where": "Abstract",
+       "quote": "In this review, we briefly summarized our knowledge of cannabinoids and the endocannabinoid system, focusing on the CB1R and the CNS",
+       "sha": "c00048a322c2eb86"
+      },
+      {
+       "label": "F1",
+       "ref": "zou_2018",
+       "where": "4. Endocannabinoid-Mediated Signaling",
+       "quote": "The first conclusive evidence supporting retrograde endocannabinoid signaling came from the observation of depolarization‑induced suppression of inhibition (DSI)/excitation (DSE).",
+       "sha": "70957d559b20e8f1"
+      },
+      {
+       "label": "F2",
+       "ref": "zou_2018",
+       "where": "4. Endocannabinoid-Mediated Signaling",
+       "quote": "Endocannabinoids are prominently involved in the suppression of synaptic transmission through multiple mechanisms, independent of synaptic nature or transmission duration.",
+       "sha": "7cdd4ed77d55f0e0"
+      },
+      {
+       "label": "F3",
+       "ref": "zou_2018",
+       "where": "7. Physiological and Pathological Roles of the CB1R",
+       "quote": "CB1R and the endocannabinoid system are largely involved in various aspects of central neural activities and disorders, including appetite, learning and memory, anxiety, depression, schizophrenia, stroke, multiple sclerosis, neurodegeneration, epilepsy, and addiction.",
+       "sha": "ff5a970e0a1b8e24"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Cannabis works in the brain through CB1 and CB2 receptors and serotonin receptors, influencing functions like appetite, learning, and mood.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "olea_2026",
+       "where": "3. The Endocannabinoid System and CBD",
+       "quote": "cannabinoids exert their effects through interactions with CB1 and CB2 receptors in the ECS, resulting in immunomodulatory, neuroprotective, antioxidant, analgesic, anxiolytic, and antiepileptic effects.",
+       "sha": "47bd24ed4985b2ae"
+      },
+      {
+       "label": "F1",
+       "ref": "zou_2018",
+       "where": "4. Endocannabinoid-Mediated Signaling",
+       "quote": "The first conclusive evidence supporting retrograde endocannabinoid signaling came from the observation of depolarization‑induced suppression of inhibition (DSI)/excitation (DSE).",
+       "sha": "70957d559b20e8f1"
+      },
+      {
+       "label": "F5",
+       "ref": "olea_2026",
+       "where": "3. The Endocannabinoid System and CBD",
+       "quote": "through interactions with serotonin (5-HT) receptors, leading to antidepressant and anxiolytic effects",
+       "sha": "47bd24ed4985b2ae"
+      },
+      {
+       "label": "F3",
+       "ref": "zou_2018",
+       "where": "7. Physiological and Pathological Roles of the CB1R",
+       "quote": "CB1R and the endocannabinoid system are largely involved in various aspects of central neural activities and disorders, including appetite, learning and memory, anxiety, depression, schizophrenia, stroke, multiple sclerosis, neurodegeneration, epilepsy, and addiction.",
+       "sha": "ff5a970e0a1b8e24"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages discuss cannabinoid interactions with receptors, but do not establish the sentence’s full claim about cannabis influencing appetite, learning, and mood through those receptors. It also repeats the editor’s warning: it gives a g"
+    },
+    {
+     "part": "but",
+     "text": "It remains uncertain whether endocannabinoids from microglia or astrocytes modulate synaptic transmission.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "zou_2018",
+       "where": "4. Endocannabinoid-Mediated Signaling",
+       "quote": "it is not clear yet whether these endocannabinoids are involved in the modulation of synaptic transmission.",
+       "sha": "7cdd4ed77d55f0e0"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer (Sentence 1 directly addresses how cannabis works in the brain, though it is not fully supported. Sentence 2 concerns an unresolved question about glia-produced endocannabinoids and synaptic transmission, rather than qualifying the specific )"
+    },
+    {
+     "part": "how1",
+     "text": "A literature review of preclinical and clinical studies found cannabis cannabinoids act on CB1 and CB2 receptors.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "olea_2026",
+       "where": "Abstract",
+       "quote": "A comprehensive literature search was conducted to identify articles investigating the therapeutic potential of CBD and cannabis in selected disorders.",
+       "sha": "f1ccb72fd39bb886"
+      },
+      {
+       "label": "F4",
+       "ref": "olea_2026",
+       "where": "3. The Endocannabinoid System and CBD",
+       "quote": "cannabinoids exert their effects through interactions with CB1 and CB2 receptors in the ECS, resulting in immunomodulatory, neuroprotective, antioxidant, analgesic, anxiolytic, and antiepileptic effects.",
+       "sha": "47bd24ed4985b2ae"
+      },
+      {
+       "label": "F5",
+       "ref": "olea_2026",
+       "where": "3. The Endocannabinoid System and CBD",
+       "quote": "through interactions with serotonin (5-HT) receptors, leading to antidepressant and anxiolytic effects",
+       "sha": "47bd24ed4985b2ae"
+      },
+      {
+       "label": "F6",
+       "ref": "olea_2026",
+       "where": "9. Conclusions",
+       "quote": "CBD appears to act through multiple mechanisms, including modulation of the endocannabinoid system, serotonergic signaling, neuroinflammatory pathways, oxidative stress, and glutamatergic neurotransmission",
+       "sha": "f560139134022321"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The receptor account appears in a section describing the endocannabinoid system and CBD; the passages do not say that the literature review found this from preclinical and clinical studies. This also turns review background into a finding, "
+    },
+    {
+     "part": "how2",
+     "text": "A review of cannabinoid receptors in the central nervous system found endocannabinoids suppress synaptic transmission.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "zou_2018",
+       "where": "Abstract",
+       "quote": "In this review, we briefly summarized our knowledge of cannabinoids and the endocannabinoid system, focusing on the CB1R and the CNS",
+       "sha": "c00048a322c2eb86"
+      },
+      {
+       "label": "F1",
+       "ref": "zou_2018",
+       "where": "4. Endocannabinoid-Mediated Signaling",
+       "quote": "The first conclusive evidence supporting retrograde endocannabinoid signaling came from the observation of depolarization‑induced suppression of inhibition (DSI)/excitation (DSE).",
+       "sha": "70957d559b20e8f1"
+      },
+      {
+       "label": "F2",
+       "ref": "zou_2018",
+       "where": "4. Endocannabinoid-Mediated Signaling",
+       "quote": "Endocannabinoids are prominently involved in the suppression of synaptic transmission through multiple mechanisms, independent of synaptic nature or transmission duration.",
+       "sha": "7cdd4ed77d55f0e0"
+      },
+      {
+       "label": "F3",
+       "ref": "zou_2018",
+       "where": "7. Physiological and Pathological Roles of the CB1R",
+       "quote": "CB1R and the endocannabinoid system are largely involved in various aspects of central neural activities and disorders, including appetite, learning and memory, anxiety, depression, schizophrenia, stroke, multiple sclerosis, neurodegeneration, epilepsy, and addiction.",
+       "sha": "ff5a970e0a1b8e24"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Cannabis works in the brain through CB1 and CB2 receptors, influencing functions like appetite, learning, and mood.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "olea_2026",
+       "where": "3. The Endocannabinoid System and CBD",
+       "quote": "cannabinoids exert their effects through interactions with CB1 and CB2 receptors in the ECS, resulting in immunomodulatory, neuroprotective, antioxidant, analgesic, anxiolytic, and antiepileptic effects.",
+       "sha": "47bd24ed4985b2ae"
+      },
+      {
+       "label": "F1",
+       "ref": "zou_2018",
+       "where": "4. Endocannabinoid-Mediated Signaling",
+       "quote": "The first conclusive evidence supporting retrograde endocannabinoid signaling came from the observation of depolarization‑induced suppression of inhibition (DSI)/excitation (DSE).",
+       "sha": "70957d559b20e8f1"
+      },
+      {
+       "label": "F5",
+       "ref": "olea_2026",
+       "where": "3. The Endocannabinoid System and CBD",
+       "quote": "through interactions with serotonin (5-HT) receptors, leading to antidepressant and anxiolytic effects",
+       "sha": "47bd24ed4985b2ae"
+      },
+      {
+       "label": "F3",
+       "ref": "zou_2018",
+       "where": "7. Physiological and Pathological Roles of the CB1R",
+       "quote": "CB1R and the endocannabinoid system are largely involved in various aspects of central neural activities and disorders, including appetite, learning and memory, anxiety, depression, schizophrenia, stroke, multiple sclerosis, neurodegeneration, epilepsy, and addiction.",
+       "sha": "ff5a970e0a1b8e24"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages say cannabinoids generally interact with CB1 and CB2, and separately associate CB1R/ECS with appetite, learning and memory, anxiety, and depression; they do not establish the sentence’s combined claim about cannabis influencing"
+    },
+    {
+     "part": "but",
+     "text": "It remains uncertain whether endocannabinoids produced by microglia or astrocytes modulate synaptic transmission.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "zou_2018",
+       "where": "4. Endocannabinoid-Mediated Signaling",
+       "quote": "it is not clear yet whether these endocannabinoids are involved in the modulation of synaptic transmission.",
+       "sha": "7cdd4ed77d55f0e0"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer (Sentence 1 directly addresses how cannabis works in the brain, though it is not supported as phrased. Sentence 2 concerns uncertainty about glia-produced endocannabinoids and synaptic transmission, not a limitation on sentence 1’s claims.)"
+    },
+    {
+     "part": "how1",
+     "text": "A literature review of preclinical and clinical studies on CBD and cannabis found cannabis cannabinoids act on CB1 and CB2 receptors.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "olea_2026",
+       "where": "Abstract",
+       "quote": "A comprehensive literature search was conducted to identify articles investigating the therapeutic potential of CBD and cannabis in selected disorders.",
+       "sha": "f1ccb72fd39bb886"
+      },
+      {
+       "label": "F4",
+       "ref": "olea_2026",
+       "where": "3. The Endocannabinoid System and CBD",
+       "quote": "cannabinoids exert their effects through interactions with CB1 and CB2 receptors in the ECS, resulting in immunomodulatory, neuroprotective, antioxidant, analgesic, anxiolytic, and antiepileptic effects.",
+       "sha": "47bd24ed4985b2ae"
+      },
+      {
+       "label": "F5",
+       "ref": "olea_2026",
+       "where": "3. The Endocannabinoid System and CBD",
+       "quote": "through interactions with serotonin (5-HT) receptors, leading to antidepressant and anxiolytic effects",
+       "sha": "47bd24ed4985b2ae"
+      },
+      {
+       "label": "F6",
+       "ref": "olea_2026",
+       "where": "9. Conclusions",
+       "quote": "CBD appears to act through multiple mechanisms, including modulation of the endocannabinoid system, serotonergic signaling, neuroinflammatory pathways, oxidative stress, and glutamatergic neurotransmission",
+       "sha": "f560139134022321"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages describe a literature search and state a general mechanism in a later section, but do not say the review found this as a result. This also repeats the editorially rejected framing of review background or explanation as somethin"
+    },
+    {
+     "part": "how2",
+     "text": "A review of cannabinoid receptors in the central nervous system found endocannabinoids suppress synaptic transmission.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "zou_2018",
+       "where": "Abstract",
+       "quote": "In this review, we briefly summarized our knowledge of cannabinoids and the endocannabinoid system, focusing on the CB1R and the CNS",
+       "sha": "c00048a322c2eb86"
+      },
+      {
+       "label": "F1",
+       "ref": "zou_2018",
+       "where": "4. Endocannabinoid-Mediated Signaling",
+       "quote": "The first conclusive evidence supporting retrograde endocannabinoid signaling came from the observation of depolarization‑induced suppression of inhibition (DSI)/excitation (DSE).",
+       "sha": "70957d559b20e8f1"
+      },
+      {
+       "label": "F2",
+       "ref": "zou_2018",
+       "where": "4. Endocannabinoid-Mediated Signaling",
+       "quote": "Endocannabinoids are prominently involved in the suppression of synaptic transmission through multiple mechanisms, independent of synaptic nature or transmission duration.",
+       "sha": "7cdd4ed77d55f0e0"
+      },
+      {
+       "label": "F3",
+       "ref": "zou_2018",
+       "where": "7. Physiological and Pathological Roles of the CB1R",
+       "quote": "CB1R and the endocannabinoid system are largely involved in various aspects of central neural activities and disorders, including appetite, learning and memory, anxiety, depression, schizophrenia, stroke, multiple sclerosis, neurodegeneration, epilepsy, and addiction.",
+       "sha": "ff5a970e0a1b8e24"
+      }
+     ],
+     "ok": true
     }
    ]
   }
  ],
  "dropped": [
   {
-   "try": 2,
-   "part": "how2",
-   "text": "A 2026 literature search found that cannabinoids interact with CB1 and CB2 receptors, serotonin receptors, and TRPV receptors to produce various effects.",
+   "try": 3,
+   "part": "how1",
+   "text": "A literature review of preclinical and clinical studies on CBD and cannabis found cannabis cannabinoids act on CB1 and CB2 receptors.",
    "rests_on": [
     {
-     "label": "DA",
+     "label": "DB",
      "ref": "olea_2026",
      "where": "Abstract",
      "quote": "A comprehensive literature search was conducted to identify articles investigating the therapeutic potential of CBD and cannabis in selected disorders.",
      "sha": "f1ccb72fd39bb886"
     },
     {
-     "label": "F1",
+     "label": "F4",
      "ref": "olea_2026",
      "where": "3. The Endocannabinoid System and CBD",
-     "quote": "In general, cannabinoids exert their effects through interactions with CB1 and CB2 receptors in the ECS, resulting in immunomodulatory, neuroprotective, antioxidant, analgesic, anxiolytic, and antiepileptic effects",
+     "quote": "cannabinoids exert their effects through interactions with CB1 and CB2 receptors in the ECS, resulting in immunomodulatory, neuroprotective, antioxidant, analgesic, anxiolytic, and antiepileptic effects.",
      "sha": "47bd24ed4985b2ae"
     },
     {
-     "label": "F2",
+     "label": "F5",
      "ref": "olea_2026",
      "where": "3. The Endocannabinoid System and CBD",
-     "quote": "through interactions with serotonin (5-HT) receptors, leading to antidepressant and anxiolytic effects; and vanilloid-type TRPV receptors, resulting in reduced motor function, euphoria, analgesia, and immunomodulation.",
+     "quote": "through interactions with serotonin (5-HT) receptors, leading to antidepressant and anxiolytic effects",
      "sha": "47bd24ed4985b2ae"
     },
     {
-     "label": "F3",
+     "label": "F6",
      "ref": "olea_2026",
      "where": "9. Conclusions",
-     "quote": "CBD appears to act through multiple mechanisms, including modulation of the endocannabinoid system, serotonergic signaling, neuroinflammatory pathways, oxidative stress, and glutamatergic neurotransmission.",
+     "quote": "CBD appears to act through multiple mechanisms, including modulation of the endocannabinoid system, serotonergic signaling, neuroinflammatory pathways, oxidative stress, and glutamatergic neurotransmission",
      "sha": "f560139134022321"
     }
    ],
    "by": "the second reader",
-   "said": "The passage does not state that a 2026 literature search found these interactions; it only describes the mechanisms."
+   "said": "The passages describe a literature search and state a general mechanism in a later section, but do not say the review found this as a result. This also repeats the editorially rejected framing of review background or explanation as somethin"
   }
  ],
- "with_checked": {
-  "differs": [],
-  "same": []
- },
  "place": {
   "home": "cannabis",
   "also": [],
