@@ -17,35 +17,41 @@
   "pcp"
  ],
  "made": {
-  "on": "2026-11-26",
+  "on": "2026-11-27",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
-   "writer": "openrouter:meta-llama/llama-3.3-70b-instruct",
-   "checker": "openrouter:openai/gpt-oss-120b",
-   "planner": "openrouter:openai/gpt-oss-120b",
-   "team": "team R",
-   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "writer_2": "groq:qwen/qwen3.8-27b"
+   "reader": "gemini:gemini-3.1-flash-lite",
+   "writer": "gemini:gemma-4-26b-a4b-it",
+   "checker": "groq:openai/gpt-oss-120b",
+   "planner": "gemini:gemma-4-31b-it",
+   "also1": "gemini:gemini-3.5-flash-lite",
+   "also2": "gemini:gemini-3.6-flash",
+   "team": "team K",
+   "reader_2": "gemini:gemini-3.5-flash-lite",
+   "reader_3": "openrouter:meta-llama/llama-3.3-70b-instruct",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "45882094062",
-  "read_seconds": 27,
+  "run": "46051303623",
+  "read_by": {
+   "gemini-3.1-flash-lite": 3,
+   "gemini-3.5-flash-lite": 1
+  },
+  "read_seconds": 45,
   "from": {
    "papers": 2,
    "summaries": 0,
    "official": 2
   },
   "neurons": 0.0,
-  "seconds": 67
+  "seconds": 414
  },
- "status": "published",
- "why": "passed every gate",
+ "status": "none",
+ "why": "no draft passed: the form was wrong: no JSON",
  "gates": {
-  "read": "8 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 2 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.77, but 0.97, how1 0.94, how2 0.96, how3 0.97, how4 0.72",
-  "check": "every sentence kept was accepted by the second reader (openrouter:openai/gpt-oss-120b); it also found that the short answer answers the question and that the But is about that answer",
-  "rules": "nothing against it",
-  "checked": "set beside the checked claims of the same page: nothing against them"
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.1-flash-lite read from there",
+  "read": "9 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 2 official page(s), 0 paper(s) read in summary only",
+  "writer": "try 1: no JSON (how the reply ended: length; reasoned 0 characters, wrote 8864) try 2: no JSON (how the reply ended: length; reasoned 0 characters, wrote 9708)"
  },
  "sources": [
   {
@@ -86,10 +92,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-26",
+     "verified_on": "2026-11-27",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-26"
+      "checked_on": "2026-11-27"
      }
     },
     "volume": "10",
@@ -112,40 +118,40 @@
     "passage": 1,
     "where": "Abstract",
     "quote": "In this review, we summarize studies on the behavioral and metabolic effects of PCP and the cellular and circuitary targets of PCP in the PFC and hippocampus (HIP).",
-    "text": "a review of studies on phencyclidine in rodents"
+    "text": "a review of studies on the behavioral and metabolic effects of PCP and its cellular and circuitary targets in rodents"
    },
    "findings": [
     {
      "passage": 4,
      "where": "Effects of PCP on psychological behaviors",
      "quote": "At low concentrations (lower than the anesthetic dose), PCP binds to corresponding sites on the ion channels of NMDA receptors (NMDARs) and blocks Ca2+ inflow",
-     "text": "At low concentrations, PCP binds to corresponding sites on the ion channels of NMDA receptors and blocks Ca2+ inflow.",
+     "text": "At low concentrations, PCP binds to sites on NMDA receptor ion channels and blocks the inflow of Ca2+.",
      "id": "F1",
-     "second_hand": ""
-    },
-    {
-     "passage": 4,
-     "where": "Effects of PCP on psychological behaviors",
-     "quote": "at high concentrations (anesthetic doses), it also blocks receptors of many other transmitter systems, including the norepinephrine, serotonin, and dopamine systems, as well as voltage-dependent sodium channels, potassium channels, and even acetylcholine N subreceptors and other membrane proteins.",
-     "text": "At high concentrations, PCP also blocks receptors of many other transmitter systems, including the norepinephrine, serotonin, and dopamine systems, as well as voltage-dependent sodium channels, potassium channels, and acetylcholine N subreceptors and other membrane proteins.",
-     "id": "F2",
      "second_hand": ""
     },
     {
      "passage": 29,
      "where": "Circuitary targets of PCP › Ventral HIP-PFC pathway",
      "quote": "PCP preferentially inhibits GABAergic neurons in the vHIP, which in turn leads to disinhibition of hippocampal pyramidal cells as well as excessive and pathological activation of vHIP-PFC projections.",
-     "text": "PCP preferentially inhibits GABAergic neurons in the vHIP, which in turn leads to disinhibition of hippocampal pyramidal cells as well as excessive and pathological activation of vHIP-PFC projections.",
+     "text": "PCP preferentially inhibits GABAergic neurons in the ventral hippocampus, leading to disinhibition of hippocampal pyramidal cells and excessive activation of ventral hippocampus-prefrontal cortex projections.",
+     "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 4,
+     "where": "Effects of PCP on psychological behaviors",
+     "quote": "at high concentrations (anesthetic doses), it also blocks receptors of many other transmitter systems, including the norepinephrine, serotonin, and dopamine systems, as well as voltage-dependent sodium channels, potassium channels",
+     "text": "At high anesthetic doses, PCP blocks receptors for norepinephrine, serotonin, and dopamine systems, as well as voltage-dependent sodium and potassium channels.",
      "id": "F3",
      "second_hand": ""
     }
    ],
    "limits": [
     {
-     "passage": 1,
-     "where": "Abstract",
-     "quote": "However, the neural mechanism underlying PCP-induced SZ-like symptoms is not fully understood.",
-     "text": "The neural mechanism underlying PCP-induced SZ-like symptoms is not fully understood.",
+     "passage": 23,
+     "where": "Circuitary targets of PCP",
+     "quote": "There are several hypotheses regarding the mechanism by which PCP decreases NMDAR function and triggers subsequent changes.",
+     "text": "There are multiple hypotheses regarding how PCP decreases NMDAR function and triggers subsequent changes.",
      "id": "L1",
      "second_hand": ""
     }
@@ -190,10 +196,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-26",
+     "verified_on": "2026-11-27",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-26"
+      "checked_on": "2026-11-27"
      }
     },
     "volume": "42",
@@ -216,22 +222,22 @@
     "passage": 1,
     "where": "Abstract",
     "quote": "This multidisciplinary review examines the pharmacology/direct effects on consciousness, effectiveness in depression and acute suicidality, and safety of these fast‐acting NMDA antagonists.",
-    "text": "a multidisciplinary review of safety and effectiveness of NMDA receptor antagonists for depression"
+    "text": "a multidisciplinary review of research on NMDA receptor antagonists"
    },
    "findings": [
-    {
-     "passage": 1,
-     "where": "Abstract",
-     "quote": "At subanesthetic doses, the two drugs, along with their older congener, phencyclidine (PCP), induce a transient, altered mental state by blocking the N‐methyl‐D‐aspartate (NMDA) receptor for glutamate, the primary excitatory neurotransmitter in the mammalian central nervous system.",
-     "text": "At subanesthetic doses, phencyclidine (PCP) induces a transient, altered mental state by blocking the N-methyl-D-aspartate (NMDA) receptor for glutamate, the primary excitatory neurotransmitter in the mammalian central nervous system.",
-     "id": "F4",
-     "second_hand": ""
-    },
     {
      "passage": 3,
      "where": "INTRODUCTION",
      "quote": "All three drugs share a chemically related structure, have similar direct effects on consciousness, and have a primary mechanism of action as fast‐acting antagonists of the NMDA receptor.",
-     "text": "Phencyclidine (PCP) has a primary mechanism of action as a fast-acting antagonist of the NMDA receptor.",
+     "text": "PCP works as a fast-acting antagonist of the NMDA receptor.",
+     "id": "F4",
+     "second_hand": ""
+    },
+    {
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "At subanesthetic doses, the two drugs, along with their older congener, phencyclidine (PCP), induce a transient, altered mental state by blocking the N‐methyl‐D‐aspartate (NMDA) receptor for glutamate",
+     "text": "At subanesthetic doses, PCP induces a transient, altered mental state by blocking the NMDA receptor for glutamate.",
      "id": "F5",
      "second_hand": ""
     }
@@ -241,7 +247,7 @@
      "passage": 11,
      "where": "PHARMACOLOGY › Effects on consciousness",
      "quote": "Direct effects of PCP, an even more potent NMDA antagonist than ketamine, were less systematically measured since it was primarily an illicit street drug in the late 1960s and 1970s.",
-     "text": "Direct effects of PCP were less systematically measured because it was primarily an illicit street drug in the late 1960s and 1970s.",
+     "text": "The direct effects of PCP were less systematically measured because it was primarily an illicit street drug.",
      "id": "L2",
      "second_hand": ""
     }
@@ -274,14 +280,14 @@
       [
        2026,
        11,
-       26
+       27
       ]
      ]
     },
     "verification": {
      "status": "made by code",
      "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-26"
+     "verified_on": "2026-11-27"
     },
     "publisher": "Government of Canada"
    },
@@ -302,7 +308,7 @@
      "passage": 5,
      "where": "Short-term effects of PCP",
      "quote": "If you smoke or snort it, PCP enters your bloodstream and brain rapidly causing immediate effects.",
-     "text": "If you smoke or snort PCP, it enters your bloodstream and brain rapidly and causes immediate effects.",
+     "text": "When PCP is smoked or snorted, it enters the bloodstream and brain rapidly to cause immediate effects.",
      "id": "F6",
      "second_hand": ""
     }
@@ -332,14 +338,14 @@
       [
        2026,
        11,
-       26
+       27
       ]
      ]
     },
     "verification": {
      "status": "made by code",
      "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-26"
+     "verified_on": "2026-11-27"
     }
    },
    "title": "PCP",
@@ -367,8 +373,16 @@
      "passage": 8,
      "where": "Is PCP addictive, and what are the long-term effects?",
      "quote": "Long-term, continued use of PCP can permanently affect your brain. It can change how neurotransmitters in the brain send and receive signals.",
-     "text": "Long-term continued use of PCP can permanently affect the brain and change how neurotransmitters send and receive signals.",
+     "text": "Long-term, continued use of PCP can permanently affect the brain by changing how neurotransmitters send and receive signals.",
      "id": "F8",
+     "second_hand": ""
+    },
+    {
+     "passage": 8,
+     "where": "Is PCP addictive, and what are the long-term effects?",
+     "quote": "It can impact your dopamine receptors leaving you in a state on synaesthesia (feeling like you’re constantly floating and smelling and tasting colours).",
+     "text": "PCP can impact dopamine receptors, leaving people in a state of synaesthesia.",
+     "id": "F9",
      "second_hand": ""
     }
    ],
@@ -376,162 +390,9 @@
    "tag": "D"
   }
  ],
- "parts": [
-  {
-   "part": "short",
-   "text": "PCP works by blocking NMDA receptors in the brain. It also blocks other receptors at high concentrations.",
-   "uses": [
-    "F5",
-    "F1",
-    "F2"
-   ],
-   "rests_on": [
-    {
-     "label": "F5",
-     "ref": "moore_2022",
-     "where": "INTRODUCTION",
-     "quote": "All three drugs share a chemically related structure, have similar direct effects on consciousness, and have a primary mechanism of action as fast‐acting antagonists of the NMDA receptor.",
-     "sha": "9502cad5d887a1c7"
-    },
-    {
-     "label": "F1",
-     "ref": "li_2024",
-     "where": "Effects of PCP on psychological behaviors",
-     "quote": "At low concentrations (lower than the anesthetic dose), PCP binds to corresponding sites on the ion channels of NMDA receptors (NMDARs) and blocks Ca2+ inflow",
-     "sha": "e8d49c9e88ff1eb0"
-    },
-    {
-     "label": "F2",
-     "ref": "li_2024",
-     "where": "Effects of PCP on psychological behaviors",
-     "quote": "at high concentrations (anesthetic doses), it also blocks receptors of many other transmitter systems, including the norepinephrine, serotonin, and dopamine systems, as well as voltage-dependent sodium channels, potassium channels, and even acetylcholine N subreceptors and other membrane proteins.",
-     "sha": "e8d49c9e88ff1eb0"
-    }
-   ]
-  },
-  {
-   "part": "but",
-   "text": "The neural mechanism is not fully understood.",
-   "uses": [
-    "L1"
-   ],
-   "rests_on": [
-    {
-     "label": "L1",
-     "ref": "li_2024",
-     "where": "Abstract",
-     "quote": "However, the neural mechanism underlying PCP-induced SZ-like symptoms is not fully understood.",
-     "sha": "ee508de75b136866"
-    }
-   ]
-  },
-  {
-   "part": "how1",
-   "text": "Drug Science says PCP antagonises glutamate ion channels.",
-   "uses": [
-    "F7"
-   ],
-   "rests_on": [
-    {
-     "label": "F7",
-     "ref": "drugscience_pcp",
-     "where": "What is the science of PCP?",
-     "quote": "It has these effects by antagonising glutamate ion channels in the brain, which mediate excitatory neurotransmission.",
-     "sha": "214bf9d601698153"
-    }
-   ],
-   "quote": "It has these effects by antagonising glutamate ion channels in the brain",
-   "quote_ref": "drugscience_pcp"
-  },
-  {
-   "part": "how2",
-   "text": "Health Canada says PCP enters the brain rapidly.",
-   "uses": [
-    "F6"
-   ],
-   "rests_on": [
-    {
-     "label": "F6",
-     "ref": "healthcanada_pcp",
-     "where": "Short-term effects of PCP",
-     "quote": "If you smoke or snort it, PCP enters your bloodstream and brain rapidly causing immediate effects.",
-     "sha": "160e3f6eb2a52699"
-    }
-   ],
-   "quote": "PCP enters your bloodstream and brain rapidly causing immediate effects",
-   "quote_ref": "healthcanada_pcp"
-  },
-  {
-   "part": "how3",
-   "text": "A multidisciplinary review found PCP blocks NMDA receptors.",
-   "uses": [
-    "DB",
-    "F5",
-    "F4"
-   ],
-   "rests_on": [
-    {
-     "label": "DB",
-     "ref": "moore_2022",
-     "where": "Abstract",
-     "quote": "This multidisciplinary review examines the pharmacology/direct effects on consciousness, effectiveness in depression and acute suicidality, and safety of these fast‐acting NMDA antagonists.",
-     "sha": "5d87d56d4d29eef2"
-    },
-    {
-     "label": "F5",
-     "ref": "moore_2022",
-     "where": "INTRODUCTION",
-     "quote": "All three drugs share a chemically related structure, have similar direct effects on consciousness, and have a primary mechanism of action as fast‐acting antagonists of the NMDA receptor.",
-     "sha": "9502cad5d887a1c7"
-    },
-    {
-     "label": "F4",
-     "ref": "moore_2022",
-     "where": "Abstract",
-     "quote": "At subanesthetic doses, the two drugs, along with their older congener, phencyclidine (PCP), induce a transient, altered mental state by blocking the N‐methyl‐D‐aspartate (NMDA) receptor for glutamate, the primary excitatory neurotransmitter in the mammalian central nervous system.",
-     "sha": "5d87d56d4d29eef2"
-    }
-   ],
-   "quote": "and have a primary mechanism of action as fast-acting antagonists of the NMDA receptor",
-   "quote_ref": "moore_2022"
-  },
-  {
-   "part": "how4",
-   "text": "A review of rodent studies found PCP blocks NMDA receptors and other receptors.",
-   "uses": [
-    "DA",
-    "F1",
-    "F2"
-   ],
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "li_2024",
-     "where": "Abstract",
-     "quote": "In this review, we summarize studies on the behavioral and metabolic effects of PCP and the cellular and circuitary targets of PCP in the PFC and hippocampus (HIP).",
-     "sha": "ee508de75b136866"
-    },
-    {
-     "label": "F1",
-     "ref": "li_2024",
-     "where": "Effects of PCP on psychological behaviors",
-     "quote": "At low concentrations (lower than the anesthetic dose), PCP binds to corresponding sites on the ion channels of NMDA receptors (NMDARs) and blocks Ca2+ inflow",
-     "sha": "e8d49c9e88ff1eb0"
-    },
-    {
-     "label": "F2",
-     "ref": "li_2024",
-     "where": "Effects of PCP on psychological behaviors",
-     "quote": "at high concentrations (anesthetic doses), it also blocks receptors of many other transmitter systems, including the norepinephrine, serotonin, and dopamine systems, as well as voltage-dependent sodium channels, potassium channels, and even acetylcholine N subreceptors and other membrane proteins.",
-     "sha": "e8d49c9e88ff1eb0"
-    }
-   ],
-   "quote": "corresponding sites on the ion channels of NMDA receptors (NMDARs) and blocks Ca2+ inflow",
-   "quote_ref": "li_2024"
-  }
- ],
+ "parts": [],
  "complete": false,
- "missing": "a paper that stands nearer the question could not be read",
+ "missing": "",
  "wanted": [
   {
    "doi": "10.1176/ajp.148.10.1301",
@@ -556,7 +417,16 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-26",
+   "lane": 19,
+   "status": "published",
+   "why": "passed every gate",
+   "short": "PCP works by blocking NMDA receptors in the brain. It also blocks other receptors at high concentrations.",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "Advances in the study of phencyclidine-induced schizophrenia-like animal models and the underlying neural mechanisms",
@@ -587,15 +457,15 @@
    "read": "page",
    "kind": "official",
    "at": "https://www.drugscience.org.uk/drugs/pcp",
-   "kept": 2,
+   "kept": 3,
    "thrown": []
   }
  ],
  "plan": {
   "short": [
-   "F5",
-   "F1",
-   "F2"
+   "F7",
+   "F4",
+   "F1"
   ],
   "direct": "",
   "but": [
@@ -606,46 +476,20 @@
     "F7"
    ],
    [
-    "F6"
-   ],
-   [
     "DB",
-    "F5",
-    "F4"
+    "F4",
+    "F5"
    ],
    [
     "DA",
     "F1",
-    "F2"
+    "F2",
+    "F3"
    ]
   ],
   "unanswered": ""
  },
- "panel_gap": [],
- "own": {
-  "model": "pharmakon-check-0",
-  "threshold": 0.05,
-  "scores": {
-   "short": 0.772,
-   "but": 0.9728,
-   "how1": 0.9411,
-   "how2": 0.9637,
-   "how3": 0.9659,
-   "how4": 0.7244
-  },
-  "scores_quotes_alone": {
-   "short": 0.7771,
-   "but": 0.9132,
-   "how1": 0.952,
-   "how2": 0.9635,
-   "how3": 0.9819,
-   "how4": 0.3984
-  }
- },
- "with_checked": {
-  "differs": [],
-  "same": []
- },
+ "soft": "the writer's reply was not in the form asked for",
  "place": {
   "home": "pcp",
   "also": [],
