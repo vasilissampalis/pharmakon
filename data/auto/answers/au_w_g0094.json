@@ -15,40 +15,34 @@
  ],
  "drugs": [],
  "made": {
-  "on": "2026-11-23",
+  "on": "2026-11-27",
   "models": {
-   "reader": "gemini:gemini-3.5-flash-lite",
-   "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-   "checker": "@cf/openai/gpt-oss-120b",
-   "planner": "groq:openai/gpt-oss-120b",
-   "team": "team B",
-   "reader_2": "groq:openai/gpt-oss-20b",
-   "reader_first": "@cf/meta/llama-4-scout-17b-16e-instruct"
+   "reader": "openrouter:openai/gpt-oss-120b",
+   "writer": "openrouter:meta-llama/llama-3.3-70b-instruct",
+   "checker": "openrouter:openai/gpt-6-luna",
+   "planner": "openrouter:openai/gpt-oss-120b",
+   "team": "team R",
+   "reader_2": "openrouter:openai/gpt-oss-120b",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "45088898793",
-  "read_by": {
-   "gemini-3.5-flash-lite": 6,
-   "llama-4-scout-17b-16e-instruct": 2
-  },
-  "read_seconds": 73,
+  "run": "45959105965",
+  "read_seconds": 18,
   "from": {
    "papers": 2,
    "summaries": 0,
    "official": 0
   },
-  "neurons": 278.9,
-  "seconds": 95
+  "neurons": 0.0,
+  "seconds": 90
  },
- "status": "published",
- "why": "passed every gate",
+ "status": "none",
+ "why": "the second reader did not accept the answer",
  "gates": {
-  "reader": "llama-4-scout-17b-16e-instruct could not read on (the model service could not be reached: The read operation timed out): gemini-3.5-flash-lite read from there",
-  "read": "4 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 1 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.63, but 0.99, how1 0.79, how2 0.97",
-  "check": "every sentence kept was accepted by the second reader (@cf/openai/gpt-oss-120b); it also found that the short answer answers the question and that the But is about that answer",
-  "rules": "nothing against it",
-  "checked": "set beside the checked claims of the same page: nothing against them"
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-120b read from there",
+  "read": "4 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 4 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 1 case report(s) (which do not count), 0 other paper(s), 0 official page(s), 0 paper(s) read in summary only",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.73, but 0.23, how1 0.80, how2 0.93",
+  "check": "short: NOT accepted: The passages say loperamide’s half-life is 9 to 30 hours and that cardiac electrical disturbances can persist for several days; they do not say the drug stays in the body for several days. This also repeats the editor’s warned-against confu; but: accepted; how1: accepted; how2: accepted"
  },
  "sources": [
   {
@@ -113,10 +107,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-23",
+     "verified_on": "2026-11-27",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-23"
+      "checked_on": "2026-11-27"
      }
     },
     "volume": "9",
@@ -139,15 +133,23 @@
     "passage": 1,
     "where": "Abstract",
     "quote": "Thus, the aim of this study was to perform an integrative review of the available evidence in the recent literature on the cardiac risks of acute and chronic use of loperamide.",
-    "text": "an integrative review of the available evidence in the recent literature on the cardiac risks of acute and chronic use of loperamide"
+    "text": "integrative review of cardiac risks of acute and chronic loperamide use"
    },
    "findings": [
     {
      "passage": 27,
      "where": "6. Discussion",
      "quote": "The half-life of loperamide is relatively long, between 9 and 30 h, and the electrical disturbances that lead to the onset of cardiac arrhythmias due to the actions of loperamide persist for several days.",
-     "text": "The half-life of loperamide is relatively long, between 9 and 30 hours.",
+     "text": "Loperamide has a half-life of 9 to 30 hours, and its cardiac electrical disturbances can persist for several days.",
      "id": "F1",
+     "second_hand": ""
+    },
+    {
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "until metabolized by intestinal and hepatic CYP3A4 and CYP2C8 into inactive metabolites.",
+     "text": "Loperamide is metabolized by intestinal and hepatic CYP3A4 and CYP2C8 into inactive metabolites.",
+     "id": "F2",
      "second_hand": ""
     }
    ],
@@ -196,10 +198,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-23",
+     "verified_on": "2026-11-27",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-23"
+      "checked_on": "2026-11-27"
      }
     },
     "volume": "3",
@@ -216,19 +218,14 @@
    "people": true,
    "near": 0.687,
    "money": [],
-   "design": {
-    "passage": 2,
-    "where": "Abstract",
-    "quote": "A 23-year-old woman was found to be in pulseless ventricular fibrillation with a QTc of 554 ms and received multiple defibrillations and IV lidocaine.",
-    "text": "A case report of a 23-year-old woman who overdosed on loperamide."
-   },
+   "design": null,
    "findings": [
     {
      "passage": 18,
      "where": "Discussion",
-     "quote": "Importantly, routine opiate screens do not include loperamide and loperamide-specific testing may not be available at all institutions.",
+     "quote": "routine opiate screens do not include loperamide and loperamide-specific testing may not be available at all institutions.",
      "text": "Routine opiate screens do not include loperamide, and loperamide-specific testing may not be available at all institutions.",
-     "id": "F2",
+     "id": "F3",
      "second_hand": ""
     },
     {
@@ -236,118 +233,26 @@
      "where": "Discussion",
      "quote": "Additionally, large doses may lead to higher levels and a significantly prolonged half-life.",
      "text": "Large doses may lead to higher levels and a significantly prolonged half-life.",
-     "id": "F3",
-     "second_hand": ""
-    },
-    {
-     "passage": 2,
-     "where": "Abstract",
-     "quote": "Her toxicology studies were negative.",
-     "text": "Her toxicology studies were negative.",
      "id": "F4",
      "second_hand": ""
     }
    ],
-   "limits": [],
+   "limits": [
+    {
+     "passage": 18,
+     "where": "Discussion",
+     "quote": "routine opiate screens do not include loperamide and loperamide-specific testing may not be available at all institutions.",
+     "text": "Loperamide cannot be detected by routine opiate screens, and specific testing may not be available at all institutions.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
    "tag": "B"
   }
  ],
- "parts": [
-  {
-   "part": "short",
-   "text": "It can stay 9 to 30 hours, and routine drug tests may not find it.",
-   "uses": [
-    "F1",
-    "F2"
-   ],
-   "rests_on": [
-    {
-     "label": "F1",
-     "ref": "lammoglia_2022",
-     "where": "6. Discussion",
-     "quote": "The half-life of loperamide is relatively long, between 9 and 30 h, and the electrical disturbances that lead to the onset of cardiac arrhythmias due to the actions of loperamide persist for several days.",
-     "sha": "499fe2fbb0a8c27b"
-    },
-    {
-     "label": "F2",
-     "ref": "cicci_2019",
-     "where": "Discussion",
-     "quote": "Importantly, routine opiate screens do not include loperamide and loperamide-specific testing may not be available at all institutions.",
-     "sha": "87f5e35967f2fae3"
-    }
-   ]
-  },
-  {
-   "part": "but",
-   "text": "But large doses may prolong its stay.",
-   "uses": [
-    "F3"
-   ],
-   "rests_on": [
-    {
-     "label": "F3",
-     "ref": "cicci_2019",
-     "where": "Discussion",
-     "quote": "Additionally, large doses may lead to higher levels and a significantly prolonged half-life.",
-     "sha": "87f5e35967f2fae3"
-    }
-   ]
-  },
-  {
-   "part": "how1",
-   "text": "An integrative review found a half-life of 9 to 30 hours.",
-   "uses": [
-    "DA",
-    "F1"
-   ],
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "lammoglia_2022",
-     "where": "Abstract",
-     "quote": "Thus, the aim of this study was to perform an integrative review of the available evidence in the recent literature on the cardiac risks of acute and chronic use of loperamide.",
-     "sha": "1d143e023e3974cc"
-    },
-    {
-     "label": "F1",
-     "ref": "lammoglia_2022",
-     "where": "6. Discussion",
-     "quote": "The half-life of loperamide is relatively long, between 9 and 30 h, and the electrical disturbances that lead to the onset of cardiac arrhythmias due to the actions of loperamide persist for several days.",
-     "sha": "499fe2fbb0a8c27b"
-    }
-   ],
-   "quote": "Thus, the aim of this study was to perform an integrative review of the available",
-   "quote_ref": "lammoglia_2022"
-  },
-  {
-   "part": "how2",
-   "text": "A case report noted routine tests do not include loperamide.",
-   "uses": [
-    "DB",
-    "F2"
-   ],
-   "rests_on": [
-    {
-     "label": "DB",
-     "ref": "cicci_2019",
-     "where": "Abstract",
-     "quote": "A 23-year-old woman was found to be in pulseless ventricular fibrillation with a QTc of 554 ms and received multiple defibrillations and IV lidocaine.",
-     "sha": "0003478aad5c5a18"
-    },
-    {
-     "label": "F2",
-     "ref": "cicci_2019",
-     "where": "Discussion",
-     "quote": "Importantly, routine opiate screens do not include loperamide and loperamide-specific testing may not be available at all institutions.",
-     "sha": "87f5e35967f2fae3"
-    }
-   ],
-   "quote": "Importantly, routine opiate screens do not include loperamide and loperamide-specific testing may not be available",
-   "quote_ref": "cicci_2019"
-  }
- ],
- "complete": true,
- "missing": "",
+ "parts": [],
+ "complete": false,
+ "missing": "exact detection window after use",
  "wanted": [
   {
    "doi": "10.1016/s0889-8553(21)00554-9",
@@ -372,7 +277,16 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-23",
+   "lane": 19,
+   "status": "published",
+   "why": "passed every gate",
+   "short": "It can stay 9 to 30 hours, and routine drug tests may not find it.",
+   "complete": true
+  }
+ ],
  "looked": [
   {
    "title": "Loperamide therapy for acute diarrhea in children: systematic review and meta-analysis",
@@ -388,14 +302,27 @@
    "kind": "review",
    "at": "10.2147/jpr.s196927",
    "kept": 0,
-   "thrown": []
+   "thrown": [
+    {
+     "kind": "limit",
+     "text": "The observation is based on only one patient over a short period.",
+     "quote": "Following a period of 3 days of open test application with loperamide 5% cream, ... the patient did not report nor experience any side effects from the topical application of loperamide 5% cream.",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    },
+    {
+     "kind": "limit",
+     "text": "Efficacy and safety have not been confirmed in larger controlled studies.",
+     "quote": "Well-designed double-blinded randomized controlled trials will further elucidate the role of topical loperamide as an option for the management of LNP.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   },
   {
    "title": "Risk of Cardiac Lesion with Chronic and Acute Use of Loperamide-An Integrative Review",
    "read": "full",
    "kind": "review",
    "at": "10.3390/jcdd9120431",
-   "kept": 1,
+   "kept": 2,
    "thrown": []
   },
   {
@@ -404,15 +331,29 @@
    "kind": "other",
    "at": "10.1002/psp4.70148",
    "kept": 0,
-   "thrown": []
+   "thrown": [
+    {
+     "kind": "limit",
+     "text": "Several knowledge gaps remain, including the need to assess nonlinearities and adapt the model to specific populations.",
+     "quote": "However, several knowledge gaps remain. Future studies include (1) assessing nonlinearities in the loperamide dose‑exposure relationship by incorporating robust kinetic parameters (Vmax, Km) for loper",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
   },
   {
    "title": "Loperamide overdose causing torsades de pointes and requiring Impella temporary mechanical support: a case report",
    "read": "full",
    "kind": "case",
    "at": "10.1093/ehjcr/ytz150",
-   "kept": 3,
-   "thrown": []
+   "kept": 2,
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "Case report of a single patient with loperamide overdose",
+     "quote": "A 23-year-old woman was found to be in pulseless ventricular fibrillation with a QTc of 554 ms and received multiple defibrillations and IV lidocaine.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   },
   {
    "title": "How and when to take loperamide Brand name: Imodium",
@@ -442,11 +383,11 @@
  "plan": {
   "short": [
    "F1",
-   "F2"
+   "F3"
   ],
   "direct": "",
   "but": [
-   "F3"
+   "L1"
   ],
   "how": [
    [
@@ -454,33 +395,264 @@
     "F1"
    ],
    [
-    "DB",
-    "F2"
+    "F3"
    ]
   ],
-  "unanswered": "exact detection window timing"
+  "unanswered": "exact detection window after use"
  },
  "panel_gap": [],
  "own": {
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.627,
-   "but": 0.9874,
-   "how1": 0.7886,
-   "how2": 0.9749
+   "short": 0.7281,
+   "but": 0.2313,
+   "how1": 0.7962,
+   "how2": 0.9306
   },
   "scores_quotes_alone": {
-   "short": 0.4947,
-   "but": 0.7487,
-   "how1": 0.6843,
-   "how2": 0.9786
+   "short": 0.4921,
+   "but": 0.3622,
+   "how1": 0.9309,
+   "how2": 0.87
   }
  },
- "with_checked": {
-  "differs": [],
-  "same": []
- },
+ "tries": [
+  {
+   "try": 1,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Loperamide can stay in the body for several days, and routine drug tests may not find it.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "lammoglia_2022",
+       "where": "6. Discussion",
+       "quote": "The half-life of loperamide is relatively long, between 9 and 30 h, and the electrical disturbances that lead to the onset of cardiac arrhythmias due to the actions of loperamide persist for several days.",
+       "sha": "499fe2fbb0a8c27b"
+      },
+      {
+       "label": "F3",
+       "ref": "cicci_2019",
+       "where": "Discussion",
+       "quote": "routine opiate screens do not include loperamide and loperamide-specific testing may not be available at all institutions.",
+       "sha": "87f5e35967f2fae3"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages say electrical disturbances can persist for several days, not that loperamide stays in the body that long. The half-life of 9–30 hours is not the same as how long the drug stays in the body. The testing passage refers specifica"
+    },
+    {
+     "part": "but",
+     "text": "Loperamide cannot be detected by routine opiate screens, and specific testing may not be available.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "cicci_2019",
+       "where": "Discussion",
+       "quote": "routine opiate screens do not include loperamide and loperamide-specific testing may not be available at all institutions.",
+       "sha": "87f5e35967f2fae3"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "A review of cardiac risks found loperamide's half-life is 9 to 30 hours.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "lammoglia_2022",
+       "where": "Abstract",
+       "quote": "Thus, the aim of this study was to perform an integrative review of the available evidence in the recent literature on the cardiac risks of acute and chronic use of loperamide.",
+       "sha": "1d143e023e3974cc"
+      },
+      {
+       "label": "F1",
+       "ref": "lammoglia_2022",
+       "where": "6. Discussion",
+       "quote": "The half-life of loperamide is relatively long, between 9 and 30 h, and the electrical disturbances that lead to the onset of cardiac arrhythmias due to the actions of loperamide persist for several days.",
+       "sha": "499fe2fbb0a8c27b"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A case report noted routine opiate screens do not include loperamide.",
+     "rests_on": [
+      {
+       "label": "F3",
+       "ref": "cicci_2019",
+       "where": "Discussion",
+       "quote": "routine opiate screens do not include loperamide and loperamide-specific testing may not be available at all institutions.",
+       "sha": "87f5e35967f2fae3"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Loperamide can stay in the body for several days, and routine opiate screens may not find it.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "lammoglia_2022",
+       "where": "6. Discussion",
+       "quote": "The half-life of loperamide is relatively long, between 9 and 30 h, and the electrical disturbances that lead to the onset of cardiac arrhythmias due to the actions of loperamide persist for several days.",
+       "sha": "499fe2fbb0a8c27b"
+      },
+      {
+       "label": "F3",
+       "ref": "cicci_2019",
+       "where": "Discussion",
+       "quote": "routine opiate screens do not include loperamide and loperamide-specific testing may not be available at all institutions.",
+       "sha": "87f5e35967f2fae3"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages say loperamide’s half-life is 9 to 30 hours and that cardiac electrical disturbances can persist for several days; they do not say the drug stays in the body for several days. The editor’s note specifically warns against treati"
+    },
+    {
+     "part": "but",
+     "text": "Loperamide-specific testing may not be available at all institutions.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "cicci_2019",
+       "where": "Discussion",
+       "quote": "routine opiate screens do not include loperamide and loperamide-specific testing may not be available at all institutions.",
+       "sha": "87f5e35967f2fae3"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "A review of cardiac risks found loperamide has a half-life of 9 to 30 hours.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "lammoglia_2022",
+       "where": "Abstract",
+       "quote": "Thus, the aim of this study was to perform an integrative review of the available evidence in the recent literature on the cardiac risks of acute and chronic use of loperamide.",
+       "sha": "1d143e023e3974cc"
+      },
+      {
+       "label": "F1",
+       "ref": "lammoglia_2022",
+       "where": "6. Discussion",
+       "quote": "The half-life of loperamide is relatively long, between 9 and 30 h, and the electrical disturbances that lead to the onset of cardiac arrhythmias due to the actions of loperamide persist for several days.",
+       "sha": "499fe2fbb0a8c27b"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A case report noted routine opiate screens do not include loperamide.",
+     "rests_on": [
+      {
+       "label": "F3",
+       "ref": "cicci_2019",
+       "where": "Discussion",
+       "quote": "routine opiate screens do not include loperamide and loperamide-specific testing may not be available at all institutions.",
+       "sha": "87f5e35967f2fae3"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Loperamide can stay in the body for several days due to its cardiac effects, and routine drug tests may not find it.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "lammoglia_2022",
+       "where": "6. Discussion",
+       "quote": "The half-life of loperamide is relatively long, between 9 and 30 h, and the electrical disturbances that lead to the onset of cardiac arrhythmias due to the actions of loperamide persist for several days.",
+       "sha": "499fe2fbb0a8c27b"
+      },
+      {
+       "label": "F3",
+       "ref": "cicci_2019",
+       "where": "Discussion",
+       "quote": "routine opiate screens do not include loperamide and loperamide-specific testing may not be available at all institutions.",
+       "sha": "87f5e35967f2fae3"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages say loperamide’s half-life is 9 to 30 hours and that cardiac electrical disturbances can persist for several days; they do not say the drug stays in the body for several days. This also repeats the editor’s warned-against confu"
+    },
+    {
+     "part": "but",
+     "text": "Loperamide cannot be detected by routine opiate screens, and specific testing may not be available at all institutions.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "cicci_2019",
+       "where": "Discussion",
+       "quote": "routine opiate screens do not include loperamide and loperamide-specific testing may not be available at all institutions.",
+       "sha": "87f5e35967f2fae3"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "A review of cardiac risks found loperamide's half-life is 9 to 30 hours.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "lammoglia_2022",
+       "where": "Abstract",
+       "quote": "Thus, the aim of this study was to perform an integrative review of the available evidence in the recent literature on the cardiac risks of acute and chronic use of loperamide.",
+       "sha": "1d143e023e3974cc"
+      },
+      {
+       "label": "F1",
+       "ref": "lammoglia_2022",
+       "where": "6. Discussion",
+       "quote": "The half-life of loperamide is relatively long, between 9 and 30 h, and the electrical disturbances that lead to the onset of cardiac arrhythmias due to the actions of loperamide persist for several days.",
+       "sha": "499fe2fbb0a8c27b"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A case report noted routine opiate screens do not include loperamide.",
+     "rests_on": [
+      {
+       "label": "F3",
+       "ref": "cicci_2019",
+       "where": "Discussion",
+       "quote": "routine opiate screens do not include loperamide and loperamide-specific testing may not be available at all institutions.",
+       "sha": "87f5e35967f2fae3"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  }
+ ],
  "place": {
   "home": "new:Loperamide",
   "also": [],
