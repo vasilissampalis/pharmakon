@@ -15,41 +15,127 @@
  ],
  "drugs": [],
  "made": {
-  "on": "2026-11-24",
+  "on": "2026-11-27",
   "models": {
    "reader": "gemini:gemini-3.5-flash-lite",
    "writer": "groq:qwen/qwen3.8-27b",
    "checker": "groq:openai/gpt-oss-120b",
    "planner": "groq:openai/gpt-oss-120b",
-   "also1": "gemini:gemini-3.6-flash",
-   "team": "team G",
+   "also1": "gemini:gemini-3.5-flash-lite",
+   "also2": "gemini:gemini-3.6-flash",
+   "team": "team I",
    "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "also1_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
-   "reader_first": "gemini:gemma-4-31b-it"
+   "reader_3": "openrouter:meta-llama/llama-3.3-70b-instruct",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "45447699266",
-  "read_seconds": 30,
+  "run": "45982397911",
+  "read_by": {
+   "gemini-3.5-flash-lite": 3,
+   "gemini-3.1-flash-lite": 2,
+   "gpt-oss-20b": 1
+  },
+  "read_seconds": 11,
   "from": {
-   "papers": 1,
+   "papers": 2,
    "summaries": 0,
    "official": 1
   },
   "neurons": 0.0,
-  "seconds": 299
+  "seconds": 292
  },
- "status": "published",
- "why": "passed every gate",
+ "status": "none",
+ "why": "the second reader did not accept the answer",
  "gates": {
-  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.5-flash-lite read from there",
-  "read": "4 findings kept from 2 sources (1 papers read in full, 1 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 1 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.80, but 0.98, how1 0.05, how2 0.66",
-  "check": "every sentence kept was accepted by the second reader (groq:openai/gpt-oss-120b) and by gemini:gemini-3.6-flash; 1 How-do-we-know line(s) dropped; it also found that the short answer answers the question and that the But is about that answer",
-  "panel": "further readers, each of which must accept every sentence too: gemini-3.6-flash accepted 3 of 4",
-  "rules": "nothing against it",
-  "checked": "set beside the checked claims of the same page: nothing against them"
+  "read": "7 findings kept from 3 sources (2 papers read in full, 1 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 1 official page(s), 0 paper(s) read in summary only",
+  "panel": "further readers, each of which must accept every sentence too: gemini-3.5-flash-lite accepted 5 of 5; gemini-3.6-flash could not be asked: gemini could not be reached: The read operation timed out; gemini-3-flash-preview accepted 2 of 5",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.83, but 0.70, how1 0.02, how2 0.80, how3 0.38, how4 0.81",
+  "check": "short: NOT accepted: Sentence copies source wording (more than 15 words) rather than paraphrasing.; but: accepted; how1: NOT accepted: Sentence copies source wording (more than 15 words) rather than paraphrasing.; how2: NOT accepted: Sentence copies source wording (more than 15 words) rather than paraphrasing.; how3: accepted; how4: accepted"
  },
  "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "gilmartins_2025",
+    "type": "article-journal",
+    "title": "Toxicodynamic insights of 2C and NBOMe drugs – is there abuse potential?",
+    "author": [
+     {
+      "family": "Gil-Martins",
+      "given": "Eva"
+     },
+     {
+      "family": "Barbosa",
+      "given": "Daniel José"
+     },
+     {
+      "family": "Borges",
+      "given": "Fernanda"
+     },
+     {
+      "family": "Remião",
+      "given": "Fernando"
+     },
+     {
+      "family": "Silva",
+      "given": "Renata"
+     }
+    ],
+    "container-title": "Toxicology Reports",
+    "issued": {
+     "date-parts": [
+      [
+       2025
+      ]
+     ]
+    },
+    "DOI": "10.1016/j.toxrep.2025.101890",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-27",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-27"
+     }
+    },
+    "volume": "14",
+    "number": "101890",
+    "PMCID": "PMC11762925"
+   },
+   "doi": "10.1016/j.toxrep.2025.101890",
+   "pmcid": "PMC11762925",
+   "title": "Toxicodynamic insights of 2C and NBOMe drugs - Is there abuse potential?",
+   "year": 2025,
+   "journal": "Toxicology reports",
+   "kind": "review",
+   "people": false,
+   "near": 0.574,
+   "money": [
+    "This work was financed by national funds from FCT - Fundação para a Ciência e a Tecnologia, I.P., in the scope of the project UIDP/04378/2020 and UIDB/04378/2020 of the Research Unit on Applied Molecular Biosciences-UCIBIO and the project LA/P/0140/2020 of the Associate Laboratory Institute for Health and Bioeconomy-i4HB. In addition, this work was also funded by FEDER funds through the Operational Programme Competitiveness Factors-COMPETE and national funds by FCT under research grants UIDB/00081/2020 (CIQUP), LA/P/0056/2020 (IMS) and PT-OPENSCREEN-NORTE-01–0145-FEDER-085468 projects. EGM (SFRH/BD/146527/2019) is supported by an FCT PhD fellowship, DJB (DL57/2016/CP1355/CT0007) and RS (DL57/2016/CP1346/CT0025) are supported by FCT junior researcher positions.",
+    "The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper."
+   ],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "This manuscript provides a comprehensive review of the psychedelic pathways underlying 2C and NBOMe designer drugs, focusing on their interactions with",
+    "text": "A comprehensive review of the psychedelic pathways and toxicodynamic insights of 2C and NBOMe designer drugs."
+   },
+   "findings": [
+    {
+     "passage": 35,
+     "where": "Toxicodynamic of 2C and NBOMe based drugs › In vivo studies › Development of tolerance and cross-tolerance",
+     "quote": "Knowing that frequent administration of psychedelics causes a fast development of tolerance, and cross-tolerance, phenomena, Smith et al. investigated these effects in NIH Swiss mice by measuring the drug-induced HTR with two phenethylamines",
+     "text": "Frequent administration of psychedelics causes a fast development of tolerance and cross-tolerance phenomena.",
+     "id": "F1",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "A"
+  },
   {
    "read": "full",
    "ref": {
@@ -80,10 +166,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-24",
+     "verified_on": "2026-11-27",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-24"
+      "checked_on": "2026-11-27"
      }
     },
     "volume": "25",
@@ -106,16 +192,16 @@
    "design": {
     "passage": 1,
     "where": "Abstract",
-    "quote": "In this review, the current state of preclinical research on the mechanism of action, neurotoxicity, and behavioral impact of psychedelics is summarized.",
-    "text": "review of preclinical research"
+    "quote": "In this review, the current state of preclinical research on the mechanism of action, neurotoxicity, and behavioral impact of psychedelics is summarized. The effect of selective 5-HT2A receptor agonists, 25I- and 25B-NBOMe, after acute and repeated administration is characterized",
+    "text": "A review of preclinical research on the mechanism of action, neurotoxicity, and behavioral impact of psychedelics, specifically 25I- and 25B-NBOMe."
    },
    "findings": [
     {
      "passage": 21,
      "where": "4. NBOMes › 4.4. The Consequences of Repeated Exposure to NBOMes",
-     "quote": "As stated before, frequent exposure to psychedelic drugs leads to rapid induction of tolerance, originating from the downregulation of the 5-HT2A receptor. This was also reported for 25I-NBOMe in rats and 25B-NBOMe in mice.",
+     "quote": "frequent exposure to psychedelic drugs leads to rapid induction of tolerance, originating from the downregulation of the 5-HT2A receptor. This was also reported for 25I-NBOMe in rats and 25B-NBOMe in mice.",
      "text": "Frequent exposure to psychedelic drugs leads to rapid induction of tolerance, which was reported for 25I-NBOMe in rats and 25B-NBOMe in mice.",
-     "id": "F1",
+     "id": "F2",
      "second_hand": ""
     },
     {
@@ -123,20 +209,29 @@
      "where": "Abstract",
      "quote": "Chronic administration of NBOMes elicited rapid development of tolerance, genotoxicity, and activation of microglia.",
      "text": "Chronic administration of NBOMes elicited rapid development of tolerance, genotoxicity, and activation of microglia.",
-     "id": "F2",
+     "id": "F3",
      "second_hand": ""
     },
     {
      "passage": 21,
      "where": "4. NBOMes › 4.4. The Consequences of Repeated Exposure to NBOMes",
-     "quote": "Repeated administration of 25B-NBOMe completely suppressed its effect on cortical glutamatergic and dopaminergic neurotransmission and significantly reduced the effect it induced on extracellular serotonin levels.",
-     "text": "Repeated administration of 25B-NBOMe completely suppressed its effect on cortical glutamatergic and dopaminergic neurotransmission and significantly reduced the effect it induced on extracellular serotonin levels.",
-     "id": "F3",
+     "quote": "The influence of tolerance on the WDS response was similar to 25I-NBOMe, starting with a rapid decline in the number of WDS episodes on the second day of treatment.",
+     "text": "The influence of tolerance on the WDS response was similar to 25I-NBOMe, starting with a rapid decline in the number of WDS episodes on the second day of treatment.",
+     "id": "F4",
      "second_hand": ""
     }
    ],
-   "limits": [],
-   "tag": "A"
+   "limits": [
+    {
+     "passage": 22,
+     "where": "4. NBOMes › 4.4. The Consequences of Repeated Exposure to NBOMes",
+     "quote": "It is important to notice that in the NAC, the observed tolerance was much smaller.",
+     "text": "The observed tolerance to 25B-NBOMe was much smaller in the nucleus accumbens.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "B"
   },
   {
    "read": "page",
@@ -164,14 +259,14 @@
       [
        2026,
        11,
-       24
+       27
       ]
      ]
     },
     "verification": {
      "status": "made by code",
      "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-24"
+     "verified_on": "2026-11-27"
     }
    },
    "title": "NBOMes",
@@ -190,89 +285,47 @@
     {
      "passage": 20,
      "where": "Reducing harm / Tolerance",
-     "quote": "Tolerance to some psychedelics, including NBOMes, develops rapidly. Using NBOMes several days in a row makes the drug much less effective or in some cases stop working entirely.",
-     "text": "Tolerance to NBOMes develops rapidly, and using them several days in a row makes the drug much less effective or in some cases stop working entirely.",
-     "id": "F4",
+     "quote": "Tolerance to some psychedelics, including NBOMes, develops rapidly.",
+     "text": "Tolerance to some psychedelics, including NBOMes, develops rapidly.",
+     "id": "F5",
+     "second_hand": ""
+    },
+    {
+     "passage": 20,
+     "where": "Reducing harm / Tolerance",
+     "quote": "Using NBOMes several days in a row makes the drug much less effective or in some cases stop working entirely.",
+     "text": "Using NBOMes several days in a row makes the drug much less effective or in some cases stop working entirely.",
+     "id": "F6",
+     "second_hand": ""
+    },
+    {
+     "passage": 20,
+     "where": "Reducing harm / Tolerance",
+     "quote": "Tolerance to one psychedelic can also affect others. For example, using NBOMes will reduce the effects of psilocybin (known as cross-tolerance).",
+     "text": "Tolerance to one psychedelic can also affect others, such as using NBOMes reducing the effects of psilocybin.",
+     "id": "F7",
      "second_hand": ""
     }
    ],
    "limits": [],
-   "tag": "B"
+   "tag": "C"
   }
  ],
- "parts": [
-  {
-   "part": "short",
-   "text": "Yes. Tolerance to NBOMes develops rapidly. Using them several days in a row makes the drug much less effective or in some cases stop working entirely.",
-   "uses": [
-    "F4",
-    "F1"
-   ],
-   "rests_on": [
-    {
-     "label": "F4",
-     "ref": "adf_nbomes",
-     "where": "Reducing harm / Tolerance",
-     "quote": "Tolerance to some psychedelics, including NBOMes, develops rapidly. Using NBOMes several days in a row makes the drug much less effective or in some cases stop working entirely.",
-     "sha": "2754551ba2516703"
-    },
-    {
-     "label": "F1",
-     "ref": "wojtas_2023",
-     "where": "4. NBOMes › 4.4. The Consequences of Repeated Exposure to NBOMes",
-     "quote": "As stated before, frequent exposure to psychedelic drugs leads to rapid induction of tolerance, originating from the downregulation of the 5-HT2A receptor. This was also reported for 25I-NBOMe in rats and 25B-NBOMe in mice.",
-     "sha": "4b398fc5de82890c"
-    }
-   ]
-  },
-  {
-   "part": "but",
-   "text": "This was reported for 25I-NBOMe in rats and 25B-NBOMe in mice after frequent exposure.",
-   "uses": [
-    "F1"
-   ],
-   "rests_on": [
-    {
-     "label": "F1",
-     "ref": "wojtas_2023",
-     "where": "4. NBOMes › 4.4. The Consequences of Repeated Exposure to NBOMes",
-     "quote": "As stated before, frequent exposure to psychedelic drugs leads to rapid induction of tolerance, originating from the downregulation of the 5-HT2A receptor. This was also reported for 25I-NBOMe in rats and 25B-NBOMe in mice.",
-     "sha": "4b398fc5de82890c"
-    }
-   ]
-  },
-  {
-   "part": "how2",
-   "text": "A 2023 review of preclinical research found frequent exposure to psychedelic drugs leads to rapid induction of tolerance.",
-   "uses": [
-    "DA",
-    "F1"
-   ],
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "wojtas_2023",
-     "where": "Abstract",
-     "quote": "In this review, the current state of preclinical research on the mechanism of action, neurotoxicity, and behavioral impact of psychedelics is summarized.",
-     "sha": "335be1e8fdc93526"
-    },
-    {
-     "label": "F1",
-     "ref": "wojtas_2023",
-     "where": "4. NBOMes › 4.4. The Consequences of Repeated Exposure to NBOMes",
-     "quote": "As stated before, frequent exposure to psychedelic drugs leads to rapid induction of tolerance, originating from the downregulation of the 5-HT2A receptor. This was also reported for 25I-NBOMe in rats and 25B-NBOMe in mice.",
-     "sha": "4b398fc5de82890c"
-    }
-   ],
-   "quote": "As stated before, frequent exposure to psychedelic drugs leads to rapid induction of tolerance",
-   "quote_ref": "wojtas_2023"
-  }
- ],
- "complete": true,
- "missing": "",
+ "parts": [],
+ "complete": false,
+ "missing": "Human long‑term tolerance evidence",
  "wanted": [],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-24",
+   "lane": 19,
+   "status": "published",
+   "why": "passed every gate",
+   "short": "Yes. Tolerance to NBOMes develops rapidly. Using them several days in a row makes the drug much less effective or in some cases stop working entirely.",
+   "complete": true
+  }
+ ],
  "looked": [
   {
    "title": "25C-NBOMe: preliminary data on pharmacology, psychoactive effects, and toxicity of a new potent and dangerous hallucinogenic drug",
@@ -287,11 +340,11 @@
    "read": "full",
    "kind": "review",
    "at": "10.1016/j.toxrep.2025.101890",
-   "kept": 0,
+   "kept": 1,
    "thrown": [
     {
      "kind": "finding",
-     "text": "Chronic 25I-NBOMe administration (0.3 mg/kg, SC for 7 days) caused a gradual reduction of the WDS response over time, signaling the development of tolerance within the first days of treatment in rats.",
+     "text": "Chronic administration of 25I-NBOMe at 0.3 mg/kg, SC for 7 days caused a gradual reduction of the WDS response over time, signaling the development of tolerance within the first days of treatment.",
      "quote": "Herian et al. reported that chronic 25I-NBOMe administration (0.3 mg/kg, SC for 7 days) caused a gradual reduction of the WDS response over time, signaling the development of tolerance within the firs",
      "why": "it holds an amount or a time between uses"
     }
@@ -310,7 +363,7 @@
    "read": "page",
    "kind": "official",
    "at": "https://adf.org.au/drug-facts/nbomes/",
-   "kept": 1,
+   "kept": 3,
    "thrown": []
   },
   {
@@ -332,39 +385,97 @@
  ],
  "plan": {
   "short": [
-   "F4",
-   "F1"
+   "F5",
+   "F1",
+   "F2"
   ],
   "direct": "Yes",
   "but": [
-   "F1"
+   "L1"
   ],
   "how": [
    [
-    "F4"
+    "F5",
+    "F6"
    ],
    [
     "DA",
     "F1"
+   ],
+   [
+    "DB",
+    "F2",
+    "F3"
    ]
   ],
-  "unanswered": "human evidence"
+  "unanswered": "Human long‑term tolerance evidence"
+ },
+ "panel": {
+  "gemini:gemini-3.5-flash-lite": {
+   "short": [
+    true,
+    ""
+   ],
+   "but": [
+    true,
+    ""
+   ],
+   "how1": [
+    true,
+    ""
+   ],
+   "how2": [
+    true,
+    ""
+   ],
+   "how3": [
+    true,
+    ""
+   ]
+  },
+  "gemini:gemini-3.6-flash": "could not be asked: gemini could not be reached: The read operation timed out",
+  "gemini:gemini-3-flash-preview": {
+   "short": [
+    false,
+    "The sentence is stronger than the passage because it omits the qualifier 'in some cases' and replaces the specific 'several days in a row' with the more general 'often'."
+   ],
+   "but": [
+    true,
+    ""
+   ],
+   "how1": [
+    false,
+    "The sentence copies the source's words and structure too closely instead of using plain words as required by the editor's rule."
+   ],
+   "how2": [
+    false,
+    "The sentence copies the source's words and structure too closely instead of using plain words as required by the editor's rule."
+   ],
+   "how3": [
+    true,
+    ""
+   ]
+  }
  },
  "panel_gap": [],
  "own": {
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.8027,
-   "but": 0.976,
-   "how1": 0.0457,
-   "how2": 0.6564
+   "short": 0.8302,
+   "but": 0.703,
+   "how1": 0.0156,
+   "how2": 0.8005,
+   "how3": 0.378,
+   "how4": 0.8061
   },
   "scores_quotes_alone": {
-   "short": 0.7746,
-   "but": 0.9127,
-   "how1": 0.0683,
-   "how2": 0.9589
+   "short": 0.0263,
+   "but": 0.119,
+   "how1": 0.1006,
+   "how2": 0.5928,
+   "how3": 0.4471,
+   "how4": 0.6523
   }
  },
  "tries": [
@@ -374,74 +485,114 @@
    "parts": [
     {
      "part": "short",
-     "text": "Yes. Tolerance to NBOMes develops rapidly. Using them several days in a row makes the drug much less effective or in some cases stop working entirely.",
+     "text": "Yes, tolerance to NBOMes develops rapidly. Frequent use can make the drug much less effective or stop it working entirely.",
      "rests_on": [
       {
-       "label": "F4",
+       "label": "F5",
        "ref": "adf_nbomes",
        "where": "Reducing harm / Tolerance",
-       "quote": "Tolerance to some psychedelics, including NBOMes, develops rapidly. Using NBOMes several days in a row makes the drug much less effective or in some cases stop working entirely.",
+       "quote": "Tolerance to some psychedelics, including NBOMes, develops rapidly.",
        "sha": "2754551ba2516703"
       },
       {
        "label": "F1",
+       "ref": "gilmartins_2025",
+       "where": "Toxicodynamic of 2C and NBOMe based drugs › In vivo studies › Development of tolerance and cross-tolerance",
+       "quote": "Knowing that frequent administration of psychedelics causes a fast development of tolerance, and cross-tolerance, phenomena, Smith et al. investigated these effects in NIH Swiss mice by measuring the drug-induced HTR with two phenethylamines",
+       "sha": "ade8ddefcd9c6825"
+      },
+      {
+       "label": "F2",
        "ref": "wojtas_2023",
        "where": "4. NBOMes › 4.4. The Consequences of Repeated Exposure to NBOMes",
-       "quote": "As stated before, frequent exposure to psychedelic drugs leads to rapid induction of tolerance, originating from the downregulation of the 5-HT2A receptor. This was also reported for 25I-NBOMe in rats and 25B-NBOMe in mice.",
+       "quote": "frequent exposure to psychedelic drugs leads to rapid induction of tolerance, originating from the downregulation of the 5-HT2A receptor. This was also reported for 25I-NBOMe in rats and 25B-NBOMe in mice.",
        "sha": "4b398fc5de82890c"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.5-flash-lite) did not accept it: The sentence copies wording directly from the source ('Tolerance to ... develops rapidly' and 'makes the drug much less effective or ... stop working entirely')."
+    },
+    {
+     "part": "but",
+     "text": "In one study, the tolerance seen in the nucleus accumbens was much smaller than in other brain areas.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "wojtas_2023",
+       "where": "4. NBOMes › 4.4. The Consequences of Repeated Exposure to NBOMes",
+       "quote": "It is important to notice that in the NAC, the observed tolerance was much smaller.",
+       "sha": "8c674b2719a9876a"
       }
      ],
      "ok": true
     },
     {
-     "part": "but",
-     "text": "This was reported for 25I-NBOMe in rats and 25B-NBOMe in mice after frequent exposure.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "wojtas_2023",
-       "where": "4. NBOMes › 4.4. The Consequences of Repeated Exposure to NBOMes",
-       "quote": "As stated before, frequent exposure to psychedelic drugs leads to rapid induction of tolerance, originating from the downregulation of the 5-HT2A receptor. This was also reported for 25I-NBOMe in rats and 25B-NBOMe in mice.",
-       "sha": "4b398fc5de82890c"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "it is about something else than the short answer"
-    },
-    {
      "part": "how1",
-     "text": "Australia's Alcohol and Drug Foundation says tolerance to some psychedelics, including NBOMes, develops rapidly.",
+     "text": "Australia's Alcohol and Drug Foundation says using NBOMes several days in a row makes them much less effective or stop working.",
      "rests_on": [
       {
-       "label": "F4",
+       "label": "F5",
        "ref": "adf_nbomes",
        "where": "Reducing harm / Tolerance",
-       "quote": "Tolerance to some psychedelics, including NBOMes, develops rapidly. Using NBOMes several days in a row makes the drug much less effective or in some cases stop working entirely.",
+       "quote": "Tolerance to some psychedelics, including NBOMes, develops rapidly.",
+       "sha": "2754551ba2516703"
+      },
+      {
+       "label": "F6",
+       "ref": "adf_nbomes",
+       "where": "Reducing harm / Tolerance",
+       "quote": "Using NBOMes several days in a row makes the drug much less effective or in some cases stop working entirely.",
        "sha": "2754551ba2516703"
       }
      ],
-     "ok": false,
-     "by": "our own checker",
-     "said": "our own checker does not find it in the words it rests on (0.05): say only what those words say, in their own measure"
+     "ok": true
     },
     {
      "part": "how2",
-     "text": "A 2023 review of preclinical research found frequent exposure to psychedelic drugs leads to rapid induction of tolerance.",
+     "text": "A 2025 review notes that frequent use of psychedelics causes fast tolerance, based on mouse studies.",
      "rests_on": [
       {
        "label": "DA",
-       "ref": "wojtas_2023",
+       "ref": "gilmartins_2025",
        "where": "Abstract",
-       "quote": "In this review, the current state of preclinical research on the mechanism of action, neurotoxicity, and behavioral impact of psychedelics is summarized.",
-       "sha": "335be1e8fdc93526"
+       "quote": "This manuscript provides a comprehensive review of the psychedelic pathways underlying 2C and NBOMe designer drugs, focusing on their interactions with",
+       "sha": "dc5ad4d937f77305"
       },
       {
        "label": "F1",
+       "ref": "gilmartins_2025",
+       "where": "Toxicodynamic of 2C and NBOMe based drugs › In vivo studies › Development of tolerance and cross-tolerance",
+       "quote": "Knowing that frequent administration of psychedelics causes a fast development of tolerance, and cross-tolerance, phenomena, Smith et al. investigated these effects in NIH Swiss mice by measuring the drug-induced HTR with two phenethylamines",
+       "sha": "ade8ddefcd9c6825"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2023 review of animal research found rapid tolerance in rats and mice after repeated NBOMe exposure.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "wojtas_2023",
+       "where": "Abstract",
+       "quote": "In this review, the current state of preclinical research on the mechanism of action, neurotoxicity, and behavioral impact of psychedelics is summarized. The effect of selective 5-HT2A receptor agonists, 25I- and 25B-NBOMe, after acute and repeated administration is characterized",
+       "sha": "335be1e8fdc93526"
+      },
+      {
+       "label": "F2",
        "ref": "wojtas_2023",
        "where": "4. NBOMes › 4.4. The Consequences of Repeated Exposure to NBOMes",
-       "quote": "As stated before, frequent exposure to psychedelic drugs leads to rapid induction of tolerance, originating from the downregulation of the 5-HT2A receptor. This was also reported for 25I-NBOMe in rats and 25B-NBOMe in mice.",
+       "quote": "frequent exposure to psychedelic drugs leads to rapid induction of tolerance, originating from the downregulation of the 5-HT2A receptor. This was also reported for 25I-NBOMe in rats and 25B-NBOMe in mice.",
        "sha": "4b398fc5de82890c"
+      },
+      {
+       "label": "F3",
+       "ref": "wojtas_2023",
+       "where": "Abstract",
+       "quote": "Chronic administration of NBOMes elicited rapid development of tolerance, genotoxicity, and activation of microglia.",
+       "sha": "335be1e8fdc93526"
       }
      ],
      "ok": true
@@ -454,74 +605,249 @@
    "parts": [
     {
      "part": "short",
-     "text": "Yes. Tolerance to NBOMes develops rapidly. Using them several days in a row makes the drug much less effective or in some cases stop working entirely.",
+     "text": "Yes, people can build up a tolerance to NBOMes. Using them often makes the drug work less well or stop working at all.",
      "rests_on": [
       {
-       "label": "F4",
+       "label": "F5",
        "ref": "adf_nbomes",
        "where": "Reducing harm / Tolerance",
-       "quote": "Tolerance to some psychedelics, including NBOMes, develops rapidly. Using NBOMes several days in a row makes the drug much less effective or in some cases stop working entirely.",
+       "quote": "Tolerance to some psychedelics, including NBOMes, develops rapidly.",
        "sha": "2754551ba2516703"
       },
       {
        "label": "F1",
+       "ref": "gilmartins_2025",
+       "where": "Toxicodynamic of 2C and NBOMe based drugs › In vivo studies › Development of tolerance and cross-tolerance",
+       "quote": "Knowing that frequent administration of psychedelics causes a fast development of tolerance, and cross-tolerance, phenomena, Smith et al. investigated these effects in NIH Swiss mice by measuring the drug-induced HTR with two phenethylamines",
+       "sha": "ade8ddefcd9c6825"
+      },
+      {
+       "label": "F2",
        "ref": "wojtas_2023",
        "where": "4. NBOMes › 4.4. The Consequences of Repeated Exposure to NBOMes",
-       "quote": "As stated before, frequent exposure to psychedelic drugs leads to rapid induction of tolerance, originating from the downregulation of the 5-HT2A receptor. This was also reported for 25I-NBOMe in rats and 25B-NBOMe in mice.",
+       "quote": "frequent exposure to psychedelic drugs leads to rapid induction of tolerance, originating from the downregulation of the 5-HT2A receptor. This was also reported for 25I-NBOMe in rats and 25B-NBOMe in mice.",
        "sha": "4b398fc5de82890c"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3-flash-preview) did not accept it: The sentence is stronger than the passage because it omits the qualifier 'in some cases' and replaces the specific 'several days in a row' with the more general 'often'."
+    },
+    {
+     "part": "but",
+     "text": "In one study, the drop in effect was much smaller in a specific part of the brain called the nucleus accumbens.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "wojtas_2023",
+       "where": "4. NBOMes › 4.4. The Consequences of Repeated Exposure to NBOMes",
+       "quote": "It is important to notice that in the NAC, the observed tolerance was much smaller.",
+       "sha": "8c674b2719a9876a"
       }
      ],
      "ok": true
     },
     {
-     "part": "but",
-     "text": "This was reported for 25I-NBOMe in rats and 25B-NBOMe in mice after frequent exposure.",
+     "part": "how1",
+     "text": "Australia's Alcohol and Drug Foundation says using NBOMes several days in a row makes them much less effective or stop working.",
      "rests_on": [
       {
+       "label": "F5",
+       "ref": "adf_nbomes",
+       "where": "Reducing harm / Tolerance",
+       "quote": "Tolerance to some psychedelics, including NBOMes, develops rapidly.",
+       "sha": "2754551ba2516703"
+      },
+      {
+       "label": "F6",
+       "ref": "adf_nbomes",
+       "where": "Reducing harm / Tolerance",
+       "quote": "Using NBOMes several days in a row makes the drug much less effective or in some cases stop working entirely.",
+       "sha": "2754551ba2516703"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "Sentence copies the source wording rather than paraphrasing, violating the editor's instruction to avoid copying source sentences."
+    },
+    {
+     "part": "how2",
+     "text": "A 2025 review of 2C and NBOMe drugs notes that frequent use causes a fast development of tolerance and cross-tolerance.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "gilmartins_2025",
+       "where": "Abstract",
+       "quote": "This manuscript provides a comprehensive review of the psychedelic pathways underlying 2C and NBOMe designer drugs, focusing on their interactions with",
+       "sha": "dc5ad4d937f77305"
+      },
+      {
        "label": "F1",
+       "ref": "gilmartins_2025",
+       "where": "Toxicodynamic of 2C and NBOMe based drugs › In vivo studies › Development of tolerance and cross-tolerance",
+       "quote": "Knowing that frequent administration of psychedelics causes a fast development of tolerance, and cross-tolerance, phenomena, Smith et al. investigated these effects in NIH Swiss mice by measuring the drug-induced HTR with two phenethylamines",
+       "sha": "ade8ddefcd9c6825"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3-flash-preview) did not accept it: The sentence copies the source's words and structure too closely instead of using plain words as required by the editor's rule."
+    },
+    {
+     "part": "how3",
+     "text": "A 2023 review of animal research found that frequent exposure to 25I- and 25B-NBOMe led to rapid tolerance in rats and mice.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "wojtas_2023",
+       "where": "Abstract",
+       "quote": "In this review, the current state of preclinical research on the mechanism of action, neurotoxicity, and behavioral impact of psychedelics is summarized. The effect of selective 5-HT2A receptor agonists, 25I- and 25B-NBOMe, after acute and repeated administration is characterized",
+       "sha": "335be1e8fdc93526"
+      },
+      {
+       "label": "F2",
        "ref": "wojtas_2023",
        "where": "4. NBOMes › 4.4. The Consequences of Repeated Exposure to NBOMes",
-       "quote": "As stated before, frequent exposure to psychedelic drugs leads to rapid induction of tolerance, originating from the downregulation of the 5-HT2A receptor. This was also reported for 25I-NBOMe in rats and 25B-NBOMe in mice.",
+       "quote": "frequent exposure to psychedelic drugs leads to rapid induction of tolerance, originating from the downregulation of the 5-HT2A receptor. This was also reported for 25I-NBOMe in rats and 25B-NBOMe in mice.",
+       "sha": "4b398fc5de82890c"
+      },
+      {
+       "label": "F3",
+       "ref": "wojtas_2023",
+       "where": "Abstract",
+       "quote": "Chronic administration of NBOMes elicited rapid development of tolerance, genotoxicity, and activation of microglia.",
+       "sha": "335be1e8fdc93526"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Yes, tolerance to NBOMes develops rapidly. Using them several days in a row makes the drug much less effective or, in some cases, stop working entirely.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "adf_nbomes",
+       "where": "Reducing harm / Tolerance",
+       "quote": "Tolerance to some psychedelics, including NBOMes, develops rapidly.",
+       "sha": "2754551ba2516703"
+      },
+      {
+       "label": "F1",
+       "ref": "gilmartins_2025",
+       "where": "Toxicodynamic of 2C and NBOMe based drugs › In vivo studies › Development of tolerance and cross-tolerance",
+       "quote": "Knowing that frequent administration of psychedelics causes a fast development of tolerance, and cross-tolerance, phenomena, Smith et al. investigated these effects in NIH Swiss mice by measuring the drug-induced HTR with two phenethylamines",
+       "sha": "ade8ddefcd9c6825"
+      },
+      {
+       "label": "F2",
+       "ref": "wojtas_2023",
+       "where": "4. NBOMes › 4.4. The Consequences of Repeated Exposure to NBOMes",
+       "quote": "frequent exposure to psychedelic drugs leads to rapid induction of tolerance, originating from the downregulation of the 5-HT2A receptor. This was also reported for 25I-NBOMe in rats and 25B-NBOMe in mice.",
        "sha": "4b398fc5de82890c"
       }
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "it is about something else than the short answer"
+     "said": "Sentence copies source wording (more than 15 words) rather than paraphrasing."
+    },
+    {
+     "part": "but",
+     "text": "In one study, the tolerance seen in the nucleus accumbens was much smaller than in other brain areas.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "wojtas_2023",
+       "where": "4. NBOMes › 4.4. The Consequences of Repeated Exposure to NBOMes",
+       "quote": "It is important to notice that in the NAC, the observed tolerance was much smaller.",
+       "sha": "8c674b2719a9876a"
+      }
+     ],
+     "ok": true
     },
     {
      "part": "how1",
      "text": "Australia's Alcohol and Drug Foundation says tolerance to some psychedelics, including NBOMes, develops rapidly.",
      "rests_on": [
       {
-       "label": "F4",
+       "label": "F5",
        "ref": "adf_nbomes",
        "where": "Reducing harm / Tolerance",
-       "quote": "Tolerance to some psychedelics, including NBOMes, develops rapidly. Using NBOMes several days in a row makes the drug much less effective or in some cases stop working entirely.",
+       "quote": "Tolerance to some psychedelics, including NBOMes, develops rapidly.",
        "sha": "2754551ba2516703"
       }
      ],
      "ok": false,
-     "by": "our own checker",
-     "said": "our own checker does not find it in the words it rests on (0.05): say only what those words say, in their own measure"
+     "by": "the second reader",
+     "said": "Sentence copies source wording (more than 15 words) rather than paraphrasing."
     },
     {
      "part": "how2",
-     "text": "A 2023 review of preclinical research found frequent exposure to psychedelic drugs leads to rapid induction of tolerance.",
+     "text": "The same page says using NBOMes several days in a row makes the drug much less effective or stop working entirely.",
+     "rests_on": [
+      {
+       "label": "F6",
+       "ref": "adf_nbomes",
+       "where": "Reducing harm / Tolerance",
+       "quote": "Using NBOMes several days in a row makes the drug much less effective or in some cases stop working entirely.",
+       "sha": "2754551ba2516703"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "Sentence copies source wording (more than 15 words) rather than paraphrasing."
+    },
+    {
+     "part": "how3",
+     "text": "A 2025 review notes that frequent use of psychedelics causes fast tolerance, citing mouse studies on 2C and NBOMe drugs.",
      "rests_on": [
       {
        "label": "DA",
-       "ref": "wojtas_2023",
+       "ref": "gilmartins_2025",
        "where": "Abstract",
-       "quote": "In this review, the current state of preclinical research on the mechanism of action, neurotoxicity, and behavioral impact of psychedelics is summarized.",
-       "sha": "335be1e8fdc93526"
+       "quote": "This manuscript provides a comprehensive review of the psychedelic pathways underlying 2C and NBOMe designer drugs, focusing on their interactions with",
+       "sha": "dc5ad4d937f77305"
       },
       {
        "label": "F1",
+       "ref": "gilmartins_2025",
+       "where": "Toxicodynamic of 2C and NBOMe based drugs › In vivo studies › Development of tolerance and cross-tolerance",
+       "quote": "Knowing that frequent administration of psychedelics causes a fast development of tolerance, and cross-tolerance, phenomena, Smith et al. investigated these effects in NIH Swiss mice by measuring the drug-induced HTR with two phenethylamines",
+       "sha": "ade8ddefcd9c6825"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how4",
+     "text": "A 2023 review of animal research says frequent exposure to 25I- and 25B-NBOMe leads to rapid tolerance in rats and mice.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "wojtas_2023",
+       "where": "Abstract",
+       "quote": "In this review, the current state of preclinical research on the mechanism of action, neurotoxicity, and behavioral impact of psychedelics is summarized. The effect of selective 5-HT2A receptor agonists, 25I- and 25B-NBOMe, after acute and repeated administration is characterized",
+       "sha": "335be1e8fdc93526"
+      },
+      {
+       "label": "F2",
        "ref": "wojtas_2023",
        "where": "4. NBOMes › 4.4. The Consequences of Repeated Exposure to NBOMes",
-       "quote": "As stated before, frequent exposure to psychedelic drugs leads to rapid induction of tolerance, originating from the downregulation of the 5-HT2A receptor. This was also reported for 25I-NBOMe in rats and 25B-NBOMe in mice.",
+       "quote": "frequent exposure to psychedelic drugs leads to rapid induction of tolerance, originating from the downregulation of the 5-HT2A receptor. This was also reported for 25I-NBOMe in rats and 25B-NBOMe in mice.",
        "sha": "4b398fc5de82890c"
+      },
+      {
+       "label": "F3",
+       "ref": "wojtas_2023",
+       "where": "Abstract",
+       "quote": "Chronic administration of NBOMes elicited rapid development of tolerance, genotoxicity, and activation of microglia.",
+       "sha": "335be1e8fdc93526"
       }
      ],
      "ok": true
@@ -529,26 +855,6 @@
    ]
   }
  ],
- "panel": {
-  "gemini:gemini-3.6-flash": {
-   "short": [
-    true,
-    ""
-   ],
-   "but": [
-    true,
-    ""
-   ],
-   "how1": [
-    false,
-    "The passages name the 'Alcohol and Drug Foundation', but do not state that it is 'Australia's'."
-   ],
-   "how2": [
-    true,
-    ""
-   ]
-  }
- },
  "dropped": [
   {
    "try": 3,
@@ -556,21 +862,33 @@
    "text": "Australia's Alcohol and Drug Foundation says tolerance to some psychedelics, including NBOMes, develops rapidly.",
    "rests_on": [
     {
-     "label": "F4",
+     "label": "F5",
      "ref": "adf_nbomes",
      "where": "Reducing harm / Tolerance",
-     "quote": "Tolerance to some psychedelics, including NBOMes, develops rapidly. Using NBOMes several days in a row makes the drug much less effective or in some cases stop working entirely.",
+     "quote": "Tolerance to some psychedelics, including NBOMes, develops rapidly.",
      "sha": "2754551ba2516703"
     }
    ],
-   "by": "a further reader",
-   "said": "a further reader (gemini-3.6-flash) did not accept it: The passages name the 'Alcohol and Drug Foundation', but do not state that it is 'Australia's'."
+   "by": "the second reader",
+   "said": "Sentence copies source wording (more than 15 words) rather than paraphrasing."
+  },
+  {
+   "try": 3,
+   "part": "how2",
+   "text": "The same page says using NBOMes several days in a row makes the drug much less effective or stop working entirely.",
+   "rests_on": [
+    {
+     "label": "F6",
+     "ref": "adf_nbomes",
+     "where": "Reducing harm / Tolerance",
+     "quote": "Using NBOMes several days in a row makes the drug much less effective or in some cases stop working entirely.",
+     "sha": "2754551ba2516703"
+    }
+   ],
+   "by": "the second reader",
+   "said": "Sentence copies source wording (more than 15 words) rather than paraphrasing."
   }
  ],
- "with_checked": {
-  "differs": [],
-  "same": []
- },
  "place": {
   "home": "new:NBOMes",
   "also": [],
