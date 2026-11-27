@@ -17,37 +17,41 @@
   "pcp"
  ],
  "made": {
-  "on": "2026-11-26",
+  "on": "2026-11-27",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
-   "writer": "openrouter:meta-llama/llama-3.3-70b-instruct",
-   "checker": "openrouter:openai/gpt-oss-120b",
-   "planner": "openrouter:openai/gpt-oss-120b",
-   "team": "team R",
+   "reader": "gemini:gemini-3.5-flash-lite",
+   "writer": "groq:qwen/qwen3.8-27b",
+   "checker": "groq:openai/gpt-oss-120b",
+   "planner": "groq:openai/gpt-oss-120b",
+   "also1": "gemini:gemini-3.5-flash-lite",
+   "also2": "gemini:gemini-3.6-flash",
+   "team": "team I",
    "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "writer_2": "groq:qwen/qwen3.8-27b"
+   "reader_3": "openrouter:meta-llama/llama-3.3-70b-instruct",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "45885068479",
-  "read_seconds": 44,
+  "run": "46021134581",
+  "read_by": {
+   "gemini-3.5-flash-lite": 4,
+   "gemini-3.1-flash-lite": 3
+  },
+  "read_seconds": 21,
   "from": {
-   "papers": 1,
+   "papers": 2,
    "summaries": 0,
    "official": 2
   },
   "neurons": 0.0,
-  "seconds": 102
+  "seconds": 86
  },
- "status": "published",
- "why": "passed every gate",
+ "status": "none",
+ "why": "no draft passed: not accepted at try 2: a second reader did not accept short (The sentence adds uncertainty ('may feel') that is not stated in the passages, which say regular users definitely feel the need.); but (The passages do not mention that FRANK is an information page rather than a study, nor that it lacks data on how many people become addicted.). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
  "gates": {
-  "read": "6 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 2 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
-  "told": "the writer was told what the readers said of the last draft that was not accepted: the short answer “Yes. A 2024 review says addiction with withdrawal signs has been discussed for PCP. A 2025 case report diagnosed one person with phencyclidine use disorder.”: the word it opens with (“Yes”) is not the answer the passages bear out: The passages only state that addiction has been *di",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.97, but 0.99, how1 0.83, how2 0.97, how3 0.90",
-  "check": "every sentence kept was accepted by the second reader (openrouter:openai/gpt-oss-120b); 1 How-do-we-know line(s) dropped",
-  "but": "the writer's But was not accepted (it is about something else than the short answer (The opening word 'Yes' correctly reflects the passages that state PCP can be addictive, so it fairly answers t): the code wrote the But itself, from what this answer rests on",
-  "rules": "nothing against it",
-  "checked": "set beside the checked claims of the same page: nothing against them"
+  "read": "8 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 1 case report(s) (which do not count), 0 other paper(s), 2 official page(s), 0 paper(s) read in summary only",
+  "rules": "broken at try 3: short: words that are not person-first (“users”); how3: words that are not person-first (“users”); how4: words that are not person-first (“users”)",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.97, but 0.09, how1 0.85, how2 0.88",
+  "check": "not accepted at try 2: a second reader did not accept short (The sentence adds uncertainty ('may feel') that is not stated in the passages, which say regular users definitely feel the need.); but (The passages do not mention that FRANK is an information page rather than a study, nor that it lacks data on how many people become addicted.). Say only what the items say, answer the question itself, and let the But be a limit of that answer."
  },
  "sources": [
   {
@@ -100,10 +104,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-26",
+     "verified_on": "2026-11-27",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-26"
+      "checked_on": "2026-11-27"
      }
     },
     "volume": "17",
@@ -141,15 +145,135 @@
    ],
    "limits": [
     {
-     "passage": 14,
-     "where": "1. Introduction › 1.2. About 3-Methoxy-Phencyclidine › 1.2.2. Intoxication and Clinical Manifestations",
-     "quote": "Although data on the toxicity profile of chronic consumption are still inconsistent, bladder and liver damage, digestive disorders with significant abdominal pain, and neurological symptoms (including memory and attention deficits, blunted reactivity, impaired perception of time, and color) may characterize the prolonged use of 3-MeO-PCP.",
-     "text": "Data on the toxicity profile of chronic consumption are still inconsistent.",
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "Despite several cases of intoxication and death reported in the literature, little is known about substance-induced psychotic disorders (SIP) and potential cognitive impairment following 3-MeO-PCP intake.",
+     "text": "Little is known about substance-induced psychotic disorders and potential cognitive impairment following 3-MeO-PCP intake.",
      "id": "L1",
      "second_hand": ""
     }
    ],
    "tag": "A"
+  },
+  {
+   "read": "full",
+   "ref": {
+    "id": "zhou_2025",
+    "type": "article-journal",
+    "title": "Severe tremors induced by tiletamine e-cigarette and alcohol use: A case report",
+    "author": [
+     {
+      "family": "Zhou",
+      "given": "Bojie"
+     },
+     {
+      "family": "Yang",
+      "given": "Shanghao"
+     },
+     {
+      "family": "Zhou",
+      "given": "Xiafeng"
+     },
+     {
+      "family": "Chen",
+      "given": "Qian"
+     },
+     {
+      "family": "Tu",
+      "given": "Ewen"
+     },
+     {
+      "family": "Zhang",
+      "given": "Bo"
+     },
+     {
+      "family": "Shi",
+      "given": "Li"
+     },
+     {
+      "family": "Zhou",
+      "given": "Xuhui"
+     }
+    ],
+    "container-title": "Frontiers in Psychiatry",
+    "issued": {
+     "date-parts": [
+      [
+       2025
+      ]
+     ]
+    },
+    "DOI": "10.3389/fpsyt.2025.1537822",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-27",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-27"
+     }
+    },
+    "volume": "16",
+    "number": "1537822",
+    "PMCID": "PMC12004490"
+   },
+   "doi": "10.3389/fpsyt.2025.1537822",
+   "pmcid": "PMC12004490",
+   "title": "Severe tremors induced by tiletamine e-cigarette and alcohol use: a case report",
+   "year": 2025,
+   "journal": "Frontiers in psychiatry",
+   "kind": "case",
+   "people": true,
+   "near": 0.515,
+   "money": [
+    "The author(s) declare that financial support was received for the research and/or publication of this article. This work was financially supported by the Clinical Research Center For Addiction Disorder in Hunan Province (No. 2023SK4055), the Scientific Research Project of the Hunan Health Commission (No. A202303096949), the Foundation of Hunan Provincial Administration of Traditional Chinese Medicine (No. B2024102), Hunan Provincial Health High-Level Talent Scientific Research Project (No. R2023178), National Cultivation Project of Key Clinical Specialty (Addiction medicine), Hunan Province clinical key specialty (Addiction medicine), Key Clinical Specialty Construction Project of the Hunan Health Commission (Improvement of Diagnosis and Treatment Ability of Severe Psychiatric Diseases in Hunan Province).",
+    "The authors declare that the research was conducted in the absence of any commercial or financial relationships that could be construed as a potential conflict of interest."
+   ],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "This case report aims to provide further insight into the clinical manifestations and treatment of tiletamine abuse, particularly focusing on the tremors induced by polydrug use.",
+    "text": "a case report of a patient"
+   },
+   "findings": [
+    {
+     "passage": 18,
+     "where": "Discussion",
+     "quote": "Animal studies have shown that prior exposure to alcohol significantly enhances Zoletil place preference and self-administration, highlighting the cross-addiction and compensatory effects between ethanol and NMDA antagonists.",
+     "text": "In animal studies, prior exposure to alcohol significantly enhances Zoletil place preference and self-administration, highlighting the cross-addiction and compensatory effects between ethanol and NMDA antagonists.",
+     "id": "F2",
+     "second_hand": "Animal studies have shown that prior exposure to alcohol significantly enhances Zoletil place preference and self-administration, highlighting the cross-addiction and compensatory "
+    },
+    {
+     "passage": 22,
+     "where": "Conclusion",
+     "quote": "Polysubstance abusers, particularly those using NMDA antagonists and GABA-A agonists, could be at increased risk of developing addiction to tiletamine.",
+     "text": "Polysubstance users, particularly those using NMDA antagonists and GABA-A agonists, could be at increased risk of developing addiction to tiletamine.",
+     "id": "F3",
+     "second_hand": ""
+    },
+    {
+     "passage": 18,
+     "where": "Discussion",
+     "quote": "This cross-addiction may lead to increased consumption of both substances at high doses, potentially explaining the heightened severity of tremors.",
+     "text": "This cross-addiction may lead to increased consumption of both substances at high doses, potentially explaining the heightened severity of tremors.",
+     "id": "F4",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 21,
+     "where": "Discussion",
+     "quote": "Due to constraints in testing methods, we were unable to conduct drug testing for tiletamine or quantify its amount in the e-cigarette.",
+     "text": "Due to constraints in testing methods, it was not possible to conduct drug testing for tiletamine or quantify its amount in the e-cigarette.",
+     "id": "L2",
+     "second_hand": ""
+    }
+   ],
+   "tag": "B"
   },
   {
    "read": "page",
@@ -177,14 +301,14 @@
       [
        2026,
        11,
-       26
+       27
       ]
      ]
     },
     "verification": {
      "status": "made by code",
      "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-26"
+     "verified_on": "2026-11-27"
     },
     "publisher": "Government of Canada"
    },
@@ -204,9 +328,17 @@
     {
      "passage": 12,
      "where": "Substance use disorders and withdrawal",
-     "quote": "PCP can be addictive. Repeated use can lead to developing a tolerance for PCP. If you stop taking PCP abruptly after prolonged use, you may have symptoms of withdrawal.",
-     "text": "PCP can be addictive, and repeated use can lead to developing a tolerance along with withdrawal symptoms if stopped abruptly after prolonged use.",
-     "id": "F4",
+     "quote": "PCP can be addictive. Repeated use can lead to developing a tolerance for PCP.",
+     "text": "PCP can be addictive and repeated use can lead to developing a tolerance for the drug.",
+     "id": "F5",
+     "second_hand": ""
+    },
+    {
+     "passage": 12,
+     "where": "Substance use disorders and withdrawal",
+     "quote": "If you stop taking PCP abruptly after prolonged use, you may have symptoms of withdrawal. These include: sweating; headaches; cravings for the drug",
+     "text": "Stopping PCP abruptly after prolonged use may cause withdrawal symptoms including sweating, headaches, and cravings for the drug.",
+     "id": "F6",
      "second_hand": ""
     }
    ],
@@ -235,14 +367,14 @@
       [
        2026,
        11,
-       26
+       27
       ]
      ]
     },
     "verification": {
      "status": "made by code",
      "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-26"
+     "verified_on": "2026-11-27"
     }
    },
    "title": "PCP",
@@ -262,16 +394,16 @@
      "passage": 10,
      "where": "Mixing PCP with other drugs / Can you get addicted?",
      "quote": "Yes, you can become addicted to PCP. This means that regular users feel the need to keep taking PCP, in spite of the risks.",
-     "text": "People can become addicted to PCP, which means regular users feel the need to keep taking it despite the risks.",
-     "id": "F5",
+     "text": "People can become addicted to PCP, which means that regular users feel the need to keep taking PCP despite the risks.",
+     "id": "F7",
      "second_hand": ""
     },
     {
      "passage": 10,
      "where": "Mixing PCP with other drugs / Can you get addicted?",
      "quote": "Regular users can also develop tolerance to PCP, which means they need to take increasing amounts to get the same effects.",
-     "text": "Regular users can develop tolerance to PCP, meaning they need to take increasing amounts to get the same effects.",
-     "id": "F6",
+     "text": "Regular users can also develop tolerance to PCP, meaning they need to take increasing amounts to achieve the same effects.",
+     "id": "F8",
      "second_hand": ""
     }
    ],
@@ -279,126 +411,8 @@
    "tag": "D"
   }
  ],
- "parts": [
-  {
-   "part": "short",
-   "text": "Yes. PCP can be addictive.",
-   "uses": [
-    "F4",
-    "F5",
-    "F1"
-   ],
-   "rests_on": [
-    {
-     "label": "F4",
-     "ref": "healthcanada_pcp",
-     "where": "Substance use disorders and withdrawal",
-     "quote": "PCP can be addictive. Repeated use can lead to developing a tolerance for PCP. If you stop taking PCP abruptly after prolonged use, you may have symptoms of withdrawal.",
-     "sha": "81fc960d208b31ec"
-    },
-    {
-     "label": "F5",
-     "ref": "frank_pcp",
-     "where": "Mixing PCP with other drugs / Can you get addicted?",
-     "quote": "Yes, you can become addicted to PCP. This means that regular users feel the need to keep taking PCP, in spite of the risks.",
-     "sha": "f0fa2f03e22401d9"
-    },
-    {
-     "label": "F1",
-     "ref": "pepe_2024",
-     "where": "1. Introduction › 1.2. About 3-Methoxy-Phencyclidine › 1.2.3. The Effects of Other PCP-Derivatives and Novel Dissociative Compounds",
-     "quote": "The development of addiction with withdrawal signs and symptoms has been discussed for both PCP/PCP-analogues and ketamine",
-     "sha": "e8666ad99d35c3b4"
-    }
-   ]
-  },
-  {
-   "part": "but",
-   "text": "This rests on 1 review and 2 official pages.",
-   "uses": [
-    "DA",
-    "F4",
-    "F5"
-   ],
-   "fixed": true,
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "pepe_2024",
-     "where": "Abstract",
-     "quote": "This literature review aimed to summarize available evidence about 3-MeO-PCP mechanisms of action and physical and psychotropic effects",
-     "sha": "d568d6e66f46757d"
-    },
-    {
-     "label": "F4",
-     "ref": "healthcanada_pcp",
-     "where": "Substance use disorders and withdrawal",
-     "quote": "PCP can be addictive. Repeated use can lead to developing a tolerance for PCP. If you stop taking PCP abruptly after prolonged use, you may have symptoms of withdrawal.",
-     "sha": "81fc960d208b31ec"
-    },
-    {
-     "label": "F5",
-     "ref": "frank_pcp",
-     "where": "Mixing PCP with other drugs / Can you get addicted?",
-     "quote": "Yes, you can become addicted to PCP. This means that regular users feel the need to keep taking PCP, in spite of the risks.",
-     "sha": "f0fa2f03e22401d9"
-    }
-   ]
-  },
-  {
-   "part": "how2",
-   "text": "FRANK says people can become addicted to PCP and feel the need to keep taking it.",
-   "uses": [
-    "F5",
-    "F6"
-   ],
-   "rests_on": [
-    {
-     "label": "F5",
-     "ref": "frank_pcp",
-     "where": "Mixing PCP with other drugs / Can you get addicted?",
-     "quote": "Yes, you can become addicted to PCP. This means that regular users feel the need to keep taking PCP, in spite of the risks.",
-     "sha": "f0fa2f03e22401d9"
-    },
-    {
-     "label": "F6",
-     "ref": "frank_pcp",
-     "where": "Mixing PCP with other drugs / Can you get addicted?",
-     "quote": "Regular users can also develop tolerance to PCP, which means they need to take increasing amounts to get the same effects.",
-     "sha": "f0fa2f03e22401d9"
-    }
-   ],
-   "quote": "which means they need to take increasing amounts to get the same effects",
-   "quote_ref": "frank_pcp"
-  },
-  {
-   "part": "how3",
-   "text": "A 2024 review discussed the development of addiction with withdrawal signs and symptoms for PCP.",
-   "uses": [
-    "DA",
-    "F1"
-   ],
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "pepe_2024",
-     "where": "Abstract",
-     "quote": "This literature review aimed to summarize available evidence about 3-MeO-PCP mechanisms of action and physical and psychotropic effects",
-     "sha": "d568d6e66f46757d"
-    },
-    {
-     "label": "F1",
-     "ref": "pepe_2024",
-     "where": "1. Introduction › 1.2. About 3-Methoxy-Phencyclidine › 1.2.3. The Effects of Other PCP-Derivatives and Novel Dissociative Compounds",
-     "quote": "The development of addiction with withdrawal signs and symptoms has been discussed for both PCP/PCP-analogues and ketamine",
-     "sha": "e8666ad99d35c3b4"
-    }
-   ],
-   "quote": "The development of addiction with withdrawal signs and symptoms has been discussed for both PCP/PCP-analogues",
-   "quote_ref": "pepe_2024"
-  }
- ],
- "complete": true,
+ "parts": [],
+ "complete": false,
  "missing": "",
  "wanted": [
   {
@@ -432,6 +446,14 @@
    "why": "the second reader did not accept the answer",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-26",
+   "lane": 19,
+   "status": "published",
+   "why": "passed every gate",
+   "short": "Yes. PCP can be addictive.",
+   "complete": true
   }
  ],
  "looked": [
@@ -472,7 +494,7 @@
    "read": "full",
    "kind": "case",
    "at": "10.3389/fpsyt.2025.1537822",
-   "kept": 2,
+   "kept": 3,
    "thrown": []
   },
   {
@@ -480,7 +502,7 @@
    "read": "page",
    "kind": "official",
    "at": "https://www.canada.ca/en/health-canada/services/substance-use/controlled-illegal-drugs/pcp.html",
-   "kept": 1,
+   "kept": 2,
    "thrown": []
   },
   {
@@ -494,19 +516,19 @@
  ],
  "plan": {
   "short": [
-   "F4",
    "F5",
-   "F1"
+   "F7"
   ],
   "direct": "Yes",
   "but": [],
   "how": [
    [
-    "F4"
-   ],
-   [
     "F5",
     "F6"
+   ],
+   [
+    "F7",
+    "F8"
    ],
    [
     "DA",
@@ -515,131 +537,107 @@
   ],
   "unanswered": ""
  },
- "panel_gap": [],
- "own": {
-  "model": "pharmakon-check-0",
-  "threshold": 0.05,
-  "scores": {
-   "short": 0.97,
-   "but": 0.9874,
-   "how1": 0.8307,
-   "how2": 0.9661,
-   "how3": 0.8997
-  },
-  "scores_quotes_alone": {
-   "short": 0.9426,
-   "but": 0.9888,
-   "how1": 0.648,
-   "how2": 0.9691,
-   "how3": 0.7347
-  }
- },
  "tries": [
   {
    "try": 1,
-   "why": "the short answer or the But was not accepted: written again",
+   "why": "a rule was broken: written again",
    "parts": [
     {
      "part": "short",
-     "text": "Yes. PCP can be addictive, people can become addicted to it, and the development of addiction has been discussed.",
+     "text": "Yes, PCP can be addictive. Regular users can feel the need to keep taking it despite the risks.",
      "rests_on": [
       {
-       "label": "F4",
+       "label": "F5",
        "ref": "healthcanada_pcp",
        "where": "Substance use disorders and withdrawal",
-       "quote": "PCP can be addictive. Repeated use can lead to developing a tolerance for PCP. If you stop taking PCP abruptly after prolonged use, you may have symptoms of withdrawal.",
+       "quote": "PCP can be addictive. Repeated use can lead to developing a tolerance for PCP.",
        "sha": "81fc960d208b31ec"
       },
       {
-       "label": "F5",
+       "label": "F7",
        "ref": "frank_pcp",
        "where": "Mixing PCP with other drugs / Can you get addicted?",
        "quote": "Yes, you can become addicted to PCP. This means that regular users feel the need to keep taking PCP, in spite of the risks.",
        "sha": "f0fa2f03e22401d9"
-      },
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: words that are not person-first (“users”)"
+    },
+    {
+     "part": "but",
+     "text": "FRANK is an information page, not a study, so it does not show how many people become addicted.",
+     "rests_on": [
       {
-       "label": "F1",
-       "ref": "pepe_2024",
-       "where": "1. Introduction › 1.2. About 3-Methoxy-Phencyclidine › 1.2.3. The Effects of Other PCP-Derivatives and Novel Dissociative Compounds",
-       "quote": "The development of addiction with withdrawal signs and symptoms has been discussed for both PCP/PCP-analogues and ketamine",
-       "sha": "e8666ad99d35c3b4"
+       "label": "F7",
+       "ref": "frank_pcp",
+       "where": "Mixing PCP with other drugs / Can you get addicted?",
+       "quote": "Yes, you can become addicted to PCP. This means that regular users feel the need to keep taking PCP, in spite of the risks.",
+       "sha": "f0fa2f03e22401d9"
       }
      ],
      "ok": true
     },
     {
-     "part": "but",
-     "text": "It was a literature review and a case report.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "pepe_2024",
-       "where": "Abstract",
-       "quote": "This literature review aimed to summarize available evidence about 3-MeO-PCP mechanisms of action and physical and psychotropic effects",
-       "sha": "d568d6e66f46757d"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "it is about something else than the short answer (Sentence 2 concerns the type of publication (literature review and case report) and does not serve as a limitation or doubt about the claim in sentence 1 regarding PCP addiction.)"
-    },
-    {
      "part": "how1",
-     "text": "Health Canada says PCP can be addictive and lead to withdrawal symptoms.",
-     "rests_on": [
-      {
-       "label": "F4",
-       "ref": "healthcanada_pcp",
-       "where": "Substance use disorders and withdrawal",
-       "quote": "PCP can be addictive. Repeated use can lead to developing a tolerance for PCP. If you stop taking PCP abruptly after prolonged use, you may have symptoms of withdrawal.",
-       "sha": "81fc960d208b31ec"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The sentence states that PCP \"lead[s] to\" withdrawal symptoms, which is stronger than the passage that says withdrawal symptoms may occur."
-    },
-    {
-     "part": "how2",
-     "text": "FRANK says people can become addicted to PCP and develop tolerance.",
+     "text": "Health Canada says PCP can be addictive and repeated use can lead to developing a tolerance for the drug.",
      "rests_on": [
       {
        "label": "F5",
-       "ref": "frank_pcp",
-       "where": "Mixing PCP with other drugs / Can you get addicted?",
-       "quote": "Yes, you can become addicted to PCP. This means that regular users feel the need to keep taking PCP, in spite of the risks.",
-       "sha": "f0fa2f03e22401d9"
-      },
+       "ref": "healthcanada_pcp",
+       "where": "Substance use disorders and withdrawal",
+       "quote": "PCP can be addictive. Repeated use can lead to developing a tolerance for PCP.",
+       "sha": "81fc960d208b31ec"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "Health Canada says stopping PCP abruptly after prolonged use may cause withdrawal symptoms including sweating, headaches, and cravings.",
+     "rests_on": [
       {
        "label": "F6",
-       "ref": "frank_pcp",
-       "where": "Mixing PCP with other drugs / Can you get addicted?",
-       "quote": "Regular users can also develop tolerance to PCP, which means they need to take increasing amounts to get the same effects.",
-       "sha": "f0fa2f03e22401d9"
+       "ref": "healthcanada_pcp",
+       "where": "Substance use disorders and withdrawal",
+       "quote": "If you stop taking PCP abruptly after prolonged use, you may have symptoms of withdrawal. These include: sweating; headaches; cravings for the drug",
+       "sha": "81fc960d208b31ec"
       }
      ],
      "ok": true
     },
     {
      "part": "how3",
-     "text": "A 2024 review discussed the development of addiction with withdrawal signs and symptoms for PCP.",
+     "text": "FRANK says people can become addicted to PCP, meaning regular users feel the need to keep taking it despite risks.",
      "rests_on": [
       {
-       "label": "DA",
-       "ref": "pepe_2024",
-       "where": "Abstract",
-       "quote": "This literature review aimed to summarize available evidence about 3-MeO-PCP mechanisms of action and physical and psychotropic effects",
-       "sha": "d568d6e66f46757d"
-      },
-      {
-       "label": "F1",
-       "ref": "pepe_2024",
-       "where": "1. Introduction › 1.2. About 3-Methoxy-Phencyclidine › 1.2.3. The Effects of Other PCP-Derivatives and Novel Dissociative Compounds",
-       "quote": "The development of addiction with withdrawal signs and symptoms has been discussed for both PCP/PCP-analogues and ketamine",
-       "sha": "e8666ad99d35c3b4"
+       "label": "F7",
+       "ref": "frank_pcp",
+       "where": "Mixing PCP with other drugs / Can you get addicted?",
+       "quote": "Yes, you can become addicted to PCP. This means that regular users feel the need to keep taking PCP, in spite of the risks.",
+       "sha": "f0fa2f03e22401d9"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: words that are not person-first (“users”)"
+    },
+    {
+     "part": "how4",
+     "text": "FRANK says regular users can also develop tolerance to PCP, meaning they need to take increasing amounts for same effects.",
+     "rests_on": [
+      {
+       "label": "F8",
+       "ref": "frank_pcp",
+       "where": "Mixing PCP with other drugs / Can you get addicted?",
+       "quote": "Regular users can also develop tolerance to PCP, which means they need to take increasing amounts to get the same effects.",
+       "sha": "f0fa2f03e22401d9"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: words that are not person-first (“users”)"
     }
    ]
   },
@@ -649,57 +647,52 @@
    "parts": [
     {
      "part": "short",
-     "text": "Yes. PCP can be addictive.",
+     "text": "Yes, PCP can be addictive. People who use it regularly may feel the need to keep taking it despite the risks.",
      "rests_on": [
       {
-       "label": "F4",
+       "label": "F5",
        "ref": "healthcanada_pcp",
        "where": "Substance use disorders and withdrawal",
-       "quote": "PCP can be addictive. Repeated use can lead to developing a tolerance for PCP. If you stop taking PCP abruptly after prolonged use, you may have symptoms of withdrawal.",
+       "quote": "PCP can be addictive. Repeated use can lead to developing a tolerance for PCP.",
        "sha": "81fc960d208b31ec"
       },
       {
-       "label": "F5",
+       "label": "F7",
        "ref": "frank_pcp",
        "where": "Mixing PCP with other drugs / Can you get addicted?",
        "quote": "Yes, you can become addicted to PCP. This means that regular users feel the need to keep taking PCP, in spite of the risks.",
        "sha": "f0fa2f03e22401d9"
-      },
-      {
-       "label": "F1",
-       "ref": "pepe_2024",
-       "where": "1. Introduction › 1.2. About 3-Methoxy-Phencyclidine › 1.2.3. The Effects of Other PCP-Derivatives and Novel Dissociative Compounds",
-       "quote": "The development of addiction with withdrawal signs and symptoms has been discussed for both PCP/PCP-analogues and ketamine",
-       "sha": "e8666ad99d35c3b4"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "but",
-     "text": "It was a literature review and a case report.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "pepe_2024",
-       "where": "Abstract",
-       "quote": "This literature review aimed to summarize available evidence about 3-MeO-PCP mechanisms of action and physical and psychotropic effects",
-       "sha": "d568d6e66f46757d"
       }
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "it is about something else than the short answer (Sentence 2 is unrelated to sentence 1; it does not provide a limitation or doubt about the claim that PCP can be addictive.)"
+     "said": "The sentence adds uncertainty ('may feel') that is not stated in the passages, which say regular users definitely feel the need."
+    },
+    {
+     "part": "but",
+     "text": "FRANK is an information page, not a study, so it does not show how many people become addicted.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "frank_pcp",
+       "where": "Mixing PCP with other drugs / Can you get addicted?",
+       "quote": "Yes, you can become addicted to PCP. This means that regular users feel the need to keep taking PCP, in spite of the risks.",
+       "sha": "f0fa2f03e22401d9"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages do not mention that FRANK is an information page rather than a study, nor that it lacks data on how many people become addicted."
     },
     {
      "part": "how1",
-     "text": "Health Canada says PCP can be addictive.",
+     "text": "Health Canada says PCP can be addictive and repeated use can lead to developing a tolerance for the drug.",
      "rests_on": [
       {
-       "label": "F4",
+       "label": "F5",
        "ref": "healthcanada_pcp",
        "where": "Substance use disorders and withdrawal",
-       "quote": "PCP can be addictive. Repeated use can lead to developing a tolerance for PCP. If you stop taking PCP abruptly after prolonged use, you may have symptoms of withdrawal.",
+       "quote": "PCP can be addictive. Repeated use can lead to developing a tolerance for PCP.",
        "sha": "81fc960d208b31ec"
       }
      ],
@@ -707,86 +700,174 @@
     },
     {
      "part": "how2",
-     "text": "FRANK says people can become addicted to PCP.",
+     "text": "Health Canada says stopping PCP abruptly after prolonged use may cause withdrawal symptoms including sweating, headaches, and cravings.",
+     "rests_on": [
+      {
+       "label": "F6",
+       "ref": "healthcanada_pcp",
+       "where": "Substance use disorders and withdrawal",
+       "quote": "If you stop taking PCP abruptly after prolonged use, you may have symptoms of withdrawal. These include: sweating; headaches; cravings for the drug",
+       "sha": "81fc960d208b31ec"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "a rule was broken: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Yes, PCP can be addictive. Regular users feel the need to keep taking it despite the risks.",
      "rests_on": [
       {
        "label": "F5",
+       "ref": "healthcanada_pcp",
+       "where": "Substance use disorders and withdrawal",
+       "quote": "PCP can be addictive. Repeated use can lead to developing a tolerance for PCP.",
+       "sha": "81fc960d208b31ec"
+      },
+      {
+       "label": "F7",
        "ref": "frank_pcp",
        "where": "Mixing PCP with other drugs / Can you get addicted?",
        "quote": "Yes, you can become addicted to PCP. This means that regular users feel the need to keep taking PCP, in spite of the risks.",
        "sha": "f0fa2f03e22401d9"
-      },
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: words that are not person-first (“users”)"
+    },
+    {
+     "part": "but",
+     "text": "FRANK is an information page, not a study, so it does not say how many people become addicted.",
+     "rests_on": [
       {
-       "label": "F6",
+       "label": "F7",
        "ref": "frank_pcp",
        "where": "Mixing PCP with other drugs / Can you get addicted?",
-       "quote": "Regular users can also develop tolerance to PCP, which means they need to take increasing amounts to get the same effects.",
+       "quote": "Yes, you can become addicted to PCP. This means that regular users feel the need to keep taking PCP, in spite of the risks.",
        "sha": "f0fa2f03e22401d9"
       }
      ],
      "ok": true
     },
     {
-     "part": "how3",
-     "text": "A 2024 review discussed addiction with withdrawal signs for PCP.",
+     "part": "how1",
+     "text": "Health Canada says PCP can be addictive and repeated use can lead to tolerance.",
      "rests_on": [
       {
-       "label": "DA",
-       "ref": "pepe_2024",
-       "where": "Abstract",
-       "quote": "This literature review aimed to summarize available evidence about 3-MeO-PCP mechanisms of action and physical and psychotropic effects",
-       "sha": "d568d6e66f46757d"
-      },
-      {
-       "label": "F1",
-       "ref": "pepe_2024",
-       "where": "1. Introduction › 1.2. About 3-Methoxy-Phencyclidine › 1.2.3. The Effects of Other PCP-Derivatives and Novel Dissociative Compounds",
-       "quote": "The development of addiction with withdrawal signs and symptoms has been discussed for both PCP/PCP-analogues and ketamine",
-       "sha": "e8666ad99d35c3b4"
+       "label": "F5",
+       "ref": "healthcanada_pcp",
+       "where": "Substance use disorders and withdrawal",
+       "quote": "PCP can be addictive. Repeated use can lead to developing a tolerance for PCP.",
+       "sha": "81fc960d208b31ec"
       }
      ],
      "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "Health Canada says stopping abruptly after prolonged use may cause sweating, headaches, and cravings.",
+     "rests_on": [
+      {
+       "label": "F6",
+       "ref": "healthcanada_pcp",
+       "where": "Substance use disorders and withdrawal",
+       "quote": "If you stop taking PCP abruptly after prolonged use, you may have symptoms of withdrawal. These include: sweating; headaches; cravings for the drug",
+       "sha": "81fc960d208b31ec"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "FRANK says regular users feel the need to keep taking PCP despite the risks.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "frank_pcp",
+       "where": "Mixing PCP with other drugs / Can you get addicted?",
+       "quote": "Yes, you can become addicted to PCP. This means that regular users feel the need to keep taking PCP, in spite of the risks.",
+       "sha": "f0fa2f03e22401d9"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: words that are not person-first (“users”)"
+    },
+    {
+     "part": "how4",
+     "text": "FRANK says regular users can develop tolerance, needing increasing amounts for the same effects.",
+     "rests_on": [
+      {
+       "label": "F8",
+       "ref": "frank_pcp",
+       "where": "Mixing PCP with other drugs / Can you get addicted?",
+       "quote": "Regular users can also develop tolerance to PCP, which means they need to take increasing amounts to get the same effects.",
+       "sha": "f0fa2f03e22401d9"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: words that are not person-first (“users”)"
     }
    ]
   }
  ],
  "dropped": [
   {
-   "try": 3,
-   "part": "but",
-   "text": "It was a literature review and a case report.",
+   "try": 2,
+   "part": "how3",
+   "text": "FRANK says people can become addicted to PCP, meaning regular users feel the need to keep taking it despite risks.",
    "rests_on": [
     {
-     "label": "DA",
-     "ref": "pepe_2024",
-     "where": "Abstract",
-     "quote": "This literature review aimed to summarize available evidence about 3-MeO-PCP mechanisms of action and physical and psychotropic effects",
-     "sha": "d568d6e66f46757d"
+     "label": "F7",
+     "ref": "frank_pcp",
+     "where": "Mixing PCP with other drugs / Can you get addicted?",
+     "quote": "Yes, you can become addicted to PCP. This means that regular users feel the need to keep taking PCP, in spite of the risks.",
+     "sha": "f0fa2f03e22401d9"
     }
    ],
-   "by": "the second reader",
-   "said": "it is about something else than the short answer (The opening word 'Yes' correctly reflects the passages that state PCP can be addictive, so it fairly answers the question 'Is PCP addictive?'. The answer (Yes + sentence 1) directly addresses the question. Sentence 2 does not serve as a lim)"
+   "by": "a rule",
+   "said": "a rule: words that are not person-first (“users”)"
   },
   {
-   "try": 3,
-   "part": "how1",
-   "text": "Health Canada says PCP can be addictive and lead to withdrawal symptoms.",
+   "try": 2,
+   "part": "how4",
+   "text": "FRANK says regular users can also develop tolerance to PCP, meaning they need to take increasing amounts for same effects.",
    "rests_on": [
     {
-     "label": "F4",
-     "ref": "healthcanada_pcp",
-     "where": "Substance use disorders and withdrawal",
-     "quote": "PCP can be addictive. Repeated use can lead to developing a tolerance for PCP. If you stop taking PCP abruptly after prolonged use, you may have symptoms of withdrawal.",
-     "sha": "81fc960d208b31ec"
+     "label": "F8",
+     "ref": "frank_pcp",
+     "where": "Mixing PCP with other drugs / Can you get addicted?",
+     "quote": "Regular users can also develop tolerance to PCP, which means they need to take increasing amounts to get the same effects.",
+     "sha": "f0fa2f03e22401d9"
     }
    ],
-   "by": "the second reader",
-   "said": "The sentence says PCP 'lead to' withdrawal symptoms, which is stronger than the passage that states withdrawal symptoms may occur ('may have symptoms of withdrawal')."
+   "by": "a rule",
+   "said": "a rule: words that are not person-first (“users”)"
   }
  ],
- "with_checked": {
-  "differs": [],
-  "same": []
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.9736,
+   "but": 0.0851,
+   "how1": 0.8473,
+   "how2": 0.8826
+  },
+  "scores_quotes_alone": {
+   "short": 0.8383,
+   "but": 0.0153,
+   "how1": 0.7868,
+   "how2": 0.7771
+  }
  },
  "place": {
   "home": "pcp",
