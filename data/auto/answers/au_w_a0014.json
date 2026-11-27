@@ -27,28 +27,27 @@
    "reader_2": "openrouter:openai/gpt-oss-120b",
    "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "45928586464",
-  "read_by": {
-   "gpt-oss-120b": 10,
-   "gemma-4-31b-it": 1
-  },
-  "read_seconds": 111,
+  "run": "45934899992",
+  "read_seconds": 27,
   "from": {
    "papers": 2,
    "summaries": 0,
    "official": 0
   },
   "neurons": 0.0,
-  "seconds": 172
+  "seconds": 90
  },
- "status": "none",
- "why": "the second reader did not accept the answer",
+ "status": "published",
+ "why": "passed every gate",
  "gates": {
   "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-120b read from there",
-  "read": "5 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 4 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 0 official page(s), 0 paper(s) read in summary only",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.41, but 0.98, how1 0.98, how2 0.65",
-  "check": "short: NOT accepted: The passage links caffeine-related cartilage changes with longitudinal bone growth inhibition and says caffeine increases predisposition to it; it does not establish that caffeine can cause the inhibition. Also, the sentence presents the gr; but: accepted; how1: accepted; how2: accepted"
+  "read": "4 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 6 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 0 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
+  "told": "the writer was told what the readers said of the last draft that was not accepted: the short answer “Yes, caffeine can cause longitudinal bone growth inhibition and negatively affect growth plate cartilage. It also reduced fetal body weight and length in rats.”: The passage links caffeine-related cartilage changes with longitudinal bone growth inhibition and says caffeine increase",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.76, but 0.99, how1 0.34, how2 0.98",
+  "check": "every sentence kept was accepted by the second reader (openrouter:openai/gpt-6-luna); it also found that the short answer answers the question and that the But is about that answer",
+  "rules": "nothing against it",
+  "checked": "set beside the checked claims of the same page: nothing against them"
  },
  "sources": [
   {
@@ -125,34 +124,29 @@
    "people": false,
    "near": 0.704,
    "money": [],
-   "design": {
-    "passage": 1,
-    "where": "Abstract",
-    "quote": "Overall, there is ample evidence indicating that caffeine intake negatively affects the physiology of both articular and growth plate cartilage, increasing consumers predisposition to suffer OA and LBGI.",
-    "text": "Review article summarizing evidence on caffeine’s effects on articular and growth plate cartilage"
-   },
+   "design": null,
    "findings": [
     {
-     "passage": 1,
-     "where": "Abstract",
-     "quote": "Overall, there is ample evidence indicating that caffeine intake negatively affects the physiology of both articular and growth plate cartilage, increasing consumers predisposition to suffer OA and LBGI.",
-     "text": "Caffeine intake negatively affects growth plate cartilage and can cause longitudinal bone growth inhibition.",
+     "passage": 32,
+     "where": "5. Caffeine’s Role in Cartilage-Related Disorders › 5.2. Caffeine Effects on the Growth Plate: Longitudinal Bone Growth Inhibition › 5.2.1. Prenatal Caffeine Exposure",
+     "quote": "the suppression of EGFR expression observed in the growth plate HZ of PCE rats was linked to a significantly widened HZ of the growth plate.",
+     "text": "Caffeine exposure in prenatal rats suppresses EGFR expression in the growth plate, leading to a widened hypertrophic zone and growth retardation.",
      "id": "F1",
      "second_hand": ""
     },
     {
      "passage": 35,
      "where": "5. Caffeine’s Role in Cartilage-Related Disorders › 5.2. Caffeine Effects on the Growth Plate: Longitudinal Bone Growth Inhibition › 5.2.2. Direct and Indirect Effect of Caffeine on Growth Plate Chondrocytes",
-     "quote": "caffeine’s consumption in a dose-dependent manner decreased up to 40% of the expression of the other key growth factors and structural proteins, such as TGF-β, COL2A1, and the hypertrophic markers COL1A1 and OCN.",
-     "text": "Caffeine consumption dose‑dependently reduces expression of key growth factors and structural proteins in the growth plate, lowering chondrocyte numbers in rats.",
+     "quote": "caffeine’s consumption in a dose‑dependent manner decreased up to 40% of the expression of the other key growth factors and structural proteins, such as TGF‑β, COL2A1, and the hypertrophic markers COL1A1 and OCN.",
+     "text": "In rats, caffeine consumption dose‑dependently decreased expression of key growth factors and structural proteins in the growth plate.",
      "id": "F2",
      "second_hand": ""
     },
     {
-     "passage": 18,
-     "where": "4. Caffeine",
-     "quote": "multiple in vitro and in vivo experiments suggest that caffeine overconsumption could be harmful to the musculoskeletal system, including the hyaline cartilage.",
-     "text": "High caffeine intake may be harmful to the musculoskeletal system, including hyaline cartilage that forms the growth plate.",
+     "passage": 40,
+     "where": "6. Conclusions",
+     "quote": "Caffeine significantly exhibits detrimental effects on both articular and growth plate hyaline cartilage.",
+     "text": "Caffeine has detrimental effects on growth plate cartilage.",
      "id": "F3",
      "second_hand": ""
     }
@@ -162,7 +156,7 @@
      "passage": 32,
      "where": "5. Caffeine’s Role in Cartilage-Related Disorders › 5.2. Caffeine Effects on the Growth Plate: Longitudinal Bone Growth Inhibition › 5.2.1. Prenatal Caffeine Exposure",
      "quote": "it has been suggested that the GC overexposure associated with PCE may upregulate Mig-6, reduce EGFR signaling, and, as a consequence, alter the EO process and bone growth.",
-     "text": "The authors suggest, but have not proven, that prenatal caffeine exposure may upregulate Mig‑6 and reduce EGFR signaling, affecting bone growth.",
+     "text": "It is only suggested that prenatal caffeine exposure may upregulate Mig‑6 and reduce EGFR signaling, potentially altering endochondral ossification and bone growth.",
      "id": "L1",
      "second_hand": ""
     }
@@ -228,7 +222,7 @@
    "year": 2025,
    "journal": "Nutrients",
    "kind": "review",
-   "people": false,
+   "people": true,
    "near": 0.655,
    "money": [
     "The authors declare no conflicts of interest.",
@@ -237,24 +231,16 @@
    "design": {
     "passage": 1,
     "where": "Abstract",
-    "quote": "Numerous in vitro and in vivo studies have indicated potential adverse effects of prenatal caffeine exposure, including disturbances in fetal growth, metabolic dysregulation, organ malformations, and neurodevelopmental alterations.",
-    "text": "Review of recent studies on caffeine exposure during pregnancy and its effects on fetal and child growth"
+    "quote": "Recent cohort studies and meta-analyses have reported that moderate maternal caffeine intake is not significantly associated with increased risks of gestational diabetes mellitus, gestational hypertension, or preeclampsia",
+    "text": "review of recent cohort studies and meta-analyses on maternal caffeine exposure"
    },
    "findings": [
     {
      "passage": 17,
      "where": "5. Experimental Evidence on the Mechanisms of Caffeine Action During Pregnancy › 5.1. Caffeine and Adverse Developmental Outcomes in Offspring",
      "quote": "In Swiss mice, high-dose caffeine (1 mg/mL) resulted in lower offspring body weight at 14, 21, and 30 days compared with low-dose (0.3 mg/mL) and control groups.",
-     "text": "High-dose caffeine reduced offspring body weight in Swiss mice.",
+     "text": "High-dose caffeine exposure in pregnant Swiss mice leads to lower offspring body weight at 14, 21, and 30 days.",
      "id": "F4",
-     "second_hand": ""
-    },
-    {
-     "passage": 17,
-     "where": "5. Experimental Evidence on the Mechanisms of Caffeine Action During Pregnancy › 5.1. Caffeine and Adverse Developmental Outcomes in Offspring",
-     "quote": "maternal caffeine exposure (40 mg/kg/day, from gestational days 3.5 to 19.5) resulted in a significant reduction in fetal body weight, fetal stem length, and fetal tail length.",
-     "text": "Maternal caffeine exposure reduced fetal body weight and length measures in Sprague–Dawley rats.",
-     "id": "F5",
      "second_hand": ""
     }
    ],
@@ -263,7 +249,7 @@
      "passage": 17,
      "where": "5. Experimental Evidence on the Mechanisms of Caffeine Action During Pregnancy › 5.1. Caffeine and Adverse Developmental Outcomes in Offspring",
      "quote": "However, there is evidence that this effect may vary across species.",
-     "text": "The growth‑affecting effect of caffeine may vary across species.",
+     "text": "The effect of caffeine on growth may vary across species.",
      "id": "L2",
      "second_hand": ""
     }
@@ -271,9 +257,108 @@
    "tag": "B"
   }
  ],
- "parts": [],
+ "parts": [
+  {
+   "part": "short",
+   "text": "It can affect growth in rats and mice, and lower offspring body weight in mice.",
+   "uses": [
+    "F1",
+    "F2",
+    "F4"
+   ],
+   "rests_on": [
+    {
+     "label": "F1",
+     "ref": "guillnfresco_2020",
+     "where": "5. Caffeine’s Role in Cartilage-Related Disorders › 5.2. Caffeine Effects on the Growth Plate: Longitudinal Bone Growth Inhibition › 5.2.1. Prenatal Caffeine Exposure",
+     "quote": "the suppression of EGFR expression observed in the growth plate HZ of PCE rats was linked to a significantly widened HZ of the growth plate.",
+     "sha": "33145b4ed1aca009"
+    },
+    {
+     "label": "F2",
+     "ref": "guillnfresco_2020",
+     "where": "5. Caffeine’s Role in Cartilage-Related Disorders › 5.2. Caffeine Effects on the Growth Plate: Longitudinal Bone Growth Inhibition › 5.2.2. Direct and Indirect Effect of Caffeine on Growth Plate Chondrocytes",
+     "quote": "caffeine’s consumption in a dose‑dependent manner decreased up to 40% of the expression of the other key growth factors and structural proteins, such as TGF‑β, COL2A1, and the hypertrophic markers COL1A1 and OCN.",
+     "sha": "3b63b0867e1aa941"
+    },
+    {
+     "label": "F4",
+     "ref": "struniewicz_2025",
+     "where": "5. Experimental Evidence on the Mechanisms of Caffeine Action During Pregnancy › 5.1. Caffeine and Adverse Developmental Outcomes in Offspring",
+     "quote": "In Swiss mice, high-dose caffeine (1 mg/mL) resulted in lower offspring body weight at 14, 21, and 30 days compared with low-dose (0.3 mg/mL) and control groups.",
+     "sha": "2153472b2c9317fa"
+    }
+   ]
+  },
+  {
+   "part": "but",
+   "text": "The effect may vary across species.",
+   "uses": [
+    "L2"
+   ],
+   "rests_on": [
+    {
+     "label": "L2",
+     "ref": "struniewicz_2025",
+     "where": "5. Experimental Evidence on the Mechanisms of Caffeine Action During Pregnancy › 5.1. Caffeine and Adverse Developmental Outcomes in Offspring",
+     "quote": "However, there is evidence that this effect may vary across species.",
+     "sha": "2153472b2c9317fa"
+    }
+   ]
+  },
+  {
+   "part": "how1",
+   "text": "Rat studies found caffeine decreased growth factors and affected growth plate cartilage.",
+   "uses": [
+    "F1",
+    "F2",
+    "F3"
+   ],
+   "rests_on": [
+    {
+     "label": "F1",
+     "ref": "guillnfresco_2020",
+     "where": "5. Caffeine’s Role in Cartilage-Related Disorders › 5.2. Caffeine Effects on the Growth Plate: Longitudinal Bone Growth Inhibition › 5.2.1. Prenatal Caffeine Exposure",
+     "quote": "the suppression of EGFR expression observed in the growth plate HZ of PCE rats was linked to a significantly widened HZ of the growth plate.",
+     "sha": "33145b4ed1aca009"
+    },
+    {
+     "label": "F2",
+     "ref": "guillnfresco_2020",
+     "where": "5. Caffeine’s Role in Cartilage-Related Disorders › 5.2. Caffeine Effects on the Growth Plate: Longitudinal Bone Growth Inhibition › 5.2.2. Direct and Indirect Effect of Caffeine on Growth Plate Chondrocytes",
+     "quote": "caffeine’s consumption in a dose‑dependent manner decreased up to 40% of the expression of the other key growth factors and structural proteins, such as TGF‑β, COL2A1, and the hypertrophic markers COL1A1 and OCN.",
+     "sha": "3b63b0867e1aa941"
+    },
+    {
+     "label": "F3",
+     "ref": "guillnfresco_2020",
+     "where": "6. Conclusions",
+     "quote": "Caffeine significantly exhibits detrimental effects on both articular and growth plate hyaline cartilage.",
+     "sha": "4aab2324cb552a7b"
+    }
+   ],
+   "quote": "the suppression of EGFR expression observed in the growth plate HZ of PCE rats",
+   "quote_ref": "guillnfresco_2020"
+  },
+  {
+   "part": "how2",
+   "text": "A mouse study found high-dose caffeine exposure led to lower offspring body weight.",
+   "uses": [
+    "F4"
+   ],
+   "rests_on": [
+    {
+     "label": "F4",
+     "ref": "struniewicz_2025",
+     "where": "5. Experimental Evidence on the Mechanisms of Caffeine Action During Pregnancy › 5.1. Caffeine and Adverse Developmental Outcomes in Offspring",
+     "quote": "In Swiss mice, high-dose caffeine (1 mg/mL) resulted in lower offspring body weight at 14, 21, and 30 days compared with low-dose (0.3 mg/mL) and control groups.",
+     "sha": "2153472b2c9317fa"
+    }
+   ]
+  }
+ ],
  "complete": false,
- "missing": "human growth effects in children",
+ "missing": "effects in people",
  "wanted": [
   {
    "doi": "10.1080/10408398.2022.2068499",
@@ -299,14 +384,6 @@
  ],
  "person": null,
  "history": [
-  {
-   "on": "2026-11-19",
-   "lane": 19,
-   "status": "none",
-   "why": "about pregnancy or children: written, but it does not meet the stricter bar for such an answer (no further reader read it): no answer yet",
-   "short": "It can affect growth, negatively impacting cartilage and bone growth.",
-   "complete": true
-  },
   {
    "on": "2026-11-19",
    "lane": 19,
@@ -346,6 +423,14 @@
    "why": "passed every gate",
    "short": "It can affect bone growth. Caffeine intake negatively affects growth plate cartilage.",
    "complete": false
+  },
+  {
+   "on": "2026-11-27",
+   "lane": 19,
+   "status": "none",
+   "why": "the second reader did not accept the answer",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -355,7 +440,14 @@
    "kind": "review",
    "at": "10.3390/nu14214696",
    "kept": 0,
-   "thrown": []
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "review article summarising knowledge gaps on caffeine's performance‑enhancing effects",
+     "quote": "The purpose of this review is to summarise key knowledge gaps regarding the current understanding of the performance‑enhancing effect of caffeine and justify their value for future investigation.",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
   },
   {
    "title": "Caffeine, a Risk Factor for Osteoarthritis and Longitudinal Bone Growth Inhibition",
@@ -365,14 +457,14 @@
    "kept": 3,
    "thrown": [
     {
-     "kind": "finding",
-     "text": "Prenatal caffeine exposure suppresses EGFR expression in the growth plate, widening the hypertrophic zone and causing growth retardation in rats.",
-     "quote": "The suppression of EGFR expression observed in the growth plate HZ of PCE rats was linked to a significantly widened HZ of the growth plate.",
+     "kind": "text",
+     "text": "Review article summarizing evidence on caffeine effects on articular and growth plate cartilage",
+     "quote": "In this review, we summarize all current knowledge in the PubMed database about caffeine catabolic effects on articular and growth plate cartilage.",
      "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
     },
     {
      "kind": "limit",
-     "text": "The paper notes that direct caffeine effects on growth plate chondrocytes may differ from prenatal exposure effects.",
+     "text": "The direct effects of caffeine on growth plate chondrocytes may differ from those seen with prenatal caffeine exposure.",
      "quote": "caffeine’s direct effects on the GPCh may be different from those observed in PCE in vivo experiments",
      "why": "the sentence is not carried by its quote and passage"
     }
@@ -383,17 +475,23 @@
    "read": "full",
    "kind": "review",
    "at": "10.3390/nu17193173",
-   "kept": 2,
+   "kept": 1,
    "thrown": [
     {
      "kind": "finding",
-     "text": "Maternal caffeine intake above 50 mg per day was associated with lower birth weight and smaller newborn anthropometric measures.",
+     "text": "Higher maternal caffeine intake (>50 mg per day) is associated with lower birth weight and length and smaller body measurements in newborns.",
      "quote": "Women who reported drinking >50 mg of caffeine daily gave birth to children with lower birth weight (LBW) and length, reduced arm and thigh circumference, and smaller anterior thigh skin fold compared",
      "why": "it holds an amount or a time between uses"
     },
     {
      "kind": "finding",
-     "text": "Each additional 100 mg of daily caffeine increased the risk of low birth weight.",
+     "text": "Maternal caffeine exposure at 40 mg/kg/day in Sprague‑Dawley rats reduces fetal body weight, stem length, and tail length.",
+     "quote": "In Sprague–Dawley rats, maternal caffeine exposure (40 mg/kg/day, from gestational days 3.5 to 19.5) resulted in a significant reduction in fetal body weight, fetal stem length, and fetal tail length.",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    },
+    {
+     "kind": "finding",
+     "text": "Each additional 100 mg of maternal caffeine per day increases the risk of low birth weight.",
      "quote": "Each additional 100 mg of caffeine a day increased the risk of LBW.",
      "why": "it holds an amount or a time between uses"
     }
@@ -467,300 +565,46 @@
  "plan": {
   "short": [
    "F1",
-   "F5"
+   "F2",
+   "F4"
   ],
-  "direct": "Yes",
+  "direct": "It can",
   "but": [
    "L2"
   ],
   "how": [
    [
-    "DA",
-    "F1"
+    "F1",
+    "F2",
+    "F3"
    ],
    [
-    "DB",
-    "F5"
+    "F4"
    ]
   ],
-  "unanswered": "human growth effects in children"
+  "unanswered": "effects on human growth"
  },
  "panel_gap": [],
  "own": {
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.4073,
-   "but": 0.9781,
-   "how1": 0.9846,
-   "how2": 0.6478
+   "short": 0.7635,
+   "but": 0.9896,
+   "how1": 0.3373,
+   "how2": 0.9822
   },
   "scores_quotes_alone": {
-   "short": 0.0967,
-   "but": 0.5074,
-   "how1": 0.9343,
-   "how2": 0.0063
+   "short": 0.7186,
+   "but": 0.9868,
+   "how1": 0.6137,
+   "how2": 0.9801
   }
  },
- "tries": [
-  {
-   "try": 1,
-   "why": "the short answer or the But was not accepted: written again",
-   "parts": [
-    {
-     "part": "short",
-     "text": "Yes, caffeine can affect growth, negatively affecting growth plate cartilage and causing longitudinal bone growth inhibition in rats and potentially in people.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "guillnfresco_2020",
-       "where": "Abstract",
-       "quote": "Overall, there is ample evidence indicating that caffeine intake negatively affects the physiology of both articular and growth plate cartilage, increasing consumers predisposition to suffer OA and LBGI.",
-       "sha": "c9cd1592add6e1bd"
-      },
-      {
-       "label": "F5",
-       "ref": "struniewicz_2025",
-       "where": "5. Experimental Evidence on the Mechanisms of Caffeine Action During Pregnancy › 5.1. Caffeine and Adverse Developmental Outcomes in Offspring",
-       "quote": "maternal caffeine exposure (40 mg/kg/day, from gestational days 3.5 to 19.5) resulted in a significant reduction in fetal body weight, fetal stem length, and fetal tail length.",
-       "sha": "2153472b2c9317fa"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The 2020 passage says caffeine negatively affects growth-plate cartilage and increases predisposition to longitudinal bone growth inhibition; it does not say caffeine causes that inhibition in rats or potentially in people. The rat passage "
-    },
-    {
-     "part": "but",
-     "text": "The growth-affecting effect of caffeine may vary across species.",
-     "rests_on": [
-      {
-       "label": "L2",
-       "ref": "struniewicz_2025",
-       "where": "5. Experimental Evidence on the Mechanisms of Caffeine Action During Pregnancy › 5.1. Caffeine and Adverse Developmental Outcomes in Offspring",
-       "quote": "However, there is evidence that this effect may vary across species.",
-       "sha": "2153472b2c9317fa"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how1",
-     "text": "A review of evidence on caffeine's effects on articular and growth plate cartilage found negative effects.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "guillnfresco_2020",
-       "where": "Abstract",
-       "quote": "Overall, there is ample evidence indicating that caffeine intake negatively affects the physiology of both articular and growth plate cartilage, increasing consumers predisposition to suffer OA and LBGI.",
-       "sha": "c9cd1592add6e1bd"
-      },
-      {
-       "label": "F1",
-       "ref": "guillnfresco_2020",
-       "where": "Abstract",
-       "quote": "Overall, there is ample evidence indicating that caffeine intake negatively affects the physiology of both articular and growth plate cartilage, increasing consumers predisposition to suffer OA and LBGI.",
-       "sha": "c9cd1592add6e1bd"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "A review of studies on caffeine exposure during pregnancy found reduced fetal body weight and length in rats.",
-     "rests_on": [
-      {
-       "label": "DB",
-       "ref": "struniewicz_2025",
-       "where": "Abstract",
-       "quote": "Numerous in vitro and in vivo studies have indicated potential adverse effects of prenatal caffeine exposure, including disturbances in fetal growth, metabolic dysregulation, organ malformations, and neurodevelopmental alterations.",
-       "sha": "616afddde64f2a67"
-      },
-      {
-       "label": "F5",
-       "ref": "struniewicz_2025",
-       "where": "5. Experimental Evidence on the Mechanisms of Caffeine Action During Pregnancy › 5.1. Caffeine and Adverse Developmental Outcomes in Offspring",
-       "quote": "maternal caffeine exposure (40 mg/kg/day, from gestational days 3.5 to 19.5) resulted in a significant reduction in fetal body weight, fetal stem length, and fetal tail length.",
-       "sha": "2153472b2c9317fa"
-      }
-     ],
-     "ok": true
-    }
-   ]
-  },
-  {
-   "try": 2,
-   "why": "the short answer or the But was not accepted: written again",
-   "parts": [
-    {
-     "part": "short",
-     "text": "Yes, caffeine can cause longitudinal bone growth inhibition and negatively affects growth plate cartilage.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "guillnfresco_2020",
-       "where": "Abstract",
-       "quote": "Overall, there is ample evidence indicating that caffeine intake negatively affects the physiology of both articular and growth plate cartilage, increasing consumers predisposition to suffer OA and LBGI.",
-       "sha": "c9cd1592add6e1bd"
-      },
-      {
-       "label": "F5",
-       "ref": "struniewicz_2025",
-       "where": "5. Experimental Evidence on the Mechanisms of Caffeine Action During Pregnancy › 5.1. Caffeine and Adverse Developmental Outcomes in Offspring",
-       "quote": "maternal caffeine exposure (40 mg/kg/day, from gestational days 3.5 to 19.5) resulted in a significant reduction in fetal body weight, fetal stem length, and fetal tail length.",
-       "sha": "2153472b2c9317fa"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passage reports a correlation with longitudinal bone growth inhibition and increased predisposition to it; it does not establish that caffeine can cause it. The claim about negatively affecting growth plate cartilage is supported."
-    },
-    {
-     "part": "but",
-     "text": "The growth-affecting effect of caffeine may vary across species.",
-     "rests_on": [
-      {
-       "label": "L2",
-       "ref": "struniewicz_2025",
-       "where": "5. Experimental Evidence on the Mechanisms of Caffeine Action During Pregnancy › 5.1. Caffeine and Adverse Developmental Outcomes in Offspring",
-       "quote": "However, there is evidence that this effect may vary across species.",
-       "sha": "2153472b2c9317fa"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "it is about something else than the short answer (Yes is fair: the passages describe caffeine-related effects on growth-plate physiology and offspring growth, while noting that effects may vary across species. Sentence 2 concerns species variation in postnatal offspring growth, not the lon)"
-    },
-    {
-     "part": "how1",
-     "text": "A 2020 review found caffeine intake negatively affects growth plate cartilage.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "guillnfresco_2020",
-       "where": "Abstract",
-       "quote": "Overall, there is ample evidence indicating that caffeine intake negatively affects the physiology of both articular and growth plate cartilage, increasing consumers predisposition to suffer OA and LBGI.",
-       "sha": "c9cd1592add6e1bd"
-      },
-      {
-       "label": "F1",
-       "ref": "guillnfresco_2020",
-       "where": "Abstract",
-       "quote": "Overall, there is ample evidence indicating that caffeine intake negatively affects the physiology of both articular and growth plate cartilage, increasing consumers predisposition to suffer OA and LBGI.",
-       "sha": "c9cd1592add6e1bd"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "A study in Sprague-Dawley rats found maternal caffeine exposure reduced fetal body weight and length.",
-     "rests_on": [
-      {
-       "label": "DB",
-       "ref": "struniewicz_2025",
-       "where": "Abstract",
-       "quote": "Numerous in vitro and in vivo studies have indicated potential adverse effects of prenatal caffeine exposure, including disturbances in fetal growth, metabolic dysregulation, organ malformations, and neurodevelopmental alterations.",
-       "sha": "616afddde64f2a67"
-      },
-      {
-       "label": "F5",
-       "ref": "struniewicz_2025",
-       "where": "5. Experimental Evidence on the Mechanisms of Caffeine Action During Pregnancy › 5.1. Caffeine and Adverse Developmental Outcomes in Offspring",
-       "quote": "maternal caffeine exposure (40 mg/kg/day, from gestational days 3.5 to 19.5) resulted in a significant reduction in fetal body weight, fetal stem length, and fetal tail length.",
-       "sha": "2153472b2c9317fa"
-      }
-     ],
-     "ok": true
-    }
-   ]
-  },
-  {
-   "try": 3,
-   "why": "the last draft: no answer",
-   "parts": [
-    {
-     "part": "short",
-     "text": "Yes, caffeine can cause longitudinal bone growth inhibition and negatively affect growth plate cartilage. It also reduced fetal body weight and length in rats.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "guillnfresco_2020",
-       "where": "Abstract",
-       "quote": "Overall, there is ample evidence indicating that caffeine intake negatively affects the physiology of both articular and growth plate cartilage, increasing consumers predisposition to suffer OA and LBGI.",
-       "sha": "c9cd1592add6e1bd"
-      },
-      {
-       "label": "F5",
-       "ref": "struniewicz_2025",
-       "where": "5. Experimental Evidence on the Mechanisms of Caffeine Action During Pregnancy › 5.1. Caffeine and Adverse Developmental Outcomes in Offspring",
-       "quote": "maternal caffeine exposure (40 mg/kg/day, from gestational days 3.5 to 19.5) resulted in a significant reduction in fetal body weight, fetal stem length, and fetal tail length.",
-       "sha": "2153472b2c9317fa"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passage links caffeine-related cartilage changes with longitudinal bone growth inhibition and says caffeine increases predisposition to it; it does not establish that caffeine can cause the inhibition. Also, the sentence presents the gr"
-    },
-    {
-     "part": "but",
-     "text": "The growth-affecting effect of caffeine may vary across species.",
-     "rests_on": [
-      {
-       "label": "L2",
-       "ref": "struniewicz_2025",
-       "where": "5. Experimental Evidence on the Mechanisms of Caffeine Action During Pregnancy › 5.1. Caffeine and Adverse Developmental Outcomes in Offspring",
-       "quote": "However, there is evidence that this effect may vary across species.",
-       "sha": "2153472b2c9317fa"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how1",
-     "text": "A review of evidence on caffeine's effects on articular and growth plate cartilage found negative effects.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "guillnfresco_2020",
-       "where": "Abstract",
-       "quote": "Overall, there is ample evidence indicating that caffeine intake negatively affects the physiology of both articular and growth plate cartilage, increasing consumers predisposition to suffer OA and LBGI.",
-       "sha": "c9cd1592add6e1bd"
-      },
-      {
-       "label": "F1",
-       "ref": "guillnfresco_2020",
-       "where": "Abstract",
-       "quote": "Overall, there is ample evidence indicating that caffeine intake negatively affects the physiology of both articular and growth plate cartilage, increasing consumers predisposition to suffer OA and LBGI.",
-       "sha": "c9cd1592add6e1bd"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "A review of studies on caffeine exposure during pregnancy found reduced fetal body weight and length in Sprague-Dawley rats.",
-     "rests_on": [
-      {
-       "label": "DB",
-       "ref": "struniewicz_2025",
-       "where": "Abstract",
-       "quote": "Numerous in vitro and in vivo studies have indicated potential adverse effects of prenatal caffeine exposure, including disturbances in fetal growth, metabolic dysregulation, organ malformations, and neurodevelopmental alterations.",
-       "sha": "616afddde64f2a67"
-      },
-      {
-       "label": "F5",
-       "ref": "struniewicz_2025",
-       "where": "5. Experimental Evidence on the Mechanisms of Caffeine Action During Pregnancy › 5.1. Caffeine and Adverse Developmental Outcomes in Offspring",
-       "quote": "maternal caffeine exposure (40 mg/kg/day, from gestational days 3.5 to 19.5) resulted in a significant reduction in fetal body weight, fetal stem length, and fetal tail length.",
-       "sha": "2153472b2c9317fa"
-      }
-     ],
-     "ok": true
-    }
-   ]
-  }
- ],
+ "with_checked": {
+  "differs": [],
+  "same": []
+ },
  "place": {
   "home": "caffeine",
   "also": [],
