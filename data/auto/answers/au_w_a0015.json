@@ -23,35 +23,35 @@
    "writer": "groq:qwen/qwen3.8-27b",
    "checker": "openrouter:openai/gpt-6-luna",
    "planner": "groq:openai/gpt-oss-120b",
-   "also1": "gemini:gemini-3.5-flash-lite",
-   "also2": "gemini:gemini-3-flash-preview",
-   "team": "team H",
+   "also1": "gemini:gemini-3-flash-preview",
+   "team": "team H2",
    "reader_2": "groq:openai/gpt-oss-20b",
    "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-   "also2_else": "gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
+   "also1_else": "gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "45915612783",
-  "read_by": {
-   "llama-4-scout-17b-16e-instruct": 12,
-   "gemini-3.5-flash-lite": 6
-  },
-  "read_seconds": 114,
+  "run": "45916725794",
+  "read_seconds": 107,
   "from": {
-   "papers": 1,
-   "summaries": 1,
+   "papers": 2,
+   "summaries": 0,
    "official": 1
   },
-  "neurons": 580.2,
-  "seconds": 156
+  "neurons": 739.2,
+  "seconds": 183
  },
  "status": "none",
- "why": "the second reader did not accept the answer",
+ "why": "about dying: written, but it does not meet the stricter bar for such an answer (the question asks about a danger, and the answer opens with “Not”): no answer yet",
  "gates": {
-  "read": "7 findings kept from 3 sources (1 papers read in full, 1 official pages, 1 papers read in summary); 4 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "0 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 1 official page(s), 1 paper(s) read in summary only",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.01, but 0.09, how1 0.91",
-  "check": "short: NOT accepted: The passage says heroin was the main drug involved in the drug-related deaths investigated, not in Greek deaths generally.; but: accepted; how1: accepted",
-  "rules": "broken at try 2: short: it says what the sources do not say: only a part of each source was read. Let the But be a finding that says for whom or under what conditions the answer holds, or a limit a source states itself"
+  "read": "9 findings kept from 3 sources (2 papers read in full, 1 official pages, 0 papers read in summary); 5 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 1 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
+  "told": "the writer was told what the readers said of the last draft that was not accepted: the short answer “Not known. A 2007 review says heroin is the main drug in Greek deaths, but gives no rate.”: The passage says heroin was the main drug involved in the drug-related deaths investigated, not in Greek deaths generally.",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.30, but 0.07, how1 0.98, how2 0.02, how3 0.98",
+  "check": "every sentence kept was accepted by the second reader (openrouter:openai/gpt-6-luna) and by gemini:gemini-3-flash-preview; 1 How-do-we-know line(s) dropped; it also found that the short answer answers the question and that the But is about that answer",
+  "panel": "further readers, each of which must accept every sentence too: gemini-3-flash-preview accepted 1 of 4",
+  "but": "the writer's But was not accepted (The review concerns women using heroin and other drugs, not women generally; the passages do not characterize it as a general review of women.): the code wrote the But itself, from what this answer rests on",
+  "rules": "nothing against it",
+  "checked": "set beside the checked claims of the same page: nothing against them",
+  "stakes": "about dying: the stricter bar for such an answer: NOT met: the question asks about a danger, and the answer opens with “Not”"
  },
  "sources": [
   {
@@ -152,7 +152,7 @@
      "passage": 28,
      "where": "Results › Consumption characteristics",
      "quote": "The highest prevalences were estimated in drug users (85.0%), followed by prisoners (26.9%) and homeless people (24.9%).",
-     "text": "The highest prevalences were in drug users at 85.0%, prisoners at 26.9%, and homeless people at 24.9%.",
+     "text": "The highest prevalences of heroin use were found in drug users (85.0%), prisoners (26.9%), and homeless people (24.9%).",
      "id": "F2",
      "second_hand": ""
     },
@@ -167,15 +167,124 @@
    ],
    "limits": [
     {
-     "passage": 36,
+     "passage": 42,
      "where": "Discussion",
-     "quote": "people in unhoused situations are scarcely represented in the studies, despite being one of the populations with the highest prevalence of drug use",
-     "text": "People in unhoused situations were scarcely represented in the studies.",
+     "quote": "they often omit or only superficially capture key dimensions of drug use",
+     "text": "The studies often omit or superficially capture key dimensions of drug use.",
      "id": "L1",
      "second_hand": ""
     }
    ],
    "tag": "A"
+  },
+  {
+   "read": "full",
+   "ref": {
+    "id": "medinaperucha_2019",
+    "type": "article-journal",
+    "title": "Factors associated with sexual risks and risk of STIs, HIV and other blood-borne viruses among women using heroin and other drugs: A systematic literature review",
+    "author": [
+     {
+      "family": "Medina-Perucha",
+      "given": "L."
+     },
+     {
+      "family": "Family",
+      "given": "H."
+     },
+     {
+      "family": "Scott",
+      "given": "J."
+     },
+     {
+      "family": "Chapman",
+      "given": "S."
+     },
+     {
+      "family": "Dack",
+      "given": "C."
+     }
+    ],
+    "container-title": "AIDS and Behavior",
+    "issued": {
+     "date-parts": [
+      [
+       2019
+      ]
+     ]
+    },
+    "DOI": "10.1007/s10461-018-2238-7",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-27",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-27"
+     },
+     "online_first_year": 2018
+    },
+    "volume": "23",
+    "issue": "1",
+    "page": "222-251",
+    "PMCID": "PMC6342849"
+   },
+   "doi": "10.1007/s10461-018-2238-7",
+   "pmcid": "PMC6342849",
+   "title": "Factors Associated with Sexual Risks and Risk of STIs, HIV and Other Blood-Borne Viruses Among Women Using Heroin and Other Drugs: A Systematic Literature Review",
+   "year": 2019,
+   "journal": "AIDS and behavior",
+   "kind": "review",
+   "people": true,
+   "near": 0.556,
+   "money": [
+    "The authors declare that they have no conflict of interest."
+   ],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "This systematic literature review identified factors associated with sexual risks related to sexually transmitted infections (STI), HIV and other blood-borne viruses (BBV) among women using heroin and other drugs.",
+    "text": "systematic literature review of women using heroin and other drugs"
+   },
+   "findings": [
+    {
+     "passage": 14,
+     "where": "Results › Sample Characteristics",
+     "quote": "Heroin was used by 44.6% of women",
+     "text": "44.6% of women used heroin",
+     "id": "F4",
+     "second_hand": ""
+    },
+    {
+     "passage": 33,
+     "where": "Condom Use › Substance Use",
+     "quote": "Condomless sex was more likely among women who used heroin with sexual partners",
+     "text": "women who used heroin with sexual partners were more likely to have condomless sex",
+     "id": "F5",
+     "second_hand": ""
+    },
+    {
+     "passage": 65,
+     "where": "Sexual Activity › Substance Use",
+     "quote": "women were more likely to engage in a wider variety of sexual practices with clients after taking heroin and cocaine",
+     "text": "women were more likely to engage in a wider variety of sexual practices with clients after taking heroin and cocaine",
+     "id": "F6",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 14,
+     "where": "Results › Sample Characteristics",
+     "quote": "There was a significant amount of missing and heterogeneous data within the included papers",
+     "text": "there was a significant amount of missing and heterogeneous data within the included papers",
+     "id": "L2",
+     "second_hand": ""
+    }
+   ],
+   "tag": "B"
   },
   {
    "read": "page",
@@ -227,7 +336,7 @@
      "where": "Mixing heroin with other drugs / Physical health risks",
      "quote": "It's very easy to overdose from heroin, which kills far more people in the UK than any other illegal drug.",
      "text": "Heroin kills far more people in the UK than any other illegal drug.",
-     "id": "F4",
+     "id": "F7",
      "second_hand": ""
     },
     {
@@ -235,7 +344,7 @@
      "where": "Mixing heroin with other drugs / Physical health risks",
      "quote": "Other sedating drugs – such as benzodiazepine tranquillisers or methadone – are also linked with deaths from heroin overdose.",
      "text": "Benzodiazepine tranquillisers or methadone are linked with deaths from heroin overdose.",
-     "id": "F5",
+     "id": "F8",
      "second_hand": ""
     },
     {
@@ -243,86 +352,7 @@
      "where": "Common risks",
      "quote": "Risk of overdose and death is high.",
      "text": "Risk of overdose and death from heroin is high.",
-     "id": "F6",
-     "second_hand": ""
-    }
-   ],
-   "limits": [],
-   "tag": "B"
-  },
-  {
-   "read": "summary",
-   "ref": {
-    "id": "stefanidou_2007",
-    "type": "article-journal",
-    "title": "Toxicological investigation of drug-related cases in Greece: Interpretation of analytical findings",
-    "author": [
-     {
-      "family": "Stefanidou",
-      "given": "Maria"
-     },
-     {
-      "family": "Maravelias",
-      "given": "Constantine"
-     },
-     {
-      "family": "Dona",
-      "given": "Artemis"
-     },
-     {
-      "family": "Athanaselis",
-      "given": "Sotiris"
-     },
-     {
-      "family": "Spiliopoulou",
-      "given": "Hara"
-     }
-    ],
-    "container-title": "International Journal of Toxicology",
-    "issued": {
-     "date-parts": [
-      [
-       2007
-      ]
-     ]
-    },
-    "DOI": "10.1080/10915810701352788",
-    "verification": {
-     "status": "metadata-verified",
-     "metadata_source": "crossref",
-     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
-     "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-27",
-     "retraction_check": {
-      "status": "clear",
-      "checked_on": "2026-11-27"
-     }
-    },
-    "volume": "26",
-    "issue": "3",
-    "page": "231-236"
-   },
-   "doi": "10.1080/10915810701352788",
-   "title": "Toxicological investigation of drug-related cases in Greece: interpretation of analytical findings",
-   "year": 2007,
-   "journal": "International journal of toxicology",
-   "kind": "review",
-   "people": false,
-   "near": 0.681,
-   "money": [],
-   "design": {
-    "passage": 2,
-    "where": "Summary",
-    "quote": "This article reviews (a) particular toxicological issues associated with some toxic substances responsible for common lethal or nonlethal poisonings",
-    "text": "review of toxicological issues"
-   },
-   "findings": [
-    {
-     "passage": 2,
-     "where": "Summary",
-     "quote": "heroin, alone or in combination with other psychoactive substances, such as cannabis and cocaine, is the main drug involved in these deaths",
-     "text": "heroin, alone or in combination with other psychoactive substances, is the main drug involved in deaths in Greece",
-     "id": "F7",
+     "id": "F9",
      "second_hand": ""
     }
    ],
@@ -330,9 +360,119 @@
    "tag": "C"
   }
  ],
- "parts": [],
+ "parts": [
+  {
+   "part": "short",
+   "text": "Not known. The sources provided do not mention Greece or give a mortality rate for heroin use there.",
+   "uses": [
+    "DA",
+    "DB",
+    "F7"
+   ],
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "teijeiro_2026",
+     "where": "Abstract",
+     "quote": "A scoping review was conducted until November 2024 in MEDLINE (Ovid), EMBASE and Web of Science.",
+     "sha": "bd16c5f2fe27070b"
+    },
+    {
+     "label": "DB",
+     "ref": "medinaperucha_2019",
+     "where": "Abstract",
+     "quote": "This systematic literature review identified factors associated with sexual risks related to sexually transmitted infections (STI), HIV and other blood-borne viruses (BBV) among women using heroin and other drugs.",
+     "sha": "a36eb88846b49e53"
+    },
+    {
+     "label": "F7",
+     "ref": "frank_heroin",
+     "where": "Mixing heroin with other drugs / Physical health risks",
+     "quote": "It's very easy to overdose from heroin, which kills far more people in the UK than any other illegal drug.",
+     "sha": "bdf83e7c599454b2"
+    }
+   ]
+  },
+  {
+   "part": "but",
+   "text": "This rests on 1 review, 1 study in people and 1 official page.",
+   "uses": [
+    "DA",
+    "DB",
+    "F7"
+   ],
+   "fixed": true,
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "teijeiro_2026",
+     "where": "Abstract",
+     "quote": "A scoping review was conducted until November 2024 in MEDLINE (Ovid), EMBASE and Web of Science.",
+     "sha": "bd16c5f2fe27070b"
+    },
+    {
+     "label": "DB",
+     "ref": "medinaperucha_2019",
+     "where": "Abstract",
+     "quote": "This systematic literature review identified factors associated with sexual risks related to sexually transmitted infections (STI), HIV and other blood-borne viruses (BBV) among women using heroin and other drugs.",
+     "sha": "a36eb88846b49e53"
+    },
+    {
+     "label": "F7",
+     "ref": "frank_heroin",
+     "where": "Mixing heroin with other drugs / Physical health risks",
+     "quote": "It's very easy to overdose from heroin, which kills far more people in the UK than any other illegal drug.",
+     "sha": "bdf83e7c599454b2"
+    }
+   ]
+  },
+  {
+   "part": "how1",
+   "text": "A 2026 scoping review of Spanish studies found heroin use prevalence varied from 0.1% to 85.0%.",
+   "uses": [
+    "DA",
+    "F1"
+   ],
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "teijeiro_2026",
+     "where": "Abstract",
+     "quote": "A scoping review was conducted until November 2024 in MEDLINE (Ovid), EMBASE and Web of Science.",
+     "sha": "bd16c5f2fe27070b"
+    },
+    {
+     "label": "F1",
+     "ref": "teijeiro_2026",
+     "where": "Results › Consumption characteristics",
+     "quote": "Prevalences of heroin use varied widely in all population groups from 0.1% to 85.0%.",
+     "sha": "b87705fedbdc82b0"
+    }
+   ],
+   "quote": "Prevalences of heroin use varied widely in all population groups from 0.1% to 85.0%",
+   "quote_ref": "teijeiro_2026"
+  },
+  {
+   "part": "how3",
+   "text": "FRANK says heroin kills far more people in the UK than any other illegal drug.",
+   "uses": [
+    "F7"
+   ],
+   "rests_on": [
+    {
+     "label": "F7",
+     "ref": "frank_heroin",
+     "where": "Mixing heroin with other drugs / Physical health risks",
+     "quote": "It's very easy to overdose from heroin, which kills far more people in the UK than any other illegal drug.",
+     "sha": "bdf83e7c599454b2"
+    }
+   ],
+   "quote": "which kills far more people in the UK than any other illegal drug",
+   "quote_ref": "frank_heroin"
+  }
+ ],
  "complete": false,
- "missing": "numeric mortality rate",
+ "missing": "Mortality rate for heroin use in Greece",
  "wanted": [
   {
    "doi": "10.1080/10915810701352788",
@@ -344,14 +484,6 @@
  ],
  "person": null,
  "history": [
-  {
-   "on": "2026-11-19",
-   "lane": 19,
-   "status": "none",
-   "why": "no source that can be read gave a finding for this question (2 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
-   "short": "",
-   "complete": false
-  },
   {
    "on": "2026-11-19",
    "lane": 19,
@@ -391,6 +523,14 @@
    "why": "no draft passed: broken at try 3: short: it says what the sources do not say: only a part of each source was read. Let the But be a finding that says for whom or under what conditions the answer holds, or a limit a source states itself",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-27",
+   "lane": 19,
+   "status": "none",
+   "why": "the second reader did not accept the answer",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -409,7 +549,20 @@
    "kind": "review",
    "at": "10.1038/s41398-023-02406-5",
    "kept": 0,
-   "thrown": []
+   "thrown": [
+    {
+     "kind": "limit",
+     "text": "findings may not apply to humans because they were mostly studied in rodents",
+     "quote": "However, caution should be applied in extending data collected in rodents to humans, given the much faster metabolism of heroin in mice and rats relative to humans",
+     "why": "the sentence is not carried by its quote and passage"
+    },
+    {
+     "kind": "limit",
+     "text": "measurements of heroin in blood are limited to 10–45 minutes after injection",
+     "quote": "Within 10–45 min, heroin becomes undetectable in the blood",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   },
   {
    "title": "Heroin assessment in Spanish population-based studies: a scoping review",
@@ -417,14 +570,7 @@
    "kind": "other",
    "at": "10.1017/neu.2026.10081",
    "kept": 3,
-   "thrown": [
-    {
-     "kind": "limit",
-     "text": "Surveys often omit or superficially capture key dimensions of drug use.",
-     "quote": "population-based surveys with large sample sizes and assessments covering multiple substances are primarily designed to estimate prevalence. As a result, they often omit or only superficially capture ",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
-    }
-   ]
+   "thrown": []
   },
   {
    "title": "Wound Botulism Among Persons Who Inject Black Tar Heroin in New Mexico, 2016",
@@ -439,55 +585,15 @@
    "read": "full",
    "kind": "review",
    "at": "10.1007/s10461-018-2238-7",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Reinterpreting ethnic patterns among white and African American men who inject heroin: a social science of medicine approach",
-   "read": "full",
-   "kind": "review",
-   "at": "10.1371/journal.pmed.0030452",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "A method of diamorphine (heroin) administration for harm reduction",
-   "read": "full",
-   "kind": "review",
-   "at": "10.1186/s12954-023-00758-1",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Fentanyls continue to replace heroin in the drug arena: the cases of ocfentanil and carfentanil",
-   "read": "full",
-   "kind": "review",
-   "at": "10.1007/s11419-017-0379-4",
-   "kept": 0,
+   "kept": 3,
    "thrown": [
     {
-     "kind": "text",
-     "text": "A review of research papers",
-     "quote": "All reviewed information was gathered through a detailed search of PubMed and the World Wide Web using relevant keywords.",
-     "why": "the sentence is not carried by its quote and passage"
+     "kind": "finding",
+     "text": "heroin use was marginally higher among women engaging in transactional sex",
+     "quote": "Heroin use was marginally higher among women engaging in transactional sex",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
     }
    ]
-  },
-  {
-   "title": "What we have learned from the Methadone Maintenance Treatment of Dual Disorder Heroin Use Disorder patients",
-   "read": "full",
-   "kind": "review",
-   "at": "10.3390/ijerph16030447",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Prevalence of Deliberate Self-harm Among Chinese Patients With Heroin Dependence: A Meta-Analysis",
-   "read": "full",
-   "kind": "other",
-   "at": "10.3389/fpsyt.2018.00325",
-   "kept": 0,
-   "thrown": []
   },
   {
    "title": "Heroin",
@@ -528,8 +634,8 @@
     },
     {
      "kind": "limit",
-     "text": "The page does not discuss the effectiveness of these treatments in preventing overdose or death.",
-     "quote": "Doctors have developed a number of effective ways to treat addiction to street heroin.",
+     "text": "The information provided does not specify how often injecting heroin leads to these conditions.",
+     "quote": "Injecting heroin can do nasty damage to your veins and arteries, and has been known to lead to gangrene (death of body tissue, usually a finger, toe or a limb) and to infections.",
      "why": "the sentence is not carried by its quote and passage"
     }
    ]
@@ -565,43 +671,26 @@
    "at": "https://www.nhs.uk/live-well/addiction-support/heroin-get-help/",
    "kept": 0,
    "thrown": []
-  },
-  {
-   "title": "Toxicological investigation of drug-related cases in Greece: interpretation of analytical findings",
-   "read": "summary",
-   "kind": "review",
-   "at": "10.1080/10915810701352788",
-   "kept": 1,
-   "thrown": []
   }
  ],
- "plan": {
-  "short": [
-   "F7"
-  ],
-  "direct": "Not known",
-  "but": [],
-  "how": [
-   [
-    "DC",
-    "F7"
-   ]
-  ],
-  "unanswered": "numeric mortality rate"
- },
+ "plan": "the planner gave no plan that could be used: the writer chose the items itself",
  "panel_gap": [],
  "own": {
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.0092,
-   "but": 0.0907,
-   "how1": 0.9077
+   "short": 0.3005,
+   "but": 0.0696,
+   "how1": 0.9781,
+   "how2": 0.0172,
+   "how3": 0.9763
   },
   "scores_quotes_alone": {
-   "short": 0.0111,
-   "but": 0.1686,
-   "how1": 0.7255
+   "short": 0.0874,
+   "but": 0.02,
+   "how1": 0.9532,
+   "how2": 0.008,
+   "how3": 0.9742
   }
  },
  "tries": [
@@ -611,53 +700,116 @@
    "parts": [
     {
      "part": "short",
-     "text": "Not known. A 2007 review says heroin is the main drug involved in deaths in Greece, but it does not give a mortality rate.",
+     "text": "Not known. The sources provided do not give a mortality rate for heroin use in Greece.",
      "rests_on": [
       {
-       "label": "F7",
-       "ref": "stefanidou_2007",
-       "where": "Summary",
-       "quote": "heroin, alone or in combination with other psychoactive substances, such as cannabis and cocaine, is the main drug involved in these deaths",
-       "sha": "5730459b5164abf1"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "the word it opens with (“Not known”) is not the answer the passages bear out: The passages give no mortality rate, but do not establish that the rate is unknown. “Not provided in the passage” would be fair."
-    },
-    {
-     "part": "but",
-     "text": "The source is a review of toxicological issues, not a study that counts how many people die from heroin.",
-     "rests_on": [
+       "label": "DA",
+       "ref": "teijeiro_2026",
+       "where": "Abstract",
+       "quote": "A scoping review was conducted until November 2024 in MEDLINE (Ovid), EMBASE and Web of Science.",
+       "sha": "bd16c5f2fe27070b"
+      },
       {
-       "label": "DC",
-       "ref": "stefanidou_2007",
-       "where": "Summary",
-       "quote": "This article reviews (a) particular toxicological issues associated with some toxic substances responsible for common lethal or nonlethal poisonings",
-       "sha": "5730459b5164abf1"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passage describes the article as a review of toxicological issues, but does not say it is not a study that counts deaths from heroin."
-    },
-    {
-     "part": "how1",
-     "text": "A 2007 review of toxicological issues in Greece says heroin, alone or with other drugs, is the main drug in deaths.",
-     "rests_on": [
-      {
-       "label": "DC",
-       "ref": "stefanidou_2007",
-       "where": "Summary",
-       "quote": "This article reviews (a) particular toxicological issues associated with some toxic substances responsible for common lethal or nonlethal poisonings",
-       "sha": "5730459b5164abf1"
+       "label": "DB",
+       "ref": "medinaperucha_2019",
+       "where": "Abstract",
+       "quote": "This systematic literature review identified factors associated with sexual risks related to sexually transmitted infections (STI), HIV and other blood-borne viruses (BBV) among women using heroin and other drugs.",
+       "sha": "a36eb88846b49e53"
       },
       {
        "label": "F7",
-       "ref": "stefanidou_2007",
-       "where": "Summary",
-       "quote": "heroin, alone or in combination with other psychoactive substances, such as cannabis and cocaine, is the main drug involved in these deaths",
-       "sha": "5730459b5164abf1"
+       "ref": "frank_heroin",
+       "where": "Mixing heroin with other drugs / Physical health risks",
+       "quote": "It's very easy to overdose from heroin, which kills far more people in the UK than any other illegal drug.",
+       "sha": "bdf83e7c599454b2"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "The sources cover Spain, a general review of women, and the UK, but none study Greece.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "teijeiro_2026",
+       "where": "Abstract",
+       "quote": "A scoping review was conducted until November 2024 in MEDLINE (Ovid), EMBASE and Web of Science.",
+       "sha": "bd16c5f2fe27070b"
+      },
+      {
+       "label": "DB",
+       "ref": "medinaperucha_2019",
+       "where": "Abstract",
+       "quote": "This systematic literature review identified factors associated with sexual risks related to sexually transmitted infections (STI), HIV and other blood-borne viruses (BBV) among women using heroin and other drugs.",
+       "sha": "a36eb88846b49e53"
+      },
+      {
+       "label": "F7",
+       "ref": "frank_heroin",
+       "where": "Mixing heroin with other drugs / Physical health risks",
+       "quote": "It's very easy to overdose from heroin, which kills far more people in the UK than any other illegal drug.",
+       "sha": "bdf83e7c599454b2"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages identify a Spain-focused review and a review of women using heroin and other drugs, but do not establish the geographic scope of that review or that none of its studies covered Greece."
+    },
+    {
+     "part": "how1",
+     "text": "A 2026 review of Spanish studies found heroin use prevalence varied from 0.1% to 85.0%.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "teijeiro_2026",
+       "where": "Abstract",
+       "quote": "A scoping review was conducted until November 2024 in MEDLINE (Ovid), EMBASE and Web of Science.",
+       "sha": "bd16c5f2fe27070b"
+      },
+      {
+       "label": "F1",
+       "ref": "teijeiro_2026",
+       "where": "Results › Consumption characteristics",
+       "quote": "Prevalences of heroin use varied widely in all population groups from 0.1% to 85.0%.",
+       "sha": "b87705fedbdc82b0"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A 2019 review of women using heroin found 44.6% used it, but did not report death rates.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "medinaperucha_2019",
+       "where": "Abstract",
+       "quote": "This systematic literature review identified factors associated with sexual risks related to sexually transmitted infections (STI), HIV and other blood-borne viruses (BBV) among women using heroin and other drugs.",
+       "sha": "a36eb88846b49e53"
+      },
+      {
+       "label": "F4",
+       "ref": "medinaperucha_2019",
+       "where": "Results › Sample Characteristics",
+       "quote": "Heroin was used by 44.6% of women",
+       "sha": "df7f94475db3b0f3"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The 44.6% figure is reported, but the passages do not state that the review did not report death rates."
+    },
+    {
+     "part": "how3",
+     "text": "FRANK says heroin kills far more people in the UK than any other illegal drug.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "frank_heroin",
+       "where": "Mixing heroin with other drugs / Physical health risks",
+       "quote": "It's very easy to overdose from heroin, which kills far more people in the UK than any other illegal drug.",
+       "sha": "bdf83e7c599454b2"
       }
      ],
      "ok": true
@@ -666,112 +818,87 @@
   },
   {
    "try": 2,
-   "why": "a rule was broken: written again",
+   "why": "the short answer or the But was not accepted: written again",
    "parts": [
     {
      "part": "short",
-     "text": "The sources do not give a mortality rate for heroin use in Greece. They say heroin is the main drug involved in deaths there.",
+     "text": "Not known. The sources provided do not give a mortality rate for heroin use in Greece.",
      "rests_on": [
       {
-       "label": "F7",
-       "ref": "stefanidou_2007",
-       "where": "Summary",
-       "quote": "heroin, alone or in combination with other psychoactive substances, such as cannabis and cocaine, is the main drug involved in these deaths",
-       "sha": "5730459b5164abf1"
-      }
-     ],
-     "ok": false,
-     "by": "a rule",
-     "said": "a rule: it says what the sources do not say: only a part of each source was read. Let the But be a finding that says for whom or under what conditions the answer holds, or a limit a source states itself"
-    },
-    {
-     "part": "but",
-     "text": "The source is a review of toxicological issues, not a study that counts how many people die.",
-     "rests_on": [
-      {
-       "label": "DC",
-       "ref": "stefanidou_2007",
-       "where": "Summary",
-       "quote": "This article reviews (a) particular toxicological issues associated with some toxic substances responsible for common lethal or nonlethal poisonings",
-       "sha": "5730459b5164abf1"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how1",
-     "text": "A 2007 review of toxicological issues in Greece says heroin, alone or with other drugs, is the main drug in deaths.",
-     "rests_on": [
-      {
-       "label": "DC",
-       "ref": "stefanidou_2007",
-       "where": "Summary",
-       "quote": "This article reviews (a) particular toxicological issues associated with some toxic substances responsible for common lethal or nonlethal poisonings",
-       "sha": "5730459b5164abf1"
+       "label": "F1",
+       "ref": "teijeiro_2026",
+       "where": "Results › Consumption characteristics",
+       "quote": "Prevalences of heroin use varied widely in all population groups from 0.1% to 85.0%.",
+       "sha": "b87705fedbdc82b0"
       },
       {
        "label": "F7",
-       "ref": "stefanidou_2007",
-       "where": "Summary",
-       "quote": "heroin, alone or in combination with other psychoactive substances, such as cannabis and cocaine, is the main drug involved in these deaths",
-       "sha": "5730459b5164abf1"
+       "ref": "frank_heroin",
+       "where": "Mixing heroin with other drugs / Physical health risks",
+       "quote": "It's very easy to overdose from heroin, which kills far more people in the UK than any other illegal drug.",
+       "sha": "bdf83e7c599454b2"
       }
      ],
-     "ok": true
-    }
-   ]
-  },
-  {
-   "try": 3,
-   "why": "the last draft: no answer",
-   "parts": [
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3-flash-preview) did not accept it: The passages do not mention Greece or state that they do not provide its mortality rate."
+    },
     {
-     "part": "short",
-     "text": "Not known. A 2007 review says heroin is the main drug in Greek deaths, but gives no rate.",
+     "part": "but",
+     "text": "The sources cover Spain and the UK, or do not specify a country, so they do not answer for Greece.",
      "rests_on": [
       {
+       "label": "F3",
+       "ref": "teijeiro_2026",
+       "where": "Discussion",
+       "quote": "it is estimated that, in Spain, the prevalence of heroin use in the past year in the general Spanish population has always been less than 0.5% since the survey began three decades ago",
+       "sha": "e41c7295ee9eb379"
+      },
+      {
        "label": "F7",
-       "ref": "stefanidou_2007",
-       "where": "Summary",
-       "quote": "heroin, alone or in combination with other psychoactive substances, such as cannabis and cocaine, is the main drug involved in these deaths",
-       "sha": "5730459b5164abf1"
+       "ref": "frank_heroin",
+       "where": "Mixing heroin with other drugs / Physical health risks",
+       "quote": "It's very easy to overdose from heroin, which kills far more people in the UK than any other illegal drug.",
+       "sha": "bdf83e7c599454b2"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3-flash-preview) did not accept it: The passages do not mention Greece or state that they do not answer for it."
+    },
+    {
+     "part": "how1",
+     "text": "A 2026 review of Spanish studies found heroin use prevalence under 0.5% in the general population.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "teijeiro_2026",
+       "where": "Abstract",
+       "quote": "A scoping review was conducted until November 2024 in MEDLINE (Ovid), EMBASE and Web of Science.",
+       "sha": "bd16c5f2fe27070b"
+      },
+      {
+       "label": "F3",
+       "ref": "teijeiro_2026",
+       "where": "Discussion",
+       "quote": "it is estimated that, in Spain, the prevalence of heroin use in the past year in the general Spanish population has always been less than 0.5% since the survey began three decades ago",
+       "sha": "e41c7295ee9eb379"
       }
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "The passage says heroin was the main drug involved in the drug-related deaths investigated, not in Greek deaths generally."
+     "said": "The passage specifies past-year prevalence; the sentence omits that qualifier."
     },
     {
-     "part": "but",
-     "text": "The source is a review of toxicological issues, not a study counting deaths over time.",
+     "part": "how2",
+     "text": "FRANK says heroin kills far more people in the UK than any other illegal drug.",
      "rests_on": [
-      {
-       "label": "DC",
-       "ref": "stefanidou_2007",
-       "where": "Summary",
-       "quote": "This article reviews (a) particular toxicological issues associated with some toxic substances responsible for common lethal or nonlethal poisonings",
-       "sha": "5730459b5164abf1"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how1",
-     "text": "A 2007 review of toxicological issues in Greece says heroin is the main drug in deaths.",
-     "rests_on": [
-      {
-       "label": "DC",
-       "ref": "stefanidou_2007",
-       "where": "Summary",
-       "quote": "This article reviews (a) particular toxicological issues associated with some toxic substances responsible for common lethal or nonlethal poisonings",
-       "sha": "5730459b5164abf1"
-      },
       {
        "label": "F7",
-       "ref": "stefanidou_2007",
-       "where": "Summary",
-       "quote": "heroin, alone or in combination with other psychoactive substances, such as cannabis and cocaine, is the main drug involved in these deaths",
-       "sha": "5730459b5164abf1"
+       "ref": "frank_heroin",
+       "where": "Mixing heroin with other drugs / Physical health risks",
+       "quote": "It's very easy to overdose from heroin, which kills far more people in the UK than any other illegal drug.",
+       "sha": "bdf83e7c599454b2"
       }
      ],
      "ok": true
@@ -779,6 +906,86 @@
    ]
   }
  ],
+ "panel": {
+  "gemini:gemini-3-flash-preview": {
+   "short": [
+    false,
+    "The passages do not mention Greece or state that they do not provide its mortality rate."
+   ],
+   "but": [
+    false,
+    "The passages do not mention Greece or state that they do not answer for it."
+   ],
+   "how1": [
+    false,
+    "The sentence omits the narrowing phrase 'in the past year' which specifies the type of prevalence being reported."
+   ],
+   "how2": [
+    true,
+    ""
+   ]
+  }
+ },
+ "dropped": [
+  {
+   "try": 3,
+   "part": "but",
+   "text": "The sources cover Spain, a general review of women, and the UK, so they do not answer for Greece.",
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "teijeiro_2026",
+     "where": "Abstract",
+     "quote": "A scoping review was conducted until November 2024 in MEDLINE (Ovid), EMBASE and Web of Science.",
+     "sha": "bd16c5f2fe27070b"
+    },
+    {
+     "label": "DB",
+     "ref": "medinaperucha_2019",
+     "where": "Abstract",
+     "quote": "This systematic literature review identified factors associated with sexual risks related to sexually transmitted infections (STI), HIV and other blood-borne viruses (BBV) among women using heroin and other drugs.",
+     "sha": "a36eb88846b49e53"
+    },
+    {
+     "label": "F7",
+     "ref": "frank_heroin",
+     "where": "Mixing heroin with other drugs / Physical health risks",
+     "quote": "It's very easy to overdose from heroin, which kills far more people in the UK than any other illegal drug.",
+     "sha": "bdf83e7c599454b2"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The review concerns women using heroin and other drugs, not women generally; the passages do not characterize it as a general review of women."
+  },
+  {
+   "try": 3,
+   "part": "how2",
+   "text": "A 2019 review of women using heroin found 44.6% used it, but did not report mortality rates.",
+   "rests_on": [
+    {
+     "label": "DB",
+     "ref": "medinaperucha_2019",
+     "where": "Abstract",
+     "quote": "This systematic literature review identified factors associated with sexual risks related to sexually transmitted infections (STI), HIV and other blood-borne viruses (BBV) among women using heroin and other drugs.",
+     "sha": "a36eb88846b49e53"
+    },
+    {
+     "label": "F4",
+     "ref": "medinaperucha_2019",
+     "where": "Results › Sample Characteristics",
+     "quote": "Heroin was used by 44.6% of women",
+     "sha": "df7f94475db3b0f3"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The passage reports that heroin was used by 44.6% of the women, but it does not establish that the full review did not report mortality rates."
+  }
+ ],
+ "stakes": "dying",
+ "with_checked": {
+  "differs": [],
+  "same": []
+ },
  "place": {
   "home": "heroin",
   "also": [],
