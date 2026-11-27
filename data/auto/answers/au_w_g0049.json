@@ -17,142 +17,157 @@
   "synthetic-cannabinoids"
  ],
  "made": {
-  "on": "2026-11-23",
+  "on": "2026-11-27",
   "models": {
-   "reader": "gemini:gemini-3.5-flash-lite",
-   "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-   "checker": "@cf/openai/gpt-oss-120b",
-   "planner": "groq:openai/gpt-oss-120b",
-   "team": "team B",
-   "reader_2": "groq:openai/gpt-oss-20b",
-   "reader_first": "@cf/meta/llama-4-scout-17b-16e-instruct"
+   "reader": "openrouter:openai/gpt-oss-120b",
+   "writer": "openrouter:meta-llama/llama-3.3-70b-instruct",
+   "checker": "openrouter:openai/gpt-6-luna",
+   "planner": "openrouter:openai/gpt-oss-120b",
+   "team": "team R",
+   "reader_2": "openrouter:openai/gpt-oss-120b",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "45088898793",
-  "read_by": {
-   "gemini-3.5-flash-lite": 13,
-   "llama-4-scout-17b-16e-instruct": 1
-  },
-  "read_seconds": 82,
+  "run": "45952530046",
+  "read_seconds": 100,
   "from": {
    "papers": 2,
    "summaries": 0,
-   "official": 1
+   "official": 0
   },
-  "neurons": 353.7,
-  "seconds": 126
+  "neurons": 0.0,
+  "seconds": 132
  },
- "status": "published",
- "why": "passed every gate",
+ "status": "none",
+ "why": "the second reader did not accept the answer",
  "gates": {
-  "reader": "llama-4-scout-17b-16e-instruct could not read on (the model service could not be reached: The read operation timed out): gemini-3.5-flash-lite read from there",
-  "read": "9 findings kept from 3 sources (2 papers read in full, 1 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 1 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
-  "told": "the writer was told what the readers said of the last draft that was not accepted: the short answer “Yes, synthetic cannabinoids can be found in blood or urine through clinical testing. They may also have a longer duration of action than THC.”: the word it opens with (“Yes”) is not the answer the passages bear out: The opening word \"Yes\" only affirms that a drug test can detect sy",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.65, but 0.97, how1 0.93, how2 0.88, how3 0.85",
-  "check": "every sentence kept was accepted by the second reader (@cf/openai/gpt-oss-120b); it also found that the short answer answers the question and that the But is about that answer",
-  "rules": "nothing against it",
-  "checked": "set beside the checked claims of the same page: nothing against them"
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-120b read from there",
+  "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
+  "read": "3 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 0 official page(s), 0 paper(s) read in summary only",
+  "rules": "broken at try 2: short: a number that is not in the paper's words it rests on (54)",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.91, but 0.98, how1 0.83, how2 0.74",
+  "check": "short: NOT accepted: it does not answer the question itself (“Yes” is fair because the passages report testing that detected synthetic cannabinoids in blood or urine. The answer addresses whether a test can find them, but does not answer how long they stay in the body. Sentence 2 expresses a difficul); but: NOT accepted: This too closely restates the source sentence about difficulties identifying synthetic cannabinoids with analytical chemistry techniques, rather than putting it in your own plain words.; how1: NOT accepted: The passages describe a systematic review of studies and case studies reporting effects in humans, but do not say it was a review of “clinical studies.”; how2: accepted"
  },
  "sources": [
   {
    "read": "full",
    "ref": {
-    "id": "gomes_2026",
+    "id": "deoliveira_2023",
     "type": "article-journal",
-    "title": "Synthetic cannabinoids: Metabolism, biomarkers of exposure and advanced analytical strategies in forensic and clinical toxicology",
+    "title": "Toxicity of synthetic cannabinoids in K2/spice: A systematic review",
     "author": [
      {
-      "family": "Gomes",
-      "given": "Telma M."
+      "family": "de Oliveira",
+      "given": "Mariana Campello"
      },
      {
-      "family": "Guedes de Pinho",
-      "given": "Paula"
+      "family": "Vides",
+      "given": "Mariana Capelo"
      },
      {
-      "family": "Nunes",
-      "given": "Ivone"
+      "family": "Lassi",
+      "given": "Dângela Layne Silva"
      },
      {
-      "family": "Câmara",
-      "given": "José S."
+      "family": "Torales",
+      "given": "Julio"
+     },
+     {
+      "family": "Ventriglio",
+      "given": "Antonio"
+     },
+     {
+      "family": "Bombana",
+      "given": "Henrique Silva"
+     },
+     {
+      "family": "Leyton",
+      "given": "Vilma"
+     },
+     {
+      "family": "Périco",
+      "given": "Cintia de Azevedo-Marques"
+     },
+     {
+      "family": "Negrão",
+      "given": "André Brooking"
+     },
+     {
+      "family": "Malbergier",
+      "given": "André"
+     },
+     {
+      "family": "Castaldelli-Maia",
+      "given": "João Maurício"
      }
     ],
-    "container-title": "Toxics",
+    "container-title": "Brain Sciences",
     "issued": {
      "date-parts": [
       [
-       2026
+       2023
       ]
      ]
     },
-    "DOI": "10.3390/toxics14100898",
+    "DOI": "10.3390/brainsci13070990",
     "verification": {
      "status": "metadata-verified",
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-23",
+     "verified_on": "2026-11-27",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-23"
+      "checked_on": "2026-11-27"
      }
     },
-    "volume": "14",
-    "issue": "10",
-    "number": "898",
-    "PMCID": "PMC13709824"
+    "volume": "13",
+    "issue": "7",
+    "number": "990",
+    "PMCID": "PMC10377539"
    },
-   "doi": "10.3390/toxics14100898",
-   "pmcid": "PMC13709824",
-   "title": "Synthetic Cannabinoids: Metabolism, Biomarkers of Exposure and Advanced Analytical Strategies in Forensic and Clinical Toxicology",
-   "year": 2026,
-   "journal": "Toxics",
+   "doi": "10.3390/brainsci13070990",
+   "pmcid": "PMC10377539",
+   "title": "Toxicity of Synthetic Cannabinoids in K2/Spice: A Systematic Review",
+   "year": 2023,
+   "journal": "Brain sciences",
    "kind": "review",
-   "people": false,
-   "near": 0.689,
+   "people": true,
+   "near": 0.719,
    "money": [
-    "The authors declare no conflicts of interest.",
-    "This work was supported by the Fundação para a Ciência e a Tecnologia (FCT) with Portuguese Government funds through the CQM Base Fund—UIDB/00674/2020 (DOI: 10.54499/UIDB/00674/2020) and Programmatic Fund—UIDP/00674/2020 (DOI: 10.54499/UIDP/00674/2020)."
+    "The authors declare no conflict of interest.",
+    "This research received no external funding."
    ],
    "design": {
-    "passage": 6,
-    "where": "2. Literature Search Strategy",
-    "quote": "Extensive literature research was carried out to find relevant studies on metabolism, biotransformation and analysis of synthetic cannabinoids.",
-    "text": "literature search and review on metabolism, biotransformation, and analysis of synthetic cannabinoids"
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "This systematic review intends to analyze the toxicity of SCs compounds in Spice/K2 drugs.",
+    "text": "Systematic review of original clinical studies on synthetic cannabinoid toxicity in humans"
    },
    "findings": [
     {
-     "passage": 25,
-     "where": "4. Toxicokinetics and Toxicometabolomics",
-     "quote": "Urine is one of the most analyzed matrices in forensic toxicology. Its main advantages include the detection of most drug metabolites, which allows for a longer detection window compared to other body fluids.",
-     "text": "Urine allows for a longer detection window for drug metabolites compared to other body fluids.",
+     "passage": 16,
+     "where": "3. Results",
+     "quote": "Analyses of SCs in blood, serum, or urine samples were performed using electrospray ionization liquid chromatography-tandem mass spectrometry.",
+     "text": "Synthetic cannabinoids can be detected in blood, serum, or urine using liquid chromatography‑tandem mass spectrometry.",
      "id": "F1",
      "second_hand": ""
     },
     {
-     "passage": 25,
-     "where": "4. Toxicokinetics and Toxicometabolomics",
-     "quote": "parent compounds, such as the synthetic cannabinoids ADB-BUTINACA and 5F-ADB, are generally not detected. Instead, only their metabolites are found",
-     "text": "Parent compounds such as ADB-BUTINACA and 5F-ADB are generally not detected, and instead only their metabolites are found.",
+     "passage": 20,
+     "where": "3. Results",
+     "quote": "Fifty‑four studies specified the detected synthetic cannabinoid via either blood or urine clinical testing.",
+     "text": "Synthetic cannabinoids have been identified in blood or urine through clinical testing in fifty‑four studies.",
      "id": "F2",
-     "second_hand": ""
-    },
-    {
-     "passage": 32,
-     "where": "4. Toxicokinetics and Toxicometabolomics",
-     "quote": "Due to their extreme potency and the long half-lives of their metabolites, with the parent compound mostly absent in various biological matrices, forensic detection of ADB-BUTINACA and 5F-ADB relies primarily on metabolic fingerprinting rather than parent drug identification.",
-     "text": "Forensic detection of ADB-BUTINACA and 5F-ADB relies primarily on metabolic fingerprinting rather than parent drug identification due to the long half-lives of their metabolites and the parent compound mostly being absent.",
-     "id": "F3",
      "second_hand": ""
     }
    ],
    "limits": [
     {
-     "passage": 25,
-     "where": "4. Toxicokinetics and Toxicometabolomics",
-     "quote": "the identification of these compounds can be challenging because many of their metabolites are not well characterized.",
-     "text": "The identification of these compounds can be challenging because many of their metabolites are not well characterized.",
+     "passage": 10,
+     "where": "2. Materials and Methods › 2.1. Eligibility",
+     "quote": "The following were excluded: non‑original studies (i.e., reviews, meta‑analysis, discussion articles, study protocols), studies in languages other than English, animal studies not including synthetic cannabinoids abusers or dependents, and studies not analyzing outcomes regarding toxicity and addiction potential.",
+     "text": "The review only included original clinical trials and excluded reviews, animal studies, and non‑English reports.",
      "id": "L1",
      "second_hand": ""
     }
@@ -162,321 +177,115 @@
   {
    "read": "full",
    "ref": {
-    "id": "bilici_2014",
+    "id": "zangani_2020",
     "type": "article-journal",
-    "title": "Synthetic cannabinoids",
+    "title": "The e-psychonauts’ ‘spiced’ world; assessment of the synthetic cannabinoids’ information available online",
     "author": [
      {
-      "family": "Bilici",
-      "given": "Rabia"
+      "family": "Zangani",
+      "given": "Caroline"
+     },
+     {
+      "family": "Schifano",
+      "given": "Fabrizio"
+     },
+     {
+      "family": "Napoletano",
+      "given": "Flavia"
+     },
+     {
+      "family": "Arillotta",
+      "given": "Davide"
+     },
+     {
+      "family": "Gilgar",
+      "given": "Liam"
+     },
+     {
+      "family": "Guirguis",
+      "given": "Amira"
+     },
+     {
+      "family": "Corkery",
+      "given": "John M."
+     },
+     {
+      "family": "Gambini",
+      "given": "Orsola"
+     },
+     {
+      "family": "Vento",
+      "given": "Alessandro"
      }
     ],
-    "container-title": "Northern Clinics of Istanbul",
+    "container-title": "Current Neuropharmacology",
     "issued": {
      "date-parts": [
       [
-       2014
+       2020
       ]
      ]
     },
-    "DOI": "10.14744/nci.2014.44153",
+    "DOI": "10.2174/1570159x18666200302125146",
     "verification": {
      "status": "metadata-verified",
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-23",
+     "verified_on": "2026-11-27",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-23"
+      "checked_on": "2026-11-27"
      }
     },
-    "volume": "1",
-    "issue": "2",
-    "PMCID": "PMC5175064"
+    "volume": "18",
+    "issue": "10",
+    "page": "966-1051",
+    "PMCID": "PMC7709145"
    },
-   "doi": "10.14744/nci.2014.44153",
-   "pmcid": "PMC5175064",
-   "title": "Synthetic cannabinoids",
-   "year": 2014,
-   "journal": "Northern clinics of Istanbul",
+   "doi": "10.2174/1570159x18666200302125146",
+   "pmcid": "PMC7709145",
+   "title": "The e-Psychonauts' 'Spiced' World; Assessment of the Synthetic Cannabinoids' Information Available Online",
+   "year": 2020,
+   "journal": "Current neuropharmacology",
    "kind": "review",
    "people": false,
-   "near": 0.658,
-   "money": [],
+   "near": 0.693,
+   "money": [
+    "AcknowledgementsDeclared none."
+   ],
    "design": {
     "passage": 2,
-    "where": "Text",
-    "quote": "In this article, we aimed to deal with available information about SCs in the light of the literature findings.",
-    "text": "An article dealing with available information about synthetic cannabinoids in the light of the literature findings"
+    "where": "Abstract",
+    "quote": "Using a web crawler (i.e. the NPS.Finder®), the present study aimed at assessing psychonauts’ fora/platforms to better understand the online mentions of SC.",
+    "text": "Web-based analysis of online mentions of synthetic cannabinoids among e‑psychonauts"
    },
    "findings": [
     {
-     "passage": 1,
-     "where": "Abstract",
-     "quote": "difficulty in detecting its presence with standard urine toxicologic tests, and similar factors probably contribute to the increased use",
-     "text": "Standard urine toxicologic tests have difficulty detecting the presence of synthetic cannabinoids.",
-     "id": "F4",
-     "second_hand": ""
-    },
-    {
-     "passage": 20,
-     "where": "Pharmacology",
-     "quote": "Some difficulties encountered in the detection of synthetic cannabinoids in urine, sputum, and serum samples of synthetic cannabinoid users.",
-     "text": "There are difficulties encountered in the detection of synthetic cannabinoids in urine, sputum, and serum samples.",
-     "id": "F5",
-     "second_hand": ""
-    },
-    {
-     "passage": 40,
-     "where": "DISCUSSION",
-     "quote": "Besides forensic medicine specialists should not forget that during evaluation process standard toxicology tests may not detect SC.",
-     "text": "Standard toxicology tests may not detect synthetic cannabinoids during the evaluation process.",
-     "id": "F6",
-     "second_hand": ""
-    }
-   ],
-   "limits": [],
-   "tag": "B"
-  },
-  {
-   "read": "page",
-   "ref": {
-    "id": "thelevel_synthetic-cannabinoids",
-    "type": "webpage",
-    "title": "Synthetic Cannabinoids",
-    "author": [
-     {
-      "literal": "NZ Drug Foundation"
-     }
-    ],
-    "issued": {
-     "date-parts": [
-      []
-     ]
-    },
-    "URL": "https://thelevel.org.nz/drug-information/synthetic-cannabinoids",
-    "accessed": {
-     "date-parts": [
-      [
-       2026,
-       11,
-       23
-      ]
-     ]
-    },
-    "verification": {
-     "status": "made by code",
-     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-23"
-    },
-    "publisher": "The Level"
-   },
-   "title": "Synthetic Cannabinoids",
-   "year": null,
-   "kind": "official",
-   "people": true,
-   "near": 0.698,
-   "name": "NZ Drug Foundation",
-   "short": "the NZ Drug Foundation",
-   "tier": 2,
-   "address": "https://thelevel.org.nz/drug-information/synthetic-cannabinoids",
-   "money": [],
-   "label": false,
-   "design": null,
-   "findings": [
-    {
-     "passage": 20,
-     "where": "Working and driving / If you take synthetic cannabinoids, will it show up on a drug test?",
-     "quote": "Generally, it is thought that these drugs can be detected up to 48 hours in urine and saliva, from a few hours to a few days in blood and up to 90 days in hair",
-     "text": "Generally, it is thought that these drugs can be detected up to 48 hours in urine and saliva, from a few hours to a few days in blood and up to 90 days in hair.",
-     "id": "F7",
-     "second_hand": ""
-    },
-    {
-     "passage": 20,
-     "where": "Working and driving / If you take synthetic cannabinoids, will it show up on a drug test?",
-     "quote": "Synthetic cannabinoids could be tested for in hair, urine, saliva (spit) or blood but may not be tested for in routine drug tests, as testing methods are not very reliable.",
-     "text": "Synthetic cannabinoids could be tested for in hair, urine, saliva, or blood, but they may not be tested for in routine drug tests because testing methods are not very reliable.",
-     "id": "F8",
-     "second_hand": ""
-    },
-    {
-     "passage": 20,
-     "where": "Working and driving / If you take synthetic cannabinoids, will it show up on a drug test?",
-     "quote": "The testing windows for these drugs can vary depending on what type of synthetic cannabinoid you used, how long you have used it for, how much you used and your individual body.",
-     "text": "The testing windows for these drugs can vary depending on what type of synthetic cannabinoid you used, how long you have used it for, how much you used, and your individual body.",
-     "id": "F9",
+     "passage": 25,
+     "where": "DISCUSSION › Pharmacological and Clinical Pharmacological Considerations",
+     "quote": "there are difficulties in identifying them with analytical chemistry techniques.",
+     "text": "Analytical chemistry techniques have difficulties identifying synthetic cannabinoids.",
+     "id": "F3",
      "second_hand": ""
     }
    ],
    "limits": [
     {
-     "passage": 20,
-     "where": "Working and driving / If you take synthetic cannabinoids, will it show up on a drug test?",
-     "quote": "(but there is some debate on how reliable this is)",
-     "text": "There is some debate on how reliable detection in hair is.",
+     "passage": 25,
+     "where": "DISCUSSION › Pharmacological and Clinical Pharmacological Considerations",
+     "quote": "Although the evidence base for most SC molecules here mentioned is lacking, they are likely to act as partial/full agonists, and with different affinity levels, at the CB1 receptors.",
+     "text": "The evidence base for most synthetic cannabinoid molecules is lacking.",
      "id": "L2",
      "second_hand": ""
     }
    ],
-   "tag": "C"
+   "tag": "B"
   }
  ],
- "parts": [
-  {
-   "part": "short",
-   "text": "It depends, synthetic cannabinoids can be detected up to 48 hours in urine and saliva, and up to 90 days in hair.",
-   "uses": [
-    "F7",
-    "F8"
-   ],
-   "rests_on": [
-    {
-     "label": "F7",
-     "ref": "thelevel_synthetic-cannabinoids",
-     "where": "Working and driving / If you take synthetic cannabinoids, will it show up on a drug test?",
-     "quote": "Generally, it is thought that these drugs can be detected up to 48 hours in urine and saliva, from a few hours to a few days in blood and up to 90 days in hair",
-     "sha": "ada38ad6996a1f1d"
-    },
-    {
-     "label": "F8",
-     "ref": "thelevel_synthetic-cannabinoids",
-     "where": "Working and driving / If you take synthetic cannabinoids, will it show up on a drug test?",
-     "quote": "Synthetic cannabinoids could be tested for in hair, urine, saliva (spit) or blood but may not be tested for in routine drug tests, as testing methods are not very reliable.",
-     "sha": "ada38ad6996a1f1d"
-    }
-   ]
-  },
-  {
-   "part": "but",
-   "text": "The identification of these compounds can be challenging because many of their metabolites are not well characterized.",
-   "uses": [
-    "L1"
-   ],
-   "rests_on": [
-    {
-     "label": "L1",
-     "ref": "gomes_2026",
-     "where": "4. Toxicokinetics and Toxicometabolomics",
-     "quote": "the identification of these compounds can be challenging because many of their metabolites are not well characterized.",
-     "sha": "e71ef54f808b552a"
-    }
-   ]
-  },
-  {
-   "part": "how1",
-   "text": "The NZ Drug Foundation says detection times vary by type and individual.",
-   "uses": [
-    "F7",
-    "F8",
-    "F9"
-   ],
-   "rests_on": [
-    {
-     "label": "F7",
-     "ref": "thelevel_synthetic-cannabinoids",
-     "where": "Working and driving / If you take synthetic cannabinoids, will it show up on a drug test?",
-     "quote": "Generally, it is thought that these drugs can be detected up to 48 hours in urine and saliva, from a few hours to a few days in blood and up to 90 days in hair",
-     "sha": "ada38ad6996a1f1d"
-    },
-    {
-     "label": "F8",
-     "ref": "thelevel_synthetic-cannabinoids",
-     "where": "Working and driving / If you take synthetic cannabinoids, will it show up on a drug test?",
-     "quote": "Synthetic cannabinoids could be tested for in hair, urine, saliva (spit) or blood but may not be tested for in routine drug tests, as testing methods are not very reliable.",
-     "sha": "ada38ad6996a1f1d"
-    },
-    {
-     "label": "F9",
-     "ref": "thelevel_synthetic-cannabinoids",
-     "where": "Working and driving / If you take synthetic cannabinoids, will it show up on a drug test?",
-     "quote": "The testing windows for these drugs can vary depending on what type of synthetic cannabinoid you used, how long you have used it for, how much you used and your individual body.",
-     "sha": "ada38ad6996a1f1d"
-    }
-   ],
-   "quote": "The testing windows for these drugs can vary depending on what type of synthetic cannabinoid",
-   "quote_ref": "thelevel_synthetic-cannabinoids"
-  },
-  {
-   "part": "how2",
-   "text": "A review of synthetic cannabinoid metabolism found urine allows for a longer detection window.",
-   "uses": [
-    "DA",
-    "F1",
-    "F3"
-   ],
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "gomes_2026",
-     "where": "2. Literature Search Strategy",
-     "quote": "Extensive literature research was carried out to find relevant studies on metabolism, biotransformation and analysis of synthetic cannabinoids.",
-     "sha": "d63d39fa360f925c"
-    },
-    {
-     "label": "F1",
-     "ref": "gomes_2026",
-     "where": "4. Toxicokinetics and Toxicometabolomics",
-     "quote": "Urine is one of the most analyzed matrices in forensic toxicology. Its main advantages include the detection of most drug metabolites, which allows for a longer detection window compared to other body fluids.",
-     "sha": "e71ef54f808b552a"
-    },
-    {
-     "label": "F3",
-     "ref": "gomes_2026",
-     "where": "4. Toxicokinetics and Toxicometabolomics",
-     "quote": "Due to their extreme potency and the long half-lives of their metabolites, with the parent compound mostly absent in various biological matrices, forensic detection of ADB-BUTINACA and 5F-ADB relies primarily on metabolic fingerprinting rather than parent drug identification.",
-     "sha": "670d1594f45a3a8c"
-    }
-   ],
-   "quote": "which allows for a longer detection window compared to other body fluids",
-   "quote_ref": "gomes_2026"
-  },
-  {
-   "part": "how3",
-   "text": "A 2014 review reported difficulties in detecting synthetic cannabinoids in urine, sputum, and serum samples.",
-   "uses": [
-    "DB",
-    "F4",
-    "F5",
-    "F6"
-   ],
-   "rests_on": [
-    {
-     "label": "DB",
-     "ref": "bilici_2014",
-     "where": "Text",
-     "quote": "In this article, we aimed to deal with available information about SCs in the light of the literature findings.",
-     "sha": "5c189a2207d3a26f"
-    },
-    {
-     "label": "F4",
-     "ref": "bilici_2014",
-     "where": "Abstract",
-     "quote": "difficulty in detecting its presence with standard urine toxicologic tests, and similar factors probably contribute to the increased use",
-     "sha": "1bc23f8d164e1d34"
-    },
-    {
-     "label": "F5",
-     "ref": "bilici_2014",
-     "where": "Pharmacology",
-     "quote": "Some difficulties encountered in the detection of synthetic cannabinoids in urine, sputum, and serum samples of synthetic cannabinoid users.",
-     "sha": "52dbd47ff893b833"
-    },
-    {
-     "label": "F6",
-     "ref": "bilici_2014",
-     "where": "DISCUSSION",
-     "quote": "Besides forensic medicine specialists should not forget that during evaluation process standard toxicology tests may not detect SC.",
-     "sha": "2dce75159661fefd"
-    }
-   ],
-   "quote": "presence with standard urine toxicologic tests, and similar factors probably contribute to the increased use",
-   "quote_ref": "bilici_2014"
-  }
- ],
+ "parts": [],
  "complete": false,
- "missing": "how long they stay in the body",
+ "missing": "how long they remain in the body",
  "wanted": [
   {
    "doi": "10.1016/j.toxlet.2010.06.002",
@@ -517,6 +326,14 @@
    "why": "no draft passed: not accepted at try 1: a second reader did not accept short (the word it opens with (“Yes”) is not the answer the passages bear out: The opening word \"Yes\" only affirms that a drug test can detect synthetic cannabinoids; it does not address the first part of the question about how long they stay in t); but (it is about something else than the short answer (The opening word \"Yes\" only affirms that a drug test can detect synthetic cannabinoids; it does not address the first part of the question about how long they stay in the body, so it is not a fully fair answer. Consequently, the overall ans)). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-23",
+   "lane": 19,
+   "status": "published",
+   "why": "passed every gate",
+   "short": "It depends, synthetic cannabinoids can be detected up to 48 hours in urine and saliva, and up to 90 days in hair.",
+   "complete": false
   }
  ],
  "looked": [
@@ -525,8 +342,15 @@
    "read": "full",
    "kind": "review",
    "at": "10.3390/brainsci13070990",
-   "kept": 0,
-   "thrown": []
+   "kept": 2,
+   "thrown": [
+    {
+     "kind": "limit",
+     "text": "The literature search was limited to studies published up to May 2022.",
+     "quote": "We searched the PubMed database of the US National Library of Medicine, Google Scholar, CompTox Chemicals, and Web of Science up to May 2022.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   },
   {
    "title": "Potential Mechanisms Underlying the Deleterious Effects of Synthetic Cannabinoids Found in Spice/K2 Products",
@@ -534,164 +358,349 @@
    "kind": "review",
    "at": "10.3390/brainsci9010014",
    "kept": 0,
-   "thrown": []
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
   },
   {
    "title": "The e-Psychonauts' 'Spiced' World; Assessment of the Synthetic Cannabinoids' Information Available Online",
    "read": "full",
    "kind": "review",
    "at": "10.2174/1570159x18666200302125146",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "The synthetic cannabinoids menace: a review of health risks and toxicity",
-   "read": "full",
-   "kind": "review",
-   "at": "10.1186/s40001-023-01443-6",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Synthetic Cannabinoids: Metabolism, Biomarkers of Exposure and Advanced Analytical Strategies in Forensic and Clinical Toxicology",
-   "read": "full",
-   "kind": "review",
-   "at": "10.3390/toxics14100898",
-   "kept": 3,
-   "thrown": []
-  },
-  {
-   "title": "Synthetic cannabinoids",
-   "read": "full",
-   "kind": "review",
-   "at": "10.14744/nci.2014.44153",
-   "kept": 3,
-   "thrown": [
-    {
-     "kind": "limit",
-     "text": "",
-     "quote": "Since limited number of epidemiological data are available on synthetic cannabinoid use, their pharmacokinetics, and distribution patterns in tissues/organs, elimination, drug-drug interactions, and c",
-     "why": "no sentence"
-    }
-   ]
-  },
-  {
-   "title": "Synthetic and semi-synthetic cannabinoids",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.talktofrank.com/drug/synthetic-cannabinoids",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Synthetic Cannabinoids",
-   "read": "page",
-   "kind": "official",
-   "at": "https://thelevel.org.nz/drug-information/synthetic-cannabinoids",
-   "kept": 3,
-   "thrown": []
-  },
-  {
-   "title": "What You Need to Know (And What We’re Working to Find Out) About Products Containing Cannabis or Cannabis-derived Compounds, Including CBD",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.fda.gov/consumers/consumer-updates/what-you-need-know-and-what-were-working-find-out-about-products-containing-cannabis-or-cannabis",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Cannabis",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.ccsa.ca/en/guidance-tools-resources/substances/cannabis",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Dronabinol",
-   "read": "page",
-   "kind": "official",
-   "at": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=fd8c5d57-0173-4f62-8ff0-d8147986a976",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "About Cannabis",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.cdc.gov/cannabis/about/index.html",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Research",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.ccsa.ca/en/guidance-tools-resources/substance-use-and-addiction/cannabis/research-cannabis",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "About CBD",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.cdc.gov/cannabis/about/about-cbd.html",
-   "kept": 0,
+   "kept": 1,
    "thrown": []
   }
  ],
  "plan": {
   "short": [
-   "F7",
-   "F8"
+   "F1",
+   "F2"
   ],
-  "direct": "It depends",
+  "direct": "Yes",
   "but": [
-   "L1"
+   "F3"
   ],
   "how": [
    [
-    "F7",
-    "F8",
-    "F9"
-   ],
-   [
     "DA",
     "F1",
-    "F3"
+    "F2"
    ],
    [
-    "DB",
-    "F4",
-    "F5",
-    "F6"
+    "DB"
    ]
   ],
-  "unanswered": "Exact clearance half‑life for individual synthetic cannabinoids"
+  "unanswered": "how long they remain in the body"
  },
+ "tries": [
+  {
+   "try": 1,
+   "why": "a rule was broken: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Yes, synthetic cannabinoids can be detected in blood, serum, or urine. They have been identified in 54 studies.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "deoliveira_2023",
+       "where": "3. Results",
+       "quote": "Analyses of SCs in blood, serum, or urine samples were performed using electrospray ionization liquid chromatography-tandem mass spectrometry.",
+       "sha": "a5676e4b637194ea"
+      },
+      {
+       "label": "F2",
+       "ref": "deoliveira_2023",
+       "where": "3. Results",
+       "quote": "Fifty‑four studies specified the detected synthetic cannabinoid via either blood or urine clinical testing.",
+       "sha": "13b59ae226507e9e"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: a number that is not in the paper's words it rests on (54)"
+    },
+    {
+     "part": "but",
+     "text": "But analytical chemistry techniques have difficulties identifying them.",
+     "rests_on": [
+      {
+       "label": "F3",
+       "ref": "zangani_2020",
+       "where": "DISCUSSION › Pharmacological and Clinical Pharmacological Considerations",
+       "quote": "there are difficulties in identifying them with analytical chemistry techniques.",
+       "sha": "fbd7d93fa6aa57e3"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "A systematic review of clinical studies on humans found this.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "deoliveira_2023",
+       "where": "Abstract",
+       "quote": "This systematic review intends to analyze the toxicity of SCs compounds in Spice/K2 drugs.",
+       "sha": "6e858c2cfeb15509"
+      },
+      {
+       "label": "F1",
+       "ref": "deoliveira_2023",
+       "where": "3. Results",
+       "quote": "Analyses of SCs in blood, serum, or urine samples were performed using electrospray ionization liquid chromatography-tandem mass spectrometry.",
+       "sha": "a5676e4b637194ea"
+      },
+      {
+       "label": "F2",
+       "ref": "deoliveira_2023",
+       "where": "3. Results",
+       "quote": "Fifty‑four studies specified the detected synthetic cannabinoid via either blood or urine clinical testing.",
+       "sha": "13b59ae226507e9e"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A web-based analysis of online mentions also studied synthetic cannabinoids.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "zangani_2020",
+       "where": "Abstract",
+       "quote": "Using a web crawler (i.e. the NPS.Finder®), the present study aimed at assessing psychonauts’ fora/platforms to better understand the online mentions of SC.",
+       "sha": "8f6f814d093cead1"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "a rule was broken: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Yes, synthetic cannabinoids can be detected in blood, serum, or urine. They were found in 54 studies.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "deoliveira_2023",
+       "where": "3. Results",
+       "quote": "Analyses of SCs in blood, serum, or urine samples were performed using electrospray ionization liquid chromatography-tandem mass spectrometry.",
+       "sha": "a5676e4b637194ea"
+      },
+      {
+       "label": "F2",
+       "ref": "deoliveira_2023",
+       "where": "3. Results",
+       "quote": "Fifty‑four studies specified the detected synthetic cannabinoid via either blood or urine clinical testing.",
+       "sha": "13b59ae226507e9e"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: a number that is not in the paper's words it rests on (54)"
+    },
+    {
+     "part": "but",
+     "text": "But analytical chemistry techniques have difficulties identifying them.",
+     "rests_on": [
+      {
+       "label": "F3",
+       "ref": "zangani_2020",
+       "where": "DISCUSSION › Pharmacological and Clinical Pharmacological Considerations",
+       "quote": "there are difficulties in identifying them with analytical chemistry techniques.",
+       "sha": "fbd7d93fa6aa57e3"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "A systematic review of clinical studies on synthetic cannabinoid toxicity in humans found this.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "deoliveira_2023",
+       "where": "Abstract",
+       "quote": "This systematic review intends to analyze the toxicity of SCs compounds in Spice/K2 drugs.",
+       "sha": "6e858c2cfeb15509"
+      },
+      {
+       "label": "F1",
+       "ref": "deoliveira_2023",
+       "where": "3. Results",
+       "quote": "Analyses of SCs in blood, serum, or urine samples were performed using electrospray ionization liquid chromatography-tandem mass spectrometry.",
+       "sha": "a5676e4b637194ea"
+      },
+      {
+       "label": "F2",
+       "ref": "deoliveira_2023",
+       "where": "3. Results",
+       "quote": "Fifty‑four studies specified the detected synthetic cannabinoid via either blood or urine clinical testing.",
+       "sha": "13b59ae226507e9e"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A web-based analysis of online mentions also studied synthetic cannabinoids.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "zangani_2020",
+       "where": "Abstract",
+       "quote": "Using a web crawler (i.e. the NPS.Finder®), the present study aimed at assessing psychonauts’ fora/platforms to better understand the online mentions of SC.",
+       "sha": "8f6f814d093cead1"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Yes, synthetic cannabinoids can be detected in blood, serum, or urine.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "deoliveira_2023",
+       "where": "3. Results",
+       "quote": "Analyses of SCs in blood, serum, or urine samples were performed using electrospray ionization liquid chromatography-tandem mass spectrometry.",
+       "sha": "a5676e4b637194ea"
+      },
+      {
+       "label": "F2",
+       "ref": "deoliveira_2023",
+       "where": "3. Results",
+       "quote": "Fifty‑four studies specified the detected synthetic cannabinoid via either blood or urine clinical testing.",
+       "sha": "13b59ae226507e9e"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it does not answer the question itself (“Yes” is fair because the passages report testing that detected synthetic cannabinoids in blood or urine. The answer addresses whether a test can find them, but does not answer how long they stay in the body. Sentence 2 expresses a difficul)"
+    },
+    {
+     "part": "but",
+     "text": "But analytical chemistry techniques have difficulties identifying them.",
+     "rests_on": [
+      {
+       "label": "F3",
+       "ref": "zangani_2020",
+       "where": "DISCUSSION › Pharmacological and Clinical Pharmacological Considerations",
+       "quote": "there are difficulties in identifying them with analytical chemistry techniques.",
+       "sha": "fbd7d93fa6aa57e3"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "This too closely restates the source sentence about difficulties identifying synthetic cannabinoids with analytical chemistry techniques, rather than putting it in your own plain words."
+    },
+    {
+     "part": "how1",
+     "text": "A systematic review of clinical studies on humans found this.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "deoliveira_2023",
+       "where": "Abstract",
+       "quote": "This systematic review intends to analyze the toxicity of SCs compounds in Spice/K2 drugs.",
+       "sha": "6e858c2cfeb15509"
+      },
+      {
+       "label": "F1",
+       "ref": "deoliveira_2023",
+       "where": "3. Results",
+       "quote": "Analyses of SCs in blood, serum, or urine samples were performed using electrospray ionization liquid chromatography-tandem mass spectrometry.",
+       "sha": "a5676e4b637194ea"
+      },
+      {
+       "label": "F2",
+       "ref": "deoliveira_2023",
+       "where": "3. Results",
+       "quote": "Fifty‑four studies specified the detected synthetic cannabinoid via either blood or urine clinical testing.",
+       "sha": "13b59ae226507e9e"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages describe a systematic review of studies and case studies reporting effects in humans, but do not say it was a review of “clinical studies.”"
+    },
+    {
+     "part": "how2",
+     "text": "A web-based analysis of online mentions also studied synthetic cannabinoids.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "zangani_2020",
+       "where": "Abstract",
+       "quote": "Using a web crawler (i.e. the NPS.Finder®), the present study aimed at assessing psychonauts’ fora/platforms to better understand the online mentions of SC.",
+       "sha": "8f6f814d093cead1"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  }
+ ],
  "panel_gap": [],
  "own": {
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.651,
-   "but": 0.9726,
-   "how1": 0.9334,
-   "how2": 0.8837,
-   "how3": 0.8549
+   "short": 0.9136,
+   "but": 0.9805,
+   "how1": 0.8341,
+   "how2": 0.7362
   },
   "scores_quotes_alone": {
-   "short": 0.5003,
-   "but": 0.8142,
-   "how1": 0.9751,
-   "how2": 0.9354,
-   "how3": 0.891
+   "short": 0.9485,
+   "but": 0.9473,
+   "how1": 0.3562,
+   "how2": 0.7767
   }
  },
- "with_checked": {
-  "differs": [],
-  "same": []
- },
+ "dropped": [
+  {
+   "try": 3,
+   "part": "how1",
+   "text": "A systematic review of clinical studies on humans found this.",
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "deoliveira_2023",
+     "where": "Abstract",
+     "quote": "This systematic review intends to analyze the toxicity of SCs compounds in Spice/K2 drugs.",
+     "sha": "6e858c2cfeb15509"
+    },
+    {
+     "label": "F1",
+     "ref": "deoliveira_2023",
+     "where": "3. Results",
+     "quote": "Analyses of SCs in blood, serum, or urine samples were performed using electrospray ionization liquid chromatography-tandem mass spectrometry.",
+     "sha": "a5676e4b637194ea"
+    },
+    {
+     "label": "F2",
+     "ref": "deoliveira_2023",
+     "where": "3. Results",
+     "quote": "Fifty‑four studies specified the detected synthetic cannabinoid via either blood or urine clinical testing.",
+     "sha": "13b59ae226507e9e"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The passages describe a systematic review of studies and case studies reporting effects in humans, but do not say it was a review of “clinical studies.”"
+  }
+ ],
  "place": {
   "home": "synthetic-cannabinoids",
   "also": [],
