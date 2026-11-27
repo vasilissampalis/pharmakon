@@ -17,38 +17,36 @@
   "2c-x"
  ],
  "made": {
-  "on": "2026-11-23",
+  "on": "2026-11-27",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
-   "writer": "groq:qwen/qwen3.8-27b",
-   "checker": "gemini:gemini-3.5-flash-lite",
-   "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3.6-flash",
-   "team": "team L",
-   "reader_2": "groq:openai/gpt-oss-20b",
-   "also1_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
+   "reader": "openrouter:openai/gpt-oss-120b",
+   "writer": "openrouter:meta-llama/llama-3.3-70b-instruct",
+   "checker": "openrouter:openai/gpt-6-luna",
+   "planner": "openrouter:openai/gpt-oss-120b",
+   "team": "team R",
+   "reader_2": "openrouter:openai/gpt-oss-120b",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "45173206616",
-  "read_seconds": 43,
+  "run": "45957997648",
+  "read_seconds": 100,
   "from": {
-   "papers": 1,
+   "papers": 2,
    "summaries": 0,
    "official": 1
   },
   "neurons": 0.0,
-  "seconds": 358
+  "seconds": 185
  },
- "status": "published",
- "why": "passed every gate",
+ "status": "none",
+ "why": "the second reader did not accept the answer",
  "gates": {
-  "read": "10 findings kept from 5 sources (2 papers read in full, 2 official pages, 1 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "0 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 1 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
-  "rules": "1 How-do-we-know line(s) left out for a rule (how1: words that are not person-first (“users”))",
-  "panel": "further readers, each of which must accept every sentence too: gemini-3.6-flash could not be asked: gemini could not be reached: The read operation timed out; gemini-3-flash-preview accepted 3 of 5",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.24, but 0.07, how2 0.97, how3 0.96",
-  "check": "every sentence kept was accepted by the second reader (gemini:gemini-3.5-flash-lite) and by gemini:gemini-3.6-flash",
-  "but": "the writer's But was not accepted (the passage about the hair time does not say it is a general guess rather than a measured fact): the code wrote the But itself, from what this answer rests on",
-  "checked": "set beside the checked claims of the same page: nothing against them"
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-120b read from there",
+  "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
+  "read": "6 findings kept from 3 sources (2 papers read in full, 1 official pages, 0 papers read in summary); 10 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "0 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 1 other paper(s), 1 official page(s), 0 paper(s) read in summary only",
+  "rules": "broken at try 1: how1: it copies 17 words of its source in a row (“2c drugs are likely to show up in …”): say it in your own plain words; a source's words stand only in its quotation, 15 at most; short: its source gives this “in half of the volunteers”: say for how many it was so, not as true of everyone",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.16, but 0.97, how1 0.97, how2 0.91, how3 0.88",
+  "check": "short: NOT accepted: It leaves out the editor-required narrowing detail that detection was in half of the 16 volunteers. It also omits that the hair follicle tests described are standard tests.; but: accepted; how1: NOT accepted: The passage limits its hair-test claim to standard hair follicle tests; the sentence omits that narrowing detail.; how2: NOT accepted: It leaves out the editor-required narrowing detail that detection was in half of the 16 volunteers.; how3: accepted"
  },
  "sources": [
   {
@@ -105,10 +103,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-23",
+     "verified_on": "2026-11-27",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-23"
+      "checked_on": "2026-11-27"
      }
     },
     "volume": "9",
@@ -126,41 +124,146 @@
    "money": [
     "The authors declare that the research was conducted in the absence of any commercial or financial relationships that could be construed as a potential conflict of interest."
    ],
-   "design": {
-    "passage": 11,
-    "where": "Materials and Methods › Design and Treatments",
-    "quote": "A non-controlled prospective observational study was conducted. Each subject participated in one session. They ingested a capsule that they brought to the testing site themselves, which they had obtained from an unknown source.",
-    "text": "A non-controlled prospective observational study of sixteen healthy, experienced drug users who self-administered 2C-B."
-   },
+   "design": null,
    "findings": [
     {
      "passage": 36,
      "where": "Results › Oral Fluid Concentrations",
-     "quote": "Concentrations decreased rapidly from 2 to 6 h after ingestion and could be detected in oral fluid up to 24 h in half of the volunteers.",
-     "text": "In this study, 2C-B could be detected in oral fluid for up to 24 hours in half of the volunteers.",
+     "quote": "could be detected in oral fluid up to 24 h in half of the volunteers.",
+     "text": "2C-B can be detected in oral fluid up to 24 hours after use in half of the volunteers.",
      "id": "F1",
+     "second_hand": ""
+    },
+    {
+     "passage": 36,
+     "where": "Results › Oral Fluid Concentrations",
+     "quote": "2C-B elimination half-life (t1/2) in oral fluid was 2.48 ± 3.20 h.",
+     "text": "The elimination half-life of 2C-B in oral fluid is 2.48 ± 3.20 hours.",
+     "id": "F2",
      "second_hand": ""
     },
     {
      "passage": 47,
      "where": "Conclusion",
      "quote": "According to these preliminary results, oral fluid could be a suitable biologic matrix to detect 2C-B acute use.",
-     "text": "Oral fluid may be a suitable biologic matrix for detecting the acute use of 2C-B.",
-     "id": "F2",
+     "text": "Oral fluid is a suitable biologic matrix to detect acute 2C-B use.",
+     "id": "F3",
      "second_hand": ""
     }
    ],
    "limits": [
     {
-     "passage": 1,
-     "where": "Abstract",
-     "quote": "It has been reported that 2C-B induces mild psychedelic effects, although its acute pharmacological effects and pharmacokinetics have not yet been fully studied in humans.",
-     "text": "The acute pharmacological effects and pharmacokinetics of 2C-B have not yet been fully studied in humans.",
+     "passage": 48,
+     "where": "Conclusion",
+     "quote": "Further experimental research under controlled conditions is needed to compare human pharmacology of 2C-B with other classical drugs.",
+     "text": "Further experimental research under controlled conditions is needed to compare human pharmacology of 2C-B with other drugs.",
      "id": "L1",
      "second_hand": ""
     }
    ],
    "tag": "A"
+  },
+  {
+   "read": "full",
+   "ref": {
+    "id": "arikci_2026",
+    "type": "article-journal",
+    "title": "Acute dose-dependent effects of 4-bromo-2,5-dimethoxyphenethylamine (2C-B) compared with 3,4-methylenedioxymethamphetamine (MDMA) and psilocybin in a double-blind, placebo-controlled study in healthy participants",
+    "author": [
+     {
+      "family": "Arikci",
+      "given": "Denis"
+     },
+     {
+      "family": "Borgulya",
+      "given": "Joran"
+     },
+     {
+      "family": "Straumann",
+      "given": "Isabelle"
+     },
+     {
+      "family": "Vizeli",
+      "given": "Patrick"
+     },
+     {
+      "family": "Luethi",
+      "given": "Dino"
+     },
+     {
+      "family": "Thomann",
+      "given": "Jan"
+     },
+     {
+      "family": "Rudin",
+      "given": "Deborah"
+     },
+     {
+      "family": "Vukalovic",
+      "given": "Ina"
+     },
+     {
+      "family": "Eckert",
+      "given": "Anne"
+     },
+     {
+      "family": "Liechti",
+      "given": "Matthias E."
+     },
+     {
+      "family": "Holze",
+      "given": "Friederike"
+     }
+    ],
+    "container-title": "Neuropsychopharmacology",
+    "issued": {
+     "date-parts": [
+      [
+       2026
+      ]
+     ]
+    },
+    "DOI": "10.1038/s41386-026-02428-9",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-27",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-27"
+     }
+    },
+    "volume": "51",
+    "issue": "8",
+    "page": "1511-1518",
+    "PMCID": "PMC13291353"
+   },
+   "doi": "10.1038/s41386-026-02428-9",
+   "pmcid": "PMC13291353",
+   "title": "Acute dose-dependent effects of 4-bromo-2,5-dimethoxyphenethylamine (2C-B) compared with 3,4-methylenedioxymethamphetamine (MDMA) and psilocybin in a double-blind, placebo-controlled study in healthy participants",
+   "year": 2026,
+   "journal": "Neuropsychopharmacology : official publication of the American College of Neuropsychopharmacology",
+   "kind": "study",
+   "people": true,
+   "near": 0.597,
+   "money": [
+    "MEL is a consultant for Definium Therapeutics Inc. and Resilient Pharmaceuticals. The other authors declare no conflicts of interests."
+   ],
+   "design": null,
+   "findings": [
+    {
+     "passage": 30,
+     "where": "Discussion",
+     "quote": "The plasma half-lives of 2C‑B and psilocybin are 1.3 and 2 h, respectively, which is consistent with their durations of action",
+     "text": "The plasma half‑life of 2C‑B is 1.3 hours.",
+     "id": "F4",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "B"
   },
   {
    "read": "page",
@@ -184,14 +287,14 @@
       [
        2026,
        11,
-       23
+       27
       ]
      ]
     },
     "verification": {
      "status": "made by code",
      "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-23"
+     "verified_on": "2026-11-27"
     },
     "publisher": "The Level"
    },
@@ -211,113 +314,36 @@
     {
      "passage": 23,
      "where": "Working and driving / If you take 2C drugs, will they show up on a drug test?",
-     "quote": "Like most other substances, 2C drugs are likely to show up in standard hair follicle tests for up to 90 days.",
-     "text": "2C drugs are likely to be detected in standard hair follicle tests for up to 90 days.",
+     "quote": "2C drugs are novel designer substances and are not often tested for on routine drug screenings.",
+     "text": "2C drugs are not often tested for on routine drug screenings.",
      "id": "F5",
      "second_hand": ""
     },
     {
      "passage": 23,
      "where": "Working and driving / If you take 2C drugs, will they show up on a drug test?",
-     "quote": "2C drugs are novel designer substances and are not often tested for on routine drug screenings.",
-     "text": "Routine drug screenings do not often test for 2C drugs because they are novel designer substances.",
+     "quote": "Like most other substances, 2C drugs are likely to show up in standard hair follicle tests for up to 90 days.",
+     "text": "2C drugs are likely to show up in standard hair follicle tests for up to 90 days.",
      "id": "F6",
      "second_hand": ""
     }
    ],
-   "limits": [],
+   "limits": [
+    {
+     "passage": 23,
+     "where": "Working and driving / If you take 2C drugs, will they show up on a drug test?",
+     "quote": "Due to this, there is a lack of research about how long they can be detected in urine, blood, and saliva.",
+     "text": "Research on detection windows in urine, blood, and saliva is lacking.",
+     "id": "L2",
+     "second_hand": ""
+    }
+   ],
    "tag": "C"
   }
  ],
- "parts": [
-  {
-   "part": "short",
-   "text": "2C-B can be found in saliva for up to 24 hours. It is likely to show up in hair tests for up to 90 days.",
-   "uses": [
-    "F1",
-    "F5"
-   ],
-   "rests_on": [
-    {
-     "label": "F1",
-     "ref": "papaseit_2018",
-     "where": "Results › Oral Fluid Concentrations",
-     "quote": "Concentrations decreased rapidly from 2 to 6 h after ingestion and could be detected in oral fluid up to 24 h in half of the volunteers.",
-     "sha": "a9171ae81eb88f4b"
-    },
-    {
-     "label": "F5",
-     "ref": "thelevel_2c",
-     "where": "Working and driving / If you take 2C drugs, will they show up on a drug test?",
-     "quote": "Like most other substances, 2C drugs are likely to show up in standard hair follicle tests for up to 90 days.",
-     "sha": "4efbe550dc0cb496"
-    }
-   ]
-  },
-  {
-   "part": "but",
-   "text": "This rests on 1 study in people and 1 official page.",
-   "uses": [
-    "DA",
-    "F5"
-   ],
-   "fixed": true,
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "papaseit_2018",
-     "where": "Materials and Methods › Design and Treatments",
-     "quote": "A non-controlled prospective observational study was conducted. Each subject participated in one session. They ingested a capsule that they brought to the testing site themselves, which they had obtained from an unknown source.",
-     "sha": "20c68ff96c04c5c8"
-    },
-    {
-     "label": "F5",
-     "ref": "thelevel_2c",
-     "where": "Working and driving / If you take 2C drugs, will they show up on a drug test?",
-     "quote": "Like most other substances, 2C drugs are likely to show up in standard hair follicle tests for up to 90 days.",
-     "sha": "4efbe550dc0cb496"
-    }
-   ]
-  },
-  {
-   "part": "how2",
-   "text": "The NZ Drug Foundation says 2C drugs are likely to show up in hair tests for up to 90 days.",
-   "uses": [
-    "F5"
-   ],
-   "rests_on": [
-    {
-     "label": "F5",
-     "ref": "thelevel_2c",
-     "where": "Working and driving / If you take 2C drugs, will they show up on a drug test?",
-     "quote": "Like most other substances, 2C drugs are likely to show up in standard hair follicle tests for up to 90 days.",
-     "sha": "4efbe550dc0cb496"
-    }
-   ],
-   "quote": "2C drugs are likely to show up in standard hair follicle tests",
-   "quote_ref": "thelevel_2c"
-  },
-  {
-   "part": "how3",
-   "text": "The NZ Drug Foundation says routine drug screenings do not often test for 2C drugs.",
-   "uses": [
-    "F6"
-   ],
-   "rests_on": [
-    {
-     "label": "F6",
-     "ref": "thelevel_2c",
-     "where": "Working and driving / If you take 2C drugs, will they show up on a drug test?",
-     "quote": "2C drugs are novel designer substances and are not often tested for on routine drug screenings.",
-     "sha": "4efbe550dc0cb496"
-    }
-   ],
-   "quote": "drugs are novel designer substances and are not often tested for on routine drug screenings",
-   "quote_ref": "thelevel_2c"
-  }
- ],
- "complete": true,
- "missing": "",
+ "parts": [],
+ "complete": false,
+ "missing": "Urine and blood detection windows",
  "wanted": [
   {
    "doi": "10.1097/ftd.0000000000000725",
@@ -335,23 +361,97 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-23",
+   "lane": 19,
+   "status": "published",
+   "why": "passed every gate",
+   "short": "2C-B can be found in saliva for up to 24 hours. It is likely to show up in hair tests for up to 90 days.",
+   "complete": true
+  }
+ ],
  "looked": [
   {
    "title": "Acute Pharmacological Effects of 2C-B in Humans: An Observational Study",
    "read": "full",
    "kind": "other",
    "at": "10.3389/fphar.2018.00206",
-   "kept": 2,
-   "thrown": []
+   "kept": 3,
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "non-controlled prospective observational study of sixteen healthy experienced drug users",
+     "quote": "A non-controlled prospective observational study was conducted. Each subject participated in one session. Sixteen healthy volunteers were included (eight males and eight females).",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
   },
   {
    "title": "Identification of 2C-B in Hair by UHPLC-HRMS/MS. A Real Forensic Case",
    "read": "full",
    "kind": "case",
    "at": "10.3390/toxics9070170",
-   "kept": 2,
-   "thrown": []
+   "kept": 0,
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "The method could detect 2C‑B at concentrations as low as 10 pg/mg in hair.",
+     "quote": "the estimation of the concentration of 2C-B was estimated by considering the LOI of the FS + DDA detection approach, which was 50 pg/mg (see), whereas the LOD was 10 pg/mg.",
+     "why": "a number of the sentence is not in its quote"
+    },
+    {
+     "kind": "finding",
+     "text": "The estimated concentration of 2C‑B in the hair sample was between 10 and 50 pg/mg.",
+     "quote": "the concentration in the real sample was estimated to be in the range 10–50 pg/mg.",
+     "why": "a number of the sentence is not in its quote"
+    },
+    {
+     "kind": "finding",
+     "text": "The study identified 2C‑B in the hair of a known drug user for the first time.",
+     "quote": "In this study, this work will show the pioneer identification of 2C-B in a real hair case, after reanalysis of the hair sample of a known drug user, by UHPLC-HRMS/MS",
+     "why": "a number of the sentence is not in its quote"
+    },
+    {
+     "kind": "finding",
+     "text": "2C‑B can be positively detected and identified in hair using UHPLC‑HRMS/MS.",
+     "quote": "2C-B has been positively detected and identified using liquid chromatography coupled to high-resolution mass spectrometry (UHPLC-HRMS/MS).",
+     "why": "a number of the sentence is not in its quote"
+    },
+    {
+     "kind": "limit",
+     "text": "No prior studies have reported positive detection of 2C‑B in hair.",
+     "quote": "there is no information available since no studies with a positive result have been carried out with this drug in hair",
+     "why": "a number of the sentence is not in its quote"
+    }
+   ]
+  },
+  {
+   "title": "Acute dose-dependent effects of 4-bromo-2,5-dimethoxyphenethylamine (2C-B) compared with 3,4-methylenedioxymethamphetamine (MDMA) and psilocybin in a double-blind, placebo-controlled study in healthy participants",
+   "read": "full",
+   "kind": "study",
+   "at": "10.1038/s41386-026-02428-9",
+   "kept": 1,
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "double‑blind, placebo‑controlled crossover study in 24 healthy adults",
+     "quote": "we compared acute effects of 2C‑B (10, 20, and 30 mg), 125 mg MDMA, and 25 mg psilocybin in 24 healthy participants (12 women, 12 men) using a double‑blind, randomized, placebo‑controlled, crossover d",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    },
+    {
+     "kind": "finding",
+     "text": "A 30 mg dose of 2C‑B produces subjective effects lasting about 4.9 hours.",
+     "quote": "The average subjective effect duration of 30 mg 2C‑B was 4.9 h and similar to MDMA (4.8 h) and shorter than psilocybin (6.1 h).",
+     "why": "it holds an amount or a time between uses"
+    },
+    {
+     "kind": "finding",
+     "text": "Plasma concentrations of 2C‑B were measured for up to 9 hours after dosing.",
+     "quote": "Outcome measures included acute subjective effects, autonomic effects, adverse effects, effects on emotional and cognitive empathy, plasma oxytocin and neurophysin I concentrations, and pharmacokineti",
+     "why": "a number of the sentence is not in its quote"
+    }
+   ]
   },
   {
    "title": "2C drugs",
@@ -361,8 +461,8 @@
    "kept": 2,
    "thrown": [
     {
-     "kind": "limit",
-     "text": "There is not enough research to know how long 2C drugs remain detectable in urine, blood, and saliva.",
+     "kind": "finding",
+     "text": "There is a lack of research about how long 2C drugs can be detected in urine, blood, and saliva.",
      "quote": "Due to this, there is a lack of research about how long they can be detected in urine, blood, and saliva.",
      "why": "a number of the sentence is not in its quote"
     }
@@ -373,243 +473,126 @@
    "read": "page",
    "kind": "official",
    "at": "https://thelevel.org.nz/drug-information/nbome",
-   "kept": 2,
-   "thrown": [
-    {
-     "kind": "limit",
-     "text": "The ability to detect NBOMe on a test depends on the amount taken, the duration of use, the specific type of NBOMe drug, and its purity.",
-     "quote": "Whether or not it shows up on a test might be impacted by how much NBOMe you have taken, how long you have taken it for, which NBOMe drug you have taken and its purity.",
-     "why": "the sentence is not carried by its quote and passage"
-    }
-   ]
+   "kept": 0,
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
   },
   {
-   "title": "Novel Phenethylamines and Their Potential Interactions With Prescription Drugs: A Systematic Critical Review",
-   "read": "summary",
-   "kind": "review",
-   "at": "10.1097/ftd.0000000000000725",
+   "title": "NBOMes",
+   "read": "page",
+   "kind": "official",
+   "at": "https://adf.org.au/drug-facts/nbomes/",
    "kept": 0,
    "thrown": []
-  },
-  {
-   "title": "A new trend in drugs-of-abuse; the 2C-series of phenethylamine designer drugs",
-   "read": "summary",
-   "kind": "review",
-   "at": "10.1023/b:phar.0000018600.03664.36",
-   "kept": 2,
-   "thrown": []
   }
  ],
- "plan": "the planner gave no plan that could be used: the writer chose the items itself",
- "dropped": [
-  {
-   "try": 1,
-   "part": "how1",
-   "text": "A study of 16 healthy people found 2C-B in oral fluid for up to 24 hours in half of them.",
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "papaseit_2018",
-     "where": "Materials and Methods › Design and Treatments",
-     "quote": "A non-controlled prospective observational study was conducted. Each subject participated in one session. They ingested a capsule that they brought to the testing site themselves, which they had obtained from an unknown source.",
-     "sha": "20c68ff96c04c5c8"
-    },
-    {
-     "label": "F1",
-     "ref": "papaseit_2018",
-     "where": "Results › Oral Fluid Concentrations",
-     "quote": "Concentrations decreased rapidly from 2 to 6 h after ingestion and could be detected in oral fluid up to 24 h in half of the volunteers.",
-     "sha": "a9171ae81eb88f4b"
-    }
+ "plan": {
+  "short": [
+   "F5",
+   "F6",
+   "F1"
+  ],
+  "direct": "Sometimes",
+  "but": [
+   "L2"
+  ],
+  "how": [
+   [
+    "F5",
+    "F6"
    ],
-   "by": "a rule",
-   "said": "a rule: a number that is not in the paper's words it rests on (16)"
-  },
-  {
-   "try": 3,
-   "part": "how1",
-   "text": "A study of experienced users found 2C-B in saliva for up to 24 hours in half of them.",
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "papaseit_2018",
-     "where": "Materials and Methods › Design and Treatments",
-     "quote": "A non-controlled prospective observational study was conducted. Each subject participated in one session. They ingested a capsule that they brought to the testing site themselves, which they had obtained from an unknown source.",
-     "sha": "20c68ff96c04c5c8"
-    },
-    {
-     "label": "F1",
-     "ref": "papaseit_2018",
-     "where": "Results › Oral Fluid Concentrations",
-     "quote": "Concentrations decreased rapidly from 2 to 6 h after ingestion and could be detected in oral fluid up to 24 h in half of the volunteers.",
-     "sha": "a9171ae81eb88f4b"
-    }
+   [
+    "F1",
+    "F2"
    ],
-   "by": "a rule",
-   "said": "a rule: words that are not person-first (“users”)"
-  },
-  {
-   "try": 3,
-   "part": "but",
-   "text": "The saliva finding came from one small study, and the hair time is a general guess, not a measured fact.",
-   "rests_on": [
-    {
-     "label": "L1",
-     "ref": "papaseit_2018",
-     "where": "Abstract",
-     "quote": "It has been reported that 2C-B induces mild psychedelic effects, although its acute pharmacological effects and pharmacokinetics have not yet been fully studied in humans.",
-     "sha": "7a8a4bbb8b2a2872"
-    },
-    {
-     "label": "F5",
-     "ref": "thelevel_2c",
-     "where": "Working and driving / If you take 2C drugs, will they show up on a drug test?",
-     "quote": "Like most other substances, 2C drugs are likely to show up in standard hair follicle tests for up to 90 days.",
-     "sha": "4efbe550dc0cb496"
-    }
-   ],
-   "by": "the second reader",
-   "said": "the passage about the hair time does not say it is a general guess rather than a measured fact"
-  }
- ],
- "panel": {
-  "gemini:gemini-3.6-flash": "could not be asked: gemini could not be reached: The read operation timed out",
-  "gemini:gemini-3-flash-preview": {
-   "short": [
-    false,
-    "The sentence leaves out the narrowing phrase 'in half of the volunteers' when describing how long 2C-B can be detected in saliva."
-   ],
-   "but": [
-    true,
-    ""
-   ],
-   "how2": [
-    true,
-    ""
-   ],
-   "how3": [
-    false,
-    "The sentence says routine drug screenings do not often test for 2C drugs 'because' they are novel, but the passage only reports a link between these two facts using 'and'."
-   ],
-   "how4": [
-    true,
-    ""
+   [
+    "F4"
    ]
-  }
- },
- "panel_gap": [],
- "own": {
-  "model": "pharmakon-check-0",
-  "threshold": 0.05,
-  "scores": {
-   "short": 0.2353,
-   "but": 0.0734,
-   "how2": 0.9737,
-   "how3": 0.9632
-  },
-  "scores_quotes_alone": {
-   "short": 0.4867,
-   "but": 0.0058,
-   "how2": 0.9408,
-   "how3": 0.93
-  }
+  ],
+  "unanswered": "Urine and blood detection windows"
  },
  "tries": [
   {
    "try": 1,
-   "why": "the short answer or the But was not accepted: written again",
+   "why": "a rule was broken: written again",
    "parts": [
     {
      "part": "short",
-     "text": "2C-B can be found in saliva for up to 24 hours. It is likely to show up in hair tests for up to 90 days.",
+     "text": "Sometimes, 2C-B can be detected in oral fluid up to 24 hours after use, but routine drug tests often do not look for it.",
      "rests_on": [
       {
        "label": "F1",
        "ref": "papaseit_2018",
        "where": "Results › Oral Fluid Concentrations",
-       "quote": "Concentrations decreased rapidly from 2 to 6 h after ingestion and could be detected in oral fluid up to 24 h in half of the volunteers.",
+       "quote": "could be detected in oral fluid up to 24 h in half of the volunteers.",
        "sha": "a9171ae81eb88f4b"
       },
       {
        "label": "F5",
        "ref": "thelevel_2c",
        "where": "Working and driving / If you take 2C drugs, will they show up on a drug test?",
-       "quote": "Like most other substances, 2C drugs are likely to show up in standard hair follicle tests for up to 90 days.",
+       "quote": "2C drugs are novel designer substances and are not often tested for on routine drug screenings.",
        "sha": "4efbe550dc0cb496"
       }
      ],
      "ok": false,
-     "by": "a further reader",
-     "said": "a further reader (gemini-3-flash-preview) did not accept it: The sentence leaves out the narrowing phrase 'in half of the volunteers' when describing how long 2C-B can be detected in saliva."
+     "by": "a rule",
+     "said": "a rule: its source gives this “in half of the volunteers”: say for how many it was so, not as true of everyone"
     },
     {
      "part": "but",
-     "text": "Routine drug tests do not often check for 2C drugs, and scientific information on detecting them is scarce.",
+     "text": "Research on detection windows in urine, blood, and saliva is lacking.",
      "rests_on": [
       {
-       "label": "F6",
+       "label": "L2",
        "ref": "thelevel_2c",
        "where": "Working and driving / If you take 2C drugs, will they show up on a drug test?",
-       "quote": "2C drugs are novel designer substances and are not often tested for on routine drug screenings.",
+       "quote": "Due to this, there is a lack of research about how long they can be detected in urine, blood, and saliva.",
        "sha": "4efbe550dc0cb496"
-      },
-      {
-       "label": "L3",
-       "ref": "deboer_2004",
-       "where": "Summary",
-       "quote": "scientific based information in respect to health risks of drugs of the 2C-series and the detection of their abuse was scarce.",
-       "sha": "2abbd6a85165c8da"
       }
      ],
      "ok": true
     },
     {
-     "part": "how2",
-     "text": "The NZ Drug Foundation says 2C drugs are likely to be detected in standard hair tests for up to 90 days.",
+     "part": "how1",
+     "text": "The NZ Drug Foundation says 2C drugs are likely to show up in standard hair follicle tests for up to 90 days.",
      "rests_on": [
       {
-       "label": "F5",
+       "label": "F6",
        "ref": "thelevel_2c",
        "where": "Working and driving / If you take 2C drugs, will they show up on a drug test?",
        "quote": "Like most other substances, 2C drugs are likely to show up in standard hair follicle tests for up to 90 days.",
        "sha": "4efbe550dc0cb496"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: it copies 17 words of its source in a row (“2c drugs are likely to show up in …”): say it in your own plain words; a source's words stand only in its quotation, 15 at most"
+    },
+    {
+     "part": "how2",
+     "text": "A 2018 study found 2C-B in oral fluid up to 24 hours after use in half of the volunteers.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "papaseit_2018",
+       "where": "Results › Oral Fluid Concentrations",
+       "quote": "could be detected in oral fluid up to 24 h in half of the volunteers.",
+       "sha": "a9171ae81eb88f4b"
       }
      ],
      "ok": true
     },
     {
      "part": "how3",
-     "text": "The NZ Drug Foundation says routine drug screenings do not often test for 2C drugs because they are novel.",
+     "text": "A 2026 study found the plasma half-life of 2C-B is 1.3 hours.",
      "rests_on": [
       {
-       "label": "F6",
-       "ref": "thelevel_2c",
-       "where": "Working and driving / If you take 2C drugs, will they show up on a drug test?",
-       "quote": "2C drugs are novel designer substances and are not often tested for on routine drug screenings.",
-       "sha": "4efbe550dc0cb496"
-      }
-     ],
-     "ok": false,
-     "by": "a further reader",
-     "said": "a further reader (gemini-3-flash-preview) did not accept it: The sentence says routine drug screenings do not often test for 2C drugs 'because' they are novel, but the passage only reports a link between these two facts using 'and'."
-    },
-    {
-     "part": "how4",
-     "text": "A 2004 review says scientific information regarding the detection of 2C-series drug use is scarce.",
-     "rests_on": [
-      {
-       "label": "DE",
-       "ref": "deboer_2004",
-       "where": "Summary",
-       "quote": "In the period of 1994-2002, all products that were claimed to contain synthetic drugs and sold in the smartshops, were purchased. The contents were analysed using analytical chemical technologies",
-       "sha": "8d70d0a07d50e420"
-      },
-      {
-       "label": "F9",
-       "ref": "deboer_2004",
-       "where": "Summary",
-       "quote": "scientific based information in respect to health risks of drugs of the 2C-series and the detection of their abuse was scarce.",
-       "sha": "2abbd6a85165c8da"
+       "label": "F4",
+       "ref": "arikci_2026",
+       "where": "Discussion",
+       "quote": "The plasma half-lives of 2C‑B and psilocybin are 1.3 and 2 h, respectively, which is consistent with their durations of action",
+       "sha": "0210f62c06efe9e7"
       }
      ],
      "ok": true
@@ -618,81 +601,65 @@
   },
   {
    "try": 2,
-   "why": "a rule was broken: written again",
+   "why": "the short answer or the But was not accepted: written again",
    "parts": [
     {
      "part": "short",
-     "text": "2C-B can be found in saliva for up to 24 hours in half of people. Routine drug tests do not often check for it.",
+     "text": "Sometimes, 2C-B can be detected in oral fluid up to 24 hours after use in half of the volunteers, but routine drug tests often do not look for 2C drugs and it may show up in hair tests for up to 90 days.",
      "rests_on": [
       {
        "label": "F1",
        "ref": "papaseit_2018",
        "where": "Results › Oral Fluid Concentrations",
-       "quote": "Concentrations decreased rapidly from 2 to 6 h after ingestion and could be detected in oral fluid up to 24 h in half of the volunteers.",
+       "quote": "could be detected in oral fluid up to 24 h in half of the volunteers.",
        "sha": "a9171ae81eb88f4b"
+      },
+      {
+       "label": "F5",
+       "ref": "thelevel_2c",
+       "where": "Working and driving / If you take 2C drugs, will they show up on a drug test?",
+       "quote": "2C drugs are novel designer substances and are not often tested for on routine drug screenings.",
+       "sha": "4efbe550dc0cb496"
       },
       {
        "label": "F6",
        "ref": "thelevel_2c",
        "where": "Working and driving / If you take 2C drugs, will they show up on a drug test?",
-       "quote": "2C drugs are novel designer substances and are not often tested for on routine drug screenings.",
+       "quote": "Like most other substances, 2C drugs are likely to show up in standard hair follicle tests for up to 90 days.",
+       "sha": "4efbe550dc0cb496"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "It omits the narrowing detail required by the editor: detection was reported in half of the 16 volunteers, not simply half of the volunteers."
+    },
+    {
+     "part": "but",
+     "text": "Research on detection windows in urine, blood, and saliva is lacking.",
+     "rests_on": [
+      {
+       "label": "L2",
+       "ref": "thelevel_2c",
+       "where": "Working and driving / If you take 2C drugs, will they show up on a drug test?",
+       "quote": "Due to this, there is a lack of research about how long they can be detected in urine, blood, and saliva.",
        "sha": "4efbe550dc0cb496"
       }
      ],
      "ok": true
     },
     {
-     "part": "but",
-     "text": "The saliva finding came from a small study of 16 people, and more research is needed to fully understand how long it stays in the body.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "papaseit_2018",
-       "where": "Materials and Methods › Design and Treatments",
-       "quote": "A non-controlled prospective observational study was conducted. Each subject participated in one session. They ingested a capsule that they brought to the testing site themselves, which they had obtained from an unknown source.",
-       "sha": "20c68ff96c04c5c8"
-      },
-      {
-       "label": "L1",
-       "ref": "papaseit_2018",
-       "where": "Abstract",
-       "quote": "It has been reported that 2C-B induces mild psychedelic effects, although its acute pharmacological effects and pharmacokinetics have not yet been fully studied in humans.",
-       "sha": "7a8a4bbb8b2a2872"
-      }
-     ],
-     "ok": false,
-     "by": "a rule",
-     "said": "a rule: a number that is not in the paper's words it rests on (16)"
-    },
-    {
      "part": "how1",
-     "text": "A study of 16 healthy people found 2C-B in saliva for up to 24 hours in half of them.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "papaseit_2018",
-       "where": "Materials and Methods › Design and Treatments",
-       "quote": "A non-controlled prospective observational study was conducted. Each subject participated in one session. They ingested a capsule that they brought to the testing site themselves, which they had obtained from an unknown source.",
-       "sha": "20c68ff96c04c5c8"
-      },
-      {
-       "label": "F1",
-       "ref": "papaseit_2018",
-       "where": "Results › Oral Fluid Concentrations",
-       "quote": "Concentrations decreased rapidly from 2 to 6 h after ingestion and could be detected in oral fluid up to 24 h in half of the volunteers.",
-       "sha": "a9171ae81eb88f4b"
-      }
-     ],
-     "ok": false,
-     "by": "a rule",
-     "said": "a rule: a number that is not in the paper's words it rests on (16)"
-    },
-    {
-     "part": "how2",
-     "text": "The NZ Drug Foundation says 2C drugs are likely to show up in hair tests for up to 90 days.",
+     "text": "The NZ Drug Foundation says 2C drugs are not often tested for on routine drug screenings and may show up in hair tests.",
      "rests_on": [
       {
        "label": "F5",
+       "ref": "thelevel_2c",
+       "where": "Working and driving / If you take 2C drugs, will they show up on a drug test?",
+       "quote": "2C drugs are novel designer substances and are not often tested for on routine drug screenings.",
+       "sha": "4efbe550dc0cb496"
+      },
+      {
+       "label": "F6",
        "ref": "thelevel_2c",
        "where": "Working and driving / If you take 2C drugs, will they show up on a drug test?",
        "quote": "Like most other substances, 2C drugs are likely to show up in standard hair follicle tests for up to 90 days.",
@@ -702,15 +669,134 @@
      "ok": true
     },
     {
-     "part": "how3",
-     "text": "The NZ Drug Foundation says routine drug screenings do not often test for 2C drugs.",
+     "part": "how2",
+     "text": "A 2018 study found 2C-B can be detected in oral fluid up to 24 hours after use in half of the volunteers.",
      "rests_on": [
       {
-       "label": "F6",
+       "label": "F1",
+       "ref": "papaseit_2018",
+       "where": "Results › Oral Fluid Concentrations",
+       "quote": "could be detected in oral fluid up to 24 h in half of the volunteers.",
+       "sha": "a9171ae81eb88f4b"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "It omits the narrowing detail required by the editor: detection was reported in half of the 16 volunteers."
+    },
+    {
+     "part": "how3",
+     "text": "A 2026 study found the plasma half-life of 2C-B is 1.3 hours.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "arikci_2026",
+       "where": "Discussion",
+       "quote": "The plasma half-lives of 2C‑B and psilocybin are 1.3 and 2 h, respectively, which is consistent with their durations of action",
+       "sha": "0210f62c06efe9e7"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Sometimes, 2C-B can be detected in oral fluid up to 24 hours after use in half of the volunteers, but routine drug tests often do not look for 2C drugs and it may show up in hair follicle tests for up to 90 days.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "papaseit_2018",
+       "where": "Results › Oral Fluid Concentrations",
+       "quote": "could be detected in oral fluid up to 24 h in half of the volunteers.",
+       "sha": "a9171ae81eb88f4b"
+      },
+      {
+       "label": "F5",
        "ref": "thelevel_2c",
        "where": "Working and driving / If you take 2C drugs, will they show up on a drug test?",
        "quote": "2C drugs are novel designer substances and are not often tested for on routine drug screenings.",
        "sha": "4efbe550dc0cb496"
+      },
+      {
+       "label": "F6",
+       "ref": "thelevel_2c",
+       "where": "Working and driving / If you take 2C drugs, will they show up on a drug test?",
+       "quote": "Like most other substances, 2C drugs are likely to show up in standard hair follicle tests for up to 90 days.",
+       "sha": "4efbe550dc0cb496"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "It leaves out the editor-required narrowing detail that detection was in half of the 16 volunteers. It also omits that the hair follicle tests described are standard tests."
+    },
+    {
+     "part": "but",
+     "text": "Research on detection windows in urine, blood, and saliva is lacking.",
+     "rests_on": [
+      {
+       "label": "L2",
+       "ref": "thelevel_2c",
+       "where": "Working and driving / If you take 2C drugs, will they show up on a drug test?",
+       "quote": "Due to this, there is a lack of research about how long they can be detected in urine, blood, and saliva.",
+       "sha": "4efbe550dc0cb496"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "The NZ Drug Foundation says 2C drugs are not often tested for on routine drug screenings and may show up in hair follicle tests.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "thelevel_2c",
+       "where": "Working and driving / If you take 2C drugs, will they show up on a drug test?",
+       "quote": "2C drugs are novel designer substances and are not often tested for on routine drug screenings.",
+       "sha": "4efbe550dc0cb496"
+      },
+      {
+       "label": "F6",
+       "ref": "thelevel_2c",
+       "where": "Working and driving / If you take 2C drugs, will they show up on a drug test?",
+       "quote": "Like most other substances, 2C drugs are likely to show up in standard hair follicle tests for up to 90 days.",
+       "sha": "4efbe550dc0cb496"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage limits its hair-test claim to standard hair follicle tests; the sentence omits that narrowing detail."
+    },
+    {
+     "part": "how2",
+     "text": "A 2018 study found 2C-B can be detected in oral fluid up to 24 hours after use in half of the volunteers.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "papaseit_2018",
+       "where": "Results › Oral Fluid Concentrations",
+       "quote": "could be detected in oral fluid up to 24 h in half of the volunteers.",
+       "sha": "a9171ae81eb88f4b"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "It leaves out the editor-required narrowing detail that detection was in half of the 16 volunteers."
+    },
+    {
+     "part": "how3",
+     "text": "A 2026 study found the plasma half-life of 2C-B is 1.3 hours.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "arikci_2026",
+       "where": "Discussion",
+       "quote": "The plasma half-lives of 2C‑B and psilocybin are 1.3 and 2 h, respectively, which is consistent with their durations of action",
+       "sha": "0210f62c06efe9e7"
       }
      ],
      "ok": true
@@ -718,10 +804,66 @@
    ]
   }
  ],
- "with_checked": {
-  "differs": [],
-  "same": []
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.159,
+   "but": 0.966,
+   "how1": 0.9749,
+   "how2": 0.9112,
+   "how3": 0.8841
+  },
+  "scores_quotes_alone": {
+   "short": 0.1849,
+   "but": 0.8299,
+   "how1": 0.8632,
+   "how2": 0.5227,
+   "how3": 0.8011
+  }
  },
+ "dropped": [
+  {
+   "try": 3,
+   "part": "how1",
+   "text": "The NZ Drug Foundation says 2C drugs are not often tested for on routine drug screenings and may show up in hair follicle tests.",
+   "rests_on": [
+    {
+     "label": "F5",
+     "ref": "thelevel_2c",
+     "where": "Working and driving / If you take 2C drugs, will they show up on a drug test?",
+     "quote": "2C drugs are novel designer substances and are not often tested for on routine drug screenings.",
+     "sha": "4efbe550dc0cb496"
+    },
+    {
+     "label": "F6",
+     "ref": "thelevel_2c",
+     "where": "Working and driving / If you take 2C drugs, will they show up on a drug test?",
+     "quote": "Like most other substances, 2C drugs are likely to show up in standard hair follicle tests for up to 90 days.",
+     "sha": "4efbe550dc0cb496"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The passage limits its hair-test claim to standard hair follicle tests; the sentence omits that narrowing detail."
+  },
+  {
+   "try": 3,
+   "part": "how2",
+   "text": "A 2018 study found 2C-B can be detected in oral fluid up to 24 hours after use in half of the volunteers.",
+   "rests_on": [
+    {
+     "label": "F1",
+     "ref": "papaseit_2018",
+     "where": "Results › Oral Fluid Concentrations",
+     "quote": "could be detected in oral fluid up to 24 h in half of the volunteers.",
+     "sha": "a9171ae81eb88f4b"
+    }
+   ],
+   "by": "the second reader",
+   "said": "It leaves out the editor-required narrowing detail that detection was in half of the 16 volunteers."
+  }
+ ],
  "place": {
   "home": "2c-x",
   "also": [],

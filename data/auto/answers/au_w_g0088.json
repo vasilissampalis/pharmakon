@@ -15,145 +15,135 @@
  ],
  "drugs": [],
  "made": {
-  "on": "2026-11-24",
+  "on": "2026-11-27",
   "models": {
-   "reader": "gemini:gemini-3.5-flash-lite",
-   "writer": "groq:qwen/qwen3.8-27b",
-   "checker": "groq:openai/gpt-oss-120b",
-   "planner": "groq:openai/gpt-oss-120b",
-   "also1": "gemini:gemini-3.5-flash-lite",
-   "also2": "gemini:gemini-3.6-flash",
-   "team": "team I",
-   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
+   "reader": "openrouter:openai/gpt-oss-120b",
+   "writer": "openrouter:meta-llama/llama-3.3-70b-instruct",
+   "checker": "openrouter:openai/gpt-6-luna",
+   "planner": "openrouter:openai/gpt-oss-120b",
+   "team": "team R",
+   "reader_2": "openrouter:openai/gpt-oss-120b",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "45352813180",
-  "read_by": {
-   "gemini-3.5-flash-lite": 6,
-   "gpt-oss-20b": 1
-  },
-  "read_seconds": 36,
+  "run": "45957997648",
+  "read_seconds": 26,
   "from": {
    "papers": 2,
    "summaries": 0,
    "official": 0
   },
   "neurons": 0.0,
-  "seconds": 233
+  "seconds": 104
  },
- "status": "published",
- "why": "passed every gate",
+ "status": "none",
+ "why": "the second reader did not accept the answer",
  "gates": {
-  "read": "4 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
-  "panel": "further readers, each of which must accept every sentence too: gemini-3.5-flash-lite accepted 1 of 4",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.08, but 0.25, how1 0.72, how2 0.98, how3 0.49",
-  "check": "every sentence kept was accepted by the second reader (groq:openai/gpt-oss-120b) and by gemini:gemini-3.5-flash-lite and by gemini:gemini-3.6-flash; it also found that the short answer answers the question and that the But is about that answer",
-  "but": "the writer's But was not accepted (Passage does not explicitly state that the finding was not from standard use): the code wrote the But itself, from what this answer rests on",
-  "rules": "nothing against it",
-  "checked": "set beside the checked claims of the same page: nothing against them"
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-120b read from there",
+  "read": "4 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 6 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 0 official page(s), 0 paper(s) read in summary only",
+  "rules": "1 How-do-we-know line(s) left out for a rule (how1: it says “significant”, and the words it rests on carry no such word: say what the source says, in its own measure, or leave the word out)",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.06, but 0.78, how2 0.44",
+  "check": "short: NOT accepted: The passages do not say suvorexant can get people high. They also report adverse-event findings and identify somnolence as a risk, so they do not support saying risks are not known from these studies.; but: NOT accepted: it is about something else than the short answer (Sentence 1 directly addresses whether suvorexant can get people high and what its risks are, but its claims are not supported by the passages. Sentence 2 describes the scope of a review and does not limit or cast doubt on sentence 1.); how2: NOT accepted: The passage limits its statement to abrupt discontinuation; the sentence omits that qualifier."
  },
  "sources": [
   {
    "read": "full",
    "ref": {
-    "id": "khazaie_2022",
+    "id": "xu_2020",
     "type": "article-journal",
-    "title": "Dual orexin receptor antagonists for treatment of insomnia: A systematic review and meta-analysis on randomized, double-blind, placebo-controlled trials of suvorexant and lemborexant",
+    "title": "Suvorexant for the prevention of delirium: A meta-analysis",
     "author": [
      {
-      "family": "Khazaie",
-      "given": "Habibolah"
+      "family": "Xu",
+      "given": "Shu"
      },
      {
-      "family": "Sadeghi",
-      "given": "Masoud"
+      "family": "Cui",
+      "given": "Yuanyuan"
      },
      {
-      "family": "Khazaie",
-      "given": "Sepideh"
+      "family": "Shen",
+      "given": "Jinhua"
      },
      {
-      "family": "Hirshkowitz",
-      "given": "Max"
-     },
-     {
-      "family": "Sharafkhaneh",
-      "given": "Amir"
+      "family": "Wang",
+      "given": "Peili"
      }
     ],
-    "container-title": "Frontiers in Psychiatry",
+    "container-title": "Medicine",
     "issued": {
      "date-parts": [
       [
-       2022
+       2020
       ]
      ]
     },
-    "DOI": "10.3389/fpsyt.2022.1070522",
+    "DOI": "10.1097/md.0000000000021043",
     "verification": {
      "status": "metadata-verified",
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-24",
+     "verified_on": "2026-11-27",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-24"
+      "checked_on": "2026-11-27"
      }
     },
-    "volume": "13",
-    "number": "1070522",
-    "PMCID": "PMC9792135"
+    "volume": "99",
+    "issue": "30",
+    "number": "e21043",
+    "PMCID": "PMC7386982"
    },
-   "doi": "10.3389/fpsyt.2022.1070522",
-   "pmcid": "PMC9792135",
-   "title": "Dual orexin receptor antagonists for treatment of insomnia: A systematic review and meta-analysis on randomized, double-blind, placebo-controlled trials of suvorexant and lemborexant",
-   "year": 2022,
-   "journal": "Frontiers in psychiatry",
+   "doi": "10.1097/md.0000000000021043",
+   "pmcid": "PMC7386982",
+   "title": "Suvorexant for the prevention of delirium: A meta-analysis",
+   "year": 2020,
+   "journal": "Medicine",
    "kind": "review",
    "people": true,
-   "near": 0.594,
-   "money": [],
+   "near": 0.634,
+   "money": [
+    "The authors report no conflicts of interest in this work."
+   ],
    "design": {
     "passage": 1,
     "where": "Abstract",
-    "quote": "We conducted a systematic review and meta-analysis for the treatment of insomnia with suvorexant and lemborexant based on randomized, double-blind, placebo-controlled Trials.",
-    "text": "systematic review and meta-analysis on randomized, double-blind, placebo-controlled trials of suvorexant and lemborexant"
+    "quote": "The goal of this study was to perform a meta-analysis to overall estimate the effectiveness of suvorexant in preventing delirium",
+    "text": "meta-analysis of studies on suvorexant in hospitalized patients"
    },
    "findings": [
     {
-     "passage": 26,
-     "where": "Discussion",
-     "quote": "Surveillance has been associated with a small number of reports of sleep-related hallucinations and sleep paralysis, both of which can happen spontaneously in the general population.",
-     "text": "Surveillance has been associated with a small number of reports of sleep-related hallucinations and sleep paralysis, both of which can happen spontaneously in the general population.",
+     "passage": 16,
+     "where": "Results › Efficacy assessments of suvorexant",
+     "quote": "drug-related adverse events (OR, 1.66; 95% CI, 0.62–4.46, P =.319)",
+     "text": "Suvorexant did not significantly change drug‑related adverse events compared with other sleep inducers (OR 1.66, 95% CI 0.62–4.46).",
      "id": "F1",
      "second_hand": ""
     },
     {
-     "passage": 26,
+     "passage": 20,
      "where": "Discussion",
-     "quote": "In the present meta-analysis, there was no significant difference between suvorexant and placebo regarding hypnagogic/hypnopompic hallucination, sleep paralysis, and sleep-onset paralysis.",
-     "text": "In the present meta-analysis, there was no significant difference between suvorexant and placebo regarding hypnagogic/hypnopompic hallucination, sleep paralysis, and sleep-onset paralysis.",
+     "quote": "the safety of suvorexant use in clinic remained indefinite by our analysis because only 2 articles recorded the adverse events.",
+     "text": "The safety of suvorexant in clinical use remains indefinite because only two studies reported adverse events.",
      "id": "F2",
      "second_hand": ""
     },
     {
-     "passage": 26,
-     "where": "Discussion",
-     "quote": "No events adjudicated as cataplexy were observed in the present meta-analysis.",
-     "text": "No events adjudicated as cataplexy were observed in the present meta-analysis.",
+     "passage": 5,
+     "where": "Introduction",
+     "quote": "Suvorexant, a novel orexin receptor antagonist, is an officially‑approved agent in Japan and USA for the treatment of insomnia.",
+     "text": "Suvorexant is an officially approved medication for treating insomnia in Japan and the USA.",
      "id": "F3",
      "second_hand": ""
     }
    ],
    "limits": [
     {
-     "passage": 30,
-     "where": "Conclusion",
-     "quote": "As many patients with insomnia have significant comorbid conditions, further data in patients with insomnia and comorbid conditions are needed.",
-     "text": "As many patients with insomnia have significant comorbid conditions, further data in patients with insomnia and comorbid conditions are needed.",
+     "passage": 20,
+     "where": "Discussion",
+     "quote": "First, suvorexant was approved only in a few countries (Japan and USA), which led to all the included studies performed in Japan.",
+     "text": "All included studies were conducted in Japan, limiting generalizability to other countries.",
      "id": "L1",
      "second_hand": ""
     }
@@ -163,212 +153,111 @@
   {
    "read": "full",
    "ref": {
-    "id": "jiang_2023",
+    "id": "kishi_2025",
     "type": "article-journal",
-    "title": "Daridorexant for the treatment of insomnia disorder: A systematic review and meta-analysis of randomized controlled trials",
+    "title": "Comparative efficacy and safety of daridorexant, lemborexant, and suvorexant for insomnia: A systematic review and network meta-analysis",
     "author": [
      {
-      "family": "Jiang",
-      "given": "Feiyu"
+      "family": "Kishi",
+      "given": "Taro"
      },
      {
-      "family": "Li",
-      "given": "Hang"
+      "family": "Ikuta",
+      "given": "Toshikazu"
      },
      {
-      "family": "Chen",
-      "given": "Yanting"
+      "family": "Citrome",
+      "given": "Leslie"
      },
      {
-      "family": "Lu",
-      "given": "Haifeng"
+      "family": "Sakuma",
+      "given": "Kenji"
      },
      {
-      "family": "Ni",
-      "given": "Jianqiang"
+      "family": "Hatano",
+      "given": "Masakazu"
      },
      {
-      "family": "Chen",
-      "given": "Gang"
+      "family": "Hamanaka",
+      "given": "Shun"
+     },
+     {
+      "family": "Nishii",
+      "given": "Yasufumi"
+     },
+     {
+      "family": "Iwata",
+      "given": "Nakao"
      }
     ],
-    "container-title": "Medicine",
+    "container-title": "Translational Psychiatry",
     "issued": {
      "date-parts": [
       [
-       2023
+       2025
       ]
      ]
     },
-    "DOI": "10.1097/md.0000000000032754",
+    "DOI": "10.1038/s41398-025-03439-8",
     "verification": {
      "status": "metadata-verified",
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-24",
+     "verified_on": "2026-11-27",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-24"
+      "checked_on": "2026-11-27"
      }
     },
-    "volume": "102",
-    "issue": "7",
-    "number": "e32754",
-    "PMCID": "PMC9936001"
+    "volume": "15",
+    "issue": "1",
+    "number": "211",
+    "PMCID": "PMC12187915"
    },
-   "doi": "10.1097/md.0000000000032754",
-   "pmcid": "PMC9936001",
-   "title": "Daridorexant for the treatment of insomnia disorder: A systematic review and meta-analysis of randomized controlled trials",
-   "year": 2023,
-   "journal": "Medicine",
+   "doi": "10.1038/s41398-025-03439-8",
+   "pmcid": "PMC12187915",
+   "title": "Comparative efficacy and safety of daridorexant, lemborexant, and suvorexant for insomnia: a systematic review and network meta-analysis",
+   "year": 2025,
+   "journal": "Translational psychiatry",
    "kind": "review",
    "people": true,
-   "near": 0.602,
-   "money": [],
+   "near": 0.625,
+   "money": [
+    "AcknowledgementsWe would like to thank MARUZEN-YUSHODO Co., Ltd. for the English language editing."
+   ],
    "design": {
     "passage": 1,
     "where": "Abstract",
-    "quote": "Therefore, we performed a meta-analysis of available studies. We performed a meta-analysis to systematically evaluate the efficacy and safety of daridorexant for treatment of insomnia disorder.",
-    "text": "a meta-analysis of randomized controlled trials evaluating the efficacy and safety of daridorexant for treatment of insomnia disorder"
+    "quote": "In order to appraise the risk‑benefit balance of the three available dual orexin receptor antagonists (DORAs; daridorexant, lemborexant, and suvorexant) for the management of adults with insomnia, we conducted a systematic review and random‑effects model network meta‑analysis.",
+    "text": "systematic review and network meta-analysis of adult insomnia trials"
    },
    "findings": [
     {
-     "passage": 25,
-     "where": "4. Discussion",
-     "quote": "In contrast, suvorexant and lemborexant include warnings about dependency. A recent study demonstrated that daridorexant at the highest phase-3 dose of 50 mg showed less dose-related drug-liking compared to supratherapeutic doses of suvorexant and zolpidem.",
-     "text": "Suvorexant and lemborexant include warnings about dependency, and supratherapeutic doses of suvorexant showed more dose-related drug-liking compared to daridorexant.",
+     "passage": 21,
+     "where": "Discussion",
+     "quote": "DORAs represent a new class of hypnotic agents and are not associated with physiological tolerance, withdrawal, or rebound insomnia when abruptly discontinued, nor are they associated with deleterious effects on sleep architecture.",
+     "text": "Suvorexant, as a DORA, is not associated with physiological tolerance, withdrawal, or rebound insomnia when stopped.",
      "id": "F4",
      "second_hand": ""
     }
    ],
-   "limits": [],
+   "limits": [
+    {
+     "passage": 9,
+     "where": "Materials and methods › Search strategy and inclusion criteria",
+     "quote": "The studies’ inclusion criteria were as follows: (1) double‑blind, randomized, placebo‑controlled trials lasting at least 4 weeks that included DAR, LEM, or SUV; and (2) studies involving adult patients with insomnia (as defined by any recognized diagnostic criteria).",
+     "text": "The analysis only includes double‑blind, randomized, placebo‑controlled trials of at least four weeks in adult insomnia patients.",
+     "id": "L2",
+     "second_hand": ""
+    }
+   ],
    "tag": "B"
   }
  ],
- "parts": [
-  {
-   "part": "short",
-   "text": "Sometimes suvorexant shows more drug-liking at high doses. A review found no significant difference from placebo for sleep hallucinations or paralysis.",
-   "uses": [
-    "F4",
-    "F2"
-   ],
-   "rests_on": [
-    {
-     "label": "F4",
-     "ref": "jiang_2023",
-     "where": "4. Discussion",
-     "quote": "In contrast, suvorexant and lemborexant include warnings about dependency. A recent study demonstrated that daridorexant at the highest phase-3 dose of 50 mg showed less dose-related drug-liking compared to supratherapeutic doses of suvorexant and zolpidem.",
-     "sha": "b7813332bf641730"
-    },
-    {
-     "label": "F2",
-     "ref": "khazaie_2022",
-     "where": "Discussion",
-     "quote": "In the present meta-analysis, there was no significant difference between suvorexant and placebo regarding hypnagogic/hypnopompic hallucination, sleep paralysis, and sleep-onset paralysis.",
-     "sha": "81ff05a6ded3006e"
-    }
-   ]
-  },
-  {
-   "part": "but",
-   "text": "This rests on 2 reviews.",
-   "uses": [
-    "DA",
-    "DB"
-   ],
-   "fixed": true,
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "khazaie_2022",
-     "where": "Abstract",
-     "quote": "We conducted a systematic review and meta-analysis for the treatment of insomnia with suvorexant and lemborexant based on randomized, double-blind, placebo-controlled Trials.",
-     "sha": "1229714416833e93"
-    },
-    {
-     "label": "DB",
-     "ref": "jiang_2023",
-     "where": "Abstract",
-     "quote": "Therefore, we performed a meta-analysis of available studies. We performed a meta-analysis to systematically evaluate the efficacy and safety of daridorexant for treatment of insomnia disorder.",
-     "sha": "010a69fe4da32a1b"
-    }
-   ]
-  },
-  {
-   "part": "how1",
-   "text": "A 2022 review of trials found no significant difference between suvorexant and placebo for sleep hallucinations or paralysis.",
-   "uses": [
-    "DA",
-    "F2"
-   ],
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "khazaie_2022",
-     "where": "Abstract",
-     "quote": "We conducted a systematic review and meta-analysis for the treatment of insomnia with suvorexant and lemborexant based on randomized, double-blind, placebo-controlled Trials.",
-     "sha": "1229714416833e93"
-    },
-    {
-     "label": "F2",
-     "ref": "khazaie_2022",
-     "where": "Discussion",
-     "quote": "In the present meta-analysis, there was no significant difference between suvorexant and placebo regarding hypnagogic/hypnopompic hallucination, sleep paralysis, and sleep-onset paralysis.",
-     "sha": "81ff05a6ded3006e"
-    }
-   ],
-   "quote": "there was no significant difference between suvorexant and placebo regarding hypnagogic/hypnopompic hallucination, sleep paralysis",
-   "quote_ref": "khazaie_2022"
-  },
-  {
-   "part": "how2",
-   "text": "Surveillance reports a small number of sleep-related hallucinations and sleep paralysis, which can happen in the general population.",
-   "uses": [
-    "F1"
-   ],
-   "rests_on": [
-    {
-     "label": "F1",
-     "ref": "khazaie_2022",
-     "where": "Discussion",
-     "quote": "Surveillance has been associated with a small number of reports of sleep-related hallucinations and sleep paralysis, both of which can happen spontaneously in the general population.",
-     "sha": "81ff05a6ded3006e"
-    }
-   ],
-   "quote": "small number of reports of sleep-related hallucinations and sleep paralysis, both of which can happen",
-   "quote_ref": "khazaie_2022"
-  },
-  {
-   "part": "how3",
-   "text": "A 2023 review notes suvorexant has dependency warnings and showed more dose-related drug-liking than daridorexant at high doses.",
-   "uses": [
-    "DB",
-    "F4"
-   ],
-   "rests_on": [
-    {
-     "label": "DB",
-     "ref": "jiang_2023",
-     "where": "Abstract",
-     "quote": "Therefore, we performed a meta-analysis of available studies. We performed a meta-analysis to systematically evaluate the efficacy and safety of daridorexant for treatment of insomnia disorder.",
-     "sha": "010a69fe4da32a1b"
-    },
-    {
-     "label": "F4",
-     "ref": "jiang_2023",
-     "where": "4. Discussion",
-     "quote": "In contrast, suvorexant and lemborexant include warnings about dependency. A recent study demonstrated that daridorexant at the highest phase-3 dose of 50 mg showed less dose-related drug-liking compared to supratherapeutic doses of suvorexant and zolpidem.",
-     "sha": "b7813332bf641730"
-    }
-   ],
-   "quote": "We performed a meta-analysis to systematically evaluate the efficacy and safety of daridorexant for treatment",
-   "quote_ref": "jiang_2023"
-  }
- ],
+ "parts": [],
  "complete": false,
- "missing": "a paper that stands nearer the question could not be read",
+ "missing": "abuse potential",
  "wanted": [
   {
    "doi": "10.2174/0115748863337982250212111648",
@@ -393,7 +282,16 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-24",
+   "lane": 19,
+   "status": "published",
+   "why": "passed every gate",
+   "short": "Sometimes suvorexant shows more drug-liking at high doses. A review found no significant difference from placebo for sleep hallucinations or paralysis.",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "Novel class of medications, orexin receptor antagonists, in the treatment of insomnia - critical appraisal of suvorexant",
@@ -401,71 +299,73 @@
    "kind": "review",
    "at": "10.2147/nss.s76910",
    "kept": 0,
-   "thrown": []
+   "thrown": [
+    {
+     "why": "the reader gave no JSON"
+    }
+   ]
   },
   {
    "title": "Suvorexant for the prevention of delirium: A meta-analysis",
    "read": "full",
    "kind": "review",
    "at": "10.1097/md.0000000000021043",
-   "kept": 0,
-   "thrown": []
+   "kept": 3,
+   "thrown": [
+    {
+     "kind": "limit",
+     "text": "The treatment duration was not clearly reported in several studies, creating uncertainty about short‑term versus long‑term effects.",
+     "quote": "Second, the treatment duration was not clearly reported in several studies.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   },
   {
    "title": "Comparative efficacy and safety of daridorexant, lemborexant, and suvorexant for insomnia: a systematic review and network meta-analysis",
    "read": "full",
    "kind": "review",
    "at": "10.1038/s41398-025-03439-8",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Different doses of dual orexin receptor antagonists in primary insomnia: a Bayesian network analysis",
-   "read": "full",
-   "kind": "review",
-   "at": "10.3389/fphar.2023.1175372",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Daridorexant, a Recently Approved Dual Orexin Receptor Antagonists (DORA) in Treatment of Insomnia",
-   "read": "full",
-   "kind": "other",
-   "at": "10.1055/s-0043-1770805",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Dual orexin receptor antagonists for treatment of insomnia: A systematic review and meta-analysis on randomized, double-blind, placebo-controlled trials of suvorexant and lemborexant",
-   "read": "full",
-   "kind": "review",
-   "at": "10.3389/fpsyt.2022.1070522",
-   "kept": 3,
-   "thrown": []
-  },
-  {
-   "title": "Daridorexant for the treatment of insomnia disorder: A systematic review and meta-analysis of randomized controlled trials",
-   "read": "full",
-   "kind": "review",
-   "at": "10.1097/md.0000000000032754",
    "kept": 1,
-   "thrown": []
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "Suvorexant carries a risk of somnolence.",
+     "quote": "However, clinicians should be aware that DORAs pose a risk of somnolence.",
+     "why": "the sentence is not carried by its quote and passage"
+    },
+    {
+     "kind": "finding",
+     "text": "Suvorexant is not linked to a higher risk of falls or dizziness.",
+     "quote": "our network meta‑analysis revealed that all DORAs were not associated with an increased risk of falls and dizziness in people with insomnia.",
+     "why": "the sentence is not carried by its quote and passage"
+    },
+    {
+     "kind": "finding",
+     "text": "Suvorexant is well tolerated with discontinuation rates similar to placebo.",
+     "quote": "there were no significant differences in all‑cause discontinuation or discontinuation due to adverse events between any active treatments and placebo, it was concluded that these active treatments wer",
+     "why": "the sentence is not carried by its quote and passage"
+    },
+    {
+     "kind": "limit",
+     "text": "Only the specified dose arms of suvorexant (20 mg/day or 15 mg/day for people under 65) were evaluated.",
+     "quote": "The recommended or approved doses for DORAs varies by country [,, ]. Therefore, this network meta‑analysis included the following treatment arms: DAR 25 mg/day (DAR25), DAR 50 mg/day (DAR50), LEM5, LE",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   }
  ],
  "plan": {
   "short": [
-   "F4",
-   "F2",
-   "F1"
-  ],
-  "direct": "Sometimes",
-  "but": [
+   "F1",
    "F4"
+  ],
+  "direct": "",
+  "but": [
+   "L2"
   ],
   "how": [
    [
     "DA",
-    "F2",
     "F1"
    ],
    [
@@ -473,45 +373,115 @@
     "F4"
    ]
   ],
-  "unanswered": ""
+  "unanswered": "abuse potential"
  },
- "panel": {
-  "gemini:gemini-3.5-flash-lite": {
-   "short": [
-    false,
-    "the passages do not state that suvorexant causes drug-liking at high doses (they discuss daridorexant showing less drug-liking compared to supratherapeutic doses of suvorexant and zolpidem)"
+ "dropped": [
+  {
+   "try": 1,
+   "part": "how1",
+   "text": "A meta-analysis of hospitalized patients found no significant change in drug-related adverse events",
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "xu_2020",
+     "where": "Abstract",
+     "quote": "The goal of this study was to perform a meta-analysis to overall estimate the effectiveness of suvorexant in preventing delirium",
+     "sha": "33dade078f537595"
+    },
+    {
+     "label": "F1",
+     "ref": "xu_2020",
+     "where": "Results › Efficacy assessments of suvorexant",
+     "quote": "drug-related adverse events (OR, 1.66; 95% CI, 0.62–4.46, P =.319)",
+     "sha": "21081c3df9acfe60"
+    }
    ],
-   "but": [
-    true,
-    ""
+   "by": "a rule",
+   "said": "a rule: it says “significant”, and the words it rests on carry no such word: say what the source says, in its own measure, or leave the word out"
+  },
+  {
+   "try": 2,
+   "part": "how1",
+   "text": "A meta-analysis of hospitalized patients found no significant change in drug-related adverse events.",
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "xu_2020",
+     "where": "Abstract",
+     "quote": "The goal of this study was to perform a meta-analysis to overall estimate the effectiveness of suvorexant in preventing delirium",
+     "sha": "33dade078f537595"
+    },
+    {
+     "label": "F1",
+     "ref": "xu_2020",
+     "where": "Results › Efficacy assessments of suvorexant",
+     "quote": "drug-related adverse events (OR, 1.66; 95% CI, 0.62–4.46, P =.319)",
+     "sha": "21081c3df9acfe60"
+    }
    ],
-   "how1": [
-    false,
-    "the passages do not use the phrase 'big difference' (they say 'no significant difference')"
+   "by": "a rule",
+   "said": "a rule: it says “significant”, and the words it rests on carry no such word: say what the source says, in its own measure, or leave the word out"
+  },
+  {
+   "try": 3,
+   "part": "how1",
+   "text": "A meta-analysis of hospitalized patients found no significant change in drug-related adverse events.",
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "xu_2020",
+     "where": "Abstract",
+     "quote": "The goal of this study was to perform a meta-analysis to overall estimate the effectiveness of suvorexant in preventing delirium",
+     "sha": "33dade078f537595"
+    },
+    {
+     "label": "F1",
+     "ref": "xu_2020",
+     "where": "Results › Efficacy assessments of suvorexant",
+     "quote": "drug-related adverse events (OR, 1.66; 95% CI, 0.62–4.46, P =.319)",
+     "sha": "21081c3df9acfe60"
+    }
    ],
-   "how2": [
-    false,
-    "the passage says daridorexant showed *less* drug-liking compared to suvorexant, whereas the sentence says suvorexant showed *more* drug-liking than other drugs"
-   ]
+   "by": "a rule",
+   "said": "a rule: it says “significant”, and the words it rests on carry no such word: say what the source says, in its own measure, or leave the word out"
+  },
+  {
+   "try": 3,
+   "part": "how2",
+   "text": "A systematic review of adult insomnia trials found no physiological tolerance or withdrawal.",
+   "rests_on": [
+    {
+     "label": "DB",
+     "ref": "kishi_2025",
+     "where": "Abstract",
+     "quote": "In order to appraise the risk‑benefit balance of the three available dual orexin receptor antagonists (DORAs; daridorexant, lemborexant, and suvorexant) for the management of adults with insomnia, we conducted a systematic review and random‑effects model network meta‑analysis.",
+     "sha": "cfbb1bbc8633565e"
+    },
+    {
+     "label": "F4",
+     "ref": "kishi_2025",
+     "where": "Discussion",
+     "quote": "DORAs represent a new class of hypnotic agents and are not associated with physiological tolerance, withdrawal, or rebound insomnia when abruptly discontinued, nor are they associated with deleterious effects on sleep architecture.",
+     "sha": "6e4fb025be7894a9"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The passage limits its statement to abrupt discontinuation; the sentence omits that qualifier."
   }
- },
+ ],
  "panel_gap": [],
  "own": {
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.076,
-   "but": 0.2516,
-   "how1": 0.7182,
-   "how2": 0.9847,
-   "how3": 0.4878
+   "short": 0.0617,
+   "but": 0.7834,
+   "how2": 0.4364
   },
   "scores_quotes_alone": {
-   "short": 0.2067,
-   "but": 0.077,
-   "how1": 0.8151,
-   "how2": 0.9416,
-   "how3": 0.2683
+   "short": 0.0166,
+   "but": 0.4421,
+   "how2": 0.5076
   }
  },
  "tries": [
@@ -521,100 +491,65 @@
    "parts": [
     {
      "part": "short",
-     "text": "Sometimes suvorexant can cause drug-liking at high doses. In trials, it did not cause more sleep hallucinations or paralysis than a placebo.",
+     "text": "It can get you high, but risks are not known",
      "rests_on": [
       {
-       "label": "F4",
-       "ref": "jiang_2023",
-       "where": "4. Discussion",
-       "quote": "In contrast, suvorexant and lemborexant include warnings about dependency. A recent study demonstrated that daridorexant at the highest phase-3 dose of 50 mg showed less dose-related drug-liking compared to supratherapeutic doses of suvorexant and zolpidem.",
-       "sha": "b7813332bf641730"
-      },
-      {
-       "label": "F2",
-       "ref": "khazaie_2022",
-       "where": "Discussion",
-       "quote": "In the present meta-analysis, there was no significant difference between suvorexant and placebo regarding hypnagogic/hypnopompic hallucination, sleep paralysis, and sleep-onset paralysis.",
-       "sha": "81ff05a6ded3006e"
-      },
-      {
        "label": "F1",
-       "ref": "khazaie_2022",
+       "ref": "xu_2020",
+       "where": "Results › Efficacy assessments of suvorexant",
+       "quote": "drug-related adverse events (OR, 1.66; 95% CI, 0.62–4.46, P =.319)",
+       "sha": "21081c3df9acfe60"
+      },
+      {
+       "label": "F4",
+       "ref": "kishi_2025",
        "where": "Discussion",
-       "quote": "Surveillance has been associated with a small number of reports of sleep-related hallucinations and sleep paralysis, both of which can happen spontaneously in the general population.",
-       "sha": "81ff05a6ded3006e"
+       "quote": "DORAs represent a new class of hypnotic agents and are not associated with physiological tolerance, withdrawal, or rebound insomnia when abruptly discontinued, nor are they associated with deleterious effects on sleep architecture.",
+       "sha": "6e4fb025be7894a9"
       }
      ],
      "ok": false,
-     "by": "a further reader",
-     "said": "a further reader (gemini-3.5-flash-lite) did not accept it: the passages do not state that suvorexant causes drug-liking at high doses (they discuss daridorexant showing less drug-liking compared to supratherapeutic doses of suvorexant and zolpidem)"
+     "by": "the second reader",
+     "said": "The passages do not say suvorexant can get you high. They do identify somnolence as a risk, so “risks are not known” is also too broad."
     },
     {
      "part": "but",
-     "text": "The drug-liking was seen with supratherapeutic doses, and suvorexant has warnings about dependency.",
+     "text": "Only includes adult insomnia patients in double-blind trials",
      "rests_on": [
       {
-       "label": "F4",
-       "ref": "jiang_2023",
-       "where": "4. Discussion",
-       "quote": "In contrast, suvorexant and lemborexant include warnings about dependency. A recent study demonstrated that daridorexant at the highest phase-3 dose of 50 mg showed less dose-related drug-liking compared to supratherapeutic doses of suvorexant and zolpidem.",
-       "sha": "b7813332bf641730"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how1",
-     "text": "A 2022 review of trials found no big difference in sleep hallucinations or paralysis between suvorexant and placebo.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "khazaie_2022",
-       "where": "Abstract",
-       "quote": "We conducted a systematic review and meta-analysis for the treatment of insomnia with suvorexant and lemborexant based on randomized, double-blind, placebo-controlled Trials.",
-       "sha": "1229714416833e93"
-      },
-      {
-       "label": "F2",
-       "ref": "khazaie_2022",
-       "where": "Discussion",
-       "quote": "In the present meta-analysis, there was no significant difference between suvorexant and placebo regarding hypnagogic/hypnopompic hallucination, sleep paralysis, and sleep-onset paralysis.",
-       "sha": "81ff05a6ded3006e"
-      },
-      {
-       "label": "F1",
-       "ref": "khazaie_2022",
-       "where": "Discussion",
-       "quote": "Surveillance has been associated with a small number of reports of sleep-related hallucinations and sleep paralysis, both of which can happen spontaneously in the general population.",
-       "sha": "81ff05a6ded3006e"
+       "label": "L2",
+       "ref": "kishi_2025",
+       "where": "Materials and methods › Search strategy and inclusion criteria",
+       "quote": "The studies’ inclusion criteria were as follows: (1) double‑blind, randomized, placebo‑controlled trials lasting at least 4 weeks that included DAR, LEM, or SUV; and (2) studies involving adult patients with insomnia (as defined by any recognized diagnostic criteria).",
+       "sha": "1e18a5912ef6cfc6"
       }
      ],
      "ok": false,
-     "by": "a further reader",
-     "said": "a further reader (gemini-3.5-flash-lite) did not accept it: the passages do not use the phrase 'big difference' (they say 'no significant difference')"
+     "by": "the second reader",
+     "said": "it is about something else than the short answer (Sentence 1 directly addresses whether the medicine can get you high and what its risks are, but the passages do not support its answer. Sentence 2 describes the review’s trial-inclusion criteria; it does not qualify the claim about getting )"
     },
     {
      "part": "how2",
-     "text": "A 2023 review says suvorexant has dependency warnings and showed more drug-liking at high doses than other drugs.",
+     "text": "A systematic review of adult insomnia trials found no physiological tolerance or withdrawal",
      "rests_on": [
       {
        "label": "DB",
-       "ref": "jiang_2023",
+       "ref": "kishi_2025",
        "where": "Abstract",
-       "quote": "Therefore, we performed a meta-analysis of available studies. We performed a meta-analysis to systematically evaluate the efficacy and safety of daridorexant for treatment of insomnia disorder.",
-       "sha": "010a69fe4da32a1b"
+       "quote": "In order to appraise the risk‑benefit balance of the three available dual orexin receptor antagonists (DORAs; daridorexant, lemborexant, and suvorexant) for the management of adults with insomnia, we conducted a systematic review and random‑effects model network meta‑analysis.",
+       "sha": "cfbb1bbc8633565e"
       },
       {
        "label": "F4",
-       "ref": "jiang_2023",
-       "where": "4. Discussion",
-       "quote": "In contrast, suvorexant and lemborexant include warnings about dependency. A recent study demonstrated that daridorexant at the highest phase-3 dose of 50 mg showed less dose-related drug-liking compared to supratherapeutic doses of suvorexant and zolpidem.",
-       "sha": "b7813332bf641730"
+       "ref": "kishi_2025",
+       "where": "Discussion",
+       "quote": "DORAs represent a new class of hypnotic agents and are not associated with physiological tolerance, withdrawal, or rebound insomnia when abruptly discontinued, nor are they associated with deleterious effects on sleep architecture.",
+       "sha": "6e4fb025be7894a9"
       }
      ],
      "ok": false,
-     "by": "a further reader",
-     "said": "a further reader (gemini-3.5-flash-lite) did not accept it: the passage says daridorexant showed *less* drug-liking compared to suvorexant, whereas the sentence says suvorexant showed *more* drug-liking than other drugs"
+     "by": "the second reader",
+     "said": "The passage limits the claim to when DORAs are abruptly discontinued; the sentence leaves out that condition."
     }
    ]
   },
@@ -624,124 +559,137 @@
    "parts": [
     {
      "part": "short",
-     "text": "Sometimes suvorexant can cause sleep-related hallucinations or sleep paralysis. A study found supratherapeutic doses showed more dose-related drug-liking than daridorexant.",
+     "text": "It can cause somnolence, but getting high is not known.",
      "rests_on": [
       {
        "label": "F1",
-       "ref": "khazaie_2022",
-       "where": "Discussion",
-       "quote": "Surveillance has been associated with a small number of reports of sleep-related hallucinations and sleep paralysis, both of which can happen spontaneously in the general population.",
-       "sha": "81ff05a6ded3006e"
+       "ref": "xu_2020",
+       "where": "Results › Efficacy assessments of suvorexant",
+       "quote": "drug-related adverse events (OR, 1.66; 95% CI, 0.62–4.46, P =.319)",
+       "sha": "21081c3df9acfe60"
       },
       {
        "label": "F4",
-       "ref": "jiang_2023",
-       "where": "4. Discussion",
-       "quote": "In contrast, suvorexant and lemborexant include warnings about dependency. A recent study demonstrated that daridorexant at the highest phase-3 dose of 50 mg showed less dose-related drug-liking compared to supratherapeutic doses of suvorexant and zolpidem.",
-       "sha": "b7813332bf641730"
+       "ref": "kishi_2025",
+       "where": "Discussion",
+       "quote": "DORAs represent a new class of hypnotic agents and are not associated with physiological tolerance, withdrawal, or rebound insomnia when abruptly discontinued, nor are they associated with deleterious effects on sleep architecture.",
+       "sha": "6e4fb025be7894a9"
       }
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "The clause \"Sometimes suvorexant can cause sleep-related hallucinations or sleep paralysis\" is not supported; the passage only reports a small number of surveillance reports and finds no significant difference versus placebo, not a causal c"
+     "said": "The passages say DORAs pose a risk of somnolence, but they do not say whether getting high is known or unknown."
     },
     {
      "part": "but",
-     "text": "The drug-liking finding came from a comparison with daridorexant at supratherapeutic doses, not a direct test of suvorexant alone.",
+     "text": "The analysis only includes adult insomnia patients in double-blind trials.",
      "rests_on": [
       {
-       "label": "F4",
-       "ref": "jiang_2023",
-       "where": "4. Discussion",
-       "quote": "In contrast, suvorexant and lemborexant include warnings about dependency. A recent study demonstrated that daridorexant at the highest phase-3 dose of 50 mg showed less dose-related drug-liking compared to supratherapeutic doses of suvorexant and zolpidem.",
-       "sha": "b7813332bf641730"
+       "label": "L2",
+       "ref": "kishi_2025",
+       "where": "Materials and methods › Search strategy and inclusion criteria",
+       "quote": "The studies’ inclusion criteria were as follows: (1) double‑blind, randomized, placebo‑controlled trials lasting at least 4 weeks that included DAR, LEM, or SUV; and (2) studies involving adult patients with insomnia (as defined by any recognized diagnostic criteria).",
+       "sha": "1e18a5912ef6cfc6"
       }
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "The statement that the finding \"not a direct test of suvorexant alone\" is not explicitly stated in the passage; the passage describes a comparison but does not say a direct test was absent."
-    },
-    {
-     "part": "how1",
-     "text": "A 2022 review of randomized trials found no significant difference between suvorexant and placebo for sleep-related hallucinations or sleep paralysis.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "khazaie_2022",
-       "where": "Abstract",
-       "quote": "We conducted a systematic review and meta-analysis for the treatment of insomnia with suvorexant and lemborexant based on randomized, double-blind, placebo-controlled Trials.",
-       "sha": "1229714416833e93"
-      },
-      {
-       "label": "F2",
-       "ref": "khazaie_2022",
-       "where": "Discussion",
-       "quote": "In the present meta-analysis, there was no significant difference between suvorexant and placebo regarding hypnagogic/hypnopompic hallucination, sleep paralysis, and sleep-onset paralysis.",
-       "sha": "81ff05a6ded3006e"
-      }
-     ],
-     "ok": true
+     "said": "it is about something else than the short answer (Sentence 1 directly addresses getting high and a risk. Sentence 2 describes the review’s inclusion criteria, not a limit or doubt about sentence 1.)"
     },
     {
      "part": "how2",
-     "text": "Surveillance reports link suvorexant to a small number of sleep-related hallucinations and sleep paralysis, which can happen in the general population.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "khazaie_2022",
-       "where": "Discussion",
-       "quote": "Surveillance has been associated with a small number of reports of sleep-related hallucinations and sleep paralysis, both of which can happen spontaneously in the general population.",
-       "sha": "81ff05a6ded3006e"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how3",
-     "text": "A 2023 review notes suvorexant has dependency warnings and that supratherapeutic doses showed more dose-related drug-liking than daridorexant.",
+     "text": "A systematic review of adult insomnia trials found suvorexant is not associated with physiological tolerance or withdrawal.",
      "rests_on": [
       {
        "label": "DB",
-       "ref": "jiang_2023",
+       "ref": "kishi_2025",
        "where": "Abstract",
-       "quote": "Therefore, we performed a meta-analysis of available studies. We performed a meta-analysis to systematically evaluate the efficacy and safety of daridorexant for treatment of insomnia disorder.",
-       "sha": "010a69fe4da32a1b"
+       "quote": "In order to appraise the risk‑benefit balance of the three available dual orexin receptor antagonists (DORAs; daridorexant, lemborexant, and suvorexant) for the management of adults with insomnia, we conducted a systematic review and random‑effects model network meta‑analysis.",
+       "sha": "cfbb1bbc8633565e"
       },
       {
        "label": "F4",
-       "ref": "jiang_2023",
-       "where": "4. Discussion",
-       "quote": "In contrast, suvorexant and lemborexant include warnings about dependency. A recent study demonstrated that daridorexant at the highest phase-3 dose of 50 mg showed less dose-related drug-liking compared to supratherapeutic doses of suvorexant and zolpidem.",
-       "sha": "b7813332bf641730"
+       "ref": "kishi_2025",
+       "where": "Discussion",
+       "quote": "DORAs represent a new class of hypnotic agents and are not associated with physiological tolerance, withdrawal, or rebound insomnia when abruptly discontinued, nor are they associated with deleterious effects on sleep architecture.",
+       "sha": "6e4fb025be7894a9"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage makes this claim about DORAs as a class and qualifies it with “when abruptly discontinued”; the sentence states it about suvorexant without that qualification."
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "It can get people high, but risks are not known from these studies.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "xu_2020",
+       "where": "Results › Efficacy assessments of suvorexant",
+       "quote": "drug-related adverse events (OR, 1.66; 95% CI, 0.62–4.46, P =.319)",
+       "sha": "21081c3df9acfe60"
+      },
+      {
+       "label": "F4",
+       "ref": "kishi_2025",
+       "where": "Discussion",
+       "quote": "DORAs represent a new class of hypnotic agents and are not associated with physiological tolerance, withdrawal, or rebound insomnia when abruptly discontinued, nor are they associated with deleterious effects on sleep architecture.",
+       "sha": "6e4fb025be7894a9"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages do not say suvorexant can get people high. They also report adverse-event findings and identify somnolence as a risk, so they do not support saying risks are not known from these studies."
+    },
+    {
+     "part": "but",
+     "text": "The analysis only includes adult insomnia patients in double-blind trials.",
+     "rests_on": [
+      {
+       "label": "L2",
+       "ref": "kishi_2025",
+       "where": "Materials and methods › Search strategy and inclusion criteria",
+       "quote": "The studies’ inclusion criteria were as follows: (1) double‑blind, randomized, placebo‑controlled trials lasting at least 4 weeks that included DAR, LEM, or SUV; and (2) studies involving adult patients with insomnia (as defined by any recognized diagnostic criteria).",
+       "sha": "1e18a5912ef6cfc6"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer (Sentence 1 directly addresses whether suvorexant can get people high and what its risks are, but its claims are not supported by the passages. Sentence 2 describes the scope of a review and does not limit or cast doubt on sentence 1.)"
+    },
+    {
+     "part": "how2",
+     "text": "A systematic review of adult insomnia trials found no physiological tolerance or withdrawal.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "kishi_2025",
+       "where": "Abstract",
+       "quote": "In order to appraise the risk‑benefit balance of the three available dual orexin receptor antagonists (DORAs; daridorexant, lemborexant, and suvorexant) for the management of adults with insomnia, we conducted a systematic review and random‑effects model network meta‑analysis.",
+       "sha": "cfbb1bbc8633565e"
+      },
+      {
+       "label": "F4",
+       "ref": "kishi_2025",
+       "where": "Discussion",
+       "quote": "DORAs represent a new class of hypnotic agents and are not associated with physiological tolerance, withdrawal, or rebound insomnia when abruptly discontinued, nor are they associated with deleterious effects on sleep architecture.",
+       "sha": "6e4fb025be7894a9"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage limits its statement to abrupt discontinuation; the sentence omits that qualifier."
     }
    ]
   }
  ],
- "dropped": [
-  {
-   "try": 3,
-   "part": "but",
-   "text": "The drug-liking finding came from supratherapeutic doses, not standard use.",
-   "rests_on": [
-    {
-     "label": "F4",
-     "ref": "jiang_2023",
-     "where": "4. Discussion",
-     "quote": "In contrast, suvorexant and lemborexant include warnings about dependency. A recent study demonstrated that daridorexant at the highest phase-3 dose of 50 mg showed less dose-related drug-liking compared to supratherapeutic doses of suvorexant and zolpidem.",
-     "sha": "b7813332bf641730"
-    }
-   ],
-   "by": "the second reader",
-   "said": "Passage does not explicitly state that the finding was not from standard use"
-  }
- ],
- "with_checked": {
-  "differs": [],
-  "same": []
- },
  "place": {
   "home": "new:Sleep medicines that block orexin",
   "also": [],
