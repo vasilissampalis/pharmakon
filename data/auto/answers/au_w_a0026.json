@@ -27,24 +27,25 @@
    "reader_2": "openrouter:openai/gpt-oss-120b",
    "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "45938683807",
-  "read_seconds": 140,
+  "run": "45940205545",
+  "read_seconds": 32,
   "from": {
    "papers": 2,
    "summaries": 0,
    "official": 2
   },
   "neurons": 0.0,
-  "seconds": 162
+  "seconds": 108
  },
  "status": "none",
- "why": "no draft passed: broken at try 3: short: its source says “subjective effects of LSD”: that is what people perceived or said of themselves, not what was measured. Keep the word (“perceived”), or say that people said so; how3: its source says “subjective effects of LSD”: that is what people perceived or said of themselves, not what was measured. Keep the word (“perceived”), or say that people said so",
+ "why": "the second reader did not accept the answer",
  "gates": {
   "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-120b read from there",
-  "read": "10 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 7 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "read": "11 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 4 thrown away (the quote was not in the passage, or a number was not in the quote)",
   "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 2 official page(s), 0 paper(s) read in summary only",
-  "told": "the writer was told what the readers said of the last draft that was not accepted: the short answer “No. FRANK says every person’s LSD experience is unique. A 2023 review found big differences in how people reacted to LSD.”: Although the passages support variation in LSD experiences, this uses variation in drug effects to answer a question about the characteristics of people who u",
-  "rules": "broken at try 3: short: its source says “subjective effects of LSD”: that is what people perceived or said of themselves, not what was measured. Keep the word (“perceived”), or say that people said so; how3: its source says “subjective effects of LSD”: that is what people perceived or said of themselves, not what was measured. Keep the word (“perceived”), or say that people said so"
+  "rules": "1 How-do-we-know line(s) left out for a rule (how3: its source says “subjective effects of LSD”: that is what people perceived or said of themselves, not what was measured. Keep the word (“perceived”), or say that people said so)",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.25, but 0.33, how1 0.84, how2 0.52, how3 0.95",
+  "check": "short: NOT accepted: The passages say LSD experiences vary, not that users differ in their characteristics. This also repeats the editorially flagged move of answering “No” using passages about variation in drug effects.; but: NOT accepted: The passage concerns physical dependence and being driven to use LSD; it does not limit or cast doubt on the claim about whether users share similar characteristics.; how1: accepted; how2: accepted; how3: accepted"
  },
  "sources": [
   {
@@ -112,23 +113,31 @@
     "passage": 1,
     "where": "Abstract",
     "quote": "Here we present the first meta-analysis establishing dose-response relationship estimates of the altered states of consciousness induced by LSD.",
-    "text": "meta-analysis of LSD subjective effects in humans"
+    "text": "first meta-analysis of LSD dose‑response in humans"
    },
    "findings": [
     {
-     "passage": 19,
-     "where": "Discussion",
-     "quote": "In conclusion, the present meta-analysis on subjective effects of LSD in study participants revealed dose-dependent alterations of consciousness with substantial heterogeneity of effects across laboratory and therapeutic settings on all scales and factors assessed by given questionnaires.",
-     "text": "People who use LSD exhibit substantial heterogeneity of effects across different settings.",
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "The considerable variability observed in most factors and scales points to the role of non-pharmacological factors in shaping subjective experiences.",
+     "text": "People who use LSD show considerable variability in most subjective factors, indicating non‑pharmacological factors shape their experiences.",
      "id": "F1",
      "second_hand": ""
     },
     {
-     "passage": 18,
+     "passage": 19,
      "where": "Discussion",
-     "quote": "Moreover, the results reflect estimates on the variability of average effects in study samples based on doses of up to 200 µg, so the experiences of individual subjects may differ considerably.",
-     "text": "People who use LSD may differ considerably in their individual experiences.",
+     "quote": "In conclusion, the present meta-analysis on subjective effects of LSD in study participants revealed dose-dependent alterations of consciousness with substantial heterogeneity of effects across laboratory and therapeutic settings on all scales and factors assessed by given questionnaires.",
+     "text": "People who use LSD exhibit substantial heterogeneity of effects across laboratory and therapeutic settings on all measured scales.",
      "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 13,
+     "where": "Discussion",
+     "quote": "the strongest dose-modulation was found for items referring to changes in perception and imagination (Visionary Restructuralization, Changed Meaning of Percepts) as well as positively experienced dissolution of boundaries between self and surroundings (Oceanic Boundlessness)",
+     "text": "People who use LSD most strongly experience changes in perception and imagination and positively experienced dissolution of self‑boundaries.",
+     "id": "F3",
      "second_hand": ""
     }
    ],
@@ -136,8 +145,8 @@
     {
      "passage": 18,
      "where": "Discussion",
-     "quote": "First, administration methods varied across studies. Most studies administered LSD orally as capsules, while it was administered sublingually in two studies and intravenously in one study.",
-     "text": "Administration methods varied across studies, which limits comparability of the results.",
+     "quote": "study samples are usually comprised of highly selected and well-prepared participants.",
+     "text": "The results may not apply to the general population because study samples were highly selected and well‑prepared participants.",
      "id": "L1",
      "second_hand": ""
     }
@@ -211,24 +220,24 @@
    "design": {
     "passage": 1,
     "where": "Abstract",
-    "quote": "This study investigates psychedelic drugs to treat substance use disorder (SUD).",
-    "text": "systematic review and meta-analysis of human studies on psychedelic drugs for SUD"
+    "quote": "The inclusion criteria in this study include evaluating the efficacy of LSD, psilocybin, ketamine, or ibogaine in human beings with an SUD.",
+    "text": "Systematic review and meta‑analysis of human studies evaluating LSD (and other psychedelics) for substance use disorder"
    },
    "findings": [
     {
      "passage": 11,
      "where": "1. Introduction › 1.3. LSD",
-     "quote": "Of the 444 respondents, 96% of individuals met the criteria for an SUD and 79% for a severe SUD.",
-     "text": "In the survey, 96% of people who used LSD met criteria for an SUD and 79% met criteria for a severe SUD.",
-     "id": "F3",
+     "quote": "The most significant reductions in SM were associated with those who reported a highly personal experience.",
+     "text": "People who reported a highly personal experience showed the most significant reductions in substance misuse.",
+     "id": "F4",
      "second_hand": ""
     },
     {
-     "passage": 11,
+     "passage": 9,
      "where": "1. Introduction › 1.3. LSD",
-     "quote": "Individuals reported taking a moderate to high dose of LSD (43%), psilocybin (29%), or other (28%).",
-     "text": "43% of the surveyed LSD users reported taking a moderate to high dose of LSD.",
-     "id": "F4",
+     "quote": "Lysergic Acid Diethylamide has low toxicity and abuse potential and is a serotonergic hallucinogen that works as a 5-HT2A agonist.",
+     "text": "LSD is characterized by low toxicity and low abuse potential.",
+     "id": "F5",
      "second_hand": ""
     }
    ],
@@ -237,7 +246,7 @@
      "passage": 59,
      "where": "4. Discussion › 4.1. Summary of Results",
      "quote": "Due to the lack of information regarding participants’ baseline SUD, the efficacy of LSD could only be compared against each study’s control group.",
-     "text": "The LSD studies lacked baseline SUD information, so efficacy could only be compared to control groups.",
+     "text": "The LSD analysis lacked baseline SUD information, limiting comparisons to control groups only.",
      "id": "L2",
      "second_hand": ""
     }
@@ -292,48 +301,61 @@
     {
      "passage": 6,
      "where": "Mixing LSD with other drugs / How does it make you feel?",
-     "quote": "Taking LSD can make you feel: euphoric; giggly; in awe of the people and things around you; energised; excited; empathetic It can also make you: see and hear things that aren’t there (hallucinate); confused; suspicious; anxious; panicked; frightened; overwhelmed",
-     "text": "People who use LSD often feel euphoric, giggly, in awe, energised, excited, empathetic, and may also see and hear things that aren’t there, feeling confused, suspicious, anxious, panicked, frightened, or overwhelmed.",
-     "id": "F5",
+     "quote": "LSD feeds off your imagination so every person’s experience is unique.",
+     "text": "Each person’s LSD experience is unique.",
+     "id": "F6",
+     "second_hand": ""
+    },
+    {
+     "passage": 6,
+     "where": "Mixing LSD with other drugs / How does it make you feel?",
+     "quote": "Taking LSD can make you feel: euphoric; giggly; in awe of the people and things around you; energised; excited; empathetic",
+     "text": "LSD can make people feel euphoric, giggly, in awe, energised, excited, and empathetic.",
+     "id": "F7",
      "second_hand": ""
     },
     {
      "passage": 7,
      "where": "Mixing LSD with other drugs / How does it make people behave?",
-     "quote": "People who take larger doses can act unpredictably. They can become fixated on certain things, emotional, paranoid or even aggressive.",
-     "text": "People who use larger doses of LSD can act unpredictably, become fixated, emotional, paranoid, or even aggressive.",
-     "id": "F6",
-     "second_hand": ""
-    },
-    {
-     "passage": 11,
-     "where": "Mixing LSD with other drugs / Mental health risks",
-     "quote": "If you have mental health problems, or a history of mental health problems in your family, taking LSD could make them worse.",
-     "text": "People who have mental health problems or a family history of such problems may experience worsening of those problems when they use LSD.",
-     "id": "F7",
+     "quote": "People on LSD might be quieter than usual as they’re so ‘in their heads’.",
+     "text": "People on LSD might be quieter than usual.",
+     "id": "F8",
      "second_hand": ""
     }
    ],
-   "limits": [],
+   "limits": [
+    {
+     "passage": 11,
+     "where": "Mixing LSD with other drugs / Mental health risks",
+     "quote": "very little is known about why some people are vulnerable or how to help them.",
+     "text": "It is not well understood why some people are vulnerable to HPPD or how to help them.",
+     "id": "L3",
+     "second_hand": ""
+    }
+   ],
    "tag": "C"
   },
   {
    "read": "page",
    "ref": {
-    "id": "thelevel_lsd",
+    "id": "healthcanada_lsd",
     "type": "webpage",
     "title": "LSD",
     "author": [
      {
-      "literal": "NZ Drug Foundation"
+      "literal": "Health Canada"
      }
     ],
     "issued": {
      "date-parts": [
-      []
+      [
+       2023,
+       2,
+       8
+      ]
      ]
     },
-    "URL": "https://thelevel.org.nz/drug-information/lsd",
+    "URL": "https://www.canada.ca/en/health-canada/services/substance-use/controlled-illegal-drugs/lsd.html",
     "accessed": {
      "date-parts": [
       [
@@ -348,43 +370,43 @@
      "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
      "verified_on": "2026-11-27"
     },
-    "publisher": "The Level"
+    "publisher": "Government of Canada"
    },
    "title": "LSD",
-   "year": null,
+   "year": 2023,
    "kind": "official",
    "people": true,
-   "near": 0.632,
-   "name": "NZ Drug Foundation",
-   "short": "the NZ Drug Foundation",
-   "tier": 2,
-   "address": "https://thelevel.org.nz/drug-information/lsd",
+   "near": 0.615,
+   "name": "Health Canada",
+   "short": "Health Canada",
+   "tier": 1,
+   "address": "https://www.canada.ca/en/health-canada/services/substance-use/controlled-illegal-drugs/lsd.html",
    "money": [],
    "label": false,
    "design": null,
    "findings": [
     {
-     "passage": 17,
-     "where": "Long-term effects / What are the long-term effects of using LSD?",
-     "quote": "most users only take it from time to time, and it is not a drug that people commonly become addicted to.",
-     "text": "Most people who use LSD take it only occasionally and are not commonly addicted.",
-     "id": "F8",
-     "second_hand": ""
-    },
-    {
-     "passage": 22,
-     "where": "Working and driving / How can LSD affect your daily activities?",
-     "quote": "Most people who use say it is difficult to go about their normal daily life while high on LSD.",
-     "text": "Most people who use LSD find it difficult to perform normal daily activities while under its effects.",
+     "passage": 6,
+     "where": "Short-term effects of LSD / Mental effects",
+     "quote": "On LSD you may see, hear or feel things that are not really there (hallucinations).",
+     "text": "People who use LSD may see, hear or feel things that are not really there (hallucinations).",
      "id": "F9",
      "second_hand": ""
     },
     {
-     "passage": 9,
-     "where": "How to stay safer / How can you be safer when using LSD?",
-     "quote": "Many people who use LSD talk about the importance of being in an environment where you feel calm and comfortable and being with people who make you feel safe.",
-     "text": "Many people who use LSD consider a calm, comfortable environment and trusted companions important.",
+     "passage": 12,
+     "where": "Substance use disorders and withdrawal",
+     "quote": "LSD does not cause physical dependence. Unlike with some other drugs, you are not driven to use LSD even if you use it frequently.",
+     "text": "People who use LSD do not develop physical dependence and are not driven to use it even if they use it frequently.",
      "id": "F10",
+     "second_hand": ""
+    },
+    {
+     "passage": 6,
+     "where": "Short-term effects of LSD / Mental effects",
+     "quote": "extreme changes in mood, from; joy to desperation; well‑being to terror or aggression; calmness to anxiety or depression",
+     "text": "People who use LSD may experience extreme changes in mood, ranging from joy to desperation, well‑being to terror, or calmness to anxiety.",
+     "id": "F11",
      "second_hand": ""
     }
    ],
@@ -394,7 +416,7 @@
  ],
  "parts": [],
  "complete": false,
- "missing": "demographic characteristics",
+ "missing": "specific demographic or personality traits of LSD users",
  "wanted": [],
  "person": null,
  "history": [
@@ -413,6 +435,14 @@
    "why": "the second reader did not accept the answer",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-27",
+   "lane": 19,
+   "status": "none",
+   "why": "no draft passed: broken at try 3: short: its source says “subjective effects of LSD”: that is what people perceived or said of themselves, not what was measured. Keep the word (“perceived”), or say that people said so; how3: its source says “subjective effects of LSD”: that is what people perceived or said of themselves, not what was measured. Keep the word (“perceived”), or say that people said so",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -421,19 +451,13 @@
    "read": "full",
    "kind": "review",
    "at": "10.1038/s41386-023-01588-2",
-   "kept": 2,
+   "kept": 3,
    "thrown": [
     {
-     "kind": "finding",
-     "text": "People who use LSD show considerable variability in their subjective experiences, indicating they do not all share the same characteristics.",
-     "quote": "The considerable variability observed in most factors and scales points to the role of non-pharmacological factors in shaping subjective experiences.",
-     "why": "the sentence is not carried by its quote and passage"
-    },
-    {
      "kind": "limit",
-     "text": "The findings may not apply to the general population or to recreational use outside controlled laboratory settings.",
-     "quote": "For these reasons and because the quality and quantity of recreationally used products is often unclear, the present results do not necessarily apply to the general population or to recreational use o",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+     "text": "There are no studies in the 20‑50 μg dose range, so the onset of effects may be overestimated.",
+     "quote": "there are no studies available in the dose range from 20 to 50 μg, resulting in an overestimation of the curves slope at their onset.",
+     "why": "it holds an amount or a time between uses"
     }
    ]
   },
@@ -445,9 +469,9 @@
    "kept": 2,
    "thrown": [
     {
-     "kind": "limit",
-     "text": "Research on LSD largely stopped after 1970, limiting recent data.",
-     "quote": "Most LSD research ended in 1970, not long after Ludwig et al., 1969 and Hollister, 1969 conducted thorough evaluations.",
+     "kind": "finding",
+     "text": "Among surveyed people who used LSD, 43% took a moderate to high dose and 96% met criteria for an SUD, with 79% having a severe SUD.",
+     "quote": "Individuals reported taking a moderate to high dose of LSD (43%), psilocybin (29%), or other (28%). Of the 444 respondents, 96% of individuals met the criteria for an SUD and 79% for a severe SUD.",
      "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
     }
    ]
@@ -461,14 +485,8 @@
    "thrown": [
     {
      "kind": "limit",
-     "text": "The page states that every person’s LSD experience is unique, limiting the similarity among users.",
-     "quote": "LSD feeds off your imagination so every person’s experience is unique.",
-     "why": "the sentence is not carried by its quote and passage"
-    },
-    {
-     "kind": "limit",
-     "text": "The page notes that very little is known about why some people are vulnerable to LSD’s effects.",
-     "quote": "very little is known about why some people are vulnerable or how to help them",
+     "text": "The described behaviors vary depending on how much LSD the person has taken.",
+     "quote": "This depends on how much LSD the person has taken.",
      "why": "the sentence is not carried by its quote and passage"
     }
    ]
@@ -490,129 +508,184 @@
    "read": "page",
    "kind": "official",
    "at": "https://www.canada.ca/en/health-canada/services/substance-use/controlled-illegal-drugs/lsd.html",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "LSD",
-   "read": "page",
-   "kind": "official",
-   "at": "https://thelevel.org.nz/drug-information/lsd",
    "kept": 3,
-   "thrown": [
-    {
-     "kind": "limit",
-     "text": "The effects of LSD can vary between individuals depending on the dose.",
-     "quote": "it can affect everyone differently at different doses.",
-     "why": "the sentence is not carried by its quote and passage"
-    }
-   ]
+   "thrown": []
   }
  ],
  "plan": {
   "short": [
-   "F5",
+   "F6",
    "F1"
   ],
-  "direct": "",
+  "direct": "No",
   "but": [
-   "L1"
+   "F10"
   ],
   "how": [
    [
-    "F5",
-    "F6"
+    "F9",
+    "F11"
    ],
    [
-    "F8"
+    "F6",
+    "F7"
    ],
    [
-    "DA",
-    "F1"
+    "F1",
+    "F2"
    ]
   ],
-  "unanswered": "demographic characteristics"
+  "unanswered": "specific demographic or personality traits of LSD users"
+ },
+ "dropped": [
+  {
+   "try": 1,
+   "part": "how3",
+   "text": "A 2023 review found people who use LSD exhibit substantial heterogeneity of effects.",
+   "rests_on": [
+    {
+     "label": "F1",
+     "ref": "hirschfeld_2023",
+     "where": "Abstract",
+     "quote": "The considerable variability observed in most factors and scales points to the role of non-pharmacological factors in shaping subjective experiences.",
+     "sha": "b212c8fb2d5fe048"
+    },
+    {
+     "label": "F2",
+     "ref": "hirschfeld_2023",
+     "where": "Discussion",
+     "quote": "In conclusion, the present meta-analysis on subjective effects of LSD in study participants revealed dose-dependent alterations of consciousness with substantial heterogeneity of effects across laboratory and therapeutic settings on all scales and factors assessed by given questionnaires.",
+     "sha": "76672004f7030615"
+    }
+   ],
+   "by": "a rule",
+   "said": "a rule: its source says “subjective effects of LSD”: that is what people perceived or said of themselves, not what was measured. Keep the word (“perceived”), or say that people said so"
+  },
+  {
+   "try": 2,
+   "part": "how3",
+   "text": "A 2023 review found people who use LSD exhibit substantial heterogeneity of effects across laboratory and therapeutic settings.",
+   "rests_on": [
+    {
+     "label": "F1",
+     "ref": "hirschfeld_2023",
+     "where": "Abstract",
+     "quote": "The considerable variability observed in most factors and scales points to the role of non-pharmacological factors in shaping subjective experiences.",
+     "sha": "b212c8fb2d5fe048"
+    },
+    {
+     "label": "F2",
+     "ref": "hirschfeld_2023",
+     "where": "Discussion",
+     "quote": "In conclusion, the present meta-analysis on subjective effects of LSD in study participants revealed dose-dependent alterations of consciousness with substantial heterogeneity of effects across laboratory and therapeutic settings on all scales and factors assessed by given questionnaires.",
+     "sha": "76672004f7030615"
+    }
+   ],
+   "by": "a rule",
+   "said": "a rule: its source says “subjective effects of LSD”: that is what people perceived or said of themselves, not what was measured. Keep the word (“perceived”), or say that people said so"
+  }
+ ],
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.2534,
+   "but": 0.3254,
+   "how1": 0.8362,
+   "how2": 0.5236,
+   "how3": 0.9475
+  },
+  "scores_quotes_alone": {
+   "short": 0.2381,
+   "but": 0.4161,
+   "how1": 0.667,
+   "how2": 0.6092,
+   "how3": 0.9639
+  }
  },
  "tries": [
   {
    "try": 1,
-   "why": "a rule was broken: written again",
+   "why": "the short answer or the But was not accepted: written again",
    "parts": [
     {
      "part": "short",
-     "text": "It can. People who use LSD exhibit substantial heterogeneity of effects.",
+     "text": "No, people who use LSD do not share similar characteristics. Each person’s LSD experience is unique.",
      "rests_on": [
+      {
+       "label": "F6",
+       "ref": "frank_lsd",
+       "where": "Mixing LSD with other drugs / How does it make you feel?",
+       "quote": "LSD feeds off your imagination so every person’s experience is unique.",
+       "sha": "44b71b1b4d565ad0"
+      },
       {
        "label": "F1",
        "ref": "hirschfeld_2023",
-       "where": "Discussion",
-       "quote": "In conclusion, the present meta-analysis on subjective effects of LSD in study participants revealed dose-dependent alterations of consciousness with substantial heterogeneity of effects across laboratory and therapeutic settings on all scales and factors assessed by given questionnaires.",
-       "sha": "76672004f7030615"
+       "where": "Abstract",
+       "quote": "The considerable variability observed in most factors and scales points to the role of non-pharmacological factors in shaping subjective experiences.",
+       "sha": "b212c8fb2d5fe048"
       }
      ],
      "ok": false,
-     "by": "a rule",
-     "said": "a rule: its source says “subjective effects of LSD”: that is what people perceived or said of themselves, not what was measured. Keep the word (“perceived”), or say that people said so"
+     "by": "the second reader",
+     "said": "The passages describe variation in LSD experiences, not whether users share similar characteristics. It also repeats the warned-against move of using passages about effects varying between people to claim something about the people who use "
     },
     {
      "part": "but",
-     "text": "Administration methods varied across studies.",
+     "text": "This holds for people who do not develop physical dependence, even with frequent use.",
      "rests_on": [
       {
-       "label": "L1",
-       "ref": "hirschfeld_2023",
-       "where": "Discussion",
-       "quote": "First, administration methods varied across studies. Most studies administered LSD orally as capsules, while it was administered sublingually in two studies and intravenously in one study.",
-       "sha": "b6540cc08dc7d56b"
+       "label": "F10",
+       "ref": "healthcanada_lsd",
+       "where": "Substance use disorders and withdrawal",
+       "quote": "LSD does not cause physical dependence. Unlike with some other drugs, you are not driven to use LSD even if you use it frequently.",
+       "sha": "4e01b7282fff7d08"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage discusses physical and psychological dependence and frequent use, but does not say that the uniqueness claim holds for people without physical dependence."
     },
     {
      "part": "how1",
-     "text": "FRANK says people who use LSD often feel euphoric, giggly, in awe, energised, excited, empathetic.",
+     "text": "Health Canada says people who use LSD may see or hear things that are not there and experience mood changes.",
      "rests_on": [
       {
-       "label": "F5",
-       "ref": "frank_lsd",
-       "where": "Mixing LSD with other drugs / How does it make you feel?",
-       "quote": "Taking LSD can make you feel: euphoric; giggly; in awe of the people and things around you; energised; excited; empathetic It can also make you: see and hear things that aren’t there (hallucinate); confused; suspicious; anxious; panicked; frightened; overwhelmed",
-       "sha": "44b71b1b4d565ad0"
+       "label": "F9",
+       "ref": "healthcanada_lsd",
+       "where": "Short-term effects of LSD / Mental effects",
+       "quote": "On LSD you may see, hear or feel things that are not really there (hallucinations).",
+       "sha": "8070a04a063a2628"
+      },
+      {
+       "label": "F11",
+       "ref": "healthcanada_lsd",
+       "where": "Short-term effects of LSD / Mental effects",
+       "quote": "extreme changes in mood, from; joy to desperation; well‑being to terror or aggression; calmness to anxiety or depression",
+       "sha": "8070a04a063a2628"
       }
      ],
      "ok": true
     },
     {
      "part": "how2",
-     "text": "The NZ Drug Foundation says most people who use LSD take it only occasionally.",
+     "text": "FRANK says LSD can make people feel euphoric or empathetic.",
      "rests_on": [
       {
-       "label": "F8",
-       "ref": "thelevel_lsd",
-       "where": "Long-term effects / What are the long-term effects of using LSD?",
-       "quote": "most users only take it from time to time, and it is not a drug that people commonly become addicted to.",
-       "sha": "ca3042eca4aa0370"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how3",
-     "text": "A 2023 meta-analysis found dose-dependent alterations of consciousness in humans.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "hirschfeld_2023",
-       "where": "Abstract",
-       "quote": "Here we present the first meta-analysis establishing dose-response relationship estimates of the altered states of consciousness induced by LSD.",
-       "sha": "b212c8fb2d5fe048"
+       "label": "F6",
+       "ref": "frank_lsd",
+       "where": "Mixing LSD with other drugs / How does it make you feel?",
+       "quote": "LSD feeds off your imagination so every person’s experience is unique.",
+       "sha": "44b71b1b4d565ad0"
       },
       {
-       "label": "F1",
-       "ref": "hirschfeld_2023",
-       "where": "Discussion",
-       "quote": "In conclusion, the present meta-analysis on subjective effects of LSD in study participants revealed dose-dependent alterations of consciousness with substantial heterogeneity of effects across laboratory and therapeutic settings on all scales and factors assessed by given questionnaires.",
-       "sha": "76672004f7030615"
+       "label": "F7",
+       "ref": "frank_lsd",
+       "where": "Mixing LSD with other drugs / How does it make you feel?",
+       "quote": "Taking LSD can make you feel: euphoric; giggly; in awe of the people and things around you; energised; excited; empathetic",
+       "sha": "44b71b1b4d565ad0"
       }
      ],
      "ok": true
@@ -621,90 +694,85 @@
   },
   {
    "try": 2,
-   "why": "a rule was broken: written again",
+   "why": "the short answer or the But was not accepted: written again",
    "parts": [
     {
      "part": "short",
-     "text": "It can. People who use LSD report varied effects.",
+     "text": "No, people who use LSD do not share similar characteristics, as each person’s experience is unique.",
      "rests_on": [
       {
-       "label": "F5",
+       "label": "F6",
        "ref": "frank_lsd",
        "where": "Mixing LSD with other drugs / How does it make you feel?",
-       "quote": "Taking LSD can make you feel: euphoric; giggly; in awe of the people and things around you; energised; excited; empathetic It can also make you: see and hear things that aren’t there (hallucinate); confused; suspicious; anxious; panicked; frightened; overwhelmed",
+       "quote": "LSD feeds off your imagination so every person’s experience is unique.",
        "sha": "44b71b1b4d565ad0"
       },
       {
        "label": "F1",
        "ref": "hirschfeld_2023",
-       "where": "Discussion",
-       "quote": "In conclusion, the present meta-analysis on subjective effects of LSD in study participants revealed dose-dependent alterations of consciousness with substantial heterogeneity of effects across laboratory and therapeutic settings on all scales and factors assessed by given questionnaires.",
-       "sha": "76672004f7030615"
+       "where": "Abstract",
+       "quote": "The considerable variability observed in most factors and scales points to the role of non-pharmacological factors in shaping subjective experiences.",
+       "sha": "b212c8fb2d5fe048"
       }
      ],
      "ok": false,
-     "by": "a rule",
-     "said": "a rule: its source says “subjective effects of LSD”: that is what people perceived or said of themselves, not what was measured. Keep the word (“perceived”), or say that people said so"
+     "by": "the second reader",
+     "said": "The passages say experiences can vary or be unique; they do not establish that LSD users do not share similar characteristics. This also repeats the warned-against move of answering about users from passages about varying drug effects."
     },
     {
      "part": "but",
-     "text": "Administration methods varied across studies.",
+     "text": "This holds for people who do not develop physical dependence and are not driven to use it even if they use it frequently.",
      "rests_on": [
       {
-       "label": "L1",
-       "ref": "hirschfeld_2023",
-       "where": "Discussion",
-       "quote": "First, administration methods varied across studies. Most studies administered LSD orally as capsules, while it was administered sublingually in two studies and intravenously in one study.",
-       "sha": "b6540cc08dc7d56b"
+       "label": "F10",
+       "ref": "healthcanada_lsd",
+       "where": "Substance use disorders and withdrawal",
+       "quote": "LSD does not cause physical dependence. Unlike with some other drugs, you are not driven to use LSD even if you use it frequently.",
+       "sha": "4e01b7282fff7d08"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage discusses physical and psychological dependence and frequent use, not whether users share characteristics or whether their experiences are unique. It also does not say the claim applies only to people who do not develop physical"
     },
     {
      "part": "how1",
-     "text": "FRANK says people who use LSD often feel euphoric or anxious.",
+     "text": "Health Canada says people who use LSD may see, hear or feel things that are not really there, and experience extreme changes in mood.",
      "rests_on": [
       {
-       "label": "F5",
-       "ref": "frank_lsd",
-       "where": "Mixing LSD with other drugs / How does it make you feel?",
-       "quote": "Taking LSD can make you feel: euphoric; giggly; in awe of the people and things around you; energised; excited; empathetic It can also make you: see and hear things that aren’t there (hallucinate); confused; suspicious; anxious; panicked; frightened; overwhelmed",
-       "sha": "44b71b1b4d565ad0"
+       "label": "F9",
+       "ref": "healthcanada_lsd",
+       "where": "Short-term effects of LSD / Mental effects",
+       "quote": "On LSD you may see, hear or feel things that are not really there (hallucinations).",
+       "sha": "8070a04a063a2628"
+      },
+      {
+       "label": "F11",
+       "ref": "healthcanada_lsd",
+       "where": "Short-term effects of LSD / Mental effects",
+       "quote": "extreme changes in mood, from; joy to desperation; well‑being to terror or aggression; calmness to anxiety or depression",
+       "sha": "8070a04a063a2628"
       }
      ],
      "ok": true
     },
     {
      "part": "how2",
-     "text": "The NZ Drug Foundation says most people who use LSD take it only occasionally.",
+     "text": "FRANK says LSD can make people feel euphoric, giggly, in awe, energised, excited, and empathetic.",
      "rests_on": [
       {
-       "label": "F8",
-       "ref": "thelevel_lsd",
-       "where": "Long-term effects / What are the long-term effects of using LSD?",
-       "quote": "most users only take it from time to time, and it is not a drug that people commonly become addicted to.",
-       "sha": "ca3042eca4aa0370"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how3",
-     "text": "A 2023 meta-analysis found dose-dependent alterations of consciousness in humans.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "hirschfeld_2023",
-       "where": "Abstract",
-       "quote": "Here we present the first meta-analysis establishing dose-response relationship estimates of the altered states of consciousness induced by LSD.",
-       "sha": "b212c8fb2d5fe048"
+       "label": "F6",
+       "ref": "frank_lsd",
+       "where": "Mixing LSD with other drugs / How does it make you feel?",
+       "quote": "LSD feeds off your imagination so every person’s experience is unique.",
+       "sha": "44b71b1b4d565ad0"
       },
       {
-       "label": "F1",
-       "ref": "hirschfeld_2023",
-       "where": "Discussion",
-       "quote": "In conclusion, the present meta-analysis on subjective effects of LSD in study participants revealed dose-dependent alterations of consciousness with substantial heterogeneity of effects across laboratory and therapeutic settings on all scales and factors assessed by given questionnaires.",
-       "sha": "76672004f7030615"
+       "label": "F7",
+       "ref": "frank_lsd",
+       "where": "Mixing LSD with other drugs / How does it make you feel?",
+       "quote": "Taking LSD can make you feel: euphoric; giggly; in awe of the people and things around you; energised; excited; empathetic",
+       "sha": "44b71b1b4d565ad0"
       }
      ],
      "ok": true
@@ -713,102 +781,109 @@
   },
   {
    "try": 3,
-   "why": "a rule was broken: written again",
+   "why": "the last draft: no answer",
    "parts": [
     {
      "part": "short",
-     "text": "It can. People who use LSD report varied effects.",
+     "text": "No, people who use LSD do not all share similar characteristics, as each person’s experience is unique.",
      "rests_on": [
       {
-       "label": "F5",
+       "label": "F6",
        "ref": "frank_lsd",
        "where": "Mixing LSD with other drugs / How does it make you feel?",
-       "quote": "Taking LSD can make you feel: euphoric; giggly; in awe of the people and things around you; energised; excited; empathetic It can also make you: see and hear things that aren’t there (hallucinate); confused; suspicious; anxious; panicked; frightened; overwhelmed",
+       "quote": "LSD feeds off your imagination so every person’s experience is unique.",
        "sha": "44b71b1b4d565ad0"
       },
       {
        "label": "F1",
        "ref": "hirschfeld_2023",
-       "where": "Discussion",
-       "quote": "In conclusion, the present meta-analysis on subjective effects of LSD in study participants revealed dose-dependent alterations of consciousness with substantial heterogeneity of effects across laboratory and therapeutic settings on all scales and factors assessed by given questionnaires.",
-       "sha": "76672004f7030615"
+       "where": "Abstract",
+       "quote": "The considerable variability observed in most factors and scales points to the role of non-pharmacological factors in shaping subjective experiences.",
+       "sha": "b212c8fb2d5fe048"
       }
      ],
      "ok": false,
-     "by": "a rule",
-     "said": "a rule: its source says “subjective effects of LSD”: that is what people perceived or said of themselves, not what was measured. Keep the word (“perceived”), or say that people said so"
+     "by": "the second reader",
+     "said": "The passages say LSD experiences vary, not that users differ in their characteristics. This also repeats the editorially flagged move of answering “No” using passages about variation in drug effects."
     },
     {
      "part": "but",
-     "text": "Administration methods varied across studies.",
+     "text": "This holds for people who do not develop physical dependence, even with frequent use.",
      "rests_on": [
       {
-       "label": "L1",
-       "ref": "hirschfeld_2023",
-       "where": "Discussion",
-       "quote": "First, administration methods varied across studies. Most studies administered LSD orally as capsules, while it was administered sublingually in two studies and intravenously in one study.",
-       "sha": "b6540cc08dc7d56b"
+       "label": "F10",
+       "ref": "healthcanada_lsd",
+       "where": "Substance use disorders and withdrawal",
+       "quote": "LSD does not cause physical dependence. Unlike with some other drugs, you are not driven to use LSD even if you use it frequently.",
+       "sha": "4e01b7282fff7d08"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage concerns physical dependence and being driven to use LSD; it does not limit or cast doubt on the claim about whether users share similar characteristics."
     },
     {
      "part": "how1",
-     "text": "FRANK says people who use LSD often feel euphoric or anxious.",
+     "text": "FRANK says each person’s LSD experience is unique, and can make people feel euphoric or empathetic.",
      "rests_on": [
-      {
-       "label": "F5",
-       "ref": "frank_lsd",
-       "where": "Mixing LSD with other drugs / How does it make you feel?",
-       "quote": "Taking LSD can make you feel: euphoric; giggly; in awe of the people and things around you; energised; excited; empathetic It can also make you: see and hear things that aren’t there (hallucinate); confused; suspicious; anxious; panicked; frightened; overwhelmed",
-       "sha": "44b71b1b4d565ad0"
-      },
       {
        "label": "F6",
        "ref": "frank_lsd",
-       "where": "Mixing LSD with other drugs / How does it make people behave?",
-       "quote": "People who take larger doses can act unpredictably. They can become fixated on certain things, emotional, paranoid or even aggressive.",
-       "sha": "811553e2dad38373"
+       "where": "Mixing LSD with other drugs / How does it make you feel?",
+       "quote": "LSD feeds off your imagination so every person’s experience is unique.",
+       "sha": "44b71b1b4d565ad0"
+      },
+      {
+       "label": "F7",
+       "ref": "frank_lsd",
+       "where": "Mixing LSD with other drugs / How does it make you feel?",
+       "quote": "Taking LSD can make you feel: euphoric; giggly; in awe of the people and things around you; energised; excited; empathetic",
+       "sha": "44b71b1b4d565ad0"
       }
      ],
      "ok": true
     },
     {
      "part": "how2",
-     "text": "The NZ Drug Foundation says most people who use LSD take it only occasionally.",
+     "text": "Health Canada says people who use LSD may see or hear things that are not there, and may experience extreme mood changes.",
      "rests_on": [
       {
-       "label": "F8",
-       "ref": "thelevel_lsd",
-       "where": "Long-term effects / What are the long-term effects of using LSD?",
-       "quote": "most users only take it from time to time, and it is not a drug that people commonly become addicted to.",
-       "sha": "ca3042eca4aa0370"
+       "label": "F9",
+       "ref": "healthcanada_lsd",
+       "where": "Short-term effects of LSD / Mental effects",
+       "quote": "On LSD you may see, hear or feel things that are not really there (hallucinations).",
+       "sha": "8070a04a063a2628"
+      },
+      {
+       "label": "F11",
+       "ref": "healthcanada_lsd",
+       "where": "Short-term effects of LSD / Mental effects",
+       "quote": "extreme changes in mood, from; joy to desperation; well‑being to terror or aggression; calmness to anxiety or depression",
+       "sha": "8070a04a063a2628"
       }
      ],
      "ok": true
     },
     {
      "part": "how3",
-     "text": "A 2023 meta-analysis found substantial heterogeneity of effects across different settings.",
+     "text": "A 2023 review found people who use LSD show variability in subjective factors, and exhibit heterogeneity of effects.",
      "rests_on": [
       {
-       "label": "DA",
+       "label": "F1",
        "ref": "hirschfeld_2023",
        "where": "Abstract",
-       "quote": "Here we present the first meta-analysis establishing dose-response relationship estimates of the altered states of consciousness induced by LSD.",
+       "quote": "The considerable variability observed in most factors and scales points to the role of non-pharmacological factors in shaping subjective experiences.",
        "sha": "b212c8fb2d5fe048"
       },
       {
-       "label": "F1",
+       "label": "F2",
        "ref": "hirschfeld_2023",
        "where": "Discussion",
        "quote": "In conclusion, the present meta-analysis on subjective effects of LSD in study participants revealed dose-dependent alterations of consciousness with substantial heterogeneity of effects across laboratory and therapeutic settings on all scales and factors assessed by given questionnaires.",
        "sha": "76672004f7030615"
       }
      ],
-     "ok": false,
-     "by": "a rule",
-     "said": "a rule: its source says “subjective effects of LSD”: that is what people perceived or said of themselves, not what was measured. Keep the word (“perceived”), or say that people said so"
+     "ok": true
     }
    ]
   }
