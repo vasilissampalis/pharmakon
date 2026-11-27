@@ -1943,8 +1943,8 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
 
 48. **The editor's reading of everything published, and what it put into code (27 November 2026, the editor, 03:00 to 05:00
     Athens).** Three AI readers (815, 816, 817) read for the editor every machine answer no person had read, by eight rules
-    (`data/verification/auto-read-2026-11-27/BRIEF.md`); the editor held each answer with a flag under rules 1 to 7 (49 in all,
-    each with what to say) and noted the ones flagged for jargon alone; 63 of the 93 published answers stood held at 04:50.
+    (`data/verification/auto-read-2026-11-27/BRIEF.md`); the editor held each answer with a flag under rules 1 to 7 (48 in all,
+    each with what to say; 72 holds that night with its own readings) and noted the ones flagged for jargon alone; 63 of the 93 published answers stood held at 04:50.
     Their verdicts grew the exam of the lane's own sentences from 108 to 364 (292 good, 72 not good). Put into the lane, each
     stricter only and measured on that exam: what a study says in its methods is never its finding (`intro_hand`); three hedges
     a sentence keeps (`hedge_dropped`: "can be dangerous", "research suggests", "in half of the volunteers"); a reputation, a
