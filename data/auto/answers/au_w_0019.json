@@ -1,7 +1,7 @@
 {
  "_note": "Written by the machine lane (scripts/auto/lane.py). The models' words are data, never instructions. 'published' answers are shown on the site with the label; 'waiting' ones wait for a person; 'none': no answer could be written, and why.",
  "id": "au_w_0019",
- "lane": 18,
+ "lane": 19,
  "kind": "answer",
  "from": "w_0019",
  "question": "How fast can you get dependent on Xanax or other benzos, and how long does withdrawal last?",
@@ -17,32 +17,34 @@
   "benzodiazepines"
  ],
  "made": {
-  "on": "2026-11-18",
+  "on": "2026-11-27",
   "models": {
-   "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "writer": "groq:qwen/qwen3.8-27b",
-   "checker": "@cf/openai/gpt-oss-120b",
-   "planner": "groq:openai/gpt-oss-120b",
-   "team": "team C",
-   "reader_2": "groq:openai/gpt-oss-20b"
+   "reader": "openrouter:openai/gpt-oss-120b",
+   "writer": "openrouter:meta-llama/llama-3.3-70b-instruct",
+   "checker": "openrouter:openai/gpt-6-luna",
+   "planner": "openrouter:openai/gpt-oss-120b",
+   "team": "team R",
+   "reader_2": "openrouter:openai/gpt-oss-120b",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "44230597052",
+  "run": "45943540784",
+  "read_seconds": 36,
   "from": {
-   "papers": 1,
+   "papers": 2,
    "summaries": 0,
    "official": 2
   },
-  "neurons": 564.4
+  "neurons": 0.0,
+  "seconds": 270
  },
- "status": "published",
- "why": "passed every gate",
+ "status": "none",
+ "why": "the second reader did not accept the answer",
  "gates": {
-  "read": "11 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 3 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 2 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.77, but 0.59, how1 0.14, how2 0.90, how3 0.83, how4 0.95",
-  "check": "every sentence kept was accepted by the second reader (@cf/openai/gpt-oss-120b); it also found that the short answer answers the question and that the But is about that answer",
-  "rules": "nothing against it",
-  "checked": "set beside the checked claims of the same page: nothing against them"
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-120b read from there",
+  "read": "11 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 4 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 2 official page(s), 0 paper(s) read in summary only",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.25, but 0.51, how1 0.65, how2 0.94, how3 0.27, how4 0.94",
+  "check": "short: NOT accepted: The passage gives 2–4 weeks as the Foundation’s advice not to use benzodiazepines regularly for longer because doing so raises the risk of dependence and withdrawal; it does not establish that dependence develops after that period. The sent; but: NOT accepted: The passage says the onset can vary by benzodiazepine type, but does not say the duration varies by type.; how1: NOT accepted: The passage says people who regularly use benzodiazepines can become dependent; the sentence omits that limitation.; how2: accepted; how3: NOT accepted: The passage identifies 4–8 months as a critical treatment period for iatrogenic dependence at therapeutic doses; it does not say people are more likely to develop dependence after that period. It also ties greater likelihood to high doses a; how4: accepted"
  },
  "sources": [
   {
@@ -87,10 +89,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-18",
+     "verified_on": "2026-11-27",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-18"
+      "checked_on": "2026-11-27"
      }
     },
     "volume": "27",
@@ -113,46 +115,170 @@
    "design": {
     "passage": 1,
     "where": "Abstract",
-    "quote": "Benzodiazepines (BZDs) are globally prevalent psychotropic substances",
-    "text": "Benzodiazepine Dependence: Clinical and Molecular Aspects"
+    "quote": "This expert review aims to compile the most relevant, representative, and recent literature summarizing the pharmacology, clinical indications, adverse effects, misuse, and abuse of BZDs that ultimately lead to BZD use disorder (BUD).",
+    "text": "Expert review of benzodiazepine dependence literature"
    },
    "findings": [
     {
-     "passage": 53,
-     "where": "5. Misuse and Abuse of BZDs—Clinical Aspects › 5.4. BZD Withdrawal Syndrome",
-     "quote": "Withdrawal symptoms typically appear within 2–3 days of ceasing short-acting BZDs and 5–10 days for long-acting BZDs.",
-     "text": "Withdrawal symptoms appear within 2–3 days for short-acting BZDs and 5–10 days for long-acting BZDs.",
+     "passage": 61,
+     "where": "5. Misuse and Abuse of BZDs—Clinical Aspects › 5.6. BZD Use Disorder (BUD)",
+     "quote": "Iatrogenic dependence is more likely to occur with high doses and/or short-acting BZDs and prolonged treatment duration, which is one of the main risk factors related to BZD dependence, with a critical treatment period of 4–8 months at therapeutic doses.",
+     "text": "People who use benzodiazepines are more likely to develop dependence after a critical treatment period of 4–8 months at therapeutic doses.",
      "id": "F1",
      "second_hand": ""
     },
     {
      "passage": 53,
      "where": "5. Misuse and Abuse of BZDs—Clinical Aspects › 5.4. BZD Withdrawal Syndrome",
-     "quote": "The course of this withdrawal syndrome is variable and can last from several weeks to several months.",
-     "text": "The course of withdrawal syndrome can last from several weeks to several months.",
+     "quote": "Withdrawal symptoms typically appear within 2–3 days of ceasing short-acting BZDs and 5–10 days for long-acting BZDs.",
+     "text": "Withdrawal symptoms typically appear within 2–3 days after stopping short-acting benzodiazepines and within 5–10 days after stopping long-acting benzodiazepines.",
      "id": "F2",
      "second_hand": ""
     },
     {
-     "passage": 61,
-     "where": "5. Misuse and Abuse of BZDs—Clinical Aspects › 5.6. BZD Use Disorder (BUD)",
-     "quote": "a critical treatment period of 4–8 months at therapeutic doses",
-     "text": "A critical treatment period of 4–8 months at therapeutic doses is associated with dependence.",
+     "passage": 53,
+     "where": "5. Misuse and Abuse of BZDs—Clinical Aspects › 5.4. BZD Withdrawal Syndrome",
+     "quote": "The course of this withdrawal syndrome is variable and can last from several weeks to several months.",
+     "text": "The withdrawal syndrome can last from several weeks to several months, although its course is variable.",
      "id": "F3",
      "second_hand": ""
     }
    ],
    "limits": [
     {
-     "passage": 89,
-     "where": "8. Therapeutic Strategies for BUD › 8.3. Adjunctive Pharmacological Agents and Biological Treatments for BZD Withdrawal and Relapse Prevention in BUD › 8.3.1. Anticonvulsants",
-     "quote": "no statistically significant differences in withdrawal severity were observed",
-     "text": "No statistically significant differences in withdrawal severity were observed in some studies.",
+     "passage": 53,
+     "where": "5. Misuse and Abuse of BZDs—Clinical Aspects › 5.4. BZD Withdrawal Syndrome",
+     "quote": "The course of this withdrawal syndrome is variable and can last from several weeks to several months.",
+     "text": "The course of the withdrawal syndrome is variable.",
      "id": "L1",
      "second_hand": ""
     }
    ],
    "tag": "A"
+  },
+  {
+   "read": "full",
+   "ref": {
+    "id": "shade_2025",
+    "type": "article-journal",
+    "title": "Long-term neurological consequences following benzodiazepine exposure: A scoping review",
+    "author": [
+     {
+      "family": "Shade",
+      "given": "Kyla N."
+     },
+     {
+      "family": "Ritvo",
+      "given": "Alexis D."
+     },
+     {
+      "family": "Silvernail",
+      "given": "Bernard"
+     },
+     {
+      "family": "Finlayson",
+      "given": "A. J. Reid"
+     },
+     {
+      "family": "Bressi",
+      "given": "Jolene E."
+     },
+     {
+      "family": "Foster",
+      "given": "D. E."
+     },
+     {
+      "family": "Martin",
+      "given": "Ian J."
+     },
+     {
+      "family": "Piper",
+      "given": "Christi"
+     },
+     {
+      "family": "Martin",
+      "given": "Peter R."
+     }
+    ],
+    "container-title": "PLOS One",
+    "issued": {
+     "date-parts": [
+      [
+       2025
+      ]
+     ]
+    },
+    "DOI": "10.1371/journal.pone.0330277",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-27",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-27"
+     }
+    },
+    "volume": "20",
+    "issue": "8",
+    "number": "e0330277",
+    "PMCID": "PMC12393751"
+   },
+   "doi": "10.1371/journal.pone.0330277",
+   "pmcid": "PMC12393751",
+   "title": "Long-term neurological consequences following benzodiazepine exposure: A scoping review",
+   "year": 2025,
+   "journal": "PloS one",
+   "kind": "other",
+   "people": true,
+   "near": 0.678,
+   "money": [
+    "The author(s) received no specific funding for this work."
+   ],
+   "design": {
+    "passage": 14,
+    "where": "Methods",
+    "quote": "Patients were ≥ 18 years of age and may have taken benzodiazepines chronically, long term, or consistently for a period of > 2 weeks and who had discontinued benzodiazepines for a period of > 4 weeks.",
+    "text": "Scoping review of adult patients who used benzodiazepines >2 weeks and discontinued >4 weeks"
+   },
+   "findings": [
+    {
+     "passage": 31,
+     "where": "Results › Incidence and prevalence/risk stratification",
+     "quote": "Acute withdrawal symptoms occurred in up to 100% of participants from studies found in this scoping review, but prolonged symptoms were less frequently reported, occurring in approximately 30% of benzodiazepine patients.",
+     "text": "Acute withdrawal symptoms can occur in up to 100% of people who stop benzodiazepines, and about 30% experience prolonged symptoms.",
+     "id": "F4",
+     "second_hand": ""
+    },
+    {
+     "passage": 27,
+     "where": "Results › A protracted withdrawal phase",
+     "quote": "In a study of 50 patients, some patients reported symptoms ≥ 1 year after benzodiazepine discontinuation, and, paradoxically, some underlying symptoms, such as irritable bowel syndrome, resolved after benzodiazepine discontinuation.",
+     "text": "Some people report withdrawal symptoms lasting one year or more after stopping benzodiazepines.",
+     "id": "F5",
+     "second_hand": "In a study of 50 patients, some patients reported symptoms ≥ 1 year after benzodiazepine discontinuation, and, paradoxically, some underlying symptoms, such as irritable bowel synd"
+    },
+    {
+     "passage": 31,
+     "where": "Results › Incidence and prevalence/risk stratification",
+     "quote": "Acute withdrawal symptoms occurred in up to 100% of participants from studies found in this scoping review, but prolonged symptoms were less frequently reported, occurring in approximately 30% of benzodiazepine patients.",
+     "text": "Prolonged withdrawal symptoms affect about 30% of benzodiazepine patients.",
+     "id": "F6",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 22,
+     "where": "Results",
+     "quote": "Since studies did not specifically evaluate protracted symptoms following benzodiazepine withdrawal, those findings relevant to our research question were suggestive signals rather than specific study endpoints.",
+     "text": "The reviewed studies did not directly assess protracted withdrawal, so the findings are only suggestive.",
+     "id": "L2",
+     "second_hand": ""
+    }
+   ],
+   "tag": "B"
   },
   {
    "read": "page",
@@ -180,14 +306,14 @@
       [
        2026,
        11,
-       18
+       27
       ]
      ]
     },
     "verification": {
      "status": "made by code",
      "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-18"
+     "verified_on": "2026-11-27"
     }
    },
    "title": "Benzodiazepines",
@@ -206,21 +332,30 @@
     {
      "passage": 24,
      "where": "Reducing harm / Dependence",
-     "quote": "Short-acting benzodiazepines are more likely to cause dependence than long-acting ones.2 Because of this, it’s recommended not to take them regularly for more than 2-4 weeks, as this increases the risks of experiencing dependence and withdrawal symptoms.",
-     "text": "Short-acting benzodiazepines are more likely to cause dependence than long-acting ones, and taking them regularly for more than 2-4 weeks increases the risks of experiencing dependence and withdrawal symptoms.",
+     "quote": "Because of this, it’s recommended not to take them regularly for more than 2-4 weeks, as this increases the risks of experiencing dependence and withdrawal symptoms.",
+     "text": "Dependence can develop if benzodiazepines are taken regularly for more than 2-4 weeks, especially short‑acting ones.",
      "id": "F7",
      "second_hand": ""
     },
     {
      "passage": 27,
      "where": "Withdrawal / Withdrawal symptoms",
-     "quote": "Withdrawal symptoms will usually start within a few hours to days after your last dose. This can vary depending on if you’re taking a long, short or intermediate acting benzo. Symptoms should mostly disappear within a few weeks, but some symptoms may last for some months.",
-     "text": "Withdrawal symptoms usually start within a few hours to days after the last dose, and mostly disappear within a few weeks, but some symptoms may last for some months.",
+     "quote": "Withdrawal symptoms will usually start within a few hours to days after your last dose. This can vary depending on if you’re taking a long, short or intermediate acting benzo.",
+     "text": "Withdrawal symptoms usually begin within a few hours to days after the last dose and generally disappear within a few weeks, though some may last for months.",
      "id": "F8",
      "second_hand": ""
     }
    ],
-   "limits": [],
+   "limits": [
+    {
+     "passage": 27,
+     "where": "Withdrawal / Withdrawal symptoms",
+     "quote": "This can vary depending on if you’re taking a long, short or intermediate acting benzo.",
+     "text": "The onset and duration of withdrawal symptoms vary depending on whether the benzodiazepine is long‑acting, short‑acting, or intermediate‑acting.",
+     "id": "L3",
+     "second_hand": ""
+    }
+   ],
    "tag": "C"
   },
   {
@@ -245,14 +380,14 @@
       [
        2026,
        11,
-       18
+       27
       ]
      ]
     },
     "verification": {
      "status": "made by code",
      "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-18"
+     "verified_on": "2026-11-27"
     },
     "publisher": "The Level"
    },
@@ -272,8 +407,8 @@
     {
      "passage": 14,
      "where": "Long-term effects / What are the long-term effects of using benzodiazepines?",
-     "quote": "If you stop using benzos after long term use, you may experience severe withdrawal symptoms.",
-     "text": "People may experience severe withdrawal symptoms if they stop using benzos after long-term use.",
+     "quote": "Taking benzodiazepines regularly can result in dependence, even in smaller doses.",
+     "text": "Regular use of benzodiazepines can cause dependence even at smaller doses.",
      "id": "F9",
      "second_hand": ""
     },
@@ -281,7 +416,7 @@
      "passage": 14,
      "where": "Long-term effects / What are the long-term effects of using benzodiazepines?",
      "quote": "The physical and mental effects of benzo withdrawal usually last for a few months, but some people may experience symptoms for longer.",
-     "text": "The physical and mental effects of benzo withdrawal usually last for a few months, but some people may experience symptoms for longer.",
+     "text": "Benzodiazepine withdrawal usually lasts a few months, though some people may have symptoms for a longer period.",
      "id": "F10",
      "second_hand": ""
     },
@@ -289,147 +424,17 @@
      "passage": 15,
      "where": "Cutting down / How do you manage withdrawal from benzodiazepines?",
      "quote": "Withdrawing from benzos can be difficult and is different for everyone. Some people experience symptoms for several months.",
-     "text": "Withdrawing from benzos can be difficult, is different for everyone, and some people experience symptoms for several months.",
+     "text": "Withdrawal symptoms can last for several months for some people.",
      "id": "F11",
      "second_hand": ""
     }
    ],
-   "limits": [
-    {
-     "passage": 14,
-     "where": "Long-term effects / What are the long-term effects of using benzodiazepines?",
-     "quote": "Some people develop benzodiazepine withdrawal syndrome and experience dangerous symptoms such as seizures.",
-     "text": "Some people may experience more severe withdrawal symptoms, including seizures.",
-     "id": "L3",
-     "second_hand": ""
-    }
-   ],
+   "limits": [],
    "tag": "D"
   }
  ],
- "parts": [
-  {
-   "part": "short",
-   "text": "Dependence risk rises after regular use for more than 2-4 weeks. Withdrawal can last from several weeks to several months.",
-   "uses": [
-    "F7",
-    "F2"
-   ],
-   "rests_on": [
-    {
-     "label": "F7",
-     "ref": "adf_benzodiazepines",
-     "where": "Reducing harm / Dependence",
-     "quote": "Short-acting benzodiazepines are more likely to cause dependence than long-acting ones.2 Because of this, it’s recommended not to take them regularly for more than 2-4 weeks, as this increases the risks of experiencing dependence and withdrawal symptoms.",
-     "sha": "002579d1bc58f479"
-    },
-    {
-     "label": "F2",
-     "ref": "navarrete_2026",
-     "where": "5. Misuse and Abuse of BZDs—Clinical Aspects › 5.4. BZD Withdrawal Syndrome",
-     "quote": "The course of this withdrawal syndrome is variable and can last from several weeks to several months.",
-     "sha": "18ddf29de62bf157"
-    }
-   ]
-  },
-  {
-   "part": "but",
-   "text": "Symptoms usually start within a few hours to days and mostly disappear within a few weeks, but some may last for some months.",
-   "uses": [
-    "F8"
-   ],
-   "rests_on": [
-    {
-     "label": "F8",
-     "ref": "adf_benzodiazepines",
-     "where": "Withdrawal / Withdrawal symptoms",
-     "quote": "Withdrawal symptoms will usually start within a few hours to days after your last dose. This can vary depending on if you’re taking a long, short or intermediate acting benzo. Symptoms should mostly disappear within a few weeks, but some symptoms may last for some months.",
-     "sha": "cc9da03becd481ef"
-    }
-   ]
-  },
-  {
-   "part": "how1",
-   "text": "Australia's Alcohol and Drug Foundation says short-acting benzos are more likely to cause dependence than long-acting ones.",
-   "uses": [
-    "F7"
-   ],
-   "rests_on": [
-    {
-     "label": "F7",
-     "ref": "adf_benzodiazepines",
-     "where": "Reducing harm / Dependence",
-     "quote": "Short-acting benzodiazepines are more likely to cause dependence than long-acting ones.2 Because of this, it’s recommended not to take them regularly for more than 2-4 weeks, as this increases the risks of experiencing dependence and withdrawal symptoms.",
-     "sha": "002579d1bc58f479"
-    }
-   ],
-   "quote": "Short-acting benzodiazepines are more likely to cause dependence than long-acting ones.2 Because of this",
-   "quote_ref": "adf_benzodiazepines"
-  },
-  {
-   "part": "how2",
-   "text": "The same page says withdrawal symptoms usually start within a few hours to days after the last dose.",
-   "uses": [
-    "F8"
-   ],
-   "rests_on": [
-    {
-     "label": "F8",
-     "ref": "adf_benzodiazepines",
-     "where": "Withdrawal / Withdrawal symptoms",
-     "quote": "Withdrawal symptoms will usually start within a few hours to days after your last dose. This can vary depending on if you’re taking a long, short or intermediate acting benzo. Symptoms should mostly disappear within a few weeks, but some symptoms may last for some months.",
-     "sha": "cc9da03becd481ef"
-    }
-   ],
-   "quote": "Withdrawal symptoms will usually start within a few hours to days after your last dose",
-   "quote_ref": "adf_benzodiazepines"
-  },
-  {
-   "part": "how3",
-   "text": "A 2026 review says the course of withdrawal syndrome is variable and can last from several weeks to several months.",
-   "uses": [
-    "DA",
-    "F2"
-   ],
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "navarrete_2026",
-     "where": "Abstract",
-     "quote": "Benzodiazepines (BZDs) are globally prevalent psychotropic substances",
-     "sha": "b11a3d1ed7eaa27b"
-    },
-    {
-     "label": "F2",
-     "ref": "navarrete_2026",
-     "where": "5. Misuse and Abuse of BZDs—Clinical Aspects › 5.4. BZD Withdrawal Syndrome",
-     "quote": "The course of this withdrawal syndrome is variable and can last from several weeks to several months.",
-     "sha": "18ddf29de62bf157"
-    }
-   ],
-   "quote": "withdrawal syndrome is variable and can last from several weeks to several months",
-   "quote_ref": "navarrete_2026"
-  },
-  {
-   "part": "how4",
-   "text": "The NZ Drug Foundation says physical and mental effects of benzo withdrawal usually last for a few months.",
-   "uses": [
-    "F10"
-   ],
-   "rests_on": [
-    {
-     "label": "F10",
-     "ref": "thelevel_benzodiazepines",
-     "where": "Long-term effects / What are the long-term effects of using benzodiazepines?",
-     "quote": "The physical and mental effects of benzo withdrawal usually last for a few months, but some people may experience symptoms for longer.",
-     "sha": "c4312b1e5801a3ea"
-    }
-   ],
-   "quote": "The physical and mental effects of benzo withdrawal usually last for a few months",
-   "quote_ref": "thelevel_benzodiazepines"
-  }
- ],
- "complete": true,
+ "parts": [],
+ "complete": false,
  "missing": "",
  "wanted": [
   {
@@ -455,7 +460,16 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-18",
+   "lane": 18,
+   "status": "published",
+   "why": "passed every gate",
+   "short": "Dependence risk rises after regular use for more than 2-4 weeks. Withdrawal can last from several weeks to several months.",
+   "complete": true
+  }
+ ],
  "looked": [
   {
    "title": "Benzodiazepine Dependence: Clinical and Molecular Aspects, Preventive Strategies and Therapeutic Approaches",
@@ -463,7 +477,20 @@
    "kind": "review",
    "at": "10.3390/ijms27031430",
    "kept": 3,
-   "thrown": []
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "People who use benzodiazepines for more than 6 months or at doses equivalent to 100 mg of diazepam or more often experience withdrawal symptoms.",
+     "quote": "BZD withdrawal symptoms often occur in patients using BZDs in the long-term (more than 6 months) or at high doses (the equivalent of 100 mg of diazepam or more).",
+     "why": "it holds an amount or a time between uses"
+    },
+    {
+     "kind": "limit",
+     "text": "There is insufficient evidence to support the efficacy of switching from short-acting to long-acting benzodiazepines.",
+     "quote": "However, to date, there is insufficient evidence to support the efficacy of this strategy.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   },
   {
    "title": "Long-term neurological consequences following benzodiazepine exposure: A scoping review",
@@ -474,9 +501,15 @@
    "thrown": [
     {
      "kind": "finding",
-     "text": "Acute withdrawal symptoms occurred in 44% to 100% of patients.",
-     "quote": "The proportion of patients who experienced acute withdrawal... ranged from approximately 44% to 100%",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+     "text": "Between roughly 44% and 100% of people who stop benzodiazepines experience acute withdrawal.",
+     "quote": "The proportion of patients who experienced acute withdrawal in our findings ranged from approximately 44% to 100%.",
+     "why": "the sentence is not carried by its quote and passage"
+    },
+    {
+     "kind": "limit",
+     "text": "The studies did not allow determination of how common or how the long‑lasting symptoms progress.",
+     "quote": "The prevalence or trajectory of these enduring symptoms could not be determined from these studies.",
+     "why": "the sentence is not carried by its quote and passage"
     }
    ]
   },
@@ -486,14 +519,7 @@
    "kind": "official",
    "at": "https://adf.org.au/drug-facts/benzodiazepines/",
    "kept": 2,
-   "thrown": [
-    {
-     "kind": "limit",
-     "text": "The timing of withdrawal symptoms can vary depending on the type of benzodiazepine taken.",
-     "quote": "This can vary depending on if you’re taking a long, short or intermediate acting benzo.",
-     "why": "the sentence is not carried by its quote and passage"
-    }
-   ]
+   "thrown": []
   },
   {
    "title": "Benzodiazepines",
@@ -501,24 +527,17 @@
    "kind": "official",
    "at": "https://thelevel.org.nz/drug-information/benzodiazepines",
    "kept": 3,
-   "thrown": [
-    {
-     "kind": "limit",
-     "text": "The difficulty and experience of withdrawing from benzos can vary greatly among individuals.",
-     "quote": "Withdrawing from benzos can be difficult and is different for everyone.",
-     "why": "the sentence is not carried by its quote and passage"
-    }
-   ]
+   "thrown": []
   }
  ],
  "plan": {
   "short": [
    "F7",
-   "F2"
+   "F8"
   ],
   "direct": "",
   "but": [
-   "F8"
+   "L3"
   ],
   "how": [
    [
@@ -526,11 +545,17 @@
     "F8"
    ],
    [
-    "DA",
-    "F2"
+    "F10",
+    "F11"
    ],
    [
-    "F10"
+    "DA",
+    "F1",
+    "F3"
+   ],
+   [
+    "F5",
+    "F6"
    ]
   ],
   "unanswered": ""
@@ -540,26 +565,464 @@
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.7673,
-   "but": 0.5915,
-   "how1": 0.1355,
-   "how2": 0.9025,
-   "how3": 0.83,
-   "how4": 0.953
+   "short": 0.2473,
+   "but": 0.5123,
+   "how1": 0.6518,
+   "how2": 0.9365,
+   "how3": 0.2721,
+   "how4": 0.9422
   },
   "scores_quotes_alone": {
-   "short": 0.7408,
-   "but": 0.6585,
-   "how1": 0.2706,
-   "how2": 0.8215,
-   "how3": 0.6918,
-   "how4": 0.7875
+   "short": 0.0067,
+   "but": 0.0611,
+   "how1": 0.082,
+   "how2": 0.6254,
+   "how3": 0.3486,
+   "how4": 0.1723
   }
  },
- "with_checked": {
-  "differs": [],
-  "same": []
- },
+ "tries": [
+  {
+   "try": 1,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Dependence can develop if benzodiazepines are taken regularly for more than 2-4 weeks, Australia's Alcohol and Drug Foundation says. Withdrawal symptoms usually begin within a few hours to days after the last dose.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "adf_benzodiazepines",
+       "where": "Reducing harm / Dependence",
+       "quote": "Because of this, it’s recommended not to take them regularly for more than 2-4 weeks, as this increases the risks of experiencing dependence and withdrawal symptoms.",
+       "sha": "002579d1bc58f479"
+      },
+      {
+       "label": "F8",
+       "ref": "adf_benzodiazepines",
+       "where": "Withdrawal / Withdrawal symptoms",
+       "quote": "Withdrawal symptoms will usually start within a few hours to days after your last dose. This can vary depending on if you’re taking a long, short or intermediate acting benzo.",
+       "sha": "cc9da03becd481ef"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The ADF passage gives advice not to take benzodiazepines regularly for more than 2–4 weeks because that increases the risks of dependence and withdrawal; it does not say dependence develops after that period. The sentence also gives the ons"
+    },
+    {
+     "part": "but",
+     "text": "The onset and duration of withdrawal symptoms vary depending on whether the benzodiazepine is long-acting, short-acting, or intermediate-acting.",
+     "rests_on": [
+      {
+       "label": "L3",
+       "ref": "adf_benzodiazepines",
+       "where": "Withdrawal / Withdrawal symptoms",
+       "quote": "This can vary depending on if you’re taking a long, short or intermediate acting benzo.",
+       "sha": "cc9da03becd481ef"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage says withdrawal onset can vary by benzodiazepine type, but does not say the duration varies by type."
+    },
+    {
+     "part": "how1",
+     "text": "Australia's Alcohol and Drug Foundation says dependence can develop and withdrawal symptoms usually begin within a few hours to days after the last dose.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "adf_benzodiazepines",
+       "where": "Reducing harm / Dependence",
+       "quote": "Because of this, it’s recommended not to take them regularly for more than 2-4 weeks, as this increases the risks of experiencing dependence and withdrawal symptoms.",
+       "sha": "002579d1bc58f479"
+      },
+      {
+       "label": "F8",
+       "ref": "adf_benzodiazepines",
+       "where": "Withdrawal / Withdrawal symptoms",
+       "quote": "Withdrawal symptoms will usually start within a few hours to days after your last dose. This can vary depending on if you’re taking a long, short or intermediate acting benzo.",
+       "sha": "cc9da03becd481ef"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage says people who regularly use benzodiazepines can become dependent; the sentence leaves out the condition that use is regular."
+    },
+    {
+     "part": "how2",
+     "text": "The NZ Drug Foundation says benzodiazepine withdrawal usually lasts a few months, though some people may have symptoms for a longer period.",
+     "rests_on": [
+      {
+       "label": "F10",
+       "ref": "thelevel_benzodiazepines",
+       "where": "Long-term effects / What are the long-term effects of using benzodiazepines?",
+       "quote": "The physical and mental effects of benzo withdrawal usually last for a few months, but some people may experience symptoms for longer.",
+       "sha": "c4312b1e5801a3ea"
+      },
+      {
+       "label": "F11",
+       "ref": "thelevel_benzodiazepines",
+       "where": "Cutting down / How do you manage withdrawal from benzodiazepines?",
+       "quote": "Withdrawing from benzos can be difficult and is different for everyone. Some people experience symptoms for several months.",
+       "sha": "c163b64685623e53"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "An expert review of benzodiazepine dependence literature found people who use benzodiazepines are more likely to develop dependence after 4-8 months at therapeutic doses.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "navarrete_2026",
+       "where": "Abstract",
+       "quote": "This expert review aims to compile the most relevant, representative, and recent literature summarizing the pharmacology, clinical indications, adverse effects, misuse, and abuse of BZDs that ultimately lead to BZD use disorder (BUD).",
+       "sha": "b11a3d1ed7eaa27b"
+      },
+      {
+       "label": "F1",
+       "ref": "navarrete_2026",
+       "where": "5. Misuse and Abuse of BZDs—Clinical Aspects › 5.6. BZD Use Disorder (BUD)",
+       "quote": "Iatrogenic dependence is more likely to occur with high doses and/or short-acting BZDs and prolonged treatment duration, which is one of the main risk factors related to BZD dependence, with a critical treatment period of 4–8 months at therapeutic doses.",
+       "sha": "87d0a31170955c89"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage identifies a critical treatment period of 4–8 months at therapeutic doses; it does not say dependence is more likely after 4–8 months."
+    },
+    {
+     "part": "how4",
+     "text": "A scoping review reports some people have withdrawal symptoms lasting one year or more after stopping benzodiazepines, and about 30% of patients have prolonged symptoms.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "shade_2025",
+       "where": "Results › A protracted withdrawal phase",
+       "quote": "In a study of 50 patients, some patients reported symptoms ≥ 1 year after benzodiazepine discontinuation, and, paradoxically, some underlying symptoms, such as irritable bowel syndrome, resolved after benzodiazepine discontinuation.",
+       "sha": "97930baac188b672"
+      },
+      {
+       "label": "F6",
+       "ref": "shade_2025",
+       "where": "Results › Incidence and prevalence/risk stratification",
+       "quote": "Acute withdrawal symptoms occurred in up to 100% of participants from studies found in this scoping review, but prolonged symptoms were less frequently reported, occurring in approximately 30% of benzodiazepine patients.",
+       "sha": "c98b630af21a422b"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Dependence can develop if benzodiazepines are taken regularly for more than 2-4 weeks, Australia's Alcohol and Drug Foundation says. Withdrawal symptoms usually begin within a few hours to days after the last dose and generally disappear within a few weeks.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "adf_benzodiazepines",
+       "where": "Reducing harm / Dependence",
+       "quote": "Because of this, it’s recommended not to take them regularly for more than 2-4 weeks, as this increases the risks of experiencing dependence and withdrawal symptoms.",
+       "sha": "002579d1bc58f479"
+      },
+      {
+       "label": "F8",
+       "ref": "adf_benzodiazepines",
+       "where": "Withdrawal / Withdrawal symptoms",
+       "quote": "Withdrawal symptoms will usually start within a few hours to days after your last dose. This can vary depending on if you’re taking a long, short or intermediate acting benzo.",
+       "sha": "cc9da03becd481ef"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage says regular use increases the risks of dependence and withdrawal, and advises against taking benzodiazepines regularly for more than 2–4 weeks. It does not say dependence develops if use passes that point. This repeats the edit"
+    },
+    {
+     "part": "but",
+     "text": "The onset and duration of withdrawal symptoms vary depending on whether the benzodiazepine is long-acting, short-acting, or intermediate-acting.",
+     "rests_on": [
+      {
+       "label": "L3",
+       "ref": "adf_benzodiazepines",
+       "where": "Withdrawal / Withdrawal symptoms",
+       "quote": "This can vary depending on if you’re taking a long, short or intermediate acting benzo.",
+       "sha": "cc9da03becd481ef"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage says the time withdrawal symptoms start can vary by benzodiazepine type. It does not say their duration varies by type."
+    },
+    {
+     "part": "how1",
+     "text": "Australia's Alcohol and Drug Foundation says dependence can develop and withdrawal symptoms usually begin within a few hours to days after the last dose.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "adf_benzodiazepines",
+       "where": "Reducing harm / Dependence",
+       "quote": "Because of this, it’s recommended not to take them regularly for more than 2-4 weeks, as this increases the risks of experiencing dependence and withdrawal symptoms.",
+       "sha": "002579d1bc58f479"
+      },
+      {
+       "label": "F8",
+       "ref": "adf_benzodiazepines",
+       "where": "Withdrawal / Withdrawal symptoms",
+       "quote": "Withdrawal symptoms will usually start within a few hours to days after your last dose. This can vary depending on if you’re taking a long, short or intermediate acting benzo.",
+       "sha": "cc9da03becd481ef"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage says people who regularly use benzodiazepines can become dependent. The sentence leaves out that regular-use qualification."
+    },
+    {
+     "part": "how2",
+     "text": "The NZ Drug Foundation says benzodiazepine withdrawal usually lasts a few months, though some people may have symptoms for a longer period.",
+     "rests_on": [
+      {
+       "label": "F10",
+       "ref": "thelevel_benzodiazepines",
+       "where": "Long-term effects / What are the long-term effects of using benzodiazepines?",
+       "quote": "The physical and mental effects of benzo withdrawal usually last for a few months, but some people may experience symptoms for longer.",
+       "sha": "c4312b1e5801a3ea"
+      },
+      {
+       "label": "F11",
+       "ref": "thelevel_benzodiazepines",
+       "where": "Cutting down / How do you manage withdrawal from benzodiazepines?",
+       "quote": "Withdrawing from benzos can be difficult and is different for everyone. Some people experience symptoms for several months.",
+       "sha": "c163b64685623e53"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2026 review of benzodiazepine dependence literature found people who use benzodiazepines are more likely to develop dependence after 4-8 months at therapeutic doses.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "navarrete_2026",
+       "where": "Abstract",
+       "quote": "This expert review aims to compile the most relevant, representative, and recent literature summarizing the pharmacology, clinical indications, adverse effects, misuse, and abuse of BZDs that ultimately lead to BZD use disorder (BUD).",
+       "sha": "b11a3d1ed7eaa27b"
+      },
+      {
+       "label": "F1",
+       "ref": "navarrete_2026",
+       "where": "5. Misuse and Abuse of BZDs—Clinical Aspects › 5.6. BZD Use Disorder (BUD)",
+       "quote": "Iatrogenic dependence is more likely to occur with high doses and/or short-acting BZDs and prolonged treatment duration, which is one of the main risk factors related to BZD dependence, with a critical treatment period of 4–8 months at therapeutic doses.",
+       "sha": "87d0a31170955c89"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage identifies 4–8 months at therapeutic doses as a critical treatment period, but does not say dependence is more likely to develop after that period."
+    },
+    {
+     "part": "how4",
+     "text": "A 2025 scoping review reports some people have withdrawal symptoms lasting one year or more after stopping benzodiazepines.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "shade_2025",
+       "where": "Results › A protracted withdrawal phase",
+       "quote": "In a study of 50 patients, some patients reported symptoms ≥ 1 year after benzodiazepine discontinuation, and, paradoxically, some underlying symptoms, such as irritable bowel syndrome, resolved after benzodiazepine discontinuation.",
+       "sha": "97930baac188b672"
+      },
+      {
+       "label": "F6",
+       "ref": "shade_2025",
+       "where": "Results › Incidence and prevalence/risk stratification",
+       "quote": "Acute withdrawal symptoms occurred in up to 100% of participants from studies found in this scoping review, but prolonged symptoms were less frequently reported, occurring in approximately 30% of benzodiazepine patients.",
+       "sha": "c98b630af21a422b"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Dependence can develop if benzodiazepines are taken regularly for more than 2-4 weeks, Australia's Alcohol and Drug Foundation says. Withdrawal symptoms usually begin within a few hours to days after the last dose and generally disappear within a few weeks.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "adf_benzodiazepines",
+       "where": "Reducing harm / Dependence",
+       "quote": "Because of this, it’s recommended not to take them regularly for more than 2-4 weeks, as this increases the risks of experiencing dependence and withdrawal symptoms.",
+       "sha": "002579d1bc58f479"
+      },
+      {
+       "label": "F8",
+       "ref": "adf_benzodiazepines",
+       "where": "Withdrawal / Withdrawal symptoms",
+       "quote": "Withdrawal symptoms will usually start within a few hours to days after your last dose. This can vary depending on if you’re taking a long, short or intermediate acting benzo.",
+       "sha": "cc9da03becd481ef"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage gives 2–4 weeks as the Foundation’s advice not to use benzodiazepines regularly for longer because doing so raises the risk of dependence and withdrawal; it does not establish that dependence develops after that period. The sent"
+    },
+    {
+     "part": "but",
+     "text": "The onset and duration of withdrawal symptoms vary depending on whether the benzodiazepine is long-acting, short-acting, or intermediate-acting.",
+     "rests_on": [
+      {
+       "label": "L3",
+       "ref": "adf_benzodiazepines",
+       "where": "Withdrawal / Withdrawal symptoms",
+       "quote": "This can vary depending on if you’re taking a long, short or intermediate acting benzo.",
+       "sha": "cc9da03becd481ef"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage says the onset can vary by benzodiazepine type, but does not say the duration varies by type."
+    },
+    {
+     "part": "how1",
+     "text": "Australia's Alcohol and Drug Foundation says dependence can develop and withdrawal symptoms usually begin within a few hours to days after the last dose.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "adf_benzodiazepines",
+       "where": "Reducing harm / Dependence",
+       "quote": "Because of this, it’s recommended not to take them regularly for more than 2-4 weeks, as this increases the risks of experiencing dependence and withdrawal symptoms.",
+       "sha": "002579d1bc58f479"
+      },
+      {
+       "label": "F8",
+       "ref": "adf_benzodiazepines",
+       "where": "Withdrawal / Withdrawal symptoms",
+       "quote": "Withdrawal symptoms will usually start within a few hours to days after your last dose. This can vary depending on if you’re taking a long, short or intermediate acting benzo.",
+       "sha": "cc9da03becd481ef"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage says people who regularly use benzodiazepines can become dependent; the sentence omits that limitation."
+    },
+    {
+     "part": "how2",
+     "text": "The NZ Drug Foundation says benzodiazepine withdrawal usually lasts a few months, though some people may have symptoms for a longer period.",
+     "rests_on": [
+      {
+       "label": "F10",
+       "ref": "thelevel_benzodiazepines",
+       "where": "Long-term effects / What are the long-term effects of using benzodiazepines?",
+       "quote": "The physical and mental effects of benzo withdrawal usually last for a few months, but some people may experience symptoms for longer.",
+       "sha": "c4312b1e5801a3ea"
+      },
+      {
+       "label": "F11",
+       "ref": "thelevel_benzodiazepines",
+       "where": "Cutting down / How do you manage withdrawal from benzodiazepines?",
+       "quote": "Withdrawing from benzos can be difficult and is different for everyone. Some people experience symptoms for several months.",
+       "sha": "c163b64685623e53"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2026 review of benzodiazepine dependence literature found people who use benzodiazepines are more likely to develop dependence after 4-8 months at therapeutic doses.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "navarrete_2026",
+       "where": "Abstract",
+       "quote": "This expert review aims to compile the most relevant, representative, and recent literature summarizing the pharmacology, clinical indications, adverse effects, misuse, and abuse of BZDs that ultimately lead to BZD use disorder (BUD).",
+       "sha": "b11a3d1ed7eaa27b"
+      },
+      {
+       "label": "F1",
+       "ref": "navarrete_2026",
+       "where": "5. Misuse and Abuse of BZDs—Clinical Aspects › 5.6. BZD Use Disorder (BUD)",
+       "quote": "Iatrogenic dependence is more likely to occur with high doses and/or short-acting BZDs and prolonged treatment duration, which is one of the main risk factors related to BZD dependence, with a critical treatment period of 4–8 months at therapeutic doses.",
+       "sha": "87d0a31170955c89"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage identifies 4–8 months as a critical treatment period for iatrogenic dependence at therapeutic doses; it does not say people are more likely to develop dependence after that period. It also ties greater likelihood to high doses a"
+    },
+    {
+     "part": "how4",
+     "text": "A 2025 scoping review reports some people have withdrawal symptoms lasting one year or more after stopping benzodiazepines.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "shade_2025",
+       "where": "Results › A protracted withdrawal phase",
+       "quote": "In a study of 50 patients, some patients reported symptoms ≥ 1 year after benzodiazepine discontinuation, and, paradoxically, some underlying symptoms, such as irritable bowel syndrome, resolved after benzodiazepine discontinuation.",
+       "sha": "97930baac188b672"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  }
+ ],
+ "dropped": [
+  {
+   "try": 3,
+   "part": "how1",
+   "text": "Australia's Alcohol and Drug Foundation says dependence can develop and withdrawal symptoms usually begin within a few hours to days after the last dose.",
+   "rests_on": [
+    {
+     "label": "F7",
+     "ref": "adf_benzodiazepines",
+     "where": "Reducing harm / Dependence",
+     "quote": "Because of this, it’s recommended not to take them regularly for more than 2-4 weeks, as this increases the risks of experiencing dependence and withdrawal symptoms.",
+     "sha": "002579d1bc58f479"
+    },
+    {
+     "label": "F8",
+     "ref": "adf_benzodiazepines",
+     "where": "Withdrawal / Withdrawal symptoms",
+     "quote": "Withdrawal symptoms will usually start within a few hours to days after your last dose. This can vary depending on if you’re taking a long, short or intermediate acting benzo.",
+     "sha": "cc9da03becd481ef"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The passage says people who regularly use benzodiazepines can become dependent; the sentence omits that limitation."
+  },
+  {
+   "try": 3,
+   "part": "how3",
+   "text": "A 2026 review of benzodiazepine dependence literature found people who use benzodiazepines are more likely to develop dependence after 4-8 months at therapeutic doses.",
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "navarrete_2026",
+     "where": "Abstract",
+     "quote": "This expert review aims to compile the most relevant, representative, and recent literature summarizing the pharmacology, clinical indications, adverse effects, misuse, and abuse of BZDs that ultimately lead to BZD use disorder (BUD).",
+     "sha": "b11a3d1ed7eaa27b"
+    },
+    {
+     "label": "F1",
+     "ref": "navarrete_2026",
+     "where": "5. Misuse and Abuse of BZDs—Clinical Aspects › 5.6. BZD Use Disorder (BUD)",
+     "quote": "Iatrogenic dependence is more likely to occur with high doses and/or short-acting BZDs and prolonged treatment duration, which is one of the main risk factors related to BZD dependence, with a critical treatment period of 4–8 months at therapeutic doses.",
+     "sha": "87d0a31170955c89"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The passage identifies 4–8 months as a critical treatment period for iatrogenic dependence at therapeutic doses; it does not say people are more likely to develop dependence after that period. It also ties greater likelihood to high doses a"
+  }
+ ],
  "place": {
   "home": "benzodiazepines",
   "also": [],
