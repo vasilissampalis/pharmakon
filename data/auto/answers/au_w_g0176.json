@@ -17,37 +17,41 @@
   "caffeine"
  ],
  "made": {
-  "on": "2026-11-26",
+  "on": "2026-11-27",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
+   "reader": "gemini:gemini-3.5-flash-lite",
    "writer": "groq:qwen/qwen3.8-27b",
-   "checker": "gemini:gemini-3.5-flash-lite",
-   "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3-flash-preview",
-   "team": "team L",
-   "reader_2": "groq:openai/gpt-oss-20b",
-   "also1_else": "gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
+   "checker": "groq:openai/gpt-oss-120b",
+   "planner": "groq:openai/gpt-oss-120b",
+   "also1": "gemini:gemini-3.5-flash-lite",
+   "also2": "gemini:gemini-3.6-flash",
+   "team": "team I",
+   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "reader_3": "openrouter:meta-llama/llama-3.3-70b-instruct",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "45839409899",
-  "read_seconds": 29,
+  "run": "46012959569",
+  "read_by": {
+   "gemini-3.5-flash-lite": 3,
+   "gemini-3.1-flash-lite": 1
+  },
+  "read_seconds": 33,
   "from": {
-   "papers": 1,
+   "papers": 2,
    "summaries": 0,
    "official": 2
   },
   "neurons": 0.0,
-  "seconds": 168
+  "seconds": 182
  },
- "status": "published",
- "why": "passed every gate",
+ "status": "none",
+ "why": "the answer was not accepted: a further reader (gemini-3.6-flash) did not accept it: The passage describes findings from a specific study (Rogers et al.) with hedges ('suggesting'), but the sentence turns this into a unhedged general claim noted by the review, doing what the editor's note warns against.",
  "gates": {
-  "read": "8 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 4 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 2 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
-  "rules": "1 How-do-we-know line(s) left out for a rule (how2: words that are not person-first (“users”))",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.86, but 0.97, how1 0.18, how2 0.06, how3 0.38",
-  "check": "every sentence kept was accepted by the second reader (gemini:gemini-3.5-flash-lite) and by gemini:gemini-3-flash-preview",
-  "but": "the writer's But was not accepted (it is about something else than the short answer): the code wrote the But itself, from what this answer rests on",
-  "checked": "set beside the checked claims of the same page: nothing against them"
+  "read": "8 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 2 official page(s), 0 paper(s) read in summary only",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.77, but 0.90, how1 0.25, how2 0.04, how3 0.88",
+  "check": "short: NOT accepted: a further reader (gemini-3.6-flash) did not accept it: The passage describes findings from a specific study (Rogers et al.) with hedges ('suggesting'), but the sentence turns this into a unhedged general claim noted by the review, doing what the editor's note warns against.; but: accepted; how1: NOT accepted: a further reader (gemini-3.5-flash-lite) did not accept it: The passage does not mention Australia's Alcohol and Drug Foundation.; how2: NOT accepted: a further reader (gemini-3.5-flash-lite) did not accept it: The passage does not mention Drug Science, a UK charity of scientists.; how3: NOT accepted: The sentence repeats a summary from the review's introduction as if it were a direct finding of the review, which the editor's note flags as unsupported.",
+  "panel": "further readers, each of which must accept every sentence too: gemini-3.5-flash-lite accepted 3 of 5; gemini-3.6-flash accepted 1 of 5"
  },
  "sources": [
   {
@@ -84,10 +88,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-26",
+     "verified_on": "2026-11-27",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-26"
+      "checked_on": "2026-11-27"
      }
     },
     "volume": "Volume 11",
@@ -122,22 +126,118 @@
      "passage": 26,
      "where": "Introduction › Reversal of sleep-deprivation performance deficits through the use of caffeine",
      "quote": "studies do appear to indicate a deterioration of mood, even after the relatively minor withdrawal associated with overnight caffeine deprivation",
-     "text": "Studies indicate a deterioration of mood after the minor withdrawal associated with overnight caffeine deprivation.",
+     "text": "Studies indicate a deterioration of mood even after the minor withdrawal associated with overnight caffeine deprivation.",
      "id": "F2",
      "second_hand": ""
     }
    ],
    "limits": [
     {
-     "passage": 35,
-     "where": "Introduction › Reversal of sleep-deprivation performance deficits through the use of caffeine",
-     "quote": "the lack of studies that objectively control for caffeine presence through blood plasma levels",
-     "text": "There is a lack of studies that objectively control for caffeine presence through blood plasma levels.",
+     "passage": 18,
+     "where": "Introduction › The impact of caffeine deprivation and withdrawal",
+     "quote": "Relatively few sleep (let alone sleep and performance) studies examine this outcome. Thus, it is difficult to map the net effects of caffeine from the current literature",
+     "text": "It is difficult to map the net effects of caffeine because relatively few studies examine the outcome of caffeine elimination.",
      "id": "L1",
-     "second_hand": "Overall, the evidence suggests that caffeine ingestion has positive impacts on physical and cognitive functioning, although a number of issues complicate conclusions regarding the "
+     "second_hand": ""
     }
    ],
    "tag": "A"
+  },
+  {
+   "read": "full",
+   "ref": {
+    "id": "liu_2026",
+    "type": "article-journal",
+    "title": "Beyond ergogenic effects: Limited evidence on caffeine-related problematic use, dependence, and withdrawal in athletic populations—a structured narrative review",
+    "author": [
+     {
+      "family": "Liu",
+      "given": "Haowei"
+     },
+     {
+      "family": "Cao",
+      "given": "Yang"
+     },
+     {
+      "family": "Zhang",
+      "given": "Guodong"
+     },
+     {
+      "family": "Li",
+      "given": "Hansen"
+     }
+    ],
+    "container-title": "Nutrients",
+    "issued": {
+     "date-parts": [
+      [
+       2026
+      ]
+     ]
+    },
+    "DOI": "10.3390/nu18172770",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-27",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-27"
+     }
+    },
+    "volume": "18",
+    "issue": "17",
+    "number": "2770",
+    "PMCID": "PMC13567338"
+   },
+   "doi": "10.3390/nu18172770",
+   "pmcid": "PMC13567338",
+   "title": "Beyond Ergogenic Effects: Limited Evidence on Caffeine-Related Problematic Use, Dependence, and Withdrawal in Athletic Populations-A Structured Narrative Review",
+   "year": 2026,
+   "journal": "Nutrients",
+   "kind": "review",
+   "people": true,
+   "near": 0.712,
+   "money": [
+    "This research received no external funding."
+   ],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "This structured narrative review used a systematic database search and prespecified selection process to identify studies directly addressing problematic caffeine use, dependence, use disorder, withdrawal, tolerance, habituation, or misuse in sport- and exercise-related populations.",
+    "text": "a structured narrative review identifying studies addressing caffeine-related problematic use, dependence, and withdrawal in sport- and exercise-related populations"
+   },
+   "findings": [
+    {
+     "passage": 28,
+     "where": "3. Results › 3.4. Caffeine Withdrawal, Habitual Intake, and Exercise Performance",
+     "quote": "In the 12-participant cycling study, 11 participants reported at least one symptom, including headache (n = 9), fatigue (n = 8), and reduced focus or motivation (n = 5).",
+     "text": "In the 12-participant cycling study, 11 participants reported at least one symptom, including headache, fatigue, and reduced focus or motivation.",
+     "id": "F3",
+     "second_hand": ""
+    },
+    {
+     "passage": 28,
+     "where": "3. Results › 3.4. Caffeine Withdrawal, Habitual Intake, and Exercise Performance",
+     "quote": "In the six-participant study, all participants reported symptoms lasting 2–4 days, including severe headache, fatigue, lethargy, and flu-like symptoms.",
+     "text": "In the six-participant study, all participants reported symptoms lasting 2 to 4 days, including severe headache, fatigue, lethargy, and flu-like symptoms.",
+     "id": "F4",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 28,
+     "where": "3. Results › 3.4. Caffeine Withdrawal, Habitual Intake, and Exercise Performance",
+     "quote": "Both studies collected non-standardized subjective reports of withdrawal symptoms.",
+     "text": "Both studies collected non-standardized subjective reports of withdrawal symptoms.",
+     "id": "L2",
+     "second_hand": ""
+    }
+   ],
+   "tag": "B"
   },
   {
    "read": "page",
@@ -165,14 +265,14 @@
       [
        2026,
        11,
-       26
+       27
       ]
      ]
     },
     "verification": {
      "status": "made by code",
      "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-26"
+     "verified_on": "2026-11-27"
     }
    },
    "title": "Caffeine",
@@ -192,20 +292,21 @@
      "passage": 21,
      "where": "Withdrawal / Withdrawal symptoms",
      "quote": "Reducing, or stopping using caffeine after a period of regular use can lead to withdrawal symptoms, including: headache; extreme fatigue or drowsiness; nausea; anxiety/irritability; sweating; depressed mood or irritability; difficulty concentrating; flu-like symptoms",
-     "text": "Reducing or stopping caffeine after regular use can cause symptoms such as headache, extreme fatigue, nausea, anxiety, irritability, sweating, depressed mood, difficulty concentrating, and flu-like symptoms.",
-     "id": "F4",
-     "second_hand": ""
-    },
-    {
-     "passage": 20,
-     "where": "Withdrawal",
-     "quote": "Withdrawal can include physical symptoms (such as headaches, or nausea) and psychological symptoms (such as anxiety, or depressed mood).",
-     "text": "Caffeine withdrawal involves both physical symptoms like headaches or nausea and psychological symptoms such as anxiety or depressed mood.",
+     "text": "Reducing or stopping caffeine use after regular use can cause withdrawal symptoms such as headache, extreme fatigue or drowsiness, nausea, anxiety, irritability, sweating, depressed mood, difficulty concentrating, and flu-like symptoms.",
      "id": "F5",
      "second_hand": ""
     }
    ],
-   "limits": [],
+   "limits": [
+    {
+     "passage": 21,
+     "where": "Withdrawal / Withdrawal symptoms",
+     "quote": "The symptoms can last for around 2-7 days, or longer for people who consume a lot.",
+     "text": "The duration of withdrawal symptoms can last longer specifically for people who consume a lot of caffeine.",
+     "id": "L3",
+     "second_hand": ""
+    }
+   ],
    "tag": "C"
   },
   {
@@ -230,14 +331,14 @@
       [
        2026,
        11,
-       26
+       27
       ]
      ]
     },
     "verification": {
      "status": "made by code",
      "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-26"
+     "verified_on": "2026-11-27"
     }
    },
    "title": "Caffeine",
@@ -256,8 +357,8 @@
     {
      "passage": 8,
      "where": "Is Caffeine addictive, and what are the long-term effects?",
-     "quote": "people have reported withdrawal symptoms of: headache, tiredness/drowsiness, insomnia, stomach and joint pains and trouble concentrating.",
-     "text": "People have reported withdrawal symptoms including headache, tiredness, drowsiness, insomnia, stomach pains, joint pains, and trouble concentrating.",
+     "quote": "Caffeine is a mildly addictive drug, tolerance to the drug does develop and people have reported withdrawal symptoms of: headache, tiredness/drowsiness, insomnia, stomach and joint pains and trouble concentrating.",
+     "text": "Caffeine withdrawal symptoms reported by people include headache, tiredness/drowsiness, insomnia, stomach and joint pains, and trouble concentrating.",
      "id": "F6",
      "second_hand": ""
     },
@@ -265,163 +366,26 @@
      "passage": 15,
      "where": "Myths and Misconceptions",
      "quote": "Regular users develop tolerance and can experience withdrawal symptoms including headache, fatigue, and irritability upon stopping.",
-     "text": "Regular users of caffeine can experience withdrawal symptoms such as headache, fatigue, and irritability when they stop using it.",
+     "text": "Regular users can experience withdrawal symptoms including headache, fatigue, and irritability upon stopping caffeine.",
      "id": "F7",
      "second_hand": ""
     },
     {
      "passage": 12,
      "where": "Harm Reduction and Drug-Drug Interactions",
-     "quote": "Being addicted to caffeine does not usually affect people’s lives for the worse. It does however mean that you can get withdrawal effects if you don’t have caffeine, which can be unpleasant.",
-     "text": "Caffeine addiction does not usually negatively affect people's lives, but it does mean that not having caffeine can cause unpleasant withdrawal effects.",
+     "quote": "It does however mean that you can get withdrawal effects if you don’t have caffeine, which can be unpleasant. This would be worse for those who regularly have very large amounts of caffeine",
+     "text": "Unpleasant withdrawal effects can occur without caffeine, and these would be worse for those who regularly have very large amounts of caffeine.",
      "id": "F8",
      "second_hand": ""
     }
    ],
-   "limits": [
-    {
-     "passage": 12,
-     "where": "Harm Reduction and Drug-Drug Interactions",
-     "quote": "This would be worse for those who regularly have very large amounts of caffeine (which is easier to do with energy drinks and caffeine pills).",
-     "text": "Withdrawal effects are worse for individuals who regularly consume very large amounts of caffeine.",
-     "id": "L3",
-     "second_hand": ""
-    }
-   ],
+   "limits": [],
    "tag": "D"
   }
  ],
- "parts": [
-  {
-   "part": "short",
-   "text": "Stopping caffeine can cause physical symptoms like headaches and nausea, and psychological symptoms like anxiety or depressed mood.",
-   "uses": [
-    "F5",
-    "F4"
-   ],
-   "rests_on": [
-    {
-     "label": "F5",
-     "ref": "adf_caffeine",
-     "where": "Withdrawal",
-     "quote": "Withdrawal can include physical symptoms (such as headaches, or nausea) and psychological symptoms (such as anxiety, or depressed mood).",
-     "sha": "36d412aadd061072"
-    },
-    {
-     "label": "F4",
-     "ref": "adf_caffeine",
-     "where": "Withdrawal / Withdrawal symptoms",
-     "quote": "Reducing, or stopping using caffeine after a period of regular use can lead to withdrawal symptoms, including: headache; extreme fatigue or drowsiness; nausea; anxiety/irritability; sweating; depressed mood or irritability; difficulty concentrating; flu-like symptoms",
-     "sha": "2c2d26c26b5dc345"
-    }
-   ]
-  },
-  {
-   "part": "but",
-   "text": "This rests on 1 review and 2 official pages.",
-   "uses": [
-    "DA",
-    "F4",
-    "F6"
-   ],
-   "fixed": true,
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "ocallaghan_2018",
-     "where": "Abstract",
-     "quote": "In this integrative review, we examine evidence illuminating the relationship between caffeine consumption and subsequent quality and quantity of nighttime rest.",
-     "sha": "d5e46c91021d541f"
-    },
-    {
-     "label": "F4",
-     "ref": "adf_caffeine",
-     "where": "Withdrawal / Withdrawal symptoms",
-     "quote": "Reducing, or stopping using caffeine after a period of regular use can lead to withdrawal symptoms, including: headache; extreme fatigue or drowsiness; nausea; anxiety/irritability; sweating; depressed mood or irritability; difficulty concentrating; flu-like symptoms",
-     "sha": "2c2d26c26b5dc345"
-    },
-    {
-     "label": "F6",
-     "ref": "drugscience_caffeine",
-     "where": "Is Caffeine addictive, and what are the long-term effects?",
-     "quote": "people have reported withdrawal symptoms of: headache, tiredness/drowsiness, insomnia, stomach and joint pains and trouble concentrating.",
-     "sha": "f1545e671eaa92bd"
-    }
-   ]
-  },
-  {
-   "part": "how1",
-   "text": "Australia's Alcohol and Drug Foundation says reducing or stopping caffeine after regular use can cause headache, fatigue, nausea, anxiety, and flu-like symptoms.",
-   "uses": [
-    "F4"
-   ],
-   "rests_on": [
-    {
-     "label": "F4",
-     "ref": "adf_caffeine",
-     "where": "Withdrawal / Withdrawal symptoms",
-     "quote": "Reducing, or stopping using caffeine after a period of regular use can lead to withdrawal symptoms, including: headache; extreme fatigue or drowsiness; nausea; anxiety/irritability; sweating; depressed mood or irritability; difficulty concentrating; flu-like symptoms",
-     "sha": "2c2d26c26b5dc345"
-    }
-   ],
-   "quote": "or stopping using caffeine after a period of regular use can lead to withdrawal symptoms",
-   "quote_ref": "adf_caffeine"
-  },
-  {
-   "part": "how2",
-   "text": "Drug Science, a UK charity of scientists says people have reported headache, tiredness, insomnia, stomach pains, and trouble concentrating.",
-   "uses": [
-    "F6"
-   ],
-   "rests_on": [
-    {
-     "label": "F6",
-     "ref": "drugscience_caffeine",
-     "where": "Is Caffeine addictive, and what are the long-term effects?",
-     "quote": "people have reported withdrawal symptoms of: headache, tiredness/drowsiness, insomnia, stomach and joint pains and trouble concentrating.",
-     "sha": "f1545e671eaa92bd"
-    }
-   ],
-   "quote": "people have reported withdrawal symptoms of: headache, tiredness/drowsiness, insomnia, stomach and joint pains and trouble",
-   "quote_ref": "drugscience_caffeine"
-  },
-  {
-   "part": "how3",
-   "text": "A 2018 review found people who missed caffeine overnight performed worse on reaction tasks and had a drop in mood.",
-   "uses": [
-    "DA",
-    "F1",
-    "F2"
-   ],
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "ocallaghan_2018",
-     "where": "Abstract",
-     "quote": "In this integrative review, we examine evidence illuminating the relationship between caffeine consumption and subsequent quality and quantity of nighttime rest.",
-     "sha": "d5e46c91021d541f"
-    },
-    {
-     "label": "F1",
-     "ref": "ocallaghan_2018",
-     "where": "Introduction › The impact of caffeine deprivation and withdrawal",
-     "quote": "those who had experienced a withdrawal overnight did perform worse on reaction time tasks and were marginally less alert, suggesting withdrawal had made them worse off than they would otherwise have been.",
-     "sha": "34ab0a9227e18871"
-    },
-    {
-     "label": "F2",
-     "ref": "ocallaghan_2018",
-     "where": "Introduction › Reversal of sleep-deprivation performance deficits through the use of caffeine",
-     "quote": "studies do appear to indicate a deterioration of mood, even after the relatively minor withdrawal associated with overnight caffeine deprivation",
-     "sha": "21771849d5a82f77"
-    }
-   ],
-   "quote": "those who had experienced a withdrawal overnight did perform worse on reaction time tasks",
-   "quote_ref": "ocallaghan_2018"
-  }
- ],
+ "parts": [],
  "complete": false,
- "missing": "a paper that stands nearer the question could not be read",
+ "missing": "typical duration and timeline of symptoms",
  "wanted": [
   {
    "doi": "10.1007/s00213-004-2000-x",
@@ -446,7 +410,16 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-26",
+   "lane": 19,
+   "status": "published",
+   "why": "passed every gate",
+   "short": "Stopping caffeine can cause physical symptoms like headaches and nausea, and psychological symptoms like anxiety or depressed mood.",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "Effects of caffeine on sleep quality and daytime functioning",
@@ -468,33 +441,20 @@
    "read": "full",
    "kind": "review",
    "at": "10.3390/nu18172770",
-   "kept": 1,
-   "thrown": [
-    {
-     "kind": "finding",
-     "text": "In a study of 6 participants, all reported symptoms lasting 2–4 days, including severe headache, fatigue, lethargy, and flu-like symptoms.",
-     "quote": "In the six-participant study, all participants reported symptoms lasting 2–4 days, including severe headache, fatigue, lethargy, and flu-like symptoms.",
-     "why": "a number of the sentence is not in its quote"
-    }
-   ]
+   "kept": 2,
+   "thrown": []
   },
   {
    "title": "Caffeine",
    "read": "page",
    "kind": "official",
    "at": "https://adf.org.au/drug-facts/caffeine/",
-   "kept": 2,
+   "kept": 1,
    "thrown": [
     {
      "kind": "finding",
-     "text": "Withdrawal symptoms typically begin 12-24 hours after the final dose and generally last for 2-7 days, though they may persist longer for those who consume large amounts.",
+     "text": "Withdrawal symptoms typically begin within 12 to 24 hours after the final dose and can last for approximately 2 to 7 days, or even longer for individuals who consume a large amount.",
      "quote": "Withdrawal symptoms usually start within 12-24 hours after the last dose. The symptoms can last for around 2-7 days, or longer for people who consume a lot.",
-     "why": "the sentence is not carried by its quote and passage"
-    },
-    {
-     "kind": "limit",
-     "text": "The intensity and duration of withdrawal symptoms vary based on the specific drug and the individual's history of use.",
-     "quote": "Symptoms - including how strong they are and how long they last - will vary depending on the type of drug and a person’s history of use.",
      "why": "the sentence is not carried by its quote and passage"
     }
    ]
@@ -511,8 +471,6 @@
  "plan": {
   "short": [
    "F5",
-   "F4",
-   "F6",
    "F1"
   ],
   "direct": "",
@@ -521,79 +479,35 @@
   ],
   "how": [
    [
-    "F5",
-    "F4"
+    "F5"
    ],
    [
-    "F6",
-    "F7"
+    "F6"
    ],
    [
     "DA",
-    "F1",
-    "F2"
+    "F1"
    ]
   ],
-  "unanswered": ""
+  "unanswered": "typical duration and timeline of symptoms"
  },
- "dropped": [
-  {
-   "try": 1,
-   "part": "how2",
-   "text": "Drug Science, a UK charity of scientists, says regular users can experience headache, fatigue, and irritability when they stop.",
-   "rests_on": [
-    {
-     "label": "F6",
-     "ref": "drugscience_caffeine",
-     "where": "Is Caffeine addictive, and what are the long-term effects?",
-     "quote": "people have reported withdrawal symptoms of: headache, tiredness/drowsiness, insomnia, stomach and joint pains and trouble concentrating.",
-     "sha": "f1545e671eaa92bd"
-    },
-    {
-     "label": "F7",
-     "ref": "drugscience_caffeine",
-     "where": "Myths and Misconceptions",
-     "quote": "Regular users develop tolerance and can experience withdrawal symptoms including headache, fatigue, and irritability upon stopping.",
-     "sha": "3b258dade9a0d986"
-    }
-   ],
-   "by": "a rule",
-   "said": "a rule: words that are not person-first (“users”)"
-  },
-  {
-   "try": 3,
-   "part": "but",
-   "text": "Withdrawal effects are worse for people who regularly consume very large amounts of caffeine.",
-   "rests_on": [
-    {
-     "label": "L3",
-     "ref": "drugscience_caffeine",
-     "where": "Harm Reduction and Drug-Drug Interactions",
-     "quote": "This would be worse for those who regularly have very large amounts of caffeine (which is easier to do with energy drinks and caffeine pills).",
-     "sha": "81ef64d484cc1752"
-    }
-   ],
-   "by": "the second reader",
-   "said": "it is about something else than the short answer"
-  }
- ],
  "panel_gap": [],
  "own": {
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.8571,
-   "but": 0.9653,
-   "how1": 0.1836,
-   "how2": 0.0624,
-   "how3": 0.3756
+   "short": 0.7703,
+   "but": 0.8989,
+   "how1": 0.2508,
+   "how2": 0.0417,
+   "how3": 0.8793
   },
   "scores_quotes_alone": {
-   "short": 0.8965,
-   "but": 0.0658,
-   "how1": 0.1807,
-   "how2": 0.0466,
-   "how3": 0.8461
+   "short": 0.7634,
+   "but": 0.9524,
+   "how1": 0.2061,
+   "how2": 0.0502,
+   "how3": 0.8059
   }
  },
  "tries": [
@@ -603,28 +517,14 @@
    "parts": [
     {
      "part": "short",
-     "text": "Caffeine withdrawal can cause physical symptoms like headaches and nausea, and psychological symptoms like anxiety or depressed mood.",
+     "text": "Stopping regular caffeine use can cause headaches, tiredness, and irritability. A 2018 review notes that a night without caffeine can slow reactions and lower alertness.",
      "rests_on": [
       {
        "label": "F5",
        "ref": "adf_caffeine",
-       "where": "Withdrawal",
-       "quote": "Withdrawal can include physical symptoms (such as headaches, or nausea) and psychological symptoms (such as anxiety, or depressed mood).",
-       "sha": "36d412aadd061072"
-      },
-      {
-       "label": "F4",
-       "ref": "adf_caffeine",
        "where": "Withdrawal / Withdrawal symptoms",
        "quote": "Reducing, or stopping using caffeine after a period of regular use can lead to withdrawal symptoms, including: headache; extreme fatigue or drowsiness; nausea; anxiety/irritability; sweating; depressed mood or irritability; difficulty concentrating; flu-like symptoms",
        "sha": "2c2d26c26b5dc345"
-      },
-      {
-       "label": "F6",
-       "ref": "drugscience_caffeine",
-       "where": "Is Caffeine addictive, and what are the long-term effects?",
-       "quote": "people have reported withdrawal symptoms of: headache, tiredness/drowsiness, insomnia, stomach and joint pains and trouble concentrating.",
-       "sha": "f1545e671eaa92bd"
       },
       {
        "label": "F1",
@@ -634,124 +534,30 @@
        "sha": "34ab0a9227e18871"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "the second reader",
+     "said": "Second clause attributes findings to a 2018 review, but the passage does not identify a review and does not provide the hedging language required."
     },
     {
      "part": "but",
-     "text": "Withdrawal effects are worse for people who regularly consume very large amounts of caffeine.",
+     "text": "Symptoms can last longer for people who consume a lot of caffeine.",
      "rests_on": [
       {
        "label": "L3",
-       "ref": "drugscience_caffeine",
-       "where": "Harm Reduction and Drug-Drug Interactions",
-       "quote": "This would be worse for those who regularly have very large amounts of caffeine (which is easier to do with energy drinks and caffeine pills).",
-       "sha": "81ef64d484cc1752"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "it is about something else than the short answer"
-    },
-    {
-     "part": "how1",
-     "text": "Australia's Alcohol and Drug Foundation says withdrawal includes physical symptoms like headaches and psychological symptoms like anxiety.",
-     "rests_on": [
-      {
-       "label": "F5",
-       "ref": "adf_caffeine",
-       "where": "Withdrawal",
-       "quote": "Withdrawal can include physical symptoms (such as headaches, or nausea) and psychological symptoms (such as anxiety, or depressed mood).",
-       "sha": "36d412aadd061072"
-      },
-      {
-       "label": "F4",
        "ref": "adf_caffeine",
        "where": "Withdrawal / Withdrawal symptoms",
-       "quote": "Reducing, or stopping using caffeine after a period of regular use can lead to withdrawal symptoms, including: headache; extreme fatigue or drowsiness; nausea; anxiety/irritability; sweating; depressed mood or irritability; difficulty concentrating; flu-like symptoms",
+       "quote": "The symptoms can last for around 2-7 days, or longer for people who consume a lot.",
        "sha": "2c2d26c26b5dc345"
       }
      ],
      "ok": true
     },
     {
-     "part": "how3",
-     "text": "A 2018 review found people who missed caffeine overnight were less alert, had worse reaction times, and felt worse mood.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "ocallaghan_2018",
-       "where": "Abstract",
-       "quote": "In this integrative review, we examine evidence illuminating the relationship between caffeine consumption and subsequent quality and quantity of nighttime rest.",
-       "sha": "d5e46c91021d541f"
-      },
-      {
-       "label": "F1",
-       "ref": "ocallaghan_2018",
-       "where": "Introduction › The impact of caffeine deprivation and withdrawal",
-       "quote": "those who had experienced a withdrawal overnight did perform worse on reaction time tasks and were marginally less alert, suggesting withdrawal had made them worse off than they would otherwise have been.",
-       "sha": "34ab0a9227e18871"
-      },
-      {
-       "label": "F2",
-       "ref": "ocallaghan_2018",
-       "where": "Introduction › Reversal of sleep-deprivation performance deficits through the use of caffeine",
-       "quote": "studies do appear to indicate a deterioration of mood, even after the relatively minor withdrawal associated with overnight caffeine deprivation",
-       "sha": "21771849d5a82f77"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The sentence attributes the findings on reaction time, alertness, and mood to a 2018 review itself, whereas the passages report that specific studies discussed within the review (such as Rogers et al. or Mitchell and Redman) found those res"
-    }
-   ]
-  },
-  {
-   "try": 2,
-   "why": "the short answer or the But was not accepted: written again",
-   "parts": [
-    {
-     "part": "short",
-     "text": "Stopping caffeine can cause physical symptoms like headaches and nausea, and psychological symptoms like anxiety or depressed mood.",
+     "part": "how1",
+     "text": "Australia's Alcohol and Drug Foundation says reducing or stopping regular caffeine use can cause headache, fatigue, nausea, anxiety, and flu-like symptoms.",
      "rests_on": [
       {
        "label": "F5",
-       "ref": "adf_caffeine",
-       "where": "Withdrawal",
-       "quote": "Withdrawal can include physical symptoms (such as headaches, or nausea) and psychological symptoms (such as anxiety, or depressed mood).",
-       "sha": "36d412aadd061072"
-      },
-      {
-       "label": "F4",
-       "ref": "adf_caffeine",
-       "where": "Withdrawal / Withdrawal symptoms",
-       "quote": "Reducing, or stopping using caffeine after a period of regular use can lead to withdrawal symptoms, including: headache; extreme fatigue or drowsiness; nausea; anxiety/irritability; sweating; depressed mood or irritability; difficulty concentrating; flu-like symptoms",
-       "sha": "2c2d26c26b5dc345"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "but",
-     "text": "Withdrawal effects are worse for people who regularly consume very large amounts of caffeine.",
-     "rests_on": [
-      {
-       "label": "L3",
-       "ref": "drugscience_caffeine",
-       "where": "Harm Reduction and Drug-Drug Interactions",
-       "quote": "This would be worse for those who regularly have very large amounts of caffeine (which is easier to do with energy drinks and caffeine pills).",
-       "sha": "81ef64d484cc1752"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "it is about something else than the short answer"
-    },
-    {
-     "part": "how1",
-     "text": "Australia's Alcohol and Drug Foundation says reducing or stopping caffeine after regular use can cause headache, fatigue, nausea, anxiety, and flu-like symptoms.",
-     "rests_on": [
-      {
-       "label": "F4",
        "ref": "adf_caffeine",
        "where": "Withdrawal / Withdrawal symptoms",
        "quote": "Reducing, or stopping using caffeine after a period of regular use can lead to withdrawal symptoms, including: headache; extreme fatigue or drowsiness; nausea; anxiety/irritability; sweating; depressed mood or irritability; difficulty concentrating; flu-like symptoms",
@@ -768,17 +574,17 @@
        "label": "F6",
        "ref": "drugscience_caffeine",
        "where": "Is Caffeine addictive, and what are the long-term effects?",
-       "quote": "people have reported withdrawal symptoms of: headache, tiredness/drowsiness, insomnia, stomach and joint pains and trouble concentrating.",
+       "quote": "Caffeine is a mildly addictive drug, tolerance to the drug does develop and people have reported withdrawal symptoms of: headache, tiredness/drowsiness, insomnia, stomach and joint pains and trouble concentrating.",
        "sha": "f1545e671eaa92bd"
       }
      ],
      "ok": false,
-     "by": "the second reader",
-     "said": "The passage does not state that Drug Science is a UK charity of scientists, nor that people reported insomnia and stomach pains."
+     "by": "our own checker",
+     "said": "our own checker does not find it in the words it rests on (0.04): say only what those words say, in their own measure"
     },
     {
      "part": "how3",
-     "text": "A 2018 review found people who missed caffeine overnight performed worse on reaction tasks and had a drop in mood.",
+     "text": "A 2018 review of studies found that people who went a night without caffeine performed worse on reaction time tasks and were marginally less alert.",
      "rests_on": [
       {
        "label": "DA",
@@ -793,24 +599,314 @@
        "where": "Introduction › The impact of caffeine deprivation and withdrawal",
        "quote": "those who had experienced a withdrawal overnight did perform worse on reaction time tasks and were marginally less alert, suggesting withdrawal had made them worse off than they would otherwise have been.",
        "sha": "34ab0a9227e18871"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "Sentence claims a 2018 review \"found\" the result; the passage only reports a single study's finding and does not present it as a review conclusion, making the claim too strong."
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Stopping caffeine can cause headaches, tiredness, and irritability. A 2018 review notes people who missed a night of caffeine were less alert and slower to react.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "adf_caffeine",
+       "where": "Withdrawal / Withdrawal symptoms",
+       "quote": "Reducing, or stopping using caffeine after a period of regular use can lead to withdrawal symptoms, including: headache; extreme fatigue or drowsiness; nausea; anxiety/irritability; sweating; depressed mood or irritability; difficulty concentrating; flu-like symptoms",
+       "sha": "2c2d26c26b5dc345"
       },
       {
-       "label": "F2",
+       "label": "F1",
        "ref": "ocallaghan_2018",
-       "where": "Introduction › Reversal of sleep-deprivation performance deficits through the use of caffeine",
-       "quote": "studies do appear to indicate a deterioration of mood, even after the relatively minor withdrawal associated with overnight caffeine deprivation",
-       "sha": "21771849d5a82f77"
+       "where": "Introduction › The impact of caffeine deprivation and withdrawal",
+       "quote": "those who had experienced a withdrawal overnight did perform worse on reaction time tasks and were marginally less alert, suggesting withdrawal had made them worse off than they would otherwise have been.",
+       "sha": "34ab0a9227e18871"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.5-flash-lite) did not accept it: The passages do not state that stopping caffeine causes tiredness (they state 'extreme fatigue or drowsiness') or irritability in general without the specific conditions mentioned, and the 2018 review passage does not state that people who "
+    },
+    {
+     "part": "but",
+     "text": "Symptoms can last longer for people who consume a lot of caffeine.",
+     "rests_on": [
+      {
+       "label": "L3",
+       "ref": "adf_caffeine",
+       "where": "Withdrawal / Withdrawal symptoms",
+       "quote": "The symptoms can last for around 2-7 days, or longer for people who consume a lot.",
+       "sha": "2c2d26c26b5dc345"
       }
      ],
      "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "Australia's Alcohol and Drug Foundation says reducing or stopping regular caffeine use can lead to headache, fatigue, nausea, anxiety, and flu-like symptoms.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "adf_caffeine",
+       "where": "Withdrawal / Withdrawal symptoms",
+       "quote": "Reducing, or stopping using caffeine after a period of regular use can lead to withdrawal symptoms, including: headache; extreme fatigue or drowsiness; nausea; anxiety/irritability; sweating; depressed mood or irritability; difficulty concentrating; flu-like symptoms",
+       "sha": "2c2d26c26b5dc345"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.5-flash-lite) did not accept it: The passage is from the Alcohol and Drug Foundation, but it does not mention 'Australia's' Alcohol and Drug Foundation, nor does it list 'fatigue' (it says 'extreme fatigue or drowsiness') or 'stomach and joint pains'."
+    },
+    {
+     "part": "how2",
+     "text": "Drug Science, a UK charity of scientists, says people have reported headache, tiredness, insomnia, stomach and joint pains, and trouble concentrating.",
+     "rests_on": [
+      {
+       "label": "F6",
+       "ref": "drugscience_caffeine",
+       "where": "Is Caffeine addictive, and what are the long-term effects?",
+       "quote": "Caffeine is a mildly addictive drug, tolerance to the drug does develop and people have reported withdrawal symptoms of: headache, tiredness/drowsiness, insomnia, stomach and joint pains and trouble concentrating.",
+       "sha": "f1545e671eaa92bd"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.5-flash-lite) did not accept it: The passage does not state that Drug Science is a 'UK charity of scientists', nor does it state that withdrawal symptoms include stomach and joint pains as something people 'have reported' in a way matching the exact phrasing without other "
+    },
+    {
+     "part": "how3",
+     "text": "A 2018 integrative review found that people who experienced overnight caffeine withdrawal performed worse on reaction time tasks and were marginally less alert.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "ocallaghan_2018",
+       "where": "Abstract",
+       "quote": "In this integrative review, we examine evidence illuminating the relationship between caffeine consumption and subsequent quality and quantity of nighttime rest.",
+       "sha": "d5e46c91021d541f"
+      },
+      {
+       "label": "F1",
+       "ref": "ocallaghan_2018",
+       "where": "Introduction › The impact of caffeine deprivation and withdrawal",
+       "quote": "those who had experienced a withdrawal overnight did perform worse on reaction time tasks and were marginally less alert, suggesting withdrawal had made them worse off than they would otherwise have been.",
+       "sha": "34ab0a9227e18871"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.5-flash-lite) did not accept it: The 2018 integrative review text passage does not state that people who experienced overnight caffeine withdrawal performed worse on reaction time tasks and were marginally less alert; that finding comes from the introduction describing a s"
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Stopping regular caffeine use can cause headache, extreme fatigue, and irritability. A 2018 review notes people who skipped caffeine overnight were marginally less alert.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "adf_caffeine",
+       "where": "Withdrawal / Withdrawal symptoms",
+       "quote": "Reducing, or stopping using caffeine after a period of regular use can lead to withdrawal symptoms, including: headache; extreme fatigue or drowsiness; nausea; anxiety/irritability; sweating; depressed mood or irritability; difficulty concentrating; flu-like symptoms",
+       "sha": "2c2d26c26b5dc345"
+      },
+      {
+       "label": "F1",
+       "ref": "ocallaghan_2018",
+       "where": "Introduction › The impact of caffeine deprivation and withdrawal",
+       "quote": "those who had experienced a withdrawal overnight did perform worse on reaction time tasks and were marginally less alert, suggesting withdrawal had made them worse off than they would otherwise have been.",
+       "sha": "34ab0a9227e18871"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.6-flash) did not accept it: The passage describes findings from a specific study (Rogers et al.) with hedges ('suggesting'), but the sentence turns this into a unhedged general claim noted by the review, doing what the editor's note warns against."
+    },
+    {
+     "part": "but",
+     "text": "Symptoms can last longer for people who consume a lot of caffeine.",
+     "rests_on": [
+      {
+       "label": "L3",
+       "ref": "adf_caffeine",
+       "where": "Withdrawal / Withdrawal symptoms",
+       "quote": "The symptoms can last for around 2-7 days, or longer for people who consume a lot.",
+       "sha": "2c2d26c26b5dc345"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "Australia's Alcohol and Drug Foundation says reducing or stopping regular caffeine use can cause headache, extreme fatigue, nausea, anxiety, and flu-like symptoms.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "adf_caffeine",
+       "where": "Withdrawal / Withdrawal symptoms",
+       "quote": "Reducing, or stopping using caffeine after a period of regular use can lead to withdrawal symptoms, including: headache; extreme fatigue or drowsiness; nausea; anxiety/irritability; sweating; depressed mood or irritability; difficulty concentrating; flu-like symptoms",
+       "sha": "2c2d26c26b5dc345"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.5-flash-lite) did not accept it: The passage does not mention Australia's Alcohol and Drug Foundation."
+    },
+    {
+     "part": "how2",
+     "text": "Drug Science, a UK charity of scientists, says people have reported headache, tiredness, insomnia, stomach pains, and trouble concentrating.",
+     "rests_on": [
+      {
+       "label": "F6",
+       "ref": "drugscience_caffeine",
+       "where": "Is Caffeine addictive, and what are the long-term effects?",
+       "quote": "Caffeine is a mildly addictive drug, tolerance to the drug does develop and people have reported withdrawal symptoms of: headache, tiredness/drowsiness, insomnia, stomach and joint pains and trouble concentrating.",
+       "sha": "f1545e671eaa92bd"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.5-flash-lite) did not accept it: The passage does not mention Drug Science, a UK charity of scientists."
+    },
+    {
+     "part": "how3",
+     "text": "A 2018 integrative review found people who experienced overnight caffeine withdrawal performed worse on reaction time tasks and were marginally less alert.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "ocallaghan_2018",
+       "where": "Abstract",
+       "quote": "In this integrative review, we examine evidence illuminating the relationship between caffeine consumption and subsequent quality and quantity of nighttime rest.",
+       "sha": "d5e46c91021d541f"
+      },
+      {
+       "label": "F1",
+       "ref": "ocallaghan_2018",
+       "where": "Introduction › The impact of caffeine deprivation and withdrawal",
+       "quote": "those who had experienced a withdrawal overnight did perform worse on reaction time tasks and were marginally less alert, suggesting withdrawal had made them worse off than they would otherwise have been.",
+       "sha": "34ab0a9227e18871"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The sentence repeats a summary from the review's introduction as if it were a direct finding of the review, which the editor's note flags as unsupported."
     }
    ]
   }
  ],
- "with_checked": {
-  "differs": [],
-  "same": []
+ "panel": {
+  "gemini:gemini-3.5-flash-lite": {
+   "short": [
+    true,
+    ""
+   ],
+   "but": [
+    true,
+    ""
+   ],
+   "how1": [
+    false,
+    "The passage does not mention Australia's Alcohol and Drug Foundation."
+   ],
+   "how2": [
+    false,
+    "The passage does not mention Drug Science, a UK charity of scientists."
+   ],
+   "how3": [
+    true,
+    ""
+   ]
+  },
+  "gemini:gemini-3.6-flash": {
+   "short": [
+    false,
+    "The passage describes findings from a specific study (Rogers et al.) with hedges ('suggesting'), but the sentence turns this into a unhedged general claim noted by the review, doing what the editor's note warns against."
+   ],
+   "but": [
+    true,
+    ""
+   ],
+   "how1": [
+    false,
+    "The passage does not state that the Alcohol and Drug Foundation is 'Australia's'."
+   ],
+   "how2": [
+    false,
+    "The passage does not mention that Drug Science is 'a UK charity of scientists'."
+   ],
+   "how3": [
+    false,
+    "The 2018 integrative review did not find this itself; its introduction was citing a specific study by Rogers et al., and the sentence turns what that study found into a direct finding of the review without hedges, doing what the editor's no"
+   ]
+  }
  },
+ "dropped": [
+  {
+   "try": 3,
+   "part": "how1",
+   "text": "Australia's Alcohol and Drug Foundation says reducing or stopping regular caffeine use can cause headache, extreme fatigue, nausea, anxiety, and flu-like symptoms.",
+   "rests_on": [
+    {
+     "label": "F5",
+     "ref": "adf_caffeine",
+     "where": "Withdrawal / Withdrawal symptoms",
+     "quote": "Reducing, or stopping using caffeine after a period of regular use can lead to withdrawal symptoms, including: headache; extreme fatigue or drowsiness; nausea; anxiety/irritability; sweating; depressed mood or irritability; difficulty concentrating; flu-like symptoms",
+     "sha": "2c2d26c26b5dc345"
+    }
+   ],
+   "by": "a further reader",
+   "said": "a further reader (gemini-3.5-flash-lite) did not accept it: The passage does not mention Australia's Alcohol and Drug Foundation."
+  },
+  {
+   "try": 3,
+   "part": "how2",
+   "text": "Drug Science, a UK charity of scientists, says people have reported headache, tiredness, insomnia, stomach pains, and trouble concentrating.",
+   "rests_on": [
+    {
+     "label": "F6",
+     "ref": "drugscience_caffeine",
+     "where": "Is Caffeine addictive, and what are the long-term effects?",
+     "quote": "Caffeine is a mildly addictive drug, tolerance to the drug does develop and people have reported withdrawal symptoms of: headache, tiredness/drowsiness, insomnia, stomach and joint pains and trouble concentrating.",
+     "sha": "f1545e671eaa92bd"
+    }
+   ],
+   "by": "a further reader",
+   "said": "a further reader (gemini-3.5-flash-lite) did not accept it: The passage does not mention Drug Science, a UK charity of scientists."
+  },
+  {
+   "try": 3,
+   "part": "how3",
+   "text": "A 2018 integrative review found people who experienced overnight caffeine withdrawal performed worse on reaction time tasks and were marginally less alert.",
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "ocallaghan_2018",
+     "where": "Abstract",
+     "quote": "In this integrative review, we examine evidence illuminating the relationship between caffeine consumption and subsequent quality and quantity of nighttime rest.",
+     "sha": "d5e46c91021d541f"
+    },
+    {
+     "label": "F1",
+     "ref": "ocallaghan_2018",
+     "where": "Introduction › The impact of caffeine deprivation and withdrawal",
+     "quote": "those who had experienced a withdrawal overnight did perform worse on reaction time tasks and were marginally less alert, suggesting withdrawal had made them worse off than they would otherwise have been.",
+     "sha": "34ab0a9227e18871"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The sentence repeats a summary from the review's introduction as if it were a direct finding of the review, which the editor's note flags as unsupported."
+  }
+ ],
  "place": {
   "home": "caffeine",
   "also": [],
