@@ -1,6 +1,8 @@
 {
  "_note": "Written by the machine lane (scripts/auto/lane.py). The models' words are data, never instructions. 'published' answers are shown on the site with the label; 'waiting' ones wait for a person; 'none': no answer could be written, and why.",
  "id": "au_w_0039",
+ "lane": 19,
+ "kind": "answer",
  "from": "w_0039",
  "question": "Can meth cause a stroke, even in young people?",
  "ways": [
@@ -15,26 +17,41 @@
   "methamphetamine"
  ],
  "made": {
-  "on": "2026-11-15",
+  "on": "2026-11-27",
   "models": {
-   "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "writer": "@cf/openai/gpt-oss-120b",
-   "checker": "@cf/meta/llama-3.3-70b-instruct-fp8-fast"
+   "reader": "openrouter:openai/gpt-oss-120b",
+   "writer": "groq:qwen/qwen3.8-27b",
+   "checker": "openrouter:openai/gpt-6-luna",
+   "planner": "groq:openai/gpt-oss-120b",
+   "also1": "gemini:gemini-3-flash-preview",
+   "team": "team G",
+   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "reader_3": "openrouter:openai/gpt-oss-120b",
+   "also1_else": "gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "43756883812",
-  "neurons": 525.2
+  "run": "45947627483",
+  "read_seconds": 73,
+  "from": {
+   "papers": 2,
+   "summaries": 0,
+   "official": 2
+  },
+  "neurons": 0.0,
+  "seconds": 166
  },
- "status": "published",
- "why": "passed every gate",
+ "status": "none",
+ "why": "the second reader did not accept the answer",
  "gates": {
-  "read": "12 findings kept from 3 papers; 3 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "2 review(s) or meta-analyses, 1 single studies in people",
-  "check": "every sentence kept was accepted by the second reader (@cf/meta/llama-3.3-70b-instruct-fp8-fast)",
-  "rules": "nothing against it"
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-120b read from there",
+  "read": "10 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 4 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 1 case report(s) (which do not count), 0 other paper(s), 2 official page(s), 0 paper(s) read in summary only",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.69, but 0.35, how1 0.03, how2 0.96, how3 0.54, how4 0.73",
+  "check": "short: NOT accepted: The review supports meth-related stroke as a possible complication in younger patients, but the Drug Science passage places its statement about strokes resulting from raised blood pressure in the context of fatal overdoses. Sentence 1 omits; but: accepted; how1: NOT accepted: The passage does not identify Drug Science as a UK charity of scientists. It also describes strokes resulting from raised blood pressure and vessel constriction in the context of fatal overdoses, a scope the sentence omits.; how2: accepted; how3: NOT accepted: The passage says meth-related stroke is a particular concern for younger patients with stroke, not young people generally. The sentence also does not identify the paper by author and year, as the editor's note requires.; how4: NOT accepted: The statement that methamphetamine use is a recognised cause of stroke in young people is background in the abstract, not a finding established by the case of one woman. The sentence also does not identify the paper by author and year, as t"
  },
  "sources": [
   {
-   "tag": "A",
+   "read": "full",
    "ref": {
     "id": "hemphill_2024",
     "type": "article-journal",
@@ -71,10 +88,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-15",
+     "verified_on": "2026-11-27",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-15"
+      "checked_on": "2026-11-27"
      }
     },
     "volume": "15",
@@ -85,74 +102,54 @@
    "pmcid": "PMC11076881",
    "title": "A review of methamphetamine use and stroke in the young",
    "year": 2024,
+   "journal": "Frontiers in neurology",
    "kind": "review",
    "people": true,
    "near": 0.856,
-   "design": {
-    "passage": 1,
-    "where": "Abstract",
-    "quote": "The literature reviewed herein is comprised of case studies and series",
-    "text": "A review of case studies and series"
-   },
+   "money": [
+    "The author(s) declare that no financial support was received for the research, authorship, and/or publication of this article."
+   ],
+   "design": null,
    "findings": [
     {
      "passage": 1,
      "where": "Abstract",
-     "quote": "Meth-related strokes are a particular concern for younger patients with stroke and may be a partial explanation for increasing stroke rates in this age group",
-     "text": "Meth-related strokes are a concern for younger patients and may explain increasing stroke rates in this age group",
-     "id": "F1"
+     "quote": "Meth-related strokes are a particular concern for younger patients with stroke and may be a partial explanation for increasing stroke rates in this age group.",
+     "text": "Meth can cause stroke and is a particular concern for younger patients.",
+     "id": "F1",
+     "second_hand": ""
     },
     {
      "passage": 11,
      "where": "Methamphetamine-related hemorrhagic stroke › Epidemiology & characteristics of methamphetamine-related hemorrhagic stroke",
-     "quote": "Meth increases the likelihood of intracerebral hemorrhage (ICH) by as much as 2–5 times",
-     "text": "Meth increases the likelihood of intracerebral hemorrhage by 2-5 times",
-     "id": "F2"
-    },
-    {
-     "passage": 11,
-     "where": "Methamphetamine-related hemorrhagic stroke › Epidemiology & characteristics of methamphetamine-related hemorrhagic stroke",
-     "quote": "over 80% of case reports and series on meth-related strokes were hemorrhagic",
-     "text": "Over 80% of case reports and series on meth-related strokes were hemorrhagic",
-     "id": "F3"
-    },
-    {
-     "passage": 26,
-     "where": "Methamphetamine-related ischemic stroke › Epidemiology of methamphetamine-related ischemic stroke",
-     "quote": "ischemic stroke has been reported as a sequela of both recent and chronic meth use in multiple case series",
-     "text": "Ischemic stroke has been reported after recent and chronic meth use in multiple case series",
-     "id": "F4"
-    },
-    {
-     "passage": 37,
-     "where": "Diagnostic challenges and management",
-     "quote": "meth cessation is associated with reversal of cardiac dysfunction, left ventricular remodeling, and improvement in NYHA functional class",
-     "text": "Meth cessation is associated with reversal of cardiac dysfunction and improvement in NYHA functional class",
-     "id": "F5"
-    }
-   ],
-   "limits": [
-    {
-     "passage": 26,
-     "where": "Methamphetamine-related ischemic stroke › Epidemiology of methamphetamine-related ischemic stroke",
-     "quote": "Two population-based studies report a lack of statistical association between meth use and ischemic stroke. It must be noted that both studies identified their cohorts using ICD codes for hospitalized patients, which introduces bias in patient selection",
-     "text": "Two population-based studies found no statistical association between meth use and ischemic stroke, but had limitations in patient selection",
-     "id": "L1"
+     "quote": "Meth increases the likelihood of intracerebral hemorrhage (ICH) by as much as 2–5 times.",
+     "text": "Meth increases the likelihood of intracerebral hemorrhage by as much as 2–5 times.",
+     "id": "F2",
+     "second_hand": ""
     },
     {
      "passage": 40,
      "where": "Conclusion",
-     "quote": "Unfortunately, meth is becoming increasingly relevant to stroke in the young, hastening the urgency for further investigation and higher quality prospective studies",
-     "text": "Further investigation and higher quality prospective studies are needed",
-     "id": "L2"
+     "quote": "Meth poses a clear risk of hemorrhagic stroke and is described as a factor in ischemic stroke.",
+     "text": "Meth poses a clear risk of hemorrhagic stroke and is also described as a factor in ischemic stroke.",
+     "id": "F3",
+     "second_hand": ""
     }
    ],
-   "money": [
-    "The author(s) declare that no financial support was received for the research, authorship, and/or publication of this article."
-   ]
+   "limits": [
+    {
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "The increased risk of ischemic stroke related to meth use is less well supported in the literature",
+     "text": "The increased risk of ischemic stroke related to meth use is less well supported in the literature.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "A"
   },
   {
-   "tag": "B",
+   "read": "full",
    "ref": {
     "id": "lin_2020",
     "type": "article-journal",
@@ -189,10 +186,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-15",
+     "verified_on": "2026-11-27",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-15"
+      "checked_on": "2026-11-27"
      }
     },
     "volume": "2",
@@ -204,327 +201,194 @@
    "pmcid": "PMC7871710",
    "title": "Moyamoya vasculopathy in a young Caucasian woman with significant methamphetamine use",
    "year": 2020,
+   "journal": "BMJ neurology open",
    "kind": "other",
    "people": true,
    "near": 0.783,
+   "money": [],
    "design": {
-    "passage": 1,
+    "passage": 2,
     "where": "Abstract",
-    "quote": "We present a rare case of moyamoya syndrome in a young Caucasian woman with methamphetamine-associated stroke.",
-    "text": "case report"
+    "quote": "A 31-year-old Caucasian woman presented with progressive right arm weakness, speech disturbance and seizures on a background of escalating methamphetamine use in the 9 months prior to admission.",
+    "text": "case report of a single young Caucasian woman with methamphetamine-associated stroke"
    },
    "findings": [
     {
      "passage": 1,
      "where": "Abstract",
-     "quote": "Methamphetamine use is a recognised cause of stroke in young people",
-     "text": "Methamphetamine use is a recognised cause of stroke in young people.",
-     "id": "F6"
+     "quote": "Methamphetamine use is a recognised cause of stroke in young people, but its pathophysiology is not fully understood.",
+     "text": "Methamphetamine use can cause stroke in young people.",
+     "id": "F4",
+     "second_hand": ""
     },
-    {
-     "passage": 16,
-     "where": "Discussion and conclusion",
-     "quote": "A review of all fatal methamphetamine-associated strokes in Australia from 2009 to 2015 suggested that drug-induced hypertensive events increased the likelihood of vessel wall damage and development of cerebral vasculitis",
-     "text": "A review of all fatal methamphetamine-associated strokes in Australia from 2009 to 2015 suggested that drug-induced hypertensive events increased the likelihood of vessel wall damage and development of cerebral vasculitis.",
-     "id": "F7"
-    },
-    {
-     "passage": 9,
-     "where": "Case presentation",
-     "quote": "At outpatient review 4 months later, she had clinically improved and experienced no further stroke symptoms while on dual antiplatelet therapy and ceasing methamphetamine",
-     "text": "The patient had clinically improved and experienced no further stroke symptoms while on dual antiplatelet therapy and ceasing methamphetamine at outpatient review 4 months later.",
-     "id": "F8"
-    }
-   ],
-   "limits": [
     {
      "passage": 15,
      "where": "Discussion and conclusion",
-     "quote": "incidence of moyamoya vasculopathy in patients with psychostimulant use is unknown due to a lack of sufficient data",
-     "text": "The incidence of moyamoya vasculopathy in patients with psychostimulant use is unknown due to a lack of sufficient data.",
-     "id": "L3"
+     "quote": "Methamphetamine use is a recognised cause of stroke in young people and accounts for significant worldwide morbidity.",
+     "text": "Methamphetamine use is a recognised cause of stroke in young people and contributes to worldwide morbidity.",
+     "id": "F5",
+     "second_hand": ""
     },
     {
      "passage": 16,
      "where": "Discussion and conclusion",
-     "quote": "The pathophysiology of methamphetamine-associated stroke is uncertain",
-     "text": "The pathophysiology of methamphetamine-associated stroke is uncertain.",
-     "id": "L4"
-    }
-   ],
-   "money": []
-  },
-  {
-   "tag": "C",
-   "ref": {
-    "id": "schwarzbach_2020",
-    "type": "article-journal",
-    "title": "Methamphetamine-related cardiovascular diseases",
-    "author": [
-     {
-      "family": "Schwarzbach",
-      "given": "Valentin"
-     },
-     {
-      "family": "Lenk",
-      "given": "Karsten"
-     },
-     {
-      "family": "Laufs",
-      "given": "Ulrich"
-     }
-    ],
-    "container-title": "ESC Heart Failure",
-    "issued": {
-     "date-parts": [
-      [
-       2020
-      ]
-     ]
-    },
-    "DOI": "10.1002/ehf2.12572",
-    "verification": {
-     "status": "metadata-verified",
-     "metadata_source": "crossref",
-     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
-     "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-15",
-     "retraction_check": {
-      "status": "clear",
-      "checked_on": "2026-11-15"
-     }
-    },
-    "volume": "7",
-    "issue": "2",
-    "page": "407-414",
-    "PMCID": "PMC7160483"
-   },
-   "doi": "10.1002/ehf2.12572",
-   "pmcid": "PMC7160483",
-   "title": "Methamphetamine-related cardiovascular diseases",
-   "year": 2020,
-   "kind": "review",
-   "people": true,
-   "near": 0.667,
-   "design": {
-    "passage": 2,
-    "where": "Abstract",
-    "quote": "This article is a presentation of a case report and review of the current literature.",
-    "text": "case report and review of the current literature"
-   },
-   "findings": [
-    {
-     "passage": 17,
-     "where": "Cardiac complications › Stroke",
-     "quote": "MA intake is associated with both haemorrhagic and ischaemic strokes.",
-     "text": "MA intake is associated with both haemorrhagic and ischaemic strokes.",
-     "id": "F9"
-    },
-    {
-     "passage": 17,
-     "where": "Cardiac complications › Stroke",
-     "quote": "In a review of case reports and series, 80% of reported strokes in young patients taking MA were haemorrhagic.",
-     "text": "In a review of case reports and series, 80% of reported strokes in young patients taking MA were haemorrhagic.",
-     "id": "F10"
-    },
-    {
-     "passage": 17,
-     "where": "Cardiac complications › Stroke",
-     "quote": "Haemorrhagic stroke may be provoked by MA‐associated arterial hypertension.",
-     "text": "Haemorrhagic stroke may be provoked by MA‐associated arterial hypertension.",
-     "id": "F11"
-    },
-    {
-     "passage": 17,
-     "where": "Cardiac complications › Stroke",
-     "quote": "Ischaemic stroke on the other hand may be caused by vasoconstriction, vasculitis, or thromboembolism.",
-     "text": "Ischaemic stroke on the other hand may be caused by vasoconstriction, vasculitis, or thromboembolism.",
-     "id": "F12"
+     "quote": "A review of all fatal methamphetamine-associated strokes in Australia from 2009 to 2015 suggested that drug‑induced hypertensive events increased the likelihood of vessel wall damage and development of cerebral vasculitis.",
+     "text": "The mechanisms by which methamphetamine causes stroke may include drug‑induced hypertension leading to vessel wall damage and cerebral vasculitis.",
+     "id": "F6",
+     "second_hand": "A review of all fatal methamphetamine-associated strokes in Australia from 2009 to 2015 suggested that drug-induced hypertensive events increased the likelihood of vessel wall dama"
     }
    ],
    "limits": [
     {
-     "passage": 2,
-     "where": "Abstract",
-     "quote": "Although many aspects of the underlying pathophysiology remain unknown,",
-     "text": "Many aspects of the underlying pathophysiology remain unknown.",
-     "id": "L5"
+     "passage": 16,
+     "where": "Discussion and conclusion",
+     "quote": "The pathophysiology of methamphetamine-associated stroke is uncertain.",
+     "text": "The pathophysiology of methamphetamine‑associated stroke is uncertain.",
+     "id": "L2",
+     "second_hand": ""
     }
    ],
-   "money": [
-    "None declared."
-   ]
+   "tag": "B"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "frank_methamphetamine",
+    "type": "webpage",
+    "title": "Methamphetamine",
+    "author": [
+     {
+      "literal": "FRANK"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      []
+     ]
+    },
+    "URL": "https://www.talktofrank.com/drug/methamphetamine",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       27
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-27"
+    }
+   },
+   "title": "Methamphetamine",
+   "year": null,
+   "kind": "official",
+   "people": true,
+   "near": 0.661,
+   "name": "FRANK",
+   "short": "FRANK",
+   "tier": 1,
+   "address": "https://www.talktofrank.com/drug/methamphetamine",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 9,
+     "where": "Mixing methamphetamine with other drugs / Physical health risks",
+     "quote": "In cases of overdose: stroke, lung, kidney and gastrointestinal damage can develop, and coma and death can occur.",
+     "text": "Methamphetamine can cause stroke in cases of overdose.",
+     "id": "F7",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "C"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "drugscience_methamphetamine",
+    "type": "webpage",
+    "title": "Methamphetamine",
+    "author": [
+     {
+      "literal": "Drug Science"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      []
+     ]
+    },
+    "URL": "https://www.drugscience.org.uk/drugs/methamphetamine",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       27
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-27"
+    }
+   },
+   "title": "Methamphetamine",
+   "year": null,
+   "kind": "official",
+   "people": true,
+   "near": 0.668,
+   "name": "Drug Science",
+   "short": "Drug Science, a UK charity of scientists",
+   "tier": 2,
+   "address": "https://www.drugscience.org.uk/drugs/methamphetamine",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 4,
+     "where": "What are the risks?",
+     "quote": "This is generally due to methamphetamine induced heart attacks or strokes resulting from the rise in blood pressure and constriction of blood vessels.",
+     "text": "Methamphetamine can cause strokes due to increased blood pressure and blood‑vessel constriction.",
+     "id": "F8",
+     "second_hand": ""
+    },
+    {
+     "passage": 4,
+     "where": "What are the risks?",
+     "quote": "People with pre-existing heart problems, and people at increased risk of heart disease and strokes, are more likely to experience such complications from taking methamphetamine.",
+     "text": "People with pre‑existing heart problems or higher risk of heart disease and strokes are more likely to experience stroke complications from methamphetamine.",
+     "id": "F9",
+     "second_hand": ""
+    },
+    {
+     "passage": 6,
+     "where": "What are the risks?",
+     "quote": "Methamphetamine is potentially more risky for people who have pre-existing heart conditions, or who have or are at risk of circulation problems including high blood pressure.",
+     "text": "Methamphetamine is more risky for people with pre‑existing heart conditions or at risk of circulation problems such as high blood pressure.",
+     "id": "F10",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "D"
   }
  ],
- "parts": [
-  {
-   "part": "short",
-   "text": "Methamphetamine use can be linked to stroke in young people, including both hemorrhagic and ischemic types.",
-   "uses": [
-    "F1",
-    "F6",
-    "F9"
-   ],
-   "rests_on": [
-    {
-     "label": "F1",
-     "ref": "hemphill_2024",
-     "where": "Abstract",
-     "quote": "Meth-related strokes are a particular concern for younger patients with stroke and may be a partial explanation for increasing stroke rates in this age group",
-     "sha": "3d6fea9590804200"
-    },
-    {
-     "label": "F6",
-     "ref": "lin_2020",
-     "where": "Abstract",
-     "quote": "Methamphetamine use is a recognised cause of stroke in young people",
-     "sha": "bd72f1825a2565ca"
-    },
-    {
-     "label": "F9",
-     "ref": "schwarzbach_2020",
-     "where": "Cardiac complications › Stroke",
-     "quote": "MA intake is associated with both haemorrhagic and ischaemic strokes.",
-     "sha": "26c2335f602dea76"
-    }
-   ]
-  },
-  {
-   "part": "but",
-   "text": "Most evidence comes from case reports and series, and larger population studies have not shown a clear association for ischemic stroke.",
-   "uses": [
-    "L1",
-    "L2"
-   ],
-   "rests_on": [
-    {
-     "label": "L1",
-     "ref": "hemphill_2024",
-     "where": "Methamphetamine-related ischemic stroke › Epidemiology of methamphetamine-related ischemic stroke",
-     "quote": "Two population-based studies report a lack of statistical association between meth use and ischemic stroke. It must be noted that both studies identified their cohorts using ICD codes for hospitalized patients, which introduces bias in patient selection",
-     "sha": "4fdfec691455cc4b"
-    },
-    {
-     "label": "L2",
-     "ref": "hemphill_2024",
-     "where": "Conclusion",
-     "quote": "Unfortunately, meth is becoming increasingly relevant to stroke in the young, hastening the urgency for further investigation and higher quality prospective studies",
-     "sha": "a245cbc3c7a9f5b3"
-    }
-   ]
-  },
-  {
-   "part": "how1",
-   "text": "Paper A reviewed case studies and series, finding meth increases intracerebral hemorrhage risk 2–5×, most reported strokes were hemorrhagic, and ischemic strokes were also described.",
-   "uses": [
-    "DA",
-    "F1",
-    "F2",
-    "F3",
-    "F4"
-   ],
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "hemphill_2024",
-     "where": "Abstract",
-     "quote": "The literature reviewed herein is comprised of case studies and series",
-     "sha": "3d6fea9590804200"
-    },
-    {
-     "label": "F1",
-     "ref": "hemphill_2024",
-     "where": "Abstract",
-     "quote": "Meth-related strokes are a particular concern for younger patients with stroke and may be a partial explanation for increasing stroke rates in this age group",
-     "sha": "3d6fea9590804200"
-    },
-    {
-     "label": "F2",
-     "ref": "hemphill_2024",
-     "where": "Methamphetamine-related hemorrhagic stroke › Epidemiology & characteristics of methamphetamine-related hemorrhagic stroke",
-     "quote": "Meth increases the likelihood of intracerebral hemorrhage (ICH) by as much as 2–5 times",
-     "sha": "9e00765746f19d7d"
-    },
-    {
-     "label": "F3",
-     "ref": "hemphill_2024",
-     "where": "Methamphetamine-related hemorrhagic stroke › Epidemiology & characteristics of methamphetamine-related hemorrhagic stroke",
-     "quote": "over 80% of case reports and series on meth-related strokes were hemorrhagic",
-     "sha": "9e00765746f19d7d"
-    },
-    {
-     "label": "F4",
-     "ref": "hemphill_2024",
-     "where": "Methamphetamine-related ischemic stroke › Epidemiology of methamphetamine-related ischemic stroke",
-     "quote": "ischemic stroke has been reported as a sequela of both recent and chronic meth use in multiple case series",
-     "sha": "4fdfec691455cc4b"
-    }
-   ]
-  },
-  {
-   "part": "how2",
-   "text": "Paper B presented a case of a young woman where methamphetamine use was identified as a recognised cause of stroke.",
-   "uses": [
-    "DB",
-    "F6"
-   ],
-   "rests_on": [
-    {
-     "label": "DB",
-     "ref": "lin_2020",
-     "where": "Abstract",
-     "quote": "We present a rare case of moyamoya syndrome in a young Caucasian woman with methamphetamine-associated stroke.",
-     "sha": "bd72f1825a2565ca"
-    },
-    {
-     "label": "F6",
-     "ref": "lin_2020",
-     "where": "Abstract",
-     "quote": "Methamphetamine use is a recognised cause of stroke in young people",
-     "sha": "bd72f1825a2565ca"
-    }
-   ]
-  },
-  {
-   "part": "how3",
-   "text": "Paper C reviewed case reports, reporting that methamphetamine intake is linked to both hemorrhagic and ischemic strokes, with about 80% of young patients’ strokes being hemorrhagic.",
-   "uses": [
-    "DC",
-    "F9",
-    "F10"
-   ],
-   "rests_on": [
-    {
-     "label": "DC",
-     "ref": "schwarzbach_2020",
-     "where": "Abstract",
-     "quote": "This article is a presentation of a case report and review of the current literature.",
-     "sha": "fb6dd6527f7c513b"
-    },
-    {
-     "label": "F9",
-     "ref": "schwarzbach_2020",
-     "where": "Cardiac complications › Stroke",
-     "quote": "MA intake is associated with both haemorrhagic and ischaemic strokes.",
-     "sha": "26c2335f602dea76"
-    },
-    {
-     "label": "F10",
-     "ref": "schwarzbach_2020",
-     "where": "Cardiac complications › Stroke",
-     "quote": "In a review of case reports and series, 80% of reported strokes in young patients taking MA were haemorrhagic.",
-     "sha": "26c2335f602dea76"
-    }
-   ]
-  }
- ],
- "complete": true,
- "missing": "",
+ "parts": [],
+ "complete": false,
+ "missing": "how common strokes are among young meth users",
  "wanted": [
   {
    "doi": "10.1136/jnnp-2017-316071",
    "apa": "Lappin, J. M., Darke, S., & Farrell, M. (2017). Stroke and methamphetamine use in young adults: A review. Journal of Neurology, Neurosurgery & Psychiatry, 88(12), 1079–1091. https://doi.org/10.1136/jnnp-2017-316071",
-   "near": 0.795,
+   "near": 0.798,
    "why": "a review or meta-analysis in people; nearness to the question 0.80; cited 106 times; its full text is not open",
    "file": "lappin_2017_jnnp_2017_316071.pdf"
   },
@@ -543,5 +407,586 @@
    "file": "mcgee_2004_01_paf_0000137206_16785_2f.pdf"
   }
  ],
- "person": null
+ "person": null,
+ "history": [
+  {
+   "on": "2026-11-15",
+   "lane": null,
+   "status": "published",
+   "why": "passed every gate",
+   "short": "Methamphetamine use can be linked to stroke in young people, including both hemorrhagic and ischemic types.",
+   "complete": true
+  }
+ ],
+ "looked": [
+  {
+   "title": "A review of methamphetamine use and stroke in the young",
+   "read": "full",
+   "kind": "review",
+   "at": "10.3389/fneur.2024.1397677",
+   "kept": 3,
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "Review of case studies and series on meth use and stroke in young people",
+     "quote": "The literature reviewed herein is comprised of case studies and series, and it suggests that hemorrhagic stroke ... is the more common type of neurovascular complication of meth use.",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
+  },
+  {
+   "title": "Moyamoya vasculopathy in a young Caucasian woman with significant methamphetamine use",
+   "read": "full",
+   "kind": "other",
+   "at": "10.1136/bmjno-2020-000066",
+   "kept": 3,
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "In this 31‑year‑old woman, chronic methamphetamine use was associated with stroke and moyamoya vasculopathy.",
+     "quote": "A 31‑year‑old Caucasian woman presented with progressive right arm weakness, speech disturbance and seizures on a background of escalating methamphetamine use in the 9 months prior to admission.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
+  },
+  {
+   "title": "Methamphetamine",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.talktofrank.com/drug/methamphetamine",
+   "kept": 1,
+   "thrown": [
+    {
+     "kind": "limit",
+     "text": "Stroke is reported only in overdose situations, not necessarily in typical use.",
+     "quote": "In cases of overdose: stroke, lung, kidney and gastrointestinal damage can develop, and coma and death can occur.",
+     "why": "the sentence is not carried by its quote and passage"
+    },
+    {
+     "kind": "limit",
+     "text": "The risk of stroke increases with higher doses of methamphetamine.",
+     "quote": "the higher the dose, the greater these effects.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
+  },
+  {
+   "title": "Methamphetamine",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.drugscience.org.uk/drugs/methamphetamine",
+   "kept": 3,
+   "thrown": []
+  }
+ ],
+ "plan": {
+  "short": [
+   "F1",
+   "F8"
+  ],
+  "direct": "Yes",
+  "but": [
+   "L1"
+  ],
+  "how": [
+   [
+    "F8"
+   ],
+   [
+    "F7"
+   ],
+   [
+    "F1",
+    "F3"
+   ],
+   [
+    "DB",
+    "F4",
+    "F6"
+   ]
+  ],
+  "unanswered": "how common strokes are among young meth users"
+ },
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.6896,
+   "but": 0.355,
+   "how1": 0.0313,
+   "how2": 0.9644,
+   "how3": 0.5444,
+   "how4": 0.7259
+  },
+  "scores_quotes_alone": {
+   "short": 0.5968,
+   "but": 0.456,
+   "how1": 0.039,
+   "how2": 0.9478,
+   "how3": 0.6626,
+   "how4": 0.2341
+  }
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Yes. Meth can cause stroke in young people. Drug Science says this happens from high blood pressure and tight blood vessels.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "hemphill_2024",
+       "where": "Abstract",
+       "quote": "Meth-related strokes are a particular concern for younger patients with stroke and may be a partial explanation for increasing stroke rates in this age group.",
+       "sha": "3d6fea9590804200"
+      },
+      {
+       "label": "F8",
+       "ref": "drugscience_methamphetamine",
+       "where": "What are the risks?",
+       "quote": "This is generally due to methamphetamine induced heart attacks or strokes resulting from the rise in blood pressure and constriction of blood vessels.",
+       "sha": "c2436f33a9c9629c"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "Drug Science describes strokes in the context of fatal overdoses generally; it does not say that the blood-pressure rise and vessel constriction explain strokes specifically in young people."
+    },
+    {
+     "part": "but",
+     "text": "The link between meth and stroke from a blocked blood vessel is less well supported in the literature.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "hemphill_2024",
+       "where": "Abstract",
+       "quote": "The increased risk of ischemic stroke related to meth use is less well supported in the literature",
+       "sha": "3d6fea9590804200"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The review does say the meth–ischemic-stroke link is less well supported, but this sentence does not name the paper by author and year, as the editor requires."
+    },
+    {
+     "part": "how1",
+     "text": "Drug Science, a UK charity of scientists says meth can cause strokes due to increased blood pressure and blood-vessel constriction.",
+     "rests_on": [
+      {
+       "label": "F8",
+       "ref": "drugscience_methamphetamine",
+       "where": "What are the risks?",
+       "quote": "This is generally due to methamphetamine induced heart attacks or strokes resulting from the rise in blood pressure and constriction of blood vessels.",
+       "sha": "c2436f33a9c9629c"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage limits its claim to fatal overdoses generally and does not say meth can cause strokes in all circumstances. It also does not identify Drug Science as a UK charity of scientists."
+    },
+    {
+     "part": "how2",
+     "text": "FRANK says methamphetamine can cause stroke in cases of overdose.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "frank_methamphetamine",
+       "where": "Mixing methamphetamine with other drugs / Physical health risks",
+       "quote": "In cases of overdose: stroke, lung, kidney and gastrointestinal damage can develop, and coma and death can occur.",
+       "sha": "56d64158d1cdd7b9"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2024 review says meth is a particular concern for younger patients and poses a clear risk of bleeding in the brain.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "hemphill_2024",
+       "where": "Abstract",
+       "quote": "Meth-related strokes are a particular concern for younger patients with stroke and may be a partial explanation for increasing stroke rates in this age group.",
+       "sha": "3d6fea9590804200"
+      },
+      {
+       "label": "F3",
+       "ref": "hemphill_2024",
+       "where": "Conclusion",
+       "quote": "Meth poses a clear risk of hemorrhagic stroke and is described as a factor in ischemic stroke.",
+       "sha": "a245cbc3c7a9f5b3"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage supports a clear risk of hemorrhagic stroke, but the sentence does not name the review by author and year, as the editor requires."
+    },
+    {
+     "part": "how4",
+     "text": "A 2020 case report of one young woman found meth use is a recognised cause of stroke, though the exact path is not fully understood.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "lin_2020",
+       "where": "Abstract",
+       "quote": "A 31-year-old Caucasian woman presented with progressive right arm weakness, speech disturbance and seizures on a background of escalating methamphetamine use in the 9 months prior to admission.",
+       "sha": "2cc0f4f90255bd7c"
+      },
+      {
+       "label": "F4",
+       "ref": "lin_2020",
+       "where": "Abstract",
+       "quote": "Methamphetamine use is a recognised cause of stroke in young people, but its pathophysiology is not fully understood.",
+       "sha": "bd72f1825a2565ca"
+      },
+      {
+       "label": "F6",
+       "ref": "lin_2020",
+       "where": "Discussion and conclusion",
+       "quote": "A review of all fatal methamphetamine-associated strokes in Australia from 2009 to 2015 suggested that drug‑induced hypertensive events increased the likelihood of vessel wall damage and development of cerebral vasculitis.",
+       "sha": "c1563f97bfc87500"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The editor warns that the case report concerns one woman and that its general statement is background, not a finding of that case. The sentence also does not name the paper by author and year."
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Yes. Meth can cause stroke in young people. Drug Science, a UK charity of scientists says this is due to high blood pressure and tight blood vessels.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "hemphill_2024",
+       "where": "Abstract",
+       "quote": "Meth-related strokes are a particular concern for younger patients with stroke and may be a partial explanation for increasing stroke rates in this age group.",
+       "sha": "3d6fea9590804200"
+      },
+      {
+       "label": "F8",
+       "ref": "drugscience_methamphetamine",
+       "where": "What are the risks?",
+       "quote": "This is generally due to methamphetamine induced heart attacks or strokes resulting from the rise in blood pressure and constriction of blood vessels.",
+       "sha": "c2436f33a9c9629c"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The review describes meth-related strokes as a concern for younger patients and says they may partly explain rising stroke rates; Drug Science discusses fatal overdoses, not young people generally. The sentence carries that source's explana"
+    },
+    {
+     "part": "but",
+     "text": "A 2024 review says the link between meth and blocked blood vessel strokes is less well supported in the literature.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "hemphill_2024",
+       "where": "Abstract",
+       "quote": "The increased risk of ischemic stroke related to meth use is less well supported in the literature",
+       "sha": "3d6fea9590804200"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage supports the point about ischemic (blocked blood vessel) stroke, but the sentence does not name the paper by its authors and year, as the editor's note requires."
+    },
+    {
+     "part": "how1",
+     "text": "Drug Science, a UK charity of scientists says meth can cause strokes from high blood pressure and tight blood vessels.",
+     "rests_on": [
+      {
+       "label": "F8",
+       "ref": "drugscience_methamphetamine",
+       "where": "What are the risks?",
+       "quote": "This is generally due to methamphetamine induced heart attacks or strokes resulting from the rise in blood pressure and constriction of blood vessels.",
+       "sha": "c2436f33a9c9629c"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "Drug Science makes this claim in the context of fatal overdoses. The sentence drops that scope and presents it as a general claim about meth causing strokes."
+    },
+    {
+     "part": "how2",
+     "text": "FRANK says meth can cause stroke in cases of overdose.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "frank_methamphetamine",
+       "where": "Mixing methamphetamine with other drugs / Physical health risks",
+       "quote": "In cases of overdose: stroke, lung, kidney and gastrointestinal damage can develop, and coma and death can occur.",
+       "sha": "56d64158d1cdd7b9"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2024 review says meth is a clear risk for bleeding in the brain and a factor in blocked blood vessel strokes.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "hemphill_2024",
+       "where": "Abstract",
+       "quote": "Meth-related strokes are a particular concern for younger patients with stroke and may be a partial explanation for increasing stroke rates in this age group.",
+       "sha": "3d6fea9590804200"
+      },
+      {
+       "label": "F3",
+       "ref": "hemphill_2024",
+       "where": "Conclusion",
+       "quote": "Meth poses a clear risk of hemorrhagic stroke and is described as a factor in ischemic stroke.",
+       "sha": "a245cbc3c7a9f5b3"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The review supports the claims about hemorrhagic and ischemic stroke, but the sentence does not name the paper by its authors and year, as the editor's note requires."
+    },
+    {
+     "part": "how4",
+     "text": "A 2020 case report of one young woman found meth can cause stroke. It cites a review suggesting high blood pressure damages vessels.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "lin_2020",
+       "where": "Abstract",
+       "quote": "A 31-year-old Caucasian woman presented with progressive right arm weakness, speech disturbance and seizures on a background of escalating methamphetamine use in the 9 months prior to admission.",
+       "sha": "2cc0f4f90255bd7c"
+      },
+      {
+       "label": "F4",
+       "ref": "lin_2020",
+       "where": "Abstract",
+       "quote": "Methamphetamine use is a recognised cause of stroke in young people, but its pathophysiology is not fully understood.",
+       "sha": "bd72f1825a2565ca"
+      },
+      {
+       "label": "F6",
+       "ref": "lin_2020",
+       "where": "Discussion and conclusion",
+       "quote": "A review of all fatal methamphetamine-associated strokes in Australia from 2009 to 2015 suggested that drug‑induced hypertensive events increased the likelihood of vessel wall damage and development of cerebral vasculitis.",
+       "sha": "c1563f97bfc87500"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The case report describes one young woman with meth-associated stroke; it does not establish generally that meth can cause stroke. Its cited review only suggested that drug-induced hypertensive events increased the likelihood of vessel-wall"
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Yes. Meth can cause stroke in young people. Drug Science says it can cause strokes from high blood pressure.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "hemphill_2024",
+       "where": "Abstract",
+       "quote": "Meth-related strokes are a particular concern for younger patients with stroke and may be a partial explanation for increasing stroke rates in this age group.",
+       "sha": "3d6fea9590804200"
+      },
+      {
+       "label": "F8",
+       "ref": "drugscience_methamphetamine",
+       "where": "What are the risks?",
+       "quote": "This is generally due to methamphetamine induced heart attacks or strokes resulting from the rise in blood pressure and constriction of blood vessels.",
+       "sha": "c2436f33a9c9629c"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The review supports meth-related stroke as a possible complication in younger patients, but the Drug Science passage places its statement about strokes resulting from raised blood pressure in the context of fatal overdoses. Sentence 1 omits"
+    },
+    {
+     "part": "but",
+     "text": "The link between meth and blocked blood vessel stroke is less well supported in the literature.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "hemphill_2024",
+       "where": "Abstract",
+       "quote": "The increased risk of ischemic stroke related to meth use is less well supported in the literature",
+       "sha": "3d6fea9590804200"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "Drug Science, a UK charity of scientists says meth can cause strokes from high blood pressure and tight blood vessels.",
+     "rests_on": [
+      {
+       "label": "F8",
+       "ref": "drugscience_methamphetamine",
+       "where": "What are the risks?",
+       "quote": "This is generally due to methamphetamine induced heart attacks or strokes resulting from the rise in blood pressure and constriction of blood vessels.",
+       "sha": "c2436f33a9c9629c"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage does not identify Drug Science as a UK charity of scientists. It also describes strokes resulting from raised blood pressure and vessel constriction in the context of fatal overdoses, a scope the sentence omits."
+    },
+    {
+     "part": "how2",
+     "text": "FRANK says meth can cause stroke in cases of overdose.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "frank_methamphetamine",
+       "where": "Mixing methamphetamine with other drugs / Physical health risks",
+       "quote": "In cases of overdose: stroke, lung, kidney and gastrointestinal damage can develop, and coma and death can occur.",
+       "sha": "56d64158d1cdd7b9"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2024 review says meth is a concern for young people and poses a clear risk of bleeding in the brain.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "hemphill_2024",
+       "where": "Abstract",
+       "quote": "Meth-related strokes are a particular concern for younger patients with stroke and may be a partial explanation for increasing stroke rates in this age group.",
+       "sha": "3d6fea9590804200"
+      },
+      {
+       "label": "F3",
+       "ref": "hemphill_2024",
+       "where": "Conclusion",
+       "quote": "Meth poses a clear risk of hemorrhagic stroke and is described as a factor in ischemic stroke.",
+       "sha": "a245cbc3c7a9f5b3"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage says meth-related stroke is a particular concern for younger patients with stroke, not young people generally. The sentence also does not identify the paper by author and year, as the editor's note requires."
+    },
+    {
+     "part": "how4",
+     "text": "A 2020 case report of one young woman found meth use is a recognised cause of stroke in young people.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "lin_2020",
+       "where": "Abstract",
+       "quote": "A 31-year-old Caucasian woman presented with progressive right arm weakness, speech disturbance and seizures on a background of escalating methamphetamine use in the 9 months prior to admission.",
+       "sha": "2cc0f4f90255bd7c"
+      },
+      {
+       "label": "F4",
+       "ref": "lin_2020",
+       "where": "Abstract",
+       "quote": "Methamphetamine use is a recognised cause of stroke in young people, but its pathophysiology is not fully understood.",
+       "sha": "bd72f1825a2565ca"
+      },
+      {
+       "label": "F6",
+       "ref": "lin_2020",
+       "where": "Discussion and conclusion",
+       "quote": "A review of all fatal methamphetamine-associated strokes in Australia from 2009 to 2015 suggested that drug‑induced hypertensive events increased the likelihood of vessel wall damage and development of cerebral vasculitis.",
+       "sha": "c1563f97bfc87500"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The statement that methamphetamine use is a recognised cause of stroke in young people is background in the abstract, not a finding established by the case of one woman. The sentence also does not identify the paper by author and year, as t"
+    }
+   ]
+  }
+ ],
+ "dropped": [
+  {
+   "try": 3,
+   "part": "how1",
+   "text": "Drug Science, a UK charity of scientists says meth can cause strokes from high blood pressure and tight blood vessels.",
+   "rests_on": [
+    {
+     "label": "F8",
+     "ref": "drugscience_methamphetamine",
+     "where": "What are the risks?",
+     "quote": "This is generally due to methamphetamine induced heart attacks or strokes resulting from the rise in blood pressure and constriction of blood vessels.",
+     "sha": "c2436f33a9c9629c"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The passage does not identify Drug Science as a UK charity of scientists. It also describes strokes resulting from raised blood pressure and vessel constriction in the context of fatal overdoses, a scope the sentence omits."
+  },
+  {
+   "try": 3,
+   "part": "how3",
+   "text": "A 2024 review says meth is a concern for young people and poses a clear risk of bleeding in the brain.",
+   "rests_on": [
+    {
+     "label": "F1",
+     "ref": "hemphill_2024",
+     "where": "Abstract",
+     "quote": "Meth-related strokes are a particular concern for younger patients with stroke and may be a partial explanation for increasing stroke rates in this age group.",
+     "sha": "3d6fea9590804200"
+    },
+    {
+     "label": "F3",
+     "ref": "hemphill_2024",
+     "where": "Conclusion",
+     "quote": "Meth poses a clear risk of hemorrhagic stroke and is described as a factor in ischemic stroke.",
+     "sha": "a245cbc3c7a9f5b3"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The passage says meth-related stroke is a particular concern for younger patients with stroke, not young people generally. The sentence also does not identify the paper by author and year, as the editor's note requires."
+  },
+  {
+   "try": 3,
+   "part": "how4",
+   "text": "A 2020 case report of one young woman found meth use is a recognised cause of stroke in young people.",
+   "rests_on": [
+    {
+     "label": "DB",
+     "ref": "lin_2020",
+     "where": "Abstract",
+     "quote": "A 31-year-old Caucasian woman presented with progressive right arm weakness, speech disturbance and seizures on a background of escalating methamphetamine use in the 9 months prior to admission.",
+     "sha": "2cc0f4f90255bd7c"
+    },
+    {
+     "label": "F4",
+     "ref": "lin_2020",
+     "where": "Abstract",
+     "quote": "Methamphetamine use is a recognised cause of stroke in young people, but its pathophysiology is not fully understood.",
+     "sha": "bd72f1825a2565ca"
+    },
+    {
+     "label": "F6",
+     "ref": "lin_2020",
+     "where": "Discussion and conclusion",
+     "quote": "A review of all fatal methamphetamine-associated strokes in Australia from 2009 to 2015 suggested that drug‑induced hypertensive events increased the likelihood of vessel wall damage and development of cerebral vasculitis.",
+     "sha": "c1563f97bfc87500"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The statement that methamphetamine use is a recognised cause of stroke in young people is background in the abstract, not a finding established by the case of one woman. The sentence also does not identify the paper by author and year, as t"
+  }
+ ],
+ "place": {
+  "home": "methamphetamine",
+  "also": [],
+  "cls": null,
+  "why": "it names a drug that has a page"
+ }
 }
