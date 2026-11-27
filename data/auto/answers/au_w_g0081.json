@@ -15,37 +15,39 @@
  ],
  "drugs": [],
  "made": {
-  "on": "2026-11-24",
+  "on": "2026-11-27",
   "models": {
-   "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "writer": "groq:qwen/qwen3.8-27b",
-   "checker": "groq:openai/gpt-oss-120b",
-   "planner": "groq:openai/gpt-oss-120b",
-   "also1": "gemini:gemini-3.6-flash",
-   "team": "team H2",
-   "reader_2": "groq:openai/gpt-oss-20b",
-   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-   "also1_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
+   "reader": "openrouter:openai/gpt-oss-120b",
+   "writer": "openrouter:meta-llama/llama-3.3-70b-instruct",
+   "checker": "openrouter:openai/gpt-6-luna",
+   "planner": "openrouter:openai/gpt-oss-120b",
+   "team": "team R",
+   "reader_2": "openrouter:openai/gpt-oss-120b",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "45340770315",
-  "read_seconds": 65,
+  "run": "45956915073",
+  "read_by": {
+   "gpt-oss-120b": 2,
+   "gemma-4-31b-it": 1
+  },
+  "read_seconds": 100,
   "from": {
-   "papers": 1,
+   "papers": 2,
    "summaries": 0,
    "official": 0
   },
-  "neurons": 84.1,
-  "seconds": 90
+  "neurons": 0.0,
+  "seconds": 139
  },
  "status": "published",
  "why": "passed every gate",
  "gates": {
-  "time": "3 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "3 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
-  "panel": "further readers, each of which must accept every sentence too: gemini-3.6-flash accepted 4 of 6",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.63, but 0.92, how1 0.77, how2 0.96, how3 0.88, how4 0.84",
-  "check": "every sentence kept was accepted by the second reader (groq:openai/gpt-oss-120b) and by gemini:gemini-3.6-flash; 2 How-do-we-know line(s) dropped; it also found that the short answer answers the question and that the But is about that answer",
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-120b read from there",
+  "time": "2 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
+  "read": "6 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 0 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.75, but 0.85, how1 0.76, how2 0.77",
+  "check": "every sentence kept was accepted by the second reader (openrouter:openai/gpt-6-luna); it also found that the short answer answers the question and that the But is about that answer",
   "rules": "nothing against it",
   "checked": "set beside the checked claims of the same page: nothing against them"
  },
@@ -53,215 +55,359 @@
   {
    "read": "full",
    "ref": {
-    "id": "wang_2021",
+    "id": "bian_2020",
     "type": "article-journal",
-    "title": "Biological activity, hepatotoxicity, and structure-activity relationship of kavalactones and flavokavins, the two main bioactive components in kava (piper methysticum)",
+    "title": "Kava as a clinical nutrient: Promises and challenges",
     "author": [
      {
+      "family": "Bian",
+      "given": "Tengfei"
+     },
+     {
+      "family": "Corral",
+      "given": "Pedro"
+     },
+     {
       "family": "Wang",
-      "given": "Yingli"
+      "given": "Yuzhi"
      },
      {
-      "family": "Su",
-      "given": "Chao"
+      "family": "Botello",
+      "given": "Jordy"
      },
      {
-      "family": "Zhang",
-      "given": "Bo"
+      "family": "Kingston",
+      "given": "Rick"
      },
      {
-      "family": "Niu",
-      "given": "Yang"
+      "family": "Daniels",
+      "given": "Tyler"
      },
      {
-      "family": "Ren",
-      "given": "Ruru"
+      "family": "Salloum",
+      "given": "Ramzi G."
      },
      {
-      "family": "Zhao",
-      "given": "Xiaojun"
+      "family": "Johnston",
+      "given": "Edward"
      },
      {
-      "family": "Yang",
-      "given": "Lingling"
+      "family": "Huo",
+      "given": "Zhiguang"
      },
      {
-      "family": "Zhang",
-      "given": "Wannian"
+      "family": "Lu",
+      "given": "Junxuan"
      },
      {
-      "family": "Ma",
-      "given": "Xueqin"
+      "family": "Liu",
+      "given": "Andrew C."
+     },
+     {
+      "family": "Xing",
+      "given": "Chengguo"
      }
     ],
-    "container-title": "Evidence-Based Complementary and Alternative Medicine",
+    "container-title": "Nutrients",
     "issued": {
      "date-parts": [
       [
-       2021
+       2020
       ]
      ]
     },
-    "DOI": "10.1155/2021/6851798",
+    "DOI": "10.3390/nu12103044",
     "verification": {
      "status": "metadata-verified",
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-24",
+     "verified_on": "2026-11-27",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-24"
+      "checked_on": "2026-11-27"
      }
     },
-    "volume": "2021",
-    "page": "1-14",
-    "PMCID": "PMC8405297"
+    "volume": "12",
+    "issue": "10",
+    "number": "3044",
+    "PMCID": "PMC7600512"
    },
-   "doi": "10.1155/2021/6851798",
-   "pmcid": "PMC8405297",
-   "title": "Biological Activity, Hepatotoxicity, and Structure-Activity Relationship of Kavalactones and Flavokavins, the Two Main Bioactive Components in Kava (Piper methysticum)",
-   "year": 2021,
-   "journal": "Evidence-based complementary and alternative medicine : eCAM",
+   "doi": "10.3390/nu12103044",
+   "pmcid": "PMC7600512",
+   "title": "Kava as a Clinical Nutrient: Promises and Challenges",
+   "year": 2020,
+   "journal": "Nutrients",
    "kind": "review",
-   "people": false,
-   "near": 0.682,
+   "people": true,
+   "near": 0.731,
    "money": [
-    "The authors have no conflicts of interest."
+    "The research data cited from our own publications were partly supported by NIH R01CA193278 (C.X.) and R61AT009988 (C.X. and Carol Mathews), the College of Pharmacy Frank Duckworth Endowment (C.X.), and the University of Florida Health Cancer Center Startup fund (C.X.) and R01 AT007395 (J.L. and C.X.). The content is solely the responsibility of the authors and does not necessarily represent the official views of the National Institutes of Health.",
+    "The authors declare no conflict of interest."
    ],
    "design": {
     "passage": 1,
     "where": "Abstract",
-    "quote": "Kava (Piper methysticum Forst) is a popular and favorable edible medicinal herb",
-    "text": "a research paper on kava"
+    "quote": "Kava beverages are typically prepared from the root of Piper methysticum. They have been consumed among Pacific Islanders for centuries. Kava extract preparations were once used as herbal drugs to treat anxiety in Europe.",
+    "text": "Review article summarizing kava use and research"
    },
    "findings": [
     {
-     "passage": 10,
-     "where": "4. Kava Hepatotoxicity",
-     "quote": "more than 100 cases of severe liver injury following kava exposure have been identified",
-     "text": "more than 100 cases of severe liver injury following kava exposure have been identified.",
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "Kava beverages are typically prepared from the root of Piper methysticum. They have been consumed among Pacific Islanders for centuries. Kava extract preparations were once used as herbal drugs to treat anxiety in Europe.",
+     "text": "Kava is traditionally prepared from the root, has been consumed for centuries, and has been used as an herbal anxiety treatment.",
      "id": "F1",
      "second_hand": ""
     },
     {
-     "passage": 3,
-     "where": "1. Introduction",
-     "quote": "there was compelling evidence that kava consumption was related to some toxicities",
-     "text": "kava consumption was related to some toxicities.",
+     "passage": 20,
+     "where": "4. Neurological Functions of Kava and Their Mechanisms",
+     "quote": "Kava use, however, is not free of side effects, such as headaches, fatigue, tremors and restlessness.",
+     "text": "Kava can cause side effects including headaches, fatigue, tremors, and restlessness.",
      "id": "F2",
      "second_hand": ""
     },
     {
-     "passage": 10,
-     "where": "4. Kava Hepatotoxicity",
-     "quote": "kava hepatotoxicity was the most concerning adverse effect of kava consumption",
-     "text": "kava hepatotoxicity was the most concerning adverse effect of kava consumption.",
+     "passage": 50,
+     "where": "6. Safety of Kava and Its Hepatotoxic Risk › 6.7. Safety of Individual Kava Compounds",
+     "quote": "The evidence overall suggests that kava’s hepatotoxic risk is very low. There are a number of factors that may contribute to such a risk, which can be reduced if not eliminated.",
+     "text": "The overall evidence suggests that kava’s hepatotoxic risk is very low.",
      "id": "F3",
      "second_hand": ""
     }
    ],
    "limits": [
     {
-     "passage": 10,
-     "where": "4. Kava Hepatotoxicity",
-     "quote": "many of which were uncertain whether kava was responsible or it was caused by the other possible pathogenetic factors",
-     "text": "it was uncertain whether kava was responsible for liver injury in many cases.",
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "Major challenges lie in the diversity of kava products and the lack of standardization, which has produced an unmet need for quality initiatives.",
+     "text": "The diversity of kava products and lack of standardization limit understanding of its safety and efficacy.",
      "id": "L1",
      "second_hand": ""
     }
    ],
    "tag": "A"
+  },
+  {
+   "read": "full",
+   "ref": {
+    "id": "economidis_2025",
+    "type": "article-journal",
+    "title": "Global perspectives on kava: A narrative systematic review of the health effects, economic and social impacts and policy considerations",
+    "author": [
+     {
+      "family": "Economidis",
+      "given": "George"
+     },
+     {
+      "family": "Lynch",
+      "given": "Michelle"
+     },
+     {
+      "family": "Taylor",
+      "given": "Sophia"
+     },
+     {
+      "family": "Asare-Doku",
+      "given": "Winifred"
+     },
+     {
+      "family": "Macpherson",
+      "given": "Georgina"
+     },
+     {
+      "family": "Degenhardt",
+      "given": "Louisa"
+     },
+     {
+      "family": "Farrell",
+      "given": "Michael"
+     },
+     {
+      "family": "Santo",
+      "given": "Thomas",
+      "suffix": "Jr"
+     }
+    ],
+    "container-title": "Drug and Alcohol Review",
+    "issued": {
+     "date-parts": [
+      [
+       2025
+      ]
+     ]
+    },
+    "DOI": "10.1111/dar.14080",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-27",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-27"
+     }
+    },
+    "volume": "44",
+    "issue": "6",
+    "page": "1601-1640",
+    "PMCID": "PMC12405834"
+   },
+   "doi": "10.1111/dar.14080",
+   "pmcid": "PMC12405834",
+   "title": "Global Perspectives on Kava: A Narrative Systematic Review of the Health Effects, Economic and Social Impacts and Policy Considerations",
+   "year": 2025,
+   "journal": "Drug and alcohol review",
+   "kind": "review",
+   "people": false,
+   "near": 0.755,
+   "money": [
+    "This project was funded by the Australian Government Department of Health and Aged Care. The funder of the study had no role in study design, data collection, data analysis, data interpretation, or writing of the report.",
+    "AcknowledgementsThe authors would like to thank Rachel Jenkins and Oscar Leppan for their assistance with screening and data extraction. In Australia, this narrative systematic review has been commissioned alongside a broader evaluation that has to date mainly focused on qualitative forms of assessment to understand the impact of the Australian kava legislation, as well as the wider health, cultural, and economic impacts from the perspectives of community and government representatives. This project was funded by the Australian Government Department of Health and Aged Care. Open access publishing facilitated by University of New South Wales, as part of the Wiley ‐ University of New South Wales agreement via the Council of Australian University Librarians."
+   ],
+   "design": {
+    "passage": 12,
+    "where": "Methods › Population and Study Design",
+    "quote": "This narrative systematic review explored available literature on kava from both qualitative and quantitative studies.",
+    "text": "a narrative systematic review of qualitative and quantitative studies"
+   },
+   "findings": [
+    {
+     "passage": 29,
+     "where": "Results › Harms Related to Kava Use",
+     "quote": "Some records also reported adverse effects associated with kava use, such as toxic withdrawal seizures among heavy users, gastric pressure and nausea, possible links to suicidal behaviour and potential for drug interactions.",
+     "text": "Adverse effects associated with kava use include gastric pressure and nausea, potential for drug interactions, possible links to suicidal behaviour, and toxic withdrawal seizures among people who use kava heavily.",
+     "id": "F4",
+     "second_hand": ""
+    },
+    {
+     "passage": 34,
+     "where": "Results › Social and Cultural Reasons for Kava Use",
+     "quote": "papers have emphasised that its consumption is vastly different from alcohol, producing calming and passive effects.",
+     "text": "The consumption of kava produces calming and passive effects and is vastly different from alcohol.",
+     "id": "F5",
+     "second_hand": ""
+    },
+    {
+     "passage": 5,
+     "where": "Introduction",
+     "quote": "Kava is a root‐based drug with depressive effects that is native to several Pacific Island countries.",
+     "text": "Kava is a root-based drug native to several Pacific Island countries that has depressive effects.",
+     "id": "F6",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "its physiological and psychological effects remain contested and poorly understood.",
+     "text": "The physiological and psychological effects of kava remain poorly understood and contested.",
+     "id": "L2",
+     "second_hand": ""
+    }
+   ],
+   "tag": "B"
   }
  ],
  "parts": [
   {
    "part": "short",
-   "text": "Kava is a popular medicinal herb. Its most concerning risk is liver injury, and there is compelling evidence it is linked to some toxicities.",
+   "text": "Kava produces calming effects and has a low liver damage risk.",
    "uses": [
-    "DA",
-    "F3",
-    "F2"
+    "F5",
+    "F3"
    ],
    "rests_on": [
     {
-     "label": "DA",
-     "ref": "wang_2021",
-     "where": "Abstract",
-     "quote": "Kava (Piper methysticum Forst) is a popular and favorable edible medicinal herb",
-     "sha": "be36c2ff803ad64d"
+     "label": "F5",
+     "ref": "economidis_2025",
+     "where": "Results › Social and Cultural Reasons for Kava Use",
+     "quote": "papers have emphasised that its consumption is vastly different from alcohol, producing calming and passive effects.",
+     "sha": "840fd452a0c9a25b"
     },
     {
      "label": "F3",
-     "ref": "wang_2021",
-     "where": "4. Kava Hepatotoxicity",
-     "quote": "kava hepatotoxicity was the most concerning adverse effect of kava consumption",
-     "sha": "34307f6e076c0002"
-    },
-    {
-     "label": "F2",
-     "ref": "wang_2021",
-     "where": "1. Introduction",
-     "quote": "there was compelling evidence that kava consumption was related to some toxicities",
-     "sha": "e7efc82484fa2c5d"
+     "ref": "bian_2020",
+     "where": "6. Safety of Kava and Its Hepatotoxic Risk › 6.7. Safety of Individual Kava Compounds",
+     "quote": "The evidence overall suggests that kava’s hepatotoxic risk is very low. There are a number of factors that may contribute to such a risk, which can be reduced if not eliminated.",
+     "sha": "33f8ecd94b7d0cd5"
     }
    ]
   },
   {
    "part": "but",
-   "text": "It was uncertain whether kava caused the liver injury in many cases, as other factors may have been responsible.",
+   "text": "The diversity of kava products and lack of standardization limit understanding of its safety.",
    "uses": [
     "L1"
    ],
    "rests_on": [
     {
      "label": "L1",
-     "ref": "wang_2021",
-     "where": "4. Kava Hepatotoxicity",
-     "quote": "many of which were uncertain whether kava was responsible or it was caused by the other possible pathogenetic factors",
-     "sha": "34307f6e076c0002"
+     "ref": "bian_2020",
+     "where": "Abstract",
+     "quote": "Major challenges lie in the diversity of kava products and the lack of standardization, which has produced an unmet need for quality initiatives.",
+     "sha": "110f456eca120509"
     }
    ]
   },
   {
    "part": "how1",
-   "text": "A 2021 review describes kava as a popular edible medicinal herb.",
+   "text": "A 2020 review of kava use and research found low liver damage risk.",
    "uses": [
-    "DA"
-   ],
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "wang_2021",
-     "where": "Abstract",
-     "quote": "Kava (Piper methysticum Forst) is a popular and favorable edible medicinal herb",
-     "sha": "be36c2ff803ad64d"
-    }
-   ],
-   "quote": "Kava (Piper methysticum Forst) is a popular and favorable edible medicinal herb",
-   "quote_ref": "wang_2021"
-  },
-  {
-   "part": "how2",
-   "text": "The review says kava hepatotoxicity was the most concerning adverse effect of consumption.",
-   "uses": [
+    "DA",
     "F3"
    ],
    "rests_on": [
     {
+     "label": "DA",
+     "ref": "bian_2020",
+     "where": "Abstract",
+     "quote": "Kava beverages are typically prepared from the root of Piper methysticum. They have been consumed among Pacific Islanders for centuries. Kava extract preparations were once used as herbal drugs to treat anxiety in Europe.",
+     "sha": "110f456eca120509"
+    },
+    {
      "label": "F3",
-     "ref": "wang_2021",
-     "where": "4. Kava Hepatotoxicity",
-     "quote": "kava hepatotoxicity was the most concerning adverse effect of kava consumption",
-     "sha": "34307f6e076c0002"
+     "ref": "bian_2020",
+     "where": "6. Safety of Kava and Its Hepatotoxic Risk › 6.7. Safety of Individual Kava Compounds",
+     "quote": "The evidence overall suggests that kava’s hepatotoxic risk is very low. There are a number of factors that may contribute to such a risk, which can be reduced if not eliminated.",
+     "sha": "33f8ecd94b7d0cd5"
     }
    ],
-   "quote": "kava hepatotoxicity was the most concerning adverse effect of kava consumption",
-   "quote_ref": "wang_2021"
+   "quote": "The evidence overall suggests that kava's hepatotoxic risk is very low",
+   "quote_ref": "bian_2020"
+  },
+  {
+   "part": "how2",
+   "text": "A 2025 narrative systematic review found kava produces calming effects.",
+   "uses": [
+    "DB",
+    "F5"
+   ],
+   "rests_on": [
+    {
+     "label": "DB",
+     "ref": "economidis_2025",
+     "where": "Methods › Population and Study Design",
+     "quote": "This narrative systematic review explored available literature on kava from both qualitative and quantitative studies.",
+     "sha": "cf652e6e5355d2be"
+    },
+    {
+     "label": "F5",
+     "ref": "economidis_2025",
+     "where": "Results › Social and Cultural Reasons for Kava Use",
+     "quote": "papers have emphasised that its consumption is vastly different from alcohol, producing calming and passive effects.",
+     "sha": "840fd452a0c9a25b"
+    }
+   ],
+   "quote": "its consumption is vastly different from alcohol, producing calming and passive effects",
+   "quote_ref": "economidis_2025"
   }
  ],
  "complete": false,
- "missing": "What kava feels like",
+ "missing": "a paper that stands nearer the question could not be read",
  "wanted": [
   {
    "doi": "10.1080/10590500801907407",
@@ -286,56 +432,68 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-24",
+   "lane": 19,
+   "status": "published",
+   "why": "passed every gate",
+   "short": "Kava is a popular medicinal herb. Its most concerning risk is liver injury, and there is compelling evidence it is linked to some toxicities.",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "Kava as a Clinical Nutrient: Promises and Challenges",
    "read": "full",
    "kind": "review",
    "at": "10.3390/nu12103044",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 3,
+   "thrown": []
   },
   {
    "title": "Global Perspectives on Kava: A Narrative Systematic Review of the Health Effects, Economic and Social Impacts and Policy Considerations",
    "read": "full",
    "kind": "review",
    "at": "10.1111/dar.14080",
+   "kept": 3,
+   "thrown": []
+  },
+  {
+   "title": "Kava",
+   "read": "page",
+   "kind": "official",
+   "at": "https://adf.org.au/drug-facts/kava/",
    "kept": 0,
    "thrown": [],
    "fault": "it was not read: the time this run has for reading was over"
   },
   {
-   "title": "Biological Activity, Hepatotoxicity, and Structure-Activity Relationship of Kavalactones and Flavokavins, the Two Main Bioactive Components in Kava (Piper methysticum)",
-   "read": "full",
-   "kind": "review",
-   "at": "10.1155/2021/6851798",
-   "kept": 3,
+   "title": "Kava",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.nccih.nih.gov/health/kava",
+   "kept": 0,
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
+  },
+  {
+   "title": "Kava",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.drugscience.org.uk/drugs/kava",
+   "kept": 0,
    "thrown": [
     {
-     "kind": "limit",
-     "text": "there are no studies on the relationship between kava hepatotoxicity and prolonged use or overdose.",
-     "quote": "there are no studies that focus on the abovementioned subjects",
-     "why": "the sentence is not carried by its quote and passage"
+     "why": "the reader gave no JSON"
     }
    ]
-  },
-  {
-   "title": "Herbal and Natural Supplements for Improving Sleep: A Literature Review",
-   "read": "full",
-   "kind": "other",
-   "at": "10.30773/pi.2024.0121",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
   }
  ],
  "plan": {
   "short": [
-   "DA",
-   "F3",
-   "F2"
+   "F5",
+   "F3"
   ],
   "direct": "",
   "but": [
@@ -344,94 +502,117 @@
   "how": [
    [
     "DA",
-    "F3",
-    "F2",
-    "F1"
+    "F3"
+   ],
+   [
+    "DB",
+    "F5"
    ]
   ],
-  "unanswered": "subjective effects and typical user experience"
- },
- "panel": {
-  "gemini:gemini-3.6-flash": {
-   "short": [
-    true,
-    ""
-   ],
-   "but": [
-    true,
-    ""
-   ],
-   "how1": [
-    true,
-    ""
-   ],
-   "how2": [
-    true,
-    ""
-   ],
-   "how3": [
-    false,
-    "The passage states that there was compelling evidence that led to warnings/restrictions since 2002, not that the review itself found this evidence."
-   ],
-   "how4": [
-    false,
-    "The passage states that more than 100 cases have been identified all over the world since 1998, not that the review itself identified them."
-   ]
-  }
+  "unanswered": "exact incidence rates of adverse effects"
  },
  "panel_gap": [],
  "own": {
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.6276,
-   "but": 0.9165,
-   "how1": 0.7656,
-   "how2": 0.9605,
-   "how3": 0.8843,
-   "how4": 0.8428
+   "short": 0.7503,
+   "but": 0.8453,
+   "how1": 0.7598,
+   "how2": 0.77
   },
   "scores_quotes_alone": {
-   "short": 0.0789,
-   "but": 0.1538,
-   "how1": 0.7408,
-   "how2": 0.5862,
-   "how3": 0.5534,
-   "how4": 0.5113
+   "short": 0.6568,
+   "but": 0.1972,
+   "how1": 0.3473,
+   "how2": 0.6794
   }
  },
- "dropped": [
+ "tries": [
   {
    "try": 1,
-   "part": "how3",
-   "text": "The review found compelling evidence that kava consumption was related to some toxicities.",
-   "rests_on": [
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
     {
-     "label": "F2",
-     "ref": "wang_2021",
-     "where": "1. Introduction",
-     "quote": "there was compelling evidence that kava consumption was related to some toxicities",
-     "sha": "e7efc82484fa2c5d"
-    }
-   ],
-   "by": "a further reader",
-   "said": "a further reader (gemini-3.6-flash) did not accept it: The passage states that there was compelling evidence that led to warnings/restrictions since 2002, not that the review itself found this evidence."
-  },
-  {
-   "try": 1,
-   "part": "how4",
-   "text": "The review identified more than 100 cases of severe liver injury following kava exposure.",
-   "rests_on": [
+     "part": "short",
+     "text": "Kava produces calming effects. Its liver damage risk is very low.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "economidis_2025",
+       "where": "Results › Social and Cultural Reasons for Kava Use",
+       "quote": "papers have emphasised that its consumption is vastly different from alcohol, producing calming and passive effects.",
+       "sha": "840fd452a0c9a25b"
+      },
+      {
+       "label": "F3",
+       "ref": "bian_2020",
+       "where": "6. Safety of Kava and Its Hepatotoxic Risk › 6.7. Safety of Individual Kava Compounds",
+       "quote": "The evidence overall suggests that kava’s hepatotoxic risk is very low. There are a number of factors that may contribute to such a risk, which can be reduced if not eliminated.",
+       "sha": "33f8ecd94b7d0cd5"
+      }
+     ],
+     "ok": true
+    },
     {
-     "label": "F1",
-     "ref": "wang_2021",
-     "where": "4. Kava Hepatotoxicity",
-     "quote": "more than 100 cases of severe liver injury following kava exposure have been identified",
-     "sha": "34307f6e076c0002"
+     "part": "but",
+     "text": "The answer holds despite lack of standardization among kava products.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "bian_2020",
+       "where": "Abstract",
+       "quote": "Major challenges lie in the diversity of kava products and the lack of standardization, which has produced an unmet need for quality initiatives.",
+       "sha": "110f456eca120509"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage notes product diversity and lack of standardization, but does not say the low liver-damage-risk conclusion holds despite them."
+    },
+    {
+     "part": "how1",
+     "text": "A 2020 review found low liver damage risk in people who use kava.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "bian_2020",
+       "where": "Abstract",
+       "quote": "Kava beverages are typically prepared from the root of Piper methysticum. They have been consumed among Pacific Islanders for centuries. Kava extract preparations were once used as herbal drugs to treat anxiety in Europe.",
+       "sha": "110f456eca120509"
+      },
+      {
+       "label": "F3",
+       "ref": "bian_2020",
+       "where": "6. Safety of Kava and Its Hepatotoxic Risk › 6.7. Safety of Individual Kava Compounds",
+       "quote": "The evidence overall suggests that kava’s hepatotoxic risk is very low. There are a number of factors that may contribute to such a risk, which can be reduced if not eliminated.",
+       "sha": "33f8ecd94b7d0cd5"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A 2025 review found kava consumption produces calming effects.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "economidis_2025",
+       "where": "Methods › Population and Study Design",
+       "quote": "This narrative systematic review explored available literature on kava from both qualitative and quantitative studies.",
+       "sha": "cf652e6e5355d2be"
+      },
+      {
+       "label": "F5",
+       "ref": "economidis_2025",
+       "where": "Results › Social and Cultural Reasons for Kava Use",
+       "quote": "papers have emphasised that its consumption is vastly different from alcohol, producing calming and passive effects.",
+       "sha": "840fd452a0c9a25b"
+      }
+     ],
+     "ok": true
     }
-   ],
-   "by": "a further reader",
-   "said": "a further reader (gemini-3.6-flash) did not accept it: The passage states that more than 100 cases have been identified all over the world since 1998, not that the review itself identified them."
+   ]
   }
  ],
  "with_checked": {
