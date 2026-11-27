@@ -17,40 +17,34 @@
   "cannabis"
  ],
  "made": {
-  "on": "2026-11-20",
+  "on": "2026-11-27",
   "models": {
-   "reader": "gemini:gemini-3.1-flash-lite",
-   "writer": "gemini:gemma-4-26b-a4b-it",
-   "checker": "gemini:gemini-3.5-flash-lite",
-   "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3.1-flash-lite",
-   "team": "team Z",
-   "reader_2": "gemini:gemini-3.1-flash-lite",
-   "also1_else": "gemini:gemma-4-31b-it",
+   "reader": "openrouter:openai/gpt-oss-120b",
+   "writer": "openrouter:meta-llama/llama-3.3-70b-instruct",
+   "checker": "openrouter:openai/gpt-6-luna",
+   "planner": "openrouter:openai/gpt-oss-120b",
+   "team": "team R",
+   "reader_2": "openrouter:openai/gpt-oss-120b",
    "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "44725160861",
-  "read_seconds": 100,
+  "run": "45948531284",
+  "read_seconds": 96,
   "from": {
    "papers": 2,
    "summaries": 0,
    "official": 0
   },
   "neurons": 0.0,
-  "seconds": 411
+  "seconds": 239
  },
- "status": "published",
- "why": "passed every gate",
+ "status": "none",
+ "why": "the second reader did not accept the answer",
  "gates": {
-  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.1-flash-lite read from there",
-  "time": "3 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "4 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
-  "panel": "further readers, each of which must accept every sentence too: gemini-3.1-flash-lite accepted 4 of 4",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.41, but 0.95, how1 0.89, how2 0.45",
-  "check": "every sentence kept was accepted by the second reader (gemini:gemini-3.5-flash-lite) and by gemini:gemini-3.1-flash-lite; it also found that the short answer answers the question and that the But is about that answer",
-  "rules": "nothing against it",
-  "checked": "set beside the checked claims of the same page: nothing against them"
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-120b read from there",
+  "read": "6 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 3 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 0 official page(s), 0 paper(s) read in summary only",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.13, but 0.94, how1 0.70, how2 0.79",
+  "check": "short: NOT accepted: It overstates the evidence for talking therapies: the passage reports modest reductions in frequency and quantity of use, not that they help people quit. It also omits the requested plain-language explanation of contingency management: rein; but: accepted; how1: accepted; how2: NOT accepted: The review found reductions and abstinence among people with a psychotic-spectrum or major depressive disorder, not people with mental health disorders generally."
  },
  "sources": [
   {
@@ -87,10 +81,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-20",
+     "verified_on": "2026-11-27",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-20"
+      "checked_on": "2026-11-27"
      }
     },
     "volume": "13",
@@ -114,32 +108,40 @@
     "passage": 1,
     "where": "Abstract",
     "quote": "A systematic search examining the effects of CM on cannabis use, clinical, cognitive, and psychosocial outcomes in patients with a mental health disorder on PubMed, PsycINFO, and EMBASE databases up to November 2022 was performed.",
-    "text": "a systematic review of contingency management for cannabis use disorder in patients with mental health disorders"
+    "text": "Systematic review of contingency management studies in people with cannabis use disorder and mental health disorders"
    },
    "findings": [
     {
      "passage": 1,
      "where": "Abstract",
      "quote": "We found CM to be efficacious in producing cannabis use reductions and abstinence amongst individuals with a psychotic-spectrum or major depressive disorder.",
-     "text": "Contingency management is effective at producing cannabis use reductions and abstinence in people with a psychotic-spectrum or major depressive disorder.",
+     "text": "Contingency management helps people quit cannabis by reducing use and achieving abstinence in those with psychotic-spectrum or major depressive disorders.",
      "id": "F1",
+     "second_hand": ""
+    },
+    {
+     "passage": 15,
+     "where": "3. Results › 3.3. Major Depressive Disorder (MDD)",
+     "quote": "eight obtained biochemically-verified cannabis abstinence while the remaining participants significantly reduced their cannabis use.",
+     "text": "In a study, most participants achieved verified cannabis abstinence or significantly reduced their use when monetary contingency management was used.",
+     "id": "F2",
      "second_hand": ""
     },
     {
      "passage": 17,
      "where": "4. Discussion",
-     "quote": "we provide strong evidence to support the efficacy of CM to promote cannabis abstinence in dually-diagnosed patients",
-     "text": "There is strong evidence that contingency management promotes cannabis abstinence in patients with both cannabis use disorder and a mental health disorder.",
-     "id": "F2",
+     "quote": "we provide strong evidence to support the efficacy of CM to promote cannabis abstinence in dually-diagnosed patients, with improvements in clinical symptomatology and some aspects of cognitive dysfunction in these disorders.",
+     "text": "Contingency management promotes cannabis abstinence and improves clinical symptoms and some cognitive functions in people with co-occurring mental health disorders.",
+     "id": "F3",
      "second_hand": ""
     }
    ],
    "limits": [
     {
-     "passage": 21,
-     "where": "6. Conclusions and Future Directions",
-     "quote": "Finally, there is a need to incorporate follow-up visits, as it remains unknown whether CM leads to sustained abstinence in individuals with CUD and comorbid mental health disorders.",
-     "text": "It is not known if contingency management leads to sustained abstinence in people with cannabis use disorder and comorbid mental health disorders because follow-up visits are needed.",
+     "passage": 19,
+     "where": "5. Strengths and Limitations",
+     "quote": "First, our sample size was small due to the limited number of studies exploring the efficacy of CM for CUD in psychiatric populations.",
+     "text": "The evidence is limited because the sample size is small, with few studies on CM for cannabis use disorder in psychiatric populations.",
      "id": "L1",
      "second_hand": ""
     }
@@ -188,10 +190,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-20",
+     "verified_on": "2026-11-27",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-20"
+      "checked_on": "2026-11-27"
      }
     },
     "volume": "134",
@@ -215,23 +217,31 @@
     "passage": 1,
     "where": "Abstract",
     "quote": "This Review will cover this topic from a variety of perspectives, with a particular emphasis on neurobiological findings and innovative treatment approaches that are being pursued.",
-    "text": "A review of research on cannabis use disorder, including neurobiological findings and treatment approaches."
+    "text": "Review article summarizing treatments for cannabis use disorder"
    },
    "findings": [
     {
      "passage": 22,
      "where": "Psychological interventions",
      "quote": "psychological interventions lead to modest reductions in the frequency and quantity of cannabis use",
-     "text": "Psychological interventions result in modest decreases in how often and how much cannabis people use.",
-     "id": "F3",
+     "text": "Psychological interventions modestly reduce how often and how much people use cannabis.",
+     "id": "F4",
      "second_hand": ""
     },
     {
-     "passage": 25,
+     "passage": 23,
      "where": "Psychological interventions",
-     "quote": "The addition of “booster” sessions after treatment may extend positive treatment effects.",
-     "text": "Adding booster sessions after the main treatment concludes may help extend the positive effects of the treatment.",
-     "id": "F4",
+     "quote": "interventions that combine elements of both MET (to facilitate initial abstinence) and CBT (to support continued abstinence) are increasingly being recommended",
+     "text": "Combining MET with CBT is recommended to help people start and maintain abstinence from cannabis.",
+     "id": "F5",
+     "second_hand": ""
+    },
+    {
+     "passage": 26,
+     "where": "Psychological interventions",
+     "quote": "brief interventions (usually 1 or 2 sessions) have demonstrated the most inconsistent or null effects compared with inactive control conditions and poorer outcomes compared with longer duration treatments",
+     "text": "Longer treatment programs are more effective than brief 1‑2 session interventions for reducing cannabis use.",
+     "id": "F6",
      "second_hand": ""
     }
    ],
@@ -239,8 +249,8 @@
     {
      "passage": 25,
      "where": "Psychological interventions",
-     "quote": "continuous abstinence rates are typically low, suggesting that although treatments are helpful in reducing cannabis use, they are not optimal for promoting complete abstinence.",
-     "text": "Current treatments are helpful for reducing cannabis use but are not optimal for helping people achieve complete abstinence.",
+     "quote": "the majority of existing studies have not included follow-up assessments beyond 12 months from treatment, and outcomes have tended to be most positive at the end of treatment or at short-term follow-up",
+     "text": "Most studies lack follow‑up beyond 12 months, so long‑term effectiveness is uncertain.",
      "id": "L2",
      "second_hand": ""
     }
@@ -248,134 +258,9 @@
    "tag": "B"
   }
  ],
- "parts": [
-  {
-   "part": "short",
-   "text": "Contingency management can help people with a psychotic-spectrum or major depressive disorder stop using cannabis. Psychological interventions may also lead to modest decreases in how often and how much people use it. Adding booster sessions may help extend these effects.",
-   "uses": [
-    "F1",
-    "F2",
-    "F3",
-    "F4"
-   ],
-   "rests_on": [
-    {
-     "label": "F1",
-     "ref": "rodas_2022",
-     "where": "Abstract",
-     "quote": "We found CM to be efficacious in producing cannabis use reductions and abstinence amongst individuals with a psychotic-spectrum or major depressive disorder.",
-     "sha": "a12294d5edc438d6"
-    },
-    {
-     "label": "F2",
-     "ref": "rodas_2022",
-     "where": "4. Discussion",
-     "quote": "we provide strong evidence to support the efficacy of CM to promote cannabis abstinence in dually-diagnosed patients",
-     "sha": "0abd93f322d70b6d"
-    },
-    {
-     "label": "F3",
-     "ref": "lefoll_2024",
-     "where": "Psychological interventions",
-     "quote": "psychological interventions lead to modest reductions in the frequency and quantity of cannabis use",
-     "sha": "9807a1812ba4fa3a"
-    },
-    {
-     "label": "F4",
-     "ref": "lefoll_2024",
-     "where": "Psychological interventions",
-     "quote": "The addition of “booster” sessions after treatment may extend positive treatment effects.",
-     "sha": "3f491c0dc671249f"
-    }
-   ]
-  },
-  {
-   "part": "but",
-   "text": "Current treatments are helpful for reducing cannabis use but are not optimal for helping people achieve complete abstinence.",
-   "uses": [
-    "L2"
-   ],
-   "rests_on": [
-    {
-     "label": "L2",
-     "ref": "lefoll_2024",
-     "where": "Psychological interventions",
-     "quote": "continuous abstinence rates are typically low, suggesting that although treatments are helpful in reducing cannabis use, they are not optimal for promoting complete abstinence.",
-     "sha": "3f491c0dc671249f"
-    }
-   ]
-  },
-  {
-   "part": "how1",
-   "text": "A 2022 systematic review found contingency management can produce cannabis use reductions and abstinence in people with a psychotic-spectrum or major depressive disorder.",
-   "uses": [
-    "DA",
-    "F1",
-    "F2"
-   ],
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "rodas_2022",
-     "where": "Abstract",
-     "quote": "A systematic search examining the effects of CM on cannabis use, clinical, cognitive, and psychosocial outcomes in patients with a mental health disorder on PubMed, PsycINFO, and EMBASE databases up to November 2022 was performed.",
-     "sha": "a12294d5edc438d6"
-    },
-    {
-     "label": "F1",
-     "ref": "rodas_2022",
-     "where": "Abstract",
-     "quote": "We found CM to be efficacious in producing cannabis use reductions and abstinence amongst individuals with a psychotic-spectrum or major depressive disorder.",
-     "sha": "a12294d5edc438d6"
-    },
-    {
-     "label": "F2",
-     "ref": "rodas_2022",
-     "where": "4. Discussion",
-     "quote": "we provide strong evidence to support the efficacy of CM to promote cannabis abstinence in dually-diagnosed patients",
-     "sha": "0abd93f322d70b6d"
-    }
-   ],
-   "quote": "producing cannabis use reductions and abstinence amongst individuals with a psychotic-spectrum or major depressive disorder",
-   "quote_ref": "rodas_2022"
-  },
-  {
-   "part": "how2",
-   "text": "A 2024 review says psychological interventions lead to modest reductions in how often and how much cannabis people use, and booster sessions may extend these effects.",
-   "uses": [
-    "DB",
-    "F3",
-    "F4"
-   ],
-   "rests_on": [
-    {
-     "label": "DB",
-     "ref": "lefoll_2024",
-     "where": "Abstract",
-     "quote": "This Review will cover this topic from a variety of perspectives, with a particular emphasis on neurobiological findings and innovative treatment approaches that are being pursued.",
-     "sha": "3559539a5357fd33"
-    },
-    {
-     "label": "F3",
-     "ref": "lefoll_2024",
-     "where": "Psychological interventions",
-     "quote": "psychological interventions lead to modest reductions in the frequency and quantity of cannabis use",
-     "sha": "9807a1812ba4fa3a"
-    },
-    {
-     "label": "F4",
-     "ref": "lefoll_2024",
-     "where": "Psychological interventions",
-     "quote": "The addition of “booster” sessions after treatment may extend positive treatment effects.",
-     "sha": "3f491c0dc671249f"
-    }
-   ],
-   "quote": "psychological interventions lead to modest reductions in the frequency and quantity of cannabis use",
-   "quote_ref": "lefoll_2024"
-  }
- ],
+ "parts": [],
  "complete": false,
- "missing": "a paper that stands nearer the question could not be read",
+ "missing": "",
  "wanted": [
   {
    "doi": "10.1159/000540193",
@@ -400,28 +285,50 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-20",
+   "lane": 19,
+   "status": "published",
+   "why": "passed every gate",
+   "short": "Contingency management can help people with a psychotic-spectrum or major depressive disorder stop using cannabis. Psychological interventions may also lead to modest decreases in how often and how much people use it. Adding booster sessions may help extend these effects.",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "Contingency Management for Treatment of Cannabis Use Disorder in Co-Occurring Mental Health Disorders: A Systematic Review",
    "read": "full",
    "kind": "review",
    "at": "10.3390/brainsci13010036",
-   "kept": 2,
-   "thrown": []
+   "kept": 3,
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "Cannabis abstinence achieved through contingency management can improve depressive symptoms in people with co-occurring disorders.",
+     "quote": "many of the included studies did observe a positive effect of cannabis abstinence on depressive symptoms",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   },
   {
    "title": "Cannabis use disorder: from neurobiology to treatment",
    "read": "full",
    "kind": "review",
    "at": "10.1172/jci172887",
-   "kept": 2,
+   "kept": 3,
    "thrown": [
     {
      "kind": "finding",
-     "text": "Combining motivational enhancement therapy and cognitive behavioral therapy is increasingly recommended to help people stop using cannabis and maintain that abstinence.",
-     "quote": "interventions that combine elements of both MET (to facilitate initial abstinence) and CBT (to support continued abstinence) are increasingly being recommended.",
-     "why": "the sentence is not carried by its quote and passage"
+     "text": "MET and CBT each modestly improve cannabis-related outcomes such as reduced use frequency and more days without cannabis.",
+     "quote": "both MET and CBT lead to modest improvements in cannabis-related outcomes (including reduced frequency and quantity of cannabis use, a higher proportion of days of abstinence)",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    },
+    {
+     "kind": "limit",
+     "text": "Effect sizes are moderate and continuous abstinence rates remain low, indicating limited success in achieving full cessation.",
+     "quote": "effect sizes are often moderate at best (and tend to be highest where psychological treatments are compared against wait list or inactive control conditions) and continuous abstinence rates are typica",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
     }
    ]
   },
@@ -431,8 +338,7 @@
    "kind": "official",
    "at": "https://www.nccih.nih.gov/health/cannabis-marijuana-and-cannabinoids-what-you-need-to-know",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
   },
   {
    "title": "Understanding Your Risk for Cannabis Use Disorder",
@@ -440,8 +346,7 @@
    "kind": "official",
    "at": "https://www.cdc.gov/cannabis/health-effects/cannabis-use-disorder.html",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
   },
   {
    "title": "Cannabis",
@@ -449,15 +354,53 @@
    "kind": "official",
    "at": "https://www.ccsa.ca/en/guidance-tools-resources/substances/cannabis",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
+  },
+  {
+   "title": "Research",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.ccsa.ca/en/guidance-tools-resources/substance-use-and-addiction/cannabis/research-cannabis",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Dronabinol",
+   "read": "page",
+   "kind": "official",
+   "at": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=fd8c5d57-0173-4f62-8ff0-d8147986a976",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Cannabis",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.canada.ca/en/health-canada/services/drugs-medication/cannabis.html",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "About cannabis",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.canada.ca/en/health-canada/services/drugs-medication/cannabis/about.html",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Cannabis (marijuana)",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.betterhealth.vic.gov.au/health/healthyliving/cannabis-marijuana",
+   "kept": 0,
+   "thrown": []
   }
  ],
  "plan": {
   "short": [
-   "F2",
+   "F5",
    "F1",
-   "F3",
    "F4"
   ],
   "direct": "",
@@ -466,59 +409,364 @@
   ],
   "how": [
    [
-    "DA",
-    "F2",
-    "F1"
+    "DB",
+    "F5",
+    "F6"
    ],
    [
-    "DB",
-    "F3",
-    "F4"
+    "DA",
+    "F1"
    ]
   ],
   "unanswered": ""
- },
- "panel": {
-  "gemini:gemini-3.1-flash-lite": {
-   "short": [
-    true,
-    ""
-   ],
-   "but": [
-    true,
-    ""
-   ],
-   "how1": [
-    true,
-    ""
-   ],
-   "how2": [
-    true,
-    ""
-   ]
-  }
  },
  "panel_gap": [],
  "own": {
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.4097,
-   "but": 0.9495,
-   "how1": 0.888,
-   "how2": 0.4467
+   "short": 0.1252,
+   "but": 0.9389,
+   "how1": 0.7022,
+   "how2": 0.7856
   },
   "scores_quotes_alone": {
-   "short": 0.457,
-   "but": 0.6478,
-   "how1": 0.8828,
-   "how2": 0.4759
+   "short": 0.0303,
+   "but": 0.1934,
+   "how1": 0.6721,
+   "how2": 0.8965
   }
  },
- "with_checked": {
-  "differs": [],
-  "same": []
- },
+ "tries": [
+  {
+   "try": 1,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Talking therapies can help people quit cannabis, and contingency management helps those with psychosis or depression stop.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "lefoll_2024",
+       "where": "Psychological interventions",
+       "quote": "psychological interventions lead to modest reductions in the frequency and quantity of cannabis use",
+       "sha": "9807a1812ba4fa3a"
+      },
+      {
+       "label": "F5",
+       "ref": "lefoll_2024",
+       "where": "Psychological interventions",
+       "quote": "interventions that combine elements of both MET (to facilitate initial abstinence) and CBT (to support continued abstinence) are increasingly being recommended",
+       "sha": "6f64cb0aa2227abd"
+      },
+      {
+       "label": "F1",
+       "ref": "rodas_2022",
+       "where": "Abstract",
+       "quote": "We found CM to be efficacious in producing cannabis use reductions and abstinence amongst individuals with a psychotic-spectrum or major depressive disorder.",
+       "sha": "a12294d5edc438d6"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "It says talking therapies help people quit, but the passage supports only modest reductions in how often and how much people use. It also repeats the editor’s warning: it does not lead with that general finding and does not explain continge"
+    },
+    {
+     "part": "but",
+     "text": "Long-term effectiveness is uncertain as most studies lack follow-up beyond 12 months.",
+     "rests_on": [
+      {
+       "label": "L2",
+       "ref": "lefoll_2024",
+       "where": "Psychological interventions",
+       "quote": "the majority of existing studies have not included follow-up assessments beyond 12 months from treatment, and outcomes have tended to be most positive at the end of treatment or at short-term follow-up",
+       "sha": "3f491c0dc671249f"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "A 2024 review article found psychological interventions modestly reduce cannabis use.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "lefoll_2024",
+       "where": "Abstract",
+       "quote": "This Review will cover this topic from a variety of perspectives, with a particular emphasis on neurobiological findings and innovative treatment approaches that are being pursued.",
+       "sha": "3559539a5357fd33"
+      },
+      {
+       "label": "F4",
+       "ref": "lefoll_2024",
+       "where": "Psychological interventions",
+       "quote": "psychological interventions lead to modest reductions in the frequency and quantity of cannabis use",
+       "sha": "9807a1812ba4fa3a"
+      },
+      {
+       "label": "F5",
+       "ref": "lefoll_2024",
+       "where": "Psychological interventions",
+       "quote": "interventions that combine elements of both MET (to facilitate initial abstinence) and CBT (to support continued abstinence) are increasingly being recommended",
+       "sha": "6f64cb0aa2227abd"
+      },
+      {
+       "label": "F6",
+       "ref": "lefoll_2024",
+       "where": "Psychological interventions",
+       "quote": "brief interventions (usually 1 or 2 sessions) have demonstrated the most inconsistent or null effects compared with inactive control conditions and poorer outcomes compared with longer duration treatments",
+       "sha": "1c34d0c038562d39"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage attributes the modest-reduction finding to previous meta-analytic reviews, not to the 2024 review article itself."
+    },
+    {
+     "part": "how2",
+     "text": "A systematic review of contingency management studies found it helps people with psychotic-spectrum or major depressive disorders quit cannabis.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "rodas_2022",
+       "where": "Abstract",
+       "quote": "A systematic search examining the effects of CM on cannabis use, clinical, cognitive, and psychosocial outcomes in patients with a mental health disorder on PubMed, PsycINFO, and EMBASE databases up to November 2022 was performed.",
+       "sha": "a12294d5edc438d6"
+      },
+      {
+       "label": "F1",
+       "ref": "rodas_2022",
+       "where": "Abstract",
+       "quote": "We found CM to be efficacious in producing cannabis use reductions and abstinence amongst individuals with a psychotic-spectrum or major depressive disorder.",
+       "sha": "a12294d5edc438d6"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Talking therapies modestly reduce cannabis use, and contingency management helps people with psychosis or depression quit.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "lefoll_2024",
+       "where": "Psychological interventions",
+       "quote": "psychological interventions lead to modest reductions in the frequency and quantity of cannabis use",
+       "sha": "9807a1812ba4fa3a"
+      },
+      {
+       "label": "F1",
+       "ref": "rodas_2022",
+       "where": "Abstract",
+       "quote": "We found CM to be efficacious in producing cannabis use reductions and abstinence amongst individuals with a psychotic-spectrum or major depressive disorder.",
+       "sha": "a12294d5edc438d6"
+      },
+      {
+       "label": "F5",
+       "ref": "lefoll_2024",
+       "where": "Psychological interventions",
+       "quote": "interventions that combine elements of both MET (to facilitate initial abstinence) and CBT (to support continued abstinence) are increasingly being recommended",
+       "sha": "6f64cb0aa2227abd"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "It omits the explanation the editor requested: the source describes contingency management as reinforcing target behavior attainment, such as abstinence. It also broadens the studied groups (people with a psychotic-spectrum or major depress"
+    },
+    {
+     "part": "but",
+     "text": "Long-term effectiveness is uncertain as most studies lack follow-up beyond 12 months.",
+     "rests_on": [
+      {
+       "label": "L2",
+       "ref": "lefoll_2024",
+       "where": "Psychological interventions",
+       "quote": "the majority of existing studies have not included follow-up assessments beyond 12 months from treatment, and outcomes have tended to be most positive at the end of treatment or at short-term follow-up",
+       "sha": "3f491c0dc671249f"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "A 2024 review article summarizes treatments for cannabis use disorder.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "lefoll_2024",
+       "where": "Abstract",
+       "quote": "This Review will cover this topic from a variety of perspectives, with a particular emphasis on neurobiological findings and innovative treatment approaches that are being pursued.",
+       "sha": "3559539a5357fd33"
+      },
+      {
+       "label": "F5",
+       "ref": "lefoll_2024",
+       "where": "Psychological interventions",
+       "quote": "interventions that combine elements of both MET (to facilitate initial abstinence) and CBT (to support continued abstinence) are increasingly being recommended",
+       "sha": "6f64cb0aa2227abd"
+      },
+      {
+       "label": "F6",
+       "ref": "lefoll_2024",
+       "where": "Psychological interventions",
+       "quote": "brief interventions (usually 1 or 2 sessions) have demonstrated the most inconsistent or null effects compared with inactive control conditions and poorer outcomes compared with longer duration treatments",
+       "sha": "1c34d0c038562d39"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A systematic review of contingency management studies found it helps people with mental health disorders quit cannabis.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "rodas_2022",
+       "where": "Abstract",
+       "quote": "A systematic search examining the effects of CM on cannabis use, clinical, cognitive, and psychosocial outcomes in patients with a mental health disorder on PubMed, PsycINFO, and EMBASE databases up to November 2022 was performed.",
+       "sha": "a12294d5edc438d6"
+      },
+      {
+       "label": "F1",
+       "ref": "rodas_2022",
+       "where": "Abstract",
+       "quote": "We found CM to be efficacious in producing cannabis use reductions and abstinence amongst individuals with a psychotic-spectrum or major depressive disorder.",
+       "sha": "a12294d5edc438d6"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The review found reductions and abstinence among people with a psychotic-spectrum or major depressive disorder, not people with mental health disorders generally; it says other psychiatric populations need further study."
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Talking therapies can help people quit cannabis, and contingency management helps people with psychosis or depression stop",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "lefoll_2024",
+       "where": "Psychological interventions",
+       "quote": "psychological interventions lead to modest reductions in the frequency and quantity of cannabis use",
+       "sha": "9807a1812ba4fa3a"
+      },
+      {
+       "label": "F5",
+       "ref": "lefoll_2024",
+       "where": "Psychological interventions",
+       "quote": "interventions that combine elements of both MET (to facilitate initial abstinence) and CBT (to support continued abstinence) are increasingly being recommended",
+       "sha": "6f64cb0aa2227abd"
+      },
+      {
+       "label": "F1",
+       "ref": "rodas_2022",
+       "where": "Abstract",
+       "quote": "We found CM to be efficacious in producing cannabis use reductions and abstinence amongst individuals with a psychotic-spectrum or major depressive disorder.",
+       "sha": "a12294d5edc438d6"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "It overstates the evidence for talking therapies: the passage reports modest reductions in frequency and quantity of use, not that they help people quit. It also omits the requested plain-language explanation of contingency management: rein"
+    },
+    {
+     "part": "but",
+     "text": "Long-term effectiveness is uncertain as most studies lack follow-up beyond 12 months",
+     "rests_on": [
+      {
+       "label": "L2",
+       "ref": "lefoll_2024",
+       "where": "Psychological interventions",
+       "quote": "the majority of existing studies have not included follow-up assessments beyond 12 months from treatment, and outcomes have tended to be most positive at the end of treatment or at short-term follow-up",
+       "sha": "3f491c0dc671249f"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "A 2024 review says psychological interventions modestly reduce cannabis use",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "lefoll_2024",
+       "where": "Abstract",
+       "quote": "This Review will cover this topic from a variety of perspectives, with a particular emphasis on neurobiological findings and innovative treatment approaches that are being pursued.",
+       "sha": "3559539a5357fd33"
+      },
+      {
+       "label": "F4",
+       "ref": "lefoll_2024",
+       "where": "Psychological interventions",
+       "quote": "psychological interventions lead to modest reductions in the frequency and quantity of cannabis use",
+       "sha": "9807a1812ba4fa3a"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A systematic review found contingency management helps people with mental health disorders quit cannabis",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "rodas_2022",
+       "where": "Abstract",
+       "quote": "A systematic search examining the effects of CM on cannabis use, clinical, cognitive, and psychosocial outcomes in patients with a mental health disorder on PubMed, PsycINFO, and EMBASE databases up to November 2022 was performed.",
+       "sha": "a12294d5edc438d6"
+      },
+      {
+       "label": "F1",
+       "ref": "rodas_2022",
+       "where": "Abstract",
+       "quote": "We found CM to be efficacious in producing cannabis use reductions and abstinence amongst individuals with a psychotic-spectrum or major depressive disorder.",
+       "sha": "a12294d5edc438d6"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The review found reductions and abstinence among people with a psychotic-spectrum or major depressive disorder, not people with mental health disorders generally."
+    }
+   ]
+  }
+ ],
+ "dropped": [
+  {
+   "try": 3,
+   "part": "how2",
+   "text": "A systematic review found contingency management helps people with mental health disorders quit cannabis",
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "rodas_2022",
+     "where": "Abstract",
+     "quote": "A systematic search examining the effects of CM on cannabis use, clinical, cognitive, and psychosocial outcomes in patients with a mental health disorder on PubMed, PsycINFO, and EMBASE databases up to November 2022 was performed.",
+     "sha": "a12294d5edc438d6"
+    },
+    {
+     "label": "F1",
+     "ref": "rodas_2022",
+     "where": "Abstract",
+     "quote": "We found CM to be efficacious in producing cannabis use reductions and abstinence amongst individuals with a psychotic-spectrum or major depressive disorder.",
+     "sha": "a12294d5edc438d6"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The review found reductions and abstinence among people with a psychotic-spectrum or major depressive disorder, not people with mental health disorders generally."
+  }
+ ],
  "place": {
   "home": "cannabis",
   "also": [],
