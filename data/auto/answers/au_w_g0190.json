@@ -15,40 +15,41 @@
  ],
  "drugs": [],
  "made": {
-  "on": "2026-11-26",
+  "on": "2026-11-27",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
-   "writer": "openrouter:meta-llama/llama-3.3-70b-instruct",
-   "checker": "openrouter:openai/gpt-oss-120b",
-   "planner": "openrouter:openai/gpt-oss-120b",
-   "team": "team R",
+   "reader": "gemini:gemini-3.5-flash-lite",
+   "writer": "groq:qwen/qwen3.8-27b",
+   "checker": "groq:openai/gpt-oss-120b",
+   "planner": "groq:openai/gpt-oss-120b",
+   "also1": "gemini:gemini-3.5-flash-lite",
+   "also2": "gemini:gemini-3.6-flash",
+   "team": "team I",
    "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "writer_2": "groq:qwen/qwen3.8-27b"
+   "reader_3": "openrouter:meta-llama/llama-3.3-70b-instruct",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "45877788043",
+  "run": "46039180253",
   "read_by": {
-   "gemini-3.5-flash-lite": 8,
-   "gpt-oss-20b": 1
+   "gemini-3.5-flash-lite": 10,
+   "gemini-3.1-flash-lite": 2
   },
-  "read_seconds": 100,
+  "read_seconds": 50,
   "from": {
-   "papers": 1,
+   "papers": 2,
    "summaries": 0,
-   "official": 0
+   "official": 1
   },
   "neurons": 0.0,
-  "seconds": 203
+  "seconds": 301
  },
- "status": "published",
- "why": "passed every gate",
+ "status": "none",
+ "why": "the answer was not accepted: a further reader (gemini-3.5-flash-lite) did not accept it: rephrases the 2018 review's finding into a general fact instead of attributing it as the review's finding",
  "gates": {
-  "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "3 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 3 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.87, but 0.83, how1 0.87, how2 0.95",
-  "check": "every sentence kept was accepted by the second reader (openrouter:openai/gpt-oss-120b); it also found that the short answer answers the question and that the But is about that answer",
-  "rules": "nothing against it",
-  "checked": "set beside the checked claims of the same page: nothing against them"
+  "read": "5 findings kept from 3 sources (2 papers read in full, 1 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 1 official page(s), 0 paper(s) read in summary only",
+  "panel": "further readers, each of which must accept every sentence too: gemini-3.5-flash-lite accepted 2 of 4; gemini-3.6-flash accepted 1 of 4; gemini-3-flash-preview accepted 3 of 4",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.05, but 0.90, how1 0.57, how2 0.58",
+  "check": "short: NOT accepted: a further reader (gemini-3.5-flash-lite) did not accept it: rephrases the 2018 review's finding into a general fact instead of attributing it as the review's finding; but: NOT accepted: a further reader (gemini-3.5-flash-lite) did not accept it: rephrases the finding as a general fact instead of attributing it; how1: accepted; how2: accepted"
  },
  "sources": [
   {
@@ -77,10 +78,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-26",
+     "verified_on": "2026-11-27",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-26"
+      "checked_on": "2026-11-27"
      }
     },
     "volume": "9",
@@ -102,103 +103,168 @@
      "passage": 1,
      "where": "Abstract",
      "quote": "usually, however, there is no tolerance to the effects of baclofen during long-term AUD treatment.",
-     "text": "There is usually no tolerance to the effects of baclofen during long-term alcohol use disorder treatment.",
+     "text": "Usually, there is no tolerance to the effects of baclofen during long-term alcohol use disorder treatment.",
      "id": "F1",
      "second_hand": ""
     },
     {
      "passage": 19,
      "where": "The substitution hypothesis",
-     "quote": "as previously mentioned, there is no tolerance to the clinical effectiveness of baclofen in AUD, but there is tolerance to most of its adverse effects",
-     "text": "There is no tolerance to the clinical effectiveness of baclofen in alcohol use disorder, but there is tolerance to most of its adverse effects.",
+     "quote": "whereas tolerance with baclofen is equivocal: as previously mentioned, there is no tolerance to the clinical effectiveness of baclofen in AUD, but there is tolerance to most of its adverse effects",
+     "text": "Tolerance with baclofen is equivocal, as there is no tolerance to its clinical effectiveness in alcohol use disorder, but there is tolerance to most of its adverse effects.",
      "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 19,
+     "where": "The substitution hypothesis",
+     "quote": "there is no tolerance to the clinical effectiveness of baclofen in AUD, but there is tolerance to most of its adverse effects (e.g., its effects on locomotor activity).",
+     "text": "There is no tolerance to the clinical effectiveness of baclofen in alcohol use disorder, but there is tolerance to most of its adverse effects such as its effects on locomotor activity.",
+     "id": "F3",
      "second_hand": ""
     }
    ],
    "limits": [],
    "tag": "A"
-  }
- ],
- "parts": [
+  },
   {
-   "part": "short",
-   "text": "It can be that people do not build up a tolerance to the effects of baclofen during long-term treatment, but there is tolerance to most of its adverse effects.",
-   "uses": [
-    "F1",
-    "F2"
-   ],
-   "rests_on": [
-    {
-     "label": "F1",
-     "ref": "debeaurepaire_2018",
-     "where": "Abstract",
-     "quote": "usually, however, there is no tolerance to the effects of baclofen during long-term AUD treatment.",
-     "sha": "e9e289504db875e9"
+   "read": "full",
+   "ref": {
+    "id": "floyd_2018",
+    "type": "article-journal",
+    "title": "Baclofen in gamma-hydroxybutyrate withdrawal: Patterns of use and online availability",
+    "author": [
+     {
+      "family": "Floyd",
+      "given": "Christopher N."
+     },
+     {
+      "family": "Wood",
+      "given": "David M."
+     },
+     {
+      "family": "Dargan",
+      "given": "Paul I."
+     }
+    ],
+    "container-title": "European Journal of Clinical Pharmacology",
+    "issued": {
+     "date-parts": [
+      [
+       2018
+      ]
+     ]
     },
+    "DOI": "10.1007/s00228-017-2387-z",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-27",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-27"
+     },
+     "online_first_year": 2017
+    },
+    "volume": "74",
+    "issue": "3",
+    "page": "349-356",
+    "PMCID": "PMC5808054"
+   },
+   "doi": "10.1007/s00228-017-2387-z",
+   "pmcid": "PMC5808054",
+   "title": "Baclofen in gamma-hydroxybutyrate withdrawal: patterns of use and online availability",
+   "year": 2018,
+   "journal": "European journal of clinical pharmacology",
+   "kind": "review",
+   "people": true,
+   "near": 0.683,
+   "money": [
+    "We have read and understood the EJCP policy on declaration of interests and declare the following interests:",
+    "PID is a member of the UK Advisory Council on the Misuse of Drugs, the European Monitoring Centre for Drugs and Drug Addiction Scientific Committee and the Glaxo Smith Kline Global Analgesics Advisory Panel and an expert advisor to the World Health Organisation and United Nations Office on Drugs and Crime.",
+    "DMW is expert advisor to the UK Advisory Council on the Misuse of Drugs, the European Monitoring Centre for Drugs and Drug Addiction and the United Nations Office on Drugs and Crime."
+   ],
+   "design": null,
+   "findings": [
     {
-     "label": "F2",
-     "ref": "debeaurepaire_2018",
-     "where": "The substitution hypothesis",
-     "quote": "as previously mentioned, there is no tolerance to the clinical effectiveness of baclofen in AUD, but there is tolerance to most of its adverse effects",
-     "sha": "f92f1af589159c02"
+     "passage": 9,
+     "where": "Introduction",
+     "quote": "Animal work in both small mammals and primates has demonstrated that chronic GHB administration induces cross tolerance to baclofen",
+     "text": "Animal work in both small mammals and primates has demonstrated that chronic GHB administration induces cross tolerance to baclofen.",
+     "id": "F4",
+     "second_hand": "Animal work in both small mammals and primates has demonstrated that chronic GHB administration induces cross tolerance to baclofen, and one case report described the use of baclof"
     }
-   ]
+   ],
+   "limits": [],
+   "tag": "B"
   },
   {
-   "part": "but",
-   "text": "This usually holds in people with alcohol use disorder.",
-   "uses": [
-    "F1"
-   ],
-   "rests_on": [
+   "read": "page",
+   "ref": {
+    "id": "govuk_10-pharmacological-interventions",
+    "type": "webpage",
+    "title": "10. Pharmacological interventions",
+    "author": [
+     {
+      "literal": "Department of Health and Social Care"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      [
+       2023,
+       3
+      ]
+     ]
+    },
+    "URL": "https://www.gov.uk/guidance/clinical-guidelines-for-alcohol-treatment/10-pharmacological-interventions",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       27
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-27"
+    },
+    "publisher": "GOV.UK"
+   },
+   "title": "10. Pharmacological interventions",
+   "year": 2023,
+   "kind": "official",
+   "people": true,
+   "near": 0.62,
+   "name": "UK Government",
+   "short": "Department of Health and Social Care",
+   "tier": 1,
+   "address": "https://www.gov.uk/guidance/clinical-guidelines-for-alcohol-treatment/10-pharmacological-interventions",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
     {
-     "label": "F1",
-     "ref": "debeaurepaire_2018",
-     "where": "Abstract",
-     "quote": "usually, however, there is no tolerance to the effects of baclofen during long-term AUD treatment.",
-     "sha": "e9e289504db875e9"
-    }
-   ]
-  },
-  {
-   "part": "how1",
-   "text": "A 2018 review found no tolerance to the clinical effectiveness of baclofen in alcohol use disorder.",
-   "uses": [
-    "F2"
-   ],
-   "rests_on": [
-    {
-     "label": "F2",
-     "ref": "debeaurepaire_2018",
-     "where": "The substitution hypothesis",
-     "quote": "as previously mentioned, there is no tolerance to the clinical effectiveness of baclofen in AUD, but there is tolerance to most of its adverse effects",
-     "sha": "f92f1af589159c02"
+     "passage": 73,
+     "where": "10.5 Pharmacological interventions for preventing relapse and promoting abstinence / 10.5.3 Second-line pharmacological interventions / Baclofen",
+     "quote": "The SPC also states that cases of misuse, abuse and dependence have been reported with baclofen. You should exercise caution when prescribing baclofen to patients with a history of substance use and they should be monitored for symptoms of baclofen misuse, abuse, or dependence. For example, this includes cases of dose escalation, drug-seeking behaviour or a development of tolerance.",
+     "text": "The SPC states that cases of misuse, abuse, and dependence have been reported with baclofen, which includes a development of tolerance.",
+     "id": "F5",
+     "second_hand": ""
     }
    ],
-   "quote": "as previously mentioned, there is no tolerance to the clinical effectiveness of baclofen in AUD",
-   "quote_ref": "debeaurepaire_2018"
-  },
-  {
-   "part": "how2",
-   "text": "The review also found that there is usually no tolerance to the effects of baclofen during long-term AUD treatment.",
-   "uses": [
-    "F1"
-   ],
-   "rests_on": [
-    {
-     "label": "F1",
-     "ref": "debeaurepaire_2018",
-     "where": "Abstract",
-     "quote": "usually, however, there is no tolerance to the effects of baclofen during long-term AUD treatment.",
-     "sha": "e9e289504db875e9"
-    }
-   ],
-   "quote": "usually, however, there is no tolerance to the effects of baclofen during long-term AUD treatment",
-   "quote_ref": "debeaurepaire_2018"
+   "limits": [],
+   "tag": "C"
   }
  ],
+ "parts": [],
  "complete": false,
- "missing": "a paper that stands nearer the question could not be read",
+ "missing": "tolerance in other indications (e.g., spasticity)",
  "wanted": [
   {
    "doi": "10.1177/106002809302700618",
@@ -223,7 +289,16 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-26",
+   "lane": 19,
+   "status": "published",
+   "why": "passed every gate",
+   "short": "It can be that people do not build up a tolerance to the effects of baclofen during long-term treatment, but there is tolerance to most of its adverse effects.",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "Baclofen therapeutics, toxicity, and withdrawal: A narrative review",
@@ -231,14 +306,7 @@
    "kind": "review",
    "at": "10.1177/20503121211022197",
    "kept": 0,
-   "thrown": [
-    {
-     "kind": "text",
-     "text": "Narrative review of baclofen therapeutics, toxicity, and withdrawal",
-     "quote": "Baclofen therapeutics, toxicity, and withdrawal: A narrative review (2021)",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
-    }
-   ]
+   "thrown": []
   },
   {
    "title": "Safety Challenges of Using High Dose Baclofen for Alcohol Use Disorder: A Focused Review",
@@ -262,14 +330,7 @@
    "kind": "review",
    "at": "10.1097/wnf.0000000000000179",
    "kept": 0,
-   "thrown": [
-    {
-     "kind": "text",
-     "text": "A research paper on baclofen in the therapeutic of sequelae of traumatic brain injury",
-     "quote": "Baclofen in the Therapeutic of Sequele of Traumatic Brain Injury: Spasticity (2016), Clinical neuropharmacology.",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
-    }
-   ]
+   "thrown": []
   },
   {
    "title": "The effects of baclofen for the treatment of gastroesophageal reflux disease: a meta-analysis of randomized controlled trials",
@@ -300,11 +361,11 @@
    "read": "full",
    "kind": "review",
    "at": "10.3389/fpsyt.2018.00506",
-   "kept": 2,
+   "kept": 3,
    "thrown": [
     {
      "kind": "text",
-     "text": "A review of the potential mechanisms of action of baclofen in alcohol use disorder",
+     "text": "A review of potential mechanisms of action of baclofen in alcohol use disorder",
      "quote": "A Review of the Potential Mechanisms of Action of Baclofen in Alcohol Use Disorder (2018), Frontiers in psychiatry.",
      "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
     }
@@ -316,8 +377,7 @@
    "kind": "review",
    "at": "10.3389/fpsyt.2018.00464",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
   },
   {
    "title": "Baclofen in gamma-hydroxybutyrate withdrawal: patterns of use and online availability",
@@ -326,40 +386,115 @@
    "at": "10.1007/s00228-017-2387-z",
    "kept": 1,
    "thrown": []
+  },
+  {
+   "title": "Baclofen Common brands: Lioresal, Lyflex",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.nhs.uk/medicines/baclofen/",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "10. Pharmacological interventions",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.gov.uk/guidance/clinical-guidelines-for-alcohol-treatment/10-pharmacological-interventions",
+   "kept": 1,
+   "thrown": []
   }
  ],
  "plan": {
   "short": [
-   "F2",
-   "F1"
+   "F5",
+   "F2"
   ],
-  "direct": "Sometimes",
+  "direct": "It depends",
   "but": [
    "F1"
   ],
   "how": [
    [
-    "F2",
-    "F1"
+    "F5"
+   ],
+   [
+    "F1",
+    "F2"
    ]
   ],
-  "unanswered": "tolerance in non‑AUD patients"
+  "unanswered": "tolerance in other indications (e.g., spasticity)"
+ },
+ "panel": {
+  "gemini:gemini-3.5-flash-lite": {
+   "short": [
+    false,
+    "rephrases the 2018 review's finding into a general fact instead of attributing it as the review's finding"
+   ],
+   "but": [
+    false,
+    "rephrases the finding as a general fact instead of attributing it"
+   ],
+   "how1": [
+    true,
+    ""
+   ],
+   "how2": [
+    true,
+    ""
+   ]
+  },
+  "gemini:gemini-3.6-flash": {
+   "short": [
+    false,
+    "The sentence leaves out the review's specific setting (long-term treatment for alcohol use disorder), doing what the editor's note warns against."
+   ],
+   "but": [
+    false,
+    "The sentence relies on an unreferenced pronoun ('This') and does not make a complete, self-contained statement supported by the passage."
+   ],
+   "how1": [
+    false,
+    "The passage states that the SPC reports cases of misuse, abuse, and dependence, but it does not say that the SPC specifically reported cases of tolerance."
+   ],
+   "how2": [
+    true,
+    ""
+   ]
+  },
+  "gemini:gemini-3-flash-preview": {
+   "short": [
+    true,
+    ""
+   ],
+   "but": [
+    false,
+    "The sentence claims there is usually no tolerance to the effects of baclofen, but the passages and the editor's note clarify that while there is no tolerance to clinical effectiveness, there is tolerance to its adverse effects (side effects"
+   ],
+   "how1": [
+    true,
+    ""
+   ],
+   "how2": [
+    true,
+    ""
+   ]
+  }
  },
  "panel_gap": [],
  "own": {
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.8683,
-   "but": 0.8288,
-   "how1": 0.8739,
-   "how2": 0.9541
+   "short": 0.0538,
+   "but": 0.8971,
+   "how1": 0.574,
+   "how2": 0.5768
   },
   "scores_quotes_alone": {
-   "short": 0.3141,
-   "but": 0.5167,
-   "how1": 0.6001,
-   "how2": 0.7104
+   "short": 0.0163,
+   "but": 0.4312,
+   "how1": 0.217,
+   "how2": 0.4487
   }
  },
  "tries": [
@@ -369,15 +504,29 @@
    "parts": [
     {
      "part": "short",
-     "text": "Sometimes people do not build up tolerance to baclofen, but there is tolerance to most of its adverse effects.",
+     "text": "It depends. The Department of Health and Social Care says tolerance has been reported. A 2018 review says tolerance is mixed: no loss of effect, but tolerance to side effects.",
      "rests_on": [
+      {
+       "label": "F5",
+       "ref": "govuk_10-pharmacological-interventions",
+       "where": "10.5 Pharmacological interventions for preventing relapse and promoting abstinence / 10.5.3 Second-line pharmacological interventions / Baclofen",
+       "quote": "The SPC also states that cases of misuse, abuse and dependence have been reported with baclofen. You should exercise caution when prescribing baclofen to patients with a history of substance use and they should be monitored for symptoms of baclofen misuse, abuse, or dependence. For example, this includes cases of dose escalation, drug-seeking behaviour or a development of tolerance.",
+       "sha": "ca1059a9af24c21a"
+      },
       {
        "label": "F2",
        "ref": "debeaurepaire_2018",
        "where": "The substitution hypothesis",
-       "quote": "as previously mentioned, there is no tolerance to the clinical effectiveness of baclofen in AUD, but there is tolerance to most of its adverse effects",
+       "quote": "whereas tolerance with baclofen is equivocal: as previously mentioned, there is no tolerance to the clinical effectiveness of baclofen in AUD, but there is tolerance to most of its adverse effects",
        "sha": "f92f1af589159c02"
-      },
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "In long-term alcohol use disorder treatment, there is usually no tolerance to the effects of baclofen.",
+     "rests_on": [
       {
        "label": "F1",
        "ref": "debeaurepaire_2018",
@@ -387,40 +536,26 @@
       }
      ],
      "ok": false,
-     "by": "the second reader",
-     "said": "The passage states there is no tolerance to clinical effectiveness (i.e., always), but the sentence adds 'Sometimes' and uses generic 'people' instead of AUD patients, which is not in the passage."
-    },
-    {
-     "part": "but",
-     "text": "This holds usually in people with alcohol use disorder during long-term treatment.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "debeaurepaire_2018",
-       "where": "Abstract",
-       "quote": "usually, however, there is no tolerance to the effects of baclofen during long-term AUD treatment.",
-       "sha": "e9e289504db875e9"
-      }
-     ],
-     "ok": true
+     "by": "a further reader",
+     "said": "a further reader (gemini-3-flash-preview) did not accept it: The sentence claims there is usually no tolerance to the effects of baclofen, but the passages and the editor's note clarify that while there is no tolerance to clinical effectiveness, there is tolerance to its adverse effects (side effect"
     },
     {
      "part": "how1",
-     "text": "A 2018 review found no tolerance to the clinical effectiveness of baclofen in alcohol use disorder.",
+     "text": "The Department of Health and Social Care page says the SPC reports cases of dependence, including a development of tolerance.",
      "rests_on": [
       {
-       "label": "F2",
-       "ref": "debeaurepaire_2018",
-       "where": "The substitution hypothesis",
-       "quote": "as previously mentioned, there is no tolerance to the clinical effectiveness of baclofen in AUD, but there is tolerance to most of its adverse effects",
-       "sha": "f92f1af589159c02"
+       "label": "F5",
+       "ref": "govuk_10-pharmacological-interventions",
+       "where": "10.5 Pharmacological interventions for preventing relapse and promoting abstinence / 10.5.3 Second-line pharmacological interventions / Baclofen",
+       "quote": "The SPC also states that cases of misuse, abuse and dependence have been reported with baclofen. You should exercise caution when prescribing baclofen to patients with a history of substance use and they should be monitored for symptoms of baclofen misuse, abuse, or dependence. For example, this includes cases of dose escalation, drug-seeking behaviour or a development of tolerance.",
+       "sha": "ca1059a9af24c21a"
       }
      ],
      "ok": true
     },
     {
      "part": "how2",
-     "text": "The review also found usually no tolerance to the effects of baclofen during long-term treatment.",
+     "text": "A 2018 review says tolerance is equivocal: no tolerance to clinical effectiveness in alcohol use disorder, but tolerance to most adverse effects.",
      "rests_on": [
       {
        "label": "F1",
@@ -428,6 +563,13 @@
        "where": "Abstract",
        "quote": "usually, however, there is no tolerance to the effects of baclofen during long-term AUD treatment.",
        "sha": "e9e289504db875e9"
+      },
+      {
+       "label": "F2",
+       "ref": "debeaurepaire_2018",
+       "where": "The substitution hypothesis",
+       "quote": "whereas tolerance with baclofen is equivocal: as previously mentioned, there is no tolerance to the clinical effectiveness of baclofen in AUD, but there is tolerance to most of its adverse effects",
+       "sha": "f92f1af589159c02"
       }
      ],
      "ok": true
@@ -440,7 +582,62 @@
    "parts": [
     {
      "part": "short",
-     "text": "Sometimes, there is no tolerance to the effects of baclofen in people with alcohol use disorder, but there is tolerance to most of its adverse effects.",
+     "text": "It depends. The Department of Health and Social Care says tolerance has been reported. A 2018 review says people usually do not lose the drug's effect, but do get used to most side effects.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "govuk_10-pharmacological-interventions",
+       "where": "10.5 Pharmacological interventions for preventing relapse and promoting abstinence / 10.5.3 Second-line pharmacological interventions / Baclofen",
+       "quote": "The SPC also states that cases of misuse, abuse and dependence have been reported with baclofen. You should exercise caution when prescribing baclofen to patients with a history of substance use and they should be monitored for symptoms of baclofen misuse, abuse, or dependence. For example, this includes cases of dose escalation, drug-seeking behaviour or a development of tolerance.",
+       "sha": "ca1059a9af24c21a"
+      },
+      {
+       "label": "F2",
+       "ref": "debeaurepaire_2018",
+       "where": "The substitution hypothesis",
+       "quote": "whereas tolerance with baclofen is equivocal: as previously mentioned, there is no tolerance to the clinical effectiveness of baclofen in AUD, but there is tolerance to most of its adverse effects",
+       "sha": "f92f1af589159c02"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.6-flash) did not accept it: The sentence leaves out the review's specific setting (long-term treatment for alcohol use disorder), doing what the editor's note warns against."
+    },
+    {
+     "part": "but",
+     "text": "This applies to people in long-term treatment for alcohol use disorder.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "debeaurepaire_2018",
+       "where": "Abstract",
+       "quote": "usually, however, there is no tolerance to the effects of baclofen during long-term AUD treatment.",
+       "sha": "e9e289504db875e9"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.6-flash) did not accept it: The sentence relies on an unreferenced pronoun ('This') and does not make a complete, self-contained statement supported by the passage."
+    },
+    {
+     "part": "how1",
+     "text": "The Department of Health and Social Care page says the SPC reports cases of dependence, including a development of tolerance.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "govuk_10-pharmacological-interventions",
+       "where": "10.5 Pharmacological interventions for preventing relapse and promoting abstinence / 10.5.3 Second-line pharmacological interventions / Baclofen",
+       "quote": "The SPC also states that cases of misuse, abuse and dependence have been reported with baclofen. You should exercise caution when prescribing baclofen to patients with a history of substance use and they should be monitored for symptoms of baclofen misuse, abuse, or dependence. For example, this includes cases of dose escalation, drug-seeking behaviour or a development of tolerance.",
+       "sha": "ca1059a9af24c21a"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "Passage does not state that tolerance is included among dependence cases."
+    },
+    {
+     "part": "how2",
+     "text": "A 2018 review says there is usually no tolerance to baclofen's clinical effectiveness in alcohol use disorder, but there is tolerance to most adverse effects.",
      "rests_on": [
       {
        "label": "F1",
@@ -453,17 +650,44 @@
        "label": "F2",
        "ref": "debeaurepaire_2018",
        "where": "The substitution hypothesis",
-       "quote": "as previously mentioned, there is no tolerance to the clinical effectiveness of baclofen in AUD, but there is tolerance to most of its adverse effects",
+       "quote": "whereas tolerance with baclofen is equivocal: as previously mentioned, there is no tolerance to the clinical effectiveness of baclofen in AUD, but there is tolerance to most of its adverse effects",
+       "sha": "f92f1af589159c02"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "It depends. In long-term alcohol use disorder treatment, people usually do not lose baclofen's effect, but they do get used to most side effects.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "govuk_10-pharmacological-interventions",
+       "where": "10.5 Pharmacological interventions for preventing relapse and promoting abstinence / 10.5.3 Second-line pharmacological interventions / Baclofen",
+       "quote": "The SPC also states that cases of misuse, abuse and dependence have been reported with baclofen. You should exercise caution when prescribing baclofen to patients with a history of substance use and they should be monitored for symptoms of baclofen misuse, abuse, or dependence. For example, this includes cases of dose escalation, drug-seeking behaviour or a development of tolerance.",
+       "sha": "ca1059a9af24c21a"
+      },
+      {
+       "label": "F2",
+       "ref": "debeaurepaire_2018",
+       "where": "The substitution hypothesis",
+       "quote": "whereas tolerance with baclofen is equivocal: as previously mentioned, there is no tolerance to the clinical effectiveness of baclofen in AUD, but there is tolerance to most of its adverse effects",
        "sha": "f92f1af589159c02"
       }
      ],
      "ok": false,
-     "by": "the second reader",
-     "said": "The word \"Sometimes\" is not present in the passages; the passages state the lack of tolerance as a general statement."
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.5-flash-lite) did not accept it: rephrases the 2018 review's finding into a general fact instead of attributing it as the review's finding"
     },
     {
      "part": "but",
-     "text": "This holds usually in people with alcohol use disorder during long-term treatment.",
+     "text": "This applies to people in long-term treatment for alcohol use disorder, where tolerance to the drug's main effect is usually absent.",
      "rests_on": [
       {
        "label": "F1",
@@ -473,25 +697,27 @@
        "sha": "e9e289504db875e9"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.5-flash-lite) did not accept it: rephrases the finding as a general fact instead of attributing it"
     },
     {
      "part": "how1",
-     "text": "A 2018 review found no tolerance to the clinical effectiveness of baclofen in alcohol use disorder.",
+     "text": "The Department of Health and Social Care says the SPC reports cases of dependence with baclofen, including a development of tolerance.",
      "rests_on": [
       {
-       "label": "F2",
-       "ref": "debeaurepaire_2018",
-       "where": "The substitution hypothesis",
-       "quote": "as previously mentioned, there is no tolerance to the clinical effectiveness of baclofen in AUD, but there is tolerance to most of its adverse effects",
-       "sha": "f92f1af589159c02"
+       "label": "F5",
+       "ref": "govuk_10-pharmacological-interventions",
+       "where": "10.5 Pharmacological interventions for preventing relapse and promoting abstinence / 10.5.3 Second-line pharmacological interventions / Baclofen",
+       "quote": "The SPC also states that cases of misuse, abuse and dependence have been reported with baclofen. You should exercise caution when prescribing baclofen to patients with a history of substance use and they should be monitored for symptoms of baclofen misuse, abuse, or dependence. For example, this includes cases of dose escalation, drug-seeking behaviour or a development of tolerance.",
+       "sha": "ca1059a9af24c21a"
       }
      ],
      "ok": true
     },
     {
      "part": "how2",
-     "text": "The review also found that there is usually no tolerance to the effects of baclofen during long-term AUD treatment.",
+     "text": "A 2018 review says tolerance is equivocal: no tolerance to clinical effectiveness in alcohol use disorder, but tolerance to most adverse effects.",
      "rests_on": [
       {
        "label": "F1",
@@ -499,6 +725,13 @@
        "where": "Abstract",
        "quote": "usually, however, there is no tolerance to the effects of baclofen during long-term AUD treatment.",
        "sha": "e9e289504db875e9"
+      },
+      {
+       "label": "F2",
+       "ref": "debeaurepaire_2018",
+       "where": "The substitution hypothesis",
+       "quote": "whereas tolerance with baclofen is equivocal: as previously mentioned, there is no tolerance to the clinical effectiveness of baclofen in AUD, but there is tolerance to most of its adverse effects",
+       "sha": "f92f1af589159c02"
       }
      ],
      "ok": true
@@ -506,10 +739,6 @@
    ]
   }
  ],
- "with_checked": {
-  "differs": [],
-  "same": []
- },
  "place": {
   "home": "new:Baclofen",
   "also": [],
