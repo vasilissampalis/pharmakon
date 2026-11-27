@@ -15,45 +15,135 @@
  ],
  "drugs": [],
  "made": {
-  "on": "2026-11-26",
+  "on": "2026-11-27",
   "models": {
-   "reader": "groq:openai/gpt-oss-20b",
-   "writer": "groq:qwen/qwen3.8-27b",
-   "checker": "gemini:gemini-3.5-flash-lite",
+   "reader": "gemini:gemma-4-31b-it",
+   "writer": "gemini:gemma-4-26b-a4b-it",
+   "checker": "groq:openai/gpt-oss-120b",
    "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3.1-flash-lite",
-   "team": "team Z",
-   "reader_2": "gemini:gemini-3.1-flash-lite",
-   "writer_2": "groq:qwen/qwen3.8-27b",
-   "also1_else": "gemini:gemma-4-31b-it",
-   "reader_first": "gemini:gemma-4-31b-it",
-   "writer_first": "gemini:gemma-4-26b-a4b-it"
+   "also1": "gemini:gemini-3.5-flash-lite",
+   "also2": "gemini:gemini-3.6-flash",
+   "team": "team K",
+   "reader_2": "gemini:gemini-3.5-flash-lite",
+   "reader_3": "openrouter:meta-llama/llama-3.3-70b-instruct",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "45793553208",
-  "read_seconds": 100,
+  "run": "45983753891",
+  "read_by": {
+   "gemini-3.1-flash-lite": 2,
+   "gpt-oss-20b": 1
+  },
+  "read_seconds": 12,
   "from": {
    "papers": 2,
    "summaries": 0,
-   "official": 0
+   "official": 1
   },
   "neurons": 0.0,
-  "seconds": 255
+  "seconds": 386
  },
- "status": "published",
- "why": "passed every gate",
+ "status": "none",
+ "why": "no draft passed: the form was wrong: no JSON",
  "gates": {
-  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-20b read from there",
-  "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "4 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 6 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
-  "writer": "try 1: no JSON (how the reply ended: length; reasoned 0 characters, wrote 9304) gemma-4-26b-a4b-it gave no answer in the form asked for: qwen3.8-27b wrote from there.",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.17, but 0.14, how1 0.49, how2 0.07",
-  "check": "every sentence kept was accepted by the second reader (gemini:gemini-3.5-flash-lite) and by gemini:gemini-3.1-flash-lite",
-  "but": "the writer's But was not accepted (The passages do not explicitly state that the sources are reviews of research rather than new studies on people, or that they summarize what is known rather tha): the code wrote the But itself, from what this answer rests on",
-  "rules": "nothing against it",
-  "checked": "set beside the checked claims of the same page: nothing against them"
+  "read": "8 findings kept from 3 sources (2 papers read in full, 1 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 1 official page(s), 0 paper(s) read in summary only",
+  "writer": "try 1: no JSON (how the reply ended: length; reasoned 0 characters, wrote 10338) try 2: no JSON (how the reply ended: length; reasoned 0 characters, wrote 10165)"
  },
  "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "hashemian_2020",
+    "type": "article-journal",
+    "title": "A review on modafinil: The characteristics, function, and use in critical care",
+    "author": [
+     {
+      "family": "Hashemian",
+      "given": "Seyed MohammadReza"
+     },
+     {
+      "family": "Farhadi",
+      "given": "Tayebeh"
+     }
+    ],
+    "container-title": "Journal of Drug Assessment",
+    "issued": {
+     "date-parts": [
+      [
+       2020
+      ]
+     ]
+    },
+    "DOI": "10.1080/21556660.2020.1745209",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-27",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-27"
+     }
+    },
+    "volume": "9",
+    "issue": "1",
+    "page": "82-86",
+    "PMCID": "PMC7170336"
+   },
+   "doi": "10.1080/21556660.2020.1745209",
+   "pmcid": "PMC7170336",
+   "title": "A review on modafinil: the characteristics, function, and use in critical care",
+   "year": 2020,
+   "journal": "Journal of drug assessment",
+   "kind": "review",
+   "people": false,
+   "near": 0.873,
+   "money": [],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "In vitro studies have demonstrated that binding of modafinil to the dopamine reuptake pump can prevent the reuptake of dopamine, resulting in a boost in extracellular dopamine.",
+    "text": "Review paper on modafinil’s use in critical care"
+   },
+   "findings": [
+    {
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "In vitro studies have demonstrated that binding of modafinil to the dopamine reuptake pump can prevent the reuptake of dopamine, resulting in a boost in extracellular dopamine.",
+     "text": "Modafinil binds to the dopamine reuptake pump, preventing dopamine reuptake and increasing extracellular dopamine.",
+     "id": "F1",
+     "second_hand": ""
+    },
+    {
+     "passage": 28,
+     "where": "Modafinil tolerance",
+     "quote": "First, it has been reported that modafinil blocks dopamine transporter in animals and human brain resulted in inhibition of dopamine reuptake.",
+     "text": "In animals and humans, modafinil blocks the dopamine transporter, inhibiting dopamine reuptake.",
+     "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 29,
+     "where": "Modafinil tolerance",
+     "quote": "In addition to dopamine, as one of the main chemicals influencing modafinil tolerance, modafinil can change norepinephrine levels in the brain, but not by adequate to induce addiction or euphoria.",
+     "text": "Modafinil can alter norepinephrine levels in the brain, but not sufficiently to cause addiction or euphoria.",
+     "id": "F3",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "The exact mechanism of action of modafinil is unclear.",
+     "text": "The precise mechanism of action of modafinil remains unclear.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "A"
+  },
   {
    "read": "full",
    "ref": {
@@ -80,10 +170,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-26",
+     "verified_on": "2026-11-27",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-26"
+      "checked_on": "2026-11-27"
      }
     },
     "volume": "4",
@@ -101,277 +191,118 @@
     "The author declares that the research was conducted in the absence of any commercial or financial relationships that could be construed as a potential conflict of interest."
    ],
    "design": {
-    "passage": 1,
-    "where": "Abstract",
-    "quote": "Modafinil, in its two clinical formulations (Provigil® and Nuvigil®), is a widely prescribed wake-promoting therapeutic agent.",
-    "text": "research paper on modafinil pharmacology"
+    "passage": 22,
+    "where": "Why Do Modafinil and Other Commonly Used (and Abused) DAT Inhibitors have Distinct Effects on Clinically Relevant Measures?",
+    "quote": "The purpose of this article is not to review exhaustively the addictive potential of modafinil; this topic is covered elsewhere from a clinical perspective. Rather, a brief survey of the pertinent literature serves to illustrate why differences between modafinil and other DAT-binding agents",
+    "text": "a review of empirical evidence regarding modafinil's mechanism of action"
    },
    "findings": [
     {
-     "passage": 32,
-     "where": "Conclusion",
-     "quote": "Modafinil elevates extracellular DA concentrations by binding to and disrupting the activity of the cell-membrane DAT.",
-     "text": "Modafinil increases extracellular dopamine by binding to and inhibiting the dopamine transporter.",
-     "id": "F1",
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "Modafinil is an exceptionally weak, but apparently very selective, DA transporter inhibitor.",
+     "text": "Modafinil acts as an exceptionally weak but apparently very selective dopamine transporter inhibitor.",
+     "id": "F4",
      "second_hand": ""
     },
     {
      "passage": 13,
      "where": "Putative Non-Dopaminergic Effects of Modafinil In vivo may be Secondary to DAT Binding",
-     "quote": "modafinil elevates NE concentrations in both the prefrontal cortex and the hypothalamus.",
-     "text": "Modafinil elevates norepinephrine concentrations in the prefrontal cortex and hypothalamus.",
-     "id": "F2",
-     "second_hand": ""
-    }
-   ],
-   "limits": [],
-   "tag": "A"
-  },
-  {
-   "read": "full",
-   "ref": {
-    "id": "hersey_2021",
-    "type": "article-journal",
-    "title": "Psychostimulant use disorder, an unmet therapeutic goal: Can modafinil narrow the gap?",
-    "author": [
-     {
-      "family": "Hersey",
-      "given": "Melinda"
-     },
-     {
-      "family": "Bacon",
-      "given": "Amanda K."
-     },
-     {
-      "family": "Bailey",
-      "given": "Lydia G."
-     },
-     {
-      "family": "Coggiano",
-      "given": "Mark A."
-     },
-     {
-      "family": "Newman",
-      "given": "Amy H."
-     },
-     {
-      "family": "Leggio",
-      "given": "Lorenzo"
-     },
-     {
-      "family": "Tanda",
-      "given": "Gianluigi"
-     }
-    ],
-    "container-title": "Frontiers in Neuroscience",
-    "issued": {
-     "date-parts": [
-      [
-       2021
-      ]
-     ]
-    },
-    "DOI": "10.3389/fnins.2021.656475",
-    "verification": {
-     "status": "metadata-verified",
-     "metadata_source": "crossref",
-     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
-     "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-26",
-     "retraction_check": {
-      "status": "clear",
-      "checked_on": "2026-11-26"
-     }
-    },
-    "volume": "15",
-    "number": "656475",
-    "PMCID": "PMC8187604"
-   },
-   "doi": "10.3389/fnins.2021.656475",
-   "pmcid": "PMC8187604",
-   "title": "Psychostimulant Use Disorder, an Unmet Therapeutic Goal: Can Modafinil Narrow the Gap?",
-   "year": 2021,
-   "journal": "Frontiers in neuroscience",
-   "kind": "review",
-   "people": true,
-   "near": 0.734,
-   "money": [
-    "The authors declare that the research was conducted in the absence of any commercial or financial relationships that could be construed as a potential conflict of interest. The reviewer TK declared a past co-authorship with one of the authors, AN, to the handling editor."
-   ],
-   "design": {
-    "passage": 1,
-    "where": "Abstract",
-    "quote": "The dopamine transporter (DAT) is a common target of psychostimulant actions related to their use and dependence, and the recent availability of atypical DAT inhibitors as a potential therapeutic option has garnered popularity in this research field.",
-    "text": "Review article on modafinil’s pharmacology and potential use for psychostimulant use disorder"
-   },
-   "findings": [
-    {
-     "passage": 9,
-     "where": "Modafinil Pharmacology Related to PSUD",
-     "quote": "Thus, the main mechanism of action for MOD appears predominantly driven by actions at neural membrane DATs to stimulate catecholamine neurotransmission.",
-     "text": "Modafinil primarily works by inhibiting dopamine transporters on neural membranes, thereby stimulating catecholamine neurotransmission.",
-     "id": "F3",
+     "quote": "Additionally, modafinil elevates NE concentrations in both the prefrontal cortex and the hypothalamus.",
+     "text": "Modafinil increases norepinephrine concentrations in the prefrontal cortex and the hypothalamus.",
+     "id": "F5",
      "second_hand": ""
     },
     {
-     "passage": 14,
-     "where": "Modafinil Pharmacology Related to PSUD › Modafinil Interactions With Sleep and Wakefulness Activities",
-     "quote": "The mechanism is suspected to be linked to the inhibition of monoamine transport by plasma membrane transporters like DAT.",
-     "text": "Modafinil’s wake‑promoting effect is suspected to involve inhibition of monoamine transporters such as DAT.",
-     "id": "F4",
+     "passage": 15,
+     "where": "Putative Non-Dopaminergic Effects of Modafinil In vivo may be Secondary to DAT Binding",
+     "quote": "Modafinil promotes an increase in extracellular glutamate concentrations in the striatum and the hippocampus.",
+     "text": "Modafinil increases extracellular glutamate concentrations in the striatum and the hippocampus.",
+     "id": "F6",
      "second_hand": ""
     }
    ],
    "limits": [
     {
-     "passage": 42,
-     "where": "Preclinical Studies on MOD as a Pharmacotherapeutic Treatment for PSUD › Effects of MOD on Behavioral Models of PSUD › Intracranial Self-Stimulation",
-     "quote": "MOD shows significant changes in ICSS rates only when administered at very high doses, while abused drugs show effects at significantly lower doses.",
-     "text": "Modafinil’s potential for abuse may require very high doses, unlike commonly abused psychostimulants that act at lower doses.",
-     "id": "L1",
+     "passage": 32,
+     "where": "Conclusion",
+     "quote": "Additional work might clarify the exact basis for these subtle distinctions among wake-promoting agents.",
+     "text": "Further research is required to clarify the exact basis for the differences between modafinil and other wake-promoting agents.",
+     "id": "L2",
      "second_hand": ""
     }
    ],
    "tag": "B"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "drugscience_modafinil",
+    "type": "webpage",
+    "title": "Modafinil",
+    "author": [
+     {
+      "literal": "Drug Science"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      []
+     ]
+    },
+    "URL": "https://www.drugscience.org.uk/drugs/modafinil",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       27
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-27"
+    }
+   },
+   "title": "Modafinil",
+   "year": null,
+   "kind": "official",
+   "people": true,
+   "near": 0.788,
+   "name": "Drug Science",
+   "short": "Drug Science, a UK charity of scientists",
+   "tier": 2,
+   "address": "https://www.drugscience.org.uk/drugs/modafinil",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 3,
+     "where": "What is the science of Modafinil?",
+     "quote": "It has been shown that modafinil works primarily through noradrenaline and dopamine transporter inhibition. It also acts on serotonin, histamine, gamma-aminobutyric acid and glutamate.",
+     "text": "Modafinil works primarily by inhibiting noradrenaline and dopamine transporters, and it also acts on serotonin, histamine, gamma-aminobutyric acid, and glutamate.",
+     "id": "F7",
+     "second_hand": ""
+    },
+    {
+     "passage": 3,
+     "where": "What is the science of Modafinil?",
+     "quote": "Increases in the hypothalamic release of histamine also occurs as a result of modafinil’s action on the orexin system.",
+     "text": "Modafinil increases the release of histamine in the hypothalamus by acting on the orexin system.",
+     "id": "F8",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "C"
   }
  ],
- "parts": [
-  {
-   "part": "short",
-   "text": "Modafinil works by blocking dopamine transporters, which raises dopamine levels. It also raises norepinephrine in the prefrontal cortex and hypothalamus.",
-   "uses": [
-    "F1",
-    "F3",
-    "F2",
-    "F4"
-   ],
-   "rests_on": [
-    {
-     "label": "F1",
-     "ref": "wisor_2013",
-     "where": "Conclusion",
-     "quote": "Modafinil elevates extracellular DA concentrations by binding to and disrupting the activity of the cell-membrane DAT.",
-     "sha": "d8e90ed932598cb1"
-    },
-    {
-     "label": "F3",
-     "ref": "hersey_2021",
-     "where": "Modafinil Pharmacology Related to PSUD",
-     "quote": "Thus, the main mechanism of action for MOD appears predominantly driven by actions at neural membrane DATs to stimulate catecholamine neurotransmission.",
-     "sha": "20fdbb8e4792885f"
-    },
-    {
-     "label": "F2",
-     "ref": "wisor_2013",
-     "where": "Putative Non-Dopaminergic Effects of Modafinil In vivo may be Secondary to DAT Binding",
-     "quote": "modafinil elevates NE concentrations in both the prefrontal cortex and the hypothalamus.",
-     "sha": "b5449f55c9fbe9ea"
-    },
-    {
-     "label": "F4",
-     "ref": "hersey_2021",
-     "where": "Modafinil Pharmacology Related to PSUD › Modafinil Interactions With Sleep and Wakefulness Activities",
-     "quote": "The mechanism is suspected to be linked to the inhibition of monoamine transport by plasma membrane transporters like DAT.",
-     "sha": "bb2cfcd477bc3fab"
-    }
-   ]
-  },
-  {
-   "part": "but",
-   "text": "This rests on 2 reviews.",
-   "uses": [
-    "DA",
-    "DB"
-   ],
-   "fixed": true,
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "wisor_2013",
-     "where": "Abstract",
-     "quote": "Modafinil, in its two clinical formulations (Provigil® and Nuvigil®), is a widely prescribed wake-promoting therapeutic agent.",
-     "sha": "a2b080dc7aad80bc"
-    },
-    {
-     "label": "DB",
-     "ref": "hersey_2021",
-     "where": "Abstract",
-     "quote": "The dopamine transporter (DAT) is a common target of psychostimulant actions related to their use and dependence, and the recent availability of atypical DAT inhibitors as a potential therapeutic option has garnered popularity in this research field.",
-     "sha": "ae00b053e93233cd"
-    }
-   ]
-  },
-  {
-   "part": "how1",
-   "text": "A 2021 review says modafinil mainly works by inhibiting dopamine transporters to stimulate catecholamine neurotransmission.",
-   "uses": [
-    "DB",
-    "F3",
-    "F4"
-   ],
-   "rests_on": [
-    {
-     "label": "DB",
-     "ref": "hersey_2021",
-     "where": "Abstract",
-     "quote": "The dopamine transporter (DAT) is a common target of psychostimulant actions related to their use and dependence, and the recent availability of atypical DAT inhibitors as a potential therapeutic option has garnered popularity in this research field.",
-     "sha": "ae00b053e93233cd"
-    },
-    {
-     "label": "F3",
-     "ref": "hersey_2021",
-     "where": "Modafinil Pharmacology Related to PSUD",
-     "quote": "Thus, the main mechanism of action for MOD appears predominantly driven by actions at neural membrane DATs to stimulate catecholamine neurotransmission.",
-     "sha": "20fdbb8e4792885f"
-    },
-    {
-     "label": "F4",
-     "ref": "hersey_2021",
-     "where": "Modafinil Pharmacology Related to PSUD › Modafinil Interactions With Sleep and Wakefulness Activities",
-     "quote": "The mechanism is suspected to be linked to the inhibition of monoamine transport by plasma membrane transporters like DAT.",
-     "sha": "bb2cfcd477bc3fab"
-    }
-   ],
-   "quote": "MOD appears predominantly driven by actions at neural membrane DATs to stimulate catecholamine neurotransmission",
-   "quote_ref": "hersey_2021"
-  },
-  {
-   "part": "how2",
-   "text": "A 2013 review notes modafinil increases extracellular dopamine by binding to the dopamine transporter and raises norepinephrine in two brain areas.",
-   "uses": [
-    "DA",
-    "F1",
-    "F2"
-   ],
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "wisor_2013",
-     "where": "Abstract",
-     "quote": "Modafinil, in its two clinical formulations (Provigil® and Nuvigil®), is a widely prescribed wake-promoting therapeutic agent.",
-     "sha": "a2b080dc7aad80bc"
-    },
-    {
-     "label": "F1",
-     "ref": "wisor_2013",
-     "where": "Conclusion",
-     "quote": "Modafinil elevates extracellular DA concentrations by binding to and disrupting the activity of the cell-membrane DAT.",
-     "sha": "d8e90ed932598cb1"
-    },
-    {
-     "label": "F2",
-     "ref": "wisor_2013",
-     "where": "Putative Non-Dopaminergic Effects of Modafinil In vivo may be Secondary to DAT Binding",
-     "quote": "modafinil elevates NE concentrations in both the prefrontal cortex and the hypothalamus.",
-     "sha": "b5449f55c9fbe9ea"
-    }
-   ],
-   "quote": "elevates extracellular DA concentrations by binding to and disrupting the activity of the cell-membrane DAT",
-   "quote_ref": "wisor_2013"
-  }
- ],
+ "parts": [],
  "complete": false,
- "missing": "a paper that stands nearer the question could not be read",
+ "missing": "",
  "wanted": [
   {
    "doi": "10.1021/acschemneuro.7b00374",
@@ -412,6 +343,14 @@
    "why": "passed every reader that could be asked, but a further reader of its team could not be (gemini-3.6-flash): it is worked on again by itself when that reader can be asked",
    "short": "Modafinil works primarily through noradrenaline and dopamine transporter inhibition. It also acts on serotonin, histamine, gamma-aminobutyric acid, and glutamate.",
    "complete": true
+  },
+  {
+   "on": "2026-11-26",
+   "lane": 19,
+   "status": "published",
+   "why": "passed every gate",
+   "short": "Modafinil works by blocking dopamine transporters, which raises dopamine levels. It also raises norepinephrine in the prefrontal cortex and hypothalamus.",
+   "complete": false
   }
  ],
  "looked": [
@@ -420,60 +359,35 @@
    "read": "full",
    "kind": "review",
    "at": "10.1080/21556660.2020.1745209",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 3,
+   "thrown": []
   },
   {
    "title": "Modafinil as a catecholaminergic agent: empirical evidence and unanswered questions",
    "read": "full",
    "kind": "review",
    "at": "10.3389/fneur.2013.00139",
-   "kept": 2,
+   "kept": 3,
    "thrown": [
     {
-     "kind": "finding",
-     "text": "Modafinil inhibits dopamine uptake with IC50 values ranging from 4.0 to 13 μM in cell lines.",
-     "quote": "IC50 values for modafinil in these in vitro assays range from 4.0 to 13 μM",
-     "why": "the sentence is not carried by its quote and passage"
-    },
-    {
      "kind": "limit",
-     "text": "It is uncertain whether the secondary neurotransmitter effects of modafinil are solely due to DAT inhibition.",
-     "quote": "To do so, one would have to show that each of these hypothesized secondary responses is abolished in DAT-deficient animals and in wild-type animals treated with a panel of DA-receptor antagonists.",
-     "why": "the sentence is not carried by its quote and passage"
-    },
-    {
-     "kind": "limit",
-     "text": "The role of DAT inhibition in modafinil’s abuse potential remains uncertain.",
-     "quote": "The concept that modafinil acts via DAT inhibition might be regarded as controversial because of inconsistencies in the preclinical and clinical literature on the potential for abuse and addiction.",
+     "text": "It has not yet been definitively ascertained that the effects on adrenergic, GABAergic, and glutamatergic transmission are secondary to elevated dopaminergic tone.",
+     "quote": "Still, though it is one thing to argue that these responses are secondary to elevated dopaminergic tone, it is another to ascertain that they are. To do so, one would have to show that each of these h",
      "why": "the sentence is not carried by its quote and passage"
     }
    ]
   },
   {
-   "title": "Psychostimulant Use Disorder, an Unmet Therapeutic Goal: Can Modafinil Narrow the Gap?",
-   "read": "full",
-   "kind": "review",
-   "at": "10.3389/fnins.2021.656475",
+   "title": "Modafinil",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.drugscience.org.uk/drugs/modafinil",
    "kept": 2,
    "thrown": [
     {
-     "kind": "finding",
-     "text": "In humans, oral modafinil at 200–400 mg occupies and blocks dopamine transporters in the caudate, nucleus accumbens, and putamen.",
-     "quote": "After oral administration, MOD (200 to 400 mg) occupies and blocks DAT in the human brain (caudate, NAcc, and putamen).",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
-    },
-    {
-     "kind": "finding",
-     "text": "DAT inhibition by modafinil or its R-enantiomer increases dopamine levels in multiple dopaminergic nerve terminal regions.",
-     "quote": "As a result of the DAT inhibition induced by administration of MOD or R-MOD, increased brain DA levels can be observed in several dopaminergic nerve terminal regions.",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
-    },
-    {
      "kind": "limit",
-     "text": "The rewarding effect of modafinil may differ between species, as it did not induce conditioned place preference in rats but did in mice.",
-     "quote": "Modafinil administered alone was unable to induce CPP in rats when administered orally, or by intraperitoneal injection, in contrast with results found in mice.",
+     "text": "The precise method by which modafinil functions in the brain remains largely unknown due to its complex mechanism of action.",
+     "quote": "The exact way in which modafinil works in the brain is still relatively unknown as it has a complex mechanism of action.",
      "why": "the sentence is not carried by its quote and passage"
     }
    ]
@@ -481,181 +395,36 @@
  ],
  "plan": {
   "short": [
+   "F7",
    "F1",
-   "F3",
-   "F2",
-   "F4"
+   "F5",
+   "F8"
   ],
   "direct": "",
-  "but": [],
+  "but": [
+   "L1"
+  ],
   "how": [
    [
-    "DB",
-    "F3",
-    "F4"
+    "F7",
+    "F8"
    ],
    [
     "DA",
     "F1",
-    "F2"
+    "F2",
+    "F3"
+   ],
+   [
+    "DB",
+    "F4",
+    "F5",
+    "F6"
    ]
   ],
   "unanswered": ""
  },
- "panel_gap": [],
- "own": {
-  "model": "pharmakon-check-0",
-  "threshold": 0.05,
-  "scores": {
-   "short": 0.1719,
-   "but": 0.1359,
-   "how1": 0.4887,
-   "how2": 0.065
-  },
-  "scores_quotes_alone": {
-   "short": 0.1021,
-   "but": 0.0659,
-   "how1": 0.4388,
-   "how2": 0.2165
-  }
- },
- "tries": [
-  {
-   "try": 2,
-   "why": "the short answer or the But was not accepted: written again",
-   "parts": [
-    {
-     "part": "short",
-     "text": "Modafinil works by blocking dopamine transporters on brain cells. This raises dopamine and norepinephrine levels, which helps keep people awake.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "wisor_2013",
-       "where": "Conclusion",
-       "quote": "Modafinil elevates extracellular DA concentrations by binding to and disrupting the activity of the cell-membrane DAT.",
-       "sha": "d8e90ed932598cb1"
-      },
-      {
-       "label": "F3",
-       "ref": "hersey_2021",
-       "where": "Modafinil Pharmacology Related to PSUD",
-       "quote": "Thus, the main mechanism of action for MOD appears predominantly driven by actions at neural membrane DATs to stimulate catecholamine neurotransmission.",
-       "sha": "20fdbb8e4792885f"
-      },
-      {
-       "label": "F2",
-       "ref": "wisor_2013",
-       "where": "Putative Non-Dopaminergic Effects of Modafinil In vivo may be Secondary to DAT Binding",
-       "quote": "modafinil elevates NE concentrations in both the prefrontal cortex and the hypothalamus.",
-       "sha": "b5449f55c9fbe9ea"
-      },
-      {
-       "label": "F4",
-       "ref": "hersey_2021",
-       "where": "Modafinil Pharmacology Related to PSUD › Modafinil Interactions With Sleep and Wakefulness Activities",
-       "quote": "The mechanism is suspected to be linked to the inhibition of monoamine transport by plasma membrane transporters like DAT.",
-       "sha": "bb2cfcd477bc3fab"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "but",
-     "text": "This is a review of research, not a new study on people. It summarizes what is known about how the drug acts in the brain.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "wisor_2013",
-       "where": "Abstract",
-       "quote": "Modafinil, in its two clinical formulations (Provigil® and Nuvigil®), is a widely prescribed wake-promoting therapeutic agent.",
-       "sha": "a2b080dc7aad80bc"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passages do not explicitly state that this is a review of research rather than a new study on people."
-    },
-    {
-     "part": "how1",
-     "text": "A 2021 review says modafinil mainly works by stopping dopamine transporters. This action stimulates catecholamine signals in the brain.",
-     "rests_on": [
-      {
-       "label": "DB",
-       "ref": "hersey_2021",
-       "where": "Abstract",
-       "quote": "The dopamine transporter (DAT) is a common target of psychostimulant actions related to their use and dependence, and the recent availability of atypical DAT inhibitors as a potential therapeutic option has garnered popularity in this research field.",
-       "sha": "ae00b053e93233cd"
-      },
-      {
-       "label": "F3",
-       "ref": "hersey_2021",
-       "where": "Modafinil Pharmacology Related to PSUD",
-       "quote": "Thus, the main mechanism of action for MOD appears predominantly driven by actions at neural membrane DATs to stimulate catecholamine neurotransmission.",
-       "sha": "20fdbb8e4792885f"
-      },
-      {
-       "label": "F4",
-       "ref": "hersey_2021",
-       "where": "Modafinil Pharmacology Related to PSUD › Modafinil Interactions With Sleep and Wakefulness Activities",
-       "quote": "The mechanism is suspected to be linked to the inhibition of monoamine transport by plasma membrane transporters like DAT.",
-       "sha": "bb2cfcd477bc3fab"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "A 2013 review explains that modafinil binds to dopamine transporters. This raises dopamine outside cells and norepinephrine in the prefrontal cortex and hypothalamus.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "wisor_2013",
-       "where": "Abstract",
-       "quote": "Modafinil, in its two clinical formulations (Provigil® and Nuvigil®), is a widely prescribed wake-promoting therapeutic agent.",
-       "sha": "a2b080dc7aad80bc"
-      },
-      {
-       "label": "F1",
-       "ref": "wisor_2013",
-       "where": "Conclusion",
-       "quote": "Modafinil elevates extracellular DA concentrations by binding to and disrupting the activity of the cell-membrane DAT.",
-       "sha": "d8e90ed932598cb1"
-      },
-      {
-       "label": "F2",
-       "ref": "wisor_2013",
-       "where": "Putative Non-Dopaminergic Effects of Modafinil In vivo may be Secondary to DAT Binding",
-       "quote": "modafinil elevates NE concentrations in both the prefrontal cortex and the hypothalamus.",
-       "sha": "b5449f55c9fbe9ea"
-      }
-     ],
-     "ok": true
-    }
-   ]
-  }
- ],
- "dropped": [
-  {
-   "try": 3,
-   "part": "but",
-   "text": "The sources are reviews of research, not new studies on people, so they summarize what is known rather than testing new effects.",
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "wisor_2013",
-     "where": "Abstract",
-     "quote": "Modafinil, in its two clinical formulations (Provigil® and Nuvigil®), is a widely prescribed wake-promoting therapeutic agent.",
-     "sha": "a2b080dc7aad80bc"
-    }
-   ],
-   "by": "the second reader",
-   "said": "The passages do not explicitly state that the sources are reviews of research rather than new studies on people, or that they summarize what is known rather than testing new effects."
-  }
- ],
- "with_checked": {
-  "differs": [],
-  "same": []
- },
+ "soft": "the writer's reply was not in the form asked for",
  "place": {
   "home": "new:Modafinil and armodafinil",
   "also": [],
