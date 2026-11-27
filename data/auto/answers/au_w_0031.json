@@ -19,32 +19,34 @@
  "made": {
   "on": "2026-11-27",
   "models": {
-   "reader": "openrouter:openai/gpt-oss-120b",
-   "writer": "openrouter:meta-llama/llama-3.3-70b-instruct",
-   "checker": "openrouter:openai/gpt-6-luna",
-   "planner": "openrouter:openai/gpt-oss-120b",
-   "team": "team R",
-   "reader_2": "openrouter:openai/gpt-oss-120b",
+   "reader": "groq:openai/gpt-oss-20b",
+   "writer": "gemini:gemma-4-26b-a4b-it",
+   "checker": "gemini:gemini-3.5-flash-lite",
+   "planner": "gemini:gemma-4-31b-it",
+   "also1": "gemini:gemma-4-31b-it",
+   "team": "team Z",
+   "reader_2": "gemini:gemini-3.1-flash-lite",
+   "reader_3": "openrouter:openai/gpt-oss-120b",
    "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "45945706907",
-  "read_seconds": 71,
+  "run": "46080680479",
+  "read_seconds": 100,
   "from": {
    "papers": 2,
    "summaries": 0,
-   "official": 2
+   "official": 0
   },
   "neurons": 0.0,
-  "seconds": 133
+  "seconds": 321
  },
  "status": "none",
- "why": "the second reader did not accept the answer",
+ "why": "no draft passed: the form was wrong: no JSON",
  "gates": {
-  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-120b read from there",
-  "read": "8 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 7 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 2 official page(s), 0 paper(s) read in summary only",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.34, but 0.86, how1 0.97, how2 0.88",
-  "check": "short: NOT accepted: The review says cannabis has a dose-dependent relationship with anxiety, but the passages do not say cannabis causes panic or paranoia, or that anxiety is especially associated with high doses of THC.; but: NOT accepted: The passage concerns cannabis and anxiety, not cannabis effects generally. It says research has only more recently increased; it does not say recent studies are especially limited.; how1: NOT accepted: The passage says CBD may block or lower some effects of THC on the mind when the amount of CBD is the same as or higher than THC. The sentence leaves out that condition.; how2: accepted"
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-20b read from there",
+  "read": "6 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 4 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 0 official page(s), 0 paper(s) read in summary only",
+  "told": "the writer was told what the readers said of the last draft that was not accepted: the short answer “Sometimes cannabis can cause anxiety, panic, or paranoia, especially at high doses of THC.”: The review says cannabis has a dose-dependent relationship with anxiety, but the passages do not say cannabis causes panic or paranoia, or that anxiety is especially associated with high do",
+  "writer": "try 1: no JSON (how the reply ended: length; reasoned 0 characters, wrote 9156) try 2: no JSON (how the reply ended: length; reasoned 0 characters, wrote 9532)"
  },
  "sources": [
   {
@@ -116,44 +118,35 @@
     "passage": 1,
     "where": "Abstract",
     "quote": "Cannabis has been reported to have both anxiogenic and anxiolytic effects. Habitual cannabis use has been associated with anxiety disorders (AD).",
-    "text": "Systematic review of literature on cannabis and anxiety"
+    "text": "systematic review of literature on cannabis and anxiety"
    },
    "findings": [
     {
+     "passage": 13,
+     "where": "Results › Causality",
+     "quote": "several studies reporting the acute anxiogenic effects of cannabis.",
+     "text": "Several studies reported that cannabis can acutely increase anxiety in people.",
+     "id": "F1",
+     "second_hand": ""
+    },
+    {
      "passage": 19,
      "where": "Discussion",
-     "quote": "It’s important to note that cannabis has a dose-dependent relationship on anxiety; that is, low doses are anxiolytic and high doses are anxiogenic.",
-     "text": "Low doses of cannabis are anxiolytic, while high doses are anxiogenic, which can cause anxiety, panic, or paranoia.",
-     "id": "F1",
+     "quote": "cannabis has a dose-dependent relationship on anxiety; that is, low doses are anxiolytic and high doses are anxiogenic.",
+     "text": "Cannabis has a dose-dependent effect on anxiety: low doses reduce anxiety, while high doses increase anxiety in people.",
+     "id": "F2",
      "second_hand": ""
     },
     {
      "passage": 18,
      "where": "Discussion",
-     "quote": "CBD has been shown to reduce THC‑induced anxiety and experimentally induced anxiety, most likely due to agonist activity at the 5HT1A receptor.",
-     "text": "THC can induce anxiety, but cannabidiol (CBD) can reduce THC‑induced anxiety.",
-     "id": "F2",
-     "second_hand": ""
-    },
-    {
-     "passage": 13,
-     "where": "Results › Causality",
-     "quote": "This directional interpretation is consistent with several studies reporting the acute anxiogenic effects of cannabis.",
-     "text": "Some studies report that cannabis can produce acute anxiogenic effects.",
+     "quote": "CBD has been shown to reduce THC-induced anxiety and experimentally induced anxiety.",
+     "text": "CBD can reduce anxiety that is induced by THC in people.",
      "id": "F3",
      "second_hand": ""
     }
    ],
-   "limits": [
-    {
-     "passage": 19,
-     "where": "Discussion",
-     "quote": "First, there are limited studies of cannabis on anxiety, and only recently (i.e., in the past 5–10 years) have more researchers attempts to study cannabis given the complex medicolegal environment surrounding the drug.",
-     "text": "There are limited studies of cannabis on anxiety, especially recent ones, creating uncertainty about its effects.",
-     "id": "L1",
-     "second_hand": ""
-    }
-   ],
+   "limits": [],
    "tag": "A"
   },
   {
@@ -225,191 +218,41 @@
     "passage": 2,
     "where": "Abstract",
     "quote": "To systematically review studies assessing cannabinoid interventions (e.g. THC or CBD or whole cannabis interventions) both in animals and humans, as well as recent epidemiological studies reporting on anxiolytic or anxiogenic effects from cannabis consumption.",
-    "text": "Systematic review of cannabinoid intervention studies in animals and humans"
+    "text": "Systematic review of cannabinoid interventions in animals and humans"
    },
    "findings": [
     {
-     "passage": 40,
-     "where": "Results › Social interaction › Cardiac conditioned response (CCR)",
-     "quote": "Generally, the results indicate that at lower dosages an anxiolytic response for THC is observed, with the opposite being true of higher doses (however as indicate above across differing animal modes, this finding is not always consistent).",
-     "text": "Low doses of THC can reduce anxiety, but higher doses increase anxiety in animal studies.",
+     "passage": 47,
+     "where": "Results › Acute human clinical trials",
+     "quote": "THC was found to have a profound anxiogenic effect, with participants stating that they felt increasingly more tense, jittery and less in control as the dose was increased.",
+     "text": "In humans, THC causes a profound anxiogenic effect, making participants feel tense, jittery and less in control as the dose increases.",
      "id": "F4",
      "second_hand": ""
-    }
-   ],
-   "limits": [
+    },
     {
-     "passage": 54,
-     "where": "Discussion › Data synthesis",
-     "quote": "these findings have not been reliably replicated in animal studies, and further larger human RCTs are required for stronger validation.",
-     "text": "The findings lack reliable replication in animal studies and need larger human randomized controlled trials for stronger validation.",
-     "id": "L2",
-     "second_hand": ""
-    }
-   ],
-   "tag": "B"
-  },
-  {
-   "read": "page",
-   "ref": {
-    "id": "healthcanada_about",
-    "type": "webpage",
-    "title": "About cannabis",
-    "author": [
-     {
-      "literal": "Health Canada"
-     }
-    ],
-    "issued": {
-     "date-parts": [
-      [
-       2023,
-       11,
-       6
-      ]
-     ]
-    },
-    "URL": "https://www.canada.ca/en/health-canada/services/drugs-medication/cannabis/about.html",
-    "accessed": {
-     "date-parts": [
-      [
-       2026,
-       11,
-       27
-      ]
-     ]
-    },
-    "verification": {
-     "status": "made by code",
-     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-27"
-    },
-    "publisher": "Government of Canada"
-   },
-   "title": "About cannabis",
-   "year": 2023,
-   "kind": "official",
-   "people": true,
-   "near": 0.557,
-   "name": "Health Canada",
-   "short": "Health Canada",
-   "tier": 1,
-   "address": "https://www.canada.ca/en/health-canada/services/drugs-medication/cannabis/about.html",
-   "money": [],
-   "label": false,
-   "design": null,
-   "findings": [
-    {
-     "passage": 4,
-     "where": "Cannabis and its components / Chemical substances in cannabis / THC",
-     "quote": "THC has some therapeutic effects but it also has harmful effects. Harmful effects may be greater when the strength of THC is higher.",
-     "text": "THC can cause harmful effects, and these harmful effects may increase with higher THC strength.",
+     "passage": 44,
+     "where": "Results › Acute human clinical trials",
+     "quote": "It was noted that those who frequently smoked cannabis displayed significantly smaller increases in anxiety than controls.",
+     "text": "In humans, frequent cannabis users show smaller increases in anxiety compared to non‑users when exposed to THC.",
      "id": "F5",
      "second_hand": ""
     },
     {
-     "passage": 6,
-     "where": "Cannabis and its components / Other intoxicating cannabinoids / CBD",
-     "quote": "There is some evidence that CBD may block or lower some of the effects of THC on the mind.",
-     "text": "CBD may block or lower some of THC’s effects on the mind.",
+     "passage": 52,
+     "where": "Discussion › Data synthesis",
+     "quote": "high potency THC in cannabis products in particular, are thought to induce the development of psychotic-like symptoms or overt psychosis in vulnerable individuals.",
+     "text": "In humans, high‑potency THC may induce psychotic‑like symptoms or overt psychosis in vulnerable individuals.",
      "id": "F6",
      "second_hand": ""
-    },
-    {
-     "passage": 5,
-     "where": "Cannabis and its components / Other intoxicating cannabinoids",
-     "quote": "While less researched and understood, the risks from consuming these other intoxicating cannabinoids are probably similar to the risks from consuming delta-9-THC.",
-     "text": "Other intoxicating cannabinoids probably have risks similar to delta-9-THC.",
-     "id": "F7",
-     "second_hand": ""
     }
    ],
-   "limits": [
-    {
-     "passage": 6,
-     "where": "Cannabis and its components / Other intoxicating cannabinoids / CBD",
-     "quote": "There is some evidence that CBD may block or lower some of the effects of THC on the mind.",
-     "text": "The evidence that CBD may block or lower THC’s effects is limited.",
-     "id": "L3",
-     "second_hand": ""
-    }
-   ],
-   "tag": "C"
-  },
-  {
-   "read": "page",
-   "ref": {
-    "id": "nhs_medical-cannabis",
-    "type": "webpage",
-    "title": "Medical cannabis (and cannabis oils)",
-    "author": [
-     {
-      "literal": "NHS"
-     }
-    ],
-    "issued": {
-     "date-parts": [
-      [
-       2025,
-       4,
-       11
-      ]
-     ]
-    },
-    "URL": "https://www.nhs.uk/medicines/medical-cannabis/",
-    "accessed": {
-     "date-parts": [
-      [
-       2026,
-       11,
-       27
-      ]
-     ]
-    },
-    "verification": {
-     "status": "made by code",
-     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-27"
-    }
-   },
-   "title": "Medical cannabis (and cannabis oils)",
-   "year": 2025,
-   "kind": "official",
-   "people": true,
-   "near": 0.533,
-   "name": "NHS",
-   "short": "the NHS",
-   "tier": 1,
-   "address": "https://www.nhs.uk/medicines/medical-cannabis/",
-   "money": [],
-   "label": false,
-   "design": null,
-   "findings": [
-    {
-     "passage": 8,
-     "where": "Is medical cannabis safe?",
-     "quote": "psychosis – there is evidence that regular cannabis use in some people can increase the risk of developing a psychotic illness such as schizophrenia",
-     "text": "Regular cannabis use can increase the risk of a psychotic illness in some people.",
-     "id": "F8",
-     "second_hand": ""
-    }
-   ],
-   "limits": [
-    {
-     "passage": 8,
-     "where": "Is medical cannabis safe?",
-     "quote": "The risks of using cannabis products containing THC (the chemical that gets you high) are not currently clear.",
-     "text": "The risks of THC cannabis products are not currently clear.",
-     "id": "L4",
-     "second_hand": ""
-    }
-   ],
-   "tag": "D"
+   "limits": [],
+   "tag": "B"
   }
  ],
  "parts": [],
  "complete": false,
- "missing": "",
+ "missing": "the biological mechanism of why this happens",
  "wanted": [
   {
    "doi": "10.1016/j.neubiorev.2025.106269",
@@ -442,6 +285,14 @@
    "why": "passed every gate; read by the editor and let out on 2026-11-18",
    "short": "The US label for dronabinol says high doses can cause paranoia. A 2025 review says high THC doses can cause anxiety and paranoid thoughts.",
    "complete": false
+  },
+  {
+   "on": "2026-11-27",
+   "lane": 19,
+   "status": "none",
+   "why": "the second reader did not accept the answer",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -454,8 +305,14 @@
    "thrown": [
     {
      "kind": "limit",
-     "text": "Inconsistencies, small effect sizes, and lack of temporal information limit confidence in a causal link between cannabis use and anxiety.",
-     "quote": "Several observations call into question the plausibility of a causal relationship, including inconsistency of associations in the literature, relatively small, reported strengths of association, and l",
+     "text": "The evidence is based on a limited number of studies conducted in the past 5–10 years.",
+     "quote": "There are limited studies of cannabis on anxiety, and only recently (i.e., in the past 5–10 years) have more researchers attempts to study cannabis.",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    },
+    {
+     "kind": "limit",
+     "text": "The studies used heterogeneous measures of anxiety, making comparisons difficult.",
+     "quote": "Specifically, when anxiety, different measures of anxiety were used, including subjective reports of decreased anxiety, patient-reported outcome tools, and measures of sleep and mood.",
      "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
     }
    ]
@@ -465,91 +322,18 @@
    "read": "full",
    "kind": "review",
    "at": "10.1186/s12967-020-02518-2",
-   "kept": 1,
+   "kept": 3,
    "thrown": [
     {
-     "kind": "finding",
-     "text": "THC is linked to anxiety and CBD is linked to reduced anxiety in humans.",
-     "quote": "In humans, Δ9-tetrahydrocannabinol (THC) has been associated with an anxiogenic response, while anxiolytic activity has been attributed mainly to cannabidiol (CBD).",
-     "why": "the sentence is not carried by its quote and passage"
-    },
-    {
-     "kind": "finding",
-     "text": "In humans, increasing THC dose leads to stronger anxiety, tension, and loss of control.",
-     "quote": "THC was found to have a profound anxiogenic effect, with participants stating that they felt increasingly more tense, jittery and less in control as the dose was increased.",
-     "why": "the sentence is not carried by its quote and passage"
-    },
-    {
-     "kind": "finding",
-     "text": "Infrequent cannabis users experience more THC‑induced anxiety, and high‑potency THC can cause psychotic‑like symptoms in vulnerable people.",
-     "quote": "In humans, research has also shown that the anxiogenic effects of THC are greater among infrequent or non-users relative to frequent users, and high potency THC in cannabis products in particular, are",
+     "kind": "limit",
+     "text": "The findings are limited by the need for larger human randomized controlled trials.",
+     "quote": "Further larger human RCTs are required for stronger validation.",
      "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
     },
     {
      "kind": "limit",
-     "text": "The effect of CBD reducing THC‑induced anxiety has not been definitively confirmed.",
-     "quote": "However, further investigation is needed to categorically affirm this effect.",
-     "why": "the sentence is not carried by its quote and passage"
-    }
-   ]
-  },
-  {
-   "title": "Cannabis (Marijuana) and Cannabinoids: What You Need To Know",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.nccih.nih.gov/health/cannabis-marijuana-and-cannabinoids-what-you-need-to-know",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Cannabis",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.ccsa.ca/en/guidance-tools-resources/substances/cannabis",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "About cannabis",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.canada.ca/en/health-canada/services/drugs-medication/cannabis/about.html",
-   "kept": 3,
-   "thrown": []
-  },
-  {
-   "title": "About Cannabis",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.cdc.gov/cannabis/about/index.html",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Cannabis (marijuana)",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.betterhealth.vic.gov.au/health/healthyliving/cannabis-marijuana",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Medical cannabis (and cannabis oils)",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.nhs.uk/medicines/medical-cannabis/",
-   "kept": 1,
-   "thrown": [
-    {
-     "kind": "finding",
-     "text": "Medical cannabis can cause a behavioural or mood change.",
-     "quote": "Depending on the type of medical cannabis you take, it's possible to develop side effects such as: ... a behavioural or mood change; ...",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
-    },
-    {
-     "kind": "finding",
-     "text": "Higher THC content is associated with greater risks.",
-     "quote": "Generally, the more THC the product contains, the greater these risks are.",
+     "text": "The results are uncertain because age, sex and prior exposure may influence reactions to THC or CBD.",
+     "quote": "age, sex and background of exposure may have an impact on how an animal or human reacts to THC or CBD inoculation, something which was found by Cuttler et al’s.",
      "why": "the sentence is not carried by its quote and passage"
     }
    ]
@@ -557,332 +341,30 @@
  ],
  "plan": {
   "short": [
-   "F1",
-   "F5"
+   "F4",
+   "F2",
+   "F6",
+   "F1"
   ],
-  "direct": "Sometimes",
+  "direct": "It can",
   "but": [
-   "L1"
+   "F5"
   ],
   "how": [
    [
-    "F5",
+    "DB",
+    "F4",
     "F6"
    ],
    [
     "DA",
-    "F1"
+    "F1",
+    "F2"
    ]
   ],
-  "unanswered": ""
+  "unanswered": "the biological mechanism of why this happens"
  },
- "panel_gap": [],
- "own": {
-  "model": "pharmakon-check-0",
-  "threshold": 0.05,
-  "scores": {
-   "short": 0.3398,
-   "but": 0.8607,
-   "how1": 0.9726,
-   "how2": 0.8802
-  },
-  "scores_quotes_alone": {
-   "short": 0.2431,
-   "but": 0.1876,
-   "how1": 0.9275,
-   "how2": 0.3101
-  }
- },
- "tries": [
-  {
-   "try": 1,
-   "why": "the short answer or the But was not accepted: written again",
-   "parts": [
-    {
-     "part": "short",
-     "text": "Sometimes cannabis causes anxiety, panic or paranoia, as low doses are calming and high doses are not.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "beletsky_2024",
-       "where": "Discussion",
-       "quote": "It’s important to note that cannabis has a dose-dependent relationship on anxiety; that is, low doses are anxiolytic and high doses are anxiogenic.",
-       "sha": "3f837d57b482fb11"
-      },
-      {
-       "label": "F5",
-       "ref": "healthcanada_about",
-       "where": "Cannabis and its components / Chemical substances in cannabis / THC",
-       "quote": "THC has some therapeutic effects but it also has harmful effects. Harmful effects may be greater when the strength of THC is higher.",
-       "sha": "05a5cd2d4e534d91"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passages discuss anxiety and dose-dependent anxiogenic effects, but do not mention panic or paranoia. They therefore do not support the full claim about those symptoms."
-    },
-    {
-     "part": "but",
-     "text": "There are limited studies, especially recent ones, creating uncertainty about its effects.",
-     "rests_on": [
-      {
-       "label": "L1",
-       "ref": "beletsky_2024",
-       "where": "Discussion",
-       "quote": "First, there are limited studies of cannabis on anxiety, and only recently (i.e., in the past 5–10 years) have more researchers attempts to study cannabis given the complex medicolegal environment surrounding the drug.",
-       "sha": "3f837d57b482fb11"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passage says there are limited studies overall and that more researchers have only recently begun studying cannabis and anxiety; it does not say that studies are especially limited among recent ones. It also concerns anxiety effects, no"
-    },
-    {
-     "part": "how1",
-     "text": "Health Canada says THC can cause harmful effects, and CBD may block some of THC’s effects.",
-     "rests_on": [
-      {
-       "label": "F5",
-       "ref": "healthcanada_about",
-       "where": "Cannabis and its components / Chemical substances in cannabis / THC",
-       "quote": "THC has some therapeutic effects but it also has harmful effects. Harmful effects may be greater when the strength of THC is higher.",
-       "sha": "05a5cd2d4e534d91"
-      },
-      {
-       "label": "F6",
-       "ref": "healthcanada_about",
-       "where": "Cannabis and its components / Other intoxicating cannabinoids / CBD",
-       "quote": "There is some evidence that CBD may block or lower some of the effects of THC on the mind.",
-       "sha": "794bbbd814e86017"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The CBD passage narrows the claim to effects on the mind and says blocking or lowering them may occur when CBD is present in the same or a higher amount than THC. The sentence omits those limits."
-    },
-    {
-     "part": "how2",
-     "text": "A systematic review of literature on cannabis and anxiety found a dose-dependent relationship.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "beletsky_2024",
-       "where": "Abstract",
-       "quote": "Cannabis has been reported to have both anxiogenic and anxiolytic effects. Habitual cannabis use has been associated with anxiety disorders (AD).",
-       "sha": "dcfe056a9ff9c938"
-      },
-      {
-       "label": "F1",
-       "ref": "beletsky_2024",
-       "where": "Discussion",
-       "quote": "It’s important to note that cannabis has a dose-dependent relationship on anxiety; that is, low doses are anxiolytic and high doses are anxiogenic.",
-       "sha": "3f837d57b482fb11"
-      }
-     ],
-     "ok": true
-    }
-   ]
-  },
-  {
-   "try": 2,
-   "why": "the short answer or the But was not accepted: written again",
-   "parts": [
-    {
-     "part": "short",
-     "text": "Sometimes cannabis can cause anxiety, panic or paranoia, with high doses being anxiogenic.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "beletsky_2024",
-       "where": "Discussion",
-       "quote": "It’s important to note that cannabis has a dose-dependent relationship on anxiety; that is, low doses are anxiolytic and high doses are anxiogenic.",
-       "sha": "3f837d57b482fb11"
-      },
-      {
-       "label": "F5",
-       "ref": "healthcanada_about",
-       "where": "Cannabis and its components / Chemical substances in cannabis / THC",
-       "quote": "THC has some therapeutic effects but it also has harmful effects. Harmful effects may be greater when the strength of THC is higher.",
-       "sha": "05a5cd2d4e534d91"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passages support a dose-dependent relationship with anxiety, but do not mention panic or paranoia. The sentence also omits the THC-specific framing called for by the editor’s note."
-    },
-    {
-     "part": "but",
-     "text": "There are limited studies of cannabis on anxiety, creating uncertainty about its effects.",
-     "rests_on": [
-      {
-       "label": "L1",
-       "ref": "beletsky_2024",
-       "where": "Discussion",
-       "quote": "First, there are limited studies of cannabis on anxiety, and only recently (i.e., in the past 5–10 years) have more researchers attempts to study cannabis given the complex medicolegal environment surrounding the drug.",
-       "sha": "3f837d57b482fb11"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how1",
-     "text": "Health Canada says THC can cause harmful effects, and CBD may block some of THC’s effects.",
-     "rests_on": [
-      {
-       "label": "F5",
-       "ref": "healthcanada_about",
-       "where": "Cannabis and its components / Chemical substances in cannabis / THC",
-       "quote": "THC has some therapeutic effects but it also has harmful effects. Harmful effects may be greater when the strength of THC is higher.",
-       "sha": "05a5cd2d4e534d91"
-      },
-      {
-       "label": "F6",
-       "ref": "healthcanada_about",
-       "where": "Cannabis and its components / Other intoxicating cannabinoids / CBD",
-       "quote": "There is some evidence that CBD may block or lower some of the effects of THC on the mind.",
-       "sha": "794bbbd814e86017"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "A systematic review of literature on cannabis and anxiety found low doses are anxiolytic and high doses are anxiogenic.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "beletsky_2024",
-       "where": "Abstract",
-       "quote": "Cannabis has been reported to have both anxiogenic and anxiolytic effects. Habitual cannabis use has been associated with anxiety disorders (AD).",
-       "sha": "dcfe056a9ff9c938"
-      },
-      {
-       "label": "F1",
-       "ref": "beletsky_2024",
-       "where": "Discussion",
-       "quote": "It’s important to note that cannabis has a dose-dependent relationship on anxiety; that is, low doses are anxiolytic and high doses are anxiogenic.",
-       "sha": "3f837d57b482fb11"
-      }
-     ],
-     "ok": true
-    }
-   ]
-  },
-  {
-   "try": 3,
-   "why": "the last draft: no answer",
-   "parts": [
-    {
-     "part": "short",
-     "text": "Sometimes cannabis can cause anxiety, panic, or paranoia, especially at high doses of THC.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "beletsky_2024",
-       "where": "Discussion",
-       "quote": "It’s important to note that cannabis has a dose-dependent relationship on anxiety; that is, low doses are anxiolytic and high doses are anxiogenic.",
-       "sha": "3f837d57b482fb11"
-      },
-      {
-       "label": "F5",
-       "ref": "healthcanada_about",
-       "where": "Cannabis and its components / Chemical substances in cannabis / THC",
-       "quote": "THC has some therapeutic effects but it also has harmful effects. Harmful effects may be greater when the strength of THC is higher.",
-       "sha": "05a5cd2d4e534d91"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The review says cannabis has a dose-dependent relationship with anxiety, but the passages do not say cannabis causes panic or paranoia, or that anxiety is especially associated with high doses of THC."
-    },
-    {
-     "part": "but",
-     "text": "There are limited studies, especially recent ones, creating uncertainty about its effects.",
-     "rests_on": [
-      {
-       "label": "L1",
-       "ref": "beletsky_2024",
-       "where": "Discussion",
-       "quote": "First, there are limited studies of cannabis on anxiety, and only recently (i.e., in the past 5–10 years) have more researchers attempts to study cannabis given the complex medicolegal environment surrounding the drug.",
-       "sha": "3f837d57b482fb11"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passage concerns cannabis and anxiety, not cannabis effects generally. It says research has only more recently increased; it does not say recent studies are especially limited."
-    },
-    {
-     "part": "how1",
-     "text": "Health Canada says THC can cause harmful effects, and CBD may block some of THC’s effects.",
-     "rests_on": [
-      {
-       "label": "F5",
-       "ref": "healthcanada_about",
-       "where": "Cannabis and its components / Chemical substances in cannabis / THC",
-       "quote": "THC has some therapeutic effects but it also has harmful effects. Harmful effects may be greater when the strength of THC is higher.",
-       "sha": "05a5cd2d4e534d91"
-      },
-      {
-       "label": "F6",
-       "ref": "healthcanada_about",
-       "where": "Cannabis and its components / Other intoxicating cannabinoids / CBD",
-       "quote": "There is some evidence that CBD may block or lower some of the effects of THC on the mind.",
-       "sha": "794bbbd814e86017"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passage says CBD may block or lower some effects of THC on the mind when the amount of CBD is the same as or higher than THC. The sentence leaves out that condition."
-    },
-    {
-     "part": "how2",
-     "text": "A systematic review of literature on cannabis and anxiety found a dose-dependent relationship.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "beletsky_2024",
-       "where": "Abstract",
-       "quote": "Cannabis has been reported to have both anxiogenic and anxiolytic effects. Habitual cannabis use has been associated with anxiety disorders (AD).",
-       "sha": "dcfe056a9ff9c938"
-      },
-      {
-       "label": "F1",
-       "ref": "beletsky_2024",
-       "where": "Discussion",
-       "quote": "It’s important to note that cannabis has a dose-dependent relationship on anxiety; that is, low doses are anxiolytic and high doses are anxiogenic.",
-       "sha": "3f837d57b482fb11"
-      }
-     ],
-     "ok": true
-    }
-   ]
-  }
- ],
- "dropped": [
-  {
-   "try": 3,
-   "part": "how1",
-   "text": "Health Canada says THC can cause harmful effects, and CBD may block some of THC’s effects.",
-   "rests_on": [
-    {
-     "label": "F5",
-     "ref": "healthcanada_about",
-     "where": "Cannabis and its components / Chemical substances in cannabis / THC",
-     "quote": "THC has some therapeutic effects but it also has harmful effects. Harmful effects may be greater when the strength of THC is higher.",
-     "sha": "05a5cd2d4e534d91"
-    },
-    {
-     "label": "F6",
-     "ref": "healthcanada_about",
-     "where": "Cannabis and its components / Other intoxicating cannabinoids / CBD",
-     "quote": "There is some evidence that CBD may block or lower some of the effects of THC on the mind.",
-     "sha": "794bbbd814e86017"
-    }
-   ],
-   "by": "the second reader",
-   "said": "The passage says CBD may block or lower some effects of THC on the mind when the amount of CBD is the same as or higher than THC. The sentence leaves out that condition."
-  }
- ],
+ "soft": "the writer's reply was not in the form asked for",
  "place": {
   "home": "cannabis",
   "also": [],
