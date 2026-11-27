@@ -1370,7 +1370,7 @@ _REPUTE_STOP = {"with", "that", "this", "from", "have", "been", "their", "which"
 def repute_as_fact(ours, quotes, passages=()):
     """The words of a quote that give a thing as a reputation or a belief, where a sentence of ours says that thing as a fact; else None. Sentence by sentence:
     "A 2021 review says kanna relieves stress. It notes traditional use as a pain reliever." says the first as a fact, whatever the second says.
-    (27 November 2026, 04:55) A quote cut out of a sentence of reputation is that sentence: "promote a sense of well-being by relieving stress with calming
+    (27 November 2026, 04:50) A quote cut out of a sentence of reputation is that sentence: "promote a sense of well-being by relieving stress with calming
     effects", cut from "the plant has gained ... reputation due to its capabilities to promote ...", stood under "Yes, kanna can have psychoactive effects".
     passages: the passage each quote stands in, in the same order; one word of what follows the reputation, in a sentence of ours with no word of its own
     that it is one, is enough (measured on the exam of 364: the same one caught, no good one stopped)."""
