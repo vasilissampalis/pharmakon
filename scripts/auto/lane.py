@@ -926,12 +926,18 @@ def opener_of(text):
     return (m.group(1) or m.group(2)), rest[:1].upper() + rest[1:]
 
 
-def checker_prompt(parts, labels, question=None, each=None, risk=""):
+def checker_prompt(parts, labels, question=None, each=None, risk="", editor=""):
     # (lane 19) risk: the answer is about dying, overdose, mixing, pregnancy or children. Every reader is then also asked whether its first two sentences can be
     # read as saying that a danger is small or absent ("plays_down"); the code publishes such an answer by itself only where every reader said no (strict_lacks)
     more = ("\n\nThis answer is about " + risk + ", where a wrong word can hurt a reader. Add one more field to your JSON, beside \"verdicts\": \"plays_down\": true if sentence 1 or sentence 2 says or suggests that "
             "something is safe or harmless, or that a danger is small, rare, unlikely or absent, or if it tells the reader what to do; false if they do neither.") if risk else ""
-    return _checker_prompt(parts, labels, question, each) + more
+    # (27 November 2026) The editor's note on an earlier answer to the same question went to the writer alone (lane 19), and the second reader, told nothing,
+    # let the same fault through again: a version written again after the note "say the review reports a reputation, never that kanna relieves stress" said
+    # "kanna promotes a sense of well-being and relieving stress", and GPT-6 Luna accepted it ("the passages describe kanna as promoting well-being"). Every
+    # reader of a version written again is now shown the note too. Stricter, never looser: a reason more to refuse.
+    held = (f"\n\nAN EDITOR READ AN EARLIER ANSWER TO THIS QUESTION AND DID NOT LET IT OUT. What the editor wrote for the next one: “{editor}”. A sentence that does "
+            "again what the editor's note warns against is not supported, whatever its passages say: say so in its problem.") if editor else ""
+    return _checker_prompt(parts, labels, question, each) + more + held
 
 
 def _checker_prompt(parts, labels, question=None, each=None):
@@ -1123,14 +1129,15 @@ def verdicts_json(text):
     return out
 
 
-def check(chat, model, parts, labels, question=None, whole=None, each=None, risk=""):
+def check(chat, model, parts, labels, question=None, whole=None, each=None, risk="", editor=""):
     """[(supported?, problem)] for the parts, in order. A sentence without a clear verdict is not supported. With a
     question, the second reader also says whether the short answer answers it and whether the But is about that answer
-    (written into whole: "answers", "but_fits", "why"; None where it gave no clear word)."""
-    room = room_for(model, 120) + 90 * len(parts) + (80 if question else 0) + (40 if risk else 0)
+    (written into whole: "answers", "but_fits", "why"; None where it gave no clear word). editor: what the editor found in an
+    earlier answer to the same question that it holds (held_say), for the reader to look for too."""
+    room = room_for(model, 120) + 90 * len(parts) + (80 if question else 0) + (40 if risk else 0) + (40 if editor else 0)
     for attempt in range(2):
         if attempt and llm.LAST.get("finish") == "length": room = min(2 * room, 12000)        # (lane 19) a reply that was cut off before its verdicts is asked for again with twice the room, not the same way
-        reply = chat(model, [{"role": "system", "content": CHECKER_SYS}, {"role": "user", "content": checker_prompt(parts, labels, question, each, risk)}], room)
+        reply = chat(model, [{"role": "system", "content": CHECKER_SYS}, {"role": "user", "content": checker_prompt(parts, labels, question, each, risk, editor)}], room)
         out = verdicts_json(reply); LAST_REPLY["head"] = re.sub(r"\s+", " ", str(reply or ""))[:90]
         vs = {v.get("n"): v for v in (out or {}).get("verdicts") or [] if isinstance(v, dict)}
         # (lane 16) the opening word of the short answer was judged apart, as the answer to the question: its verdict must be there too
@@ -1959,7 +1966,7 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
             rec["gates"]["rules"] = "broken at try " + str(attempt + 1) + ": " + "; ".join(f"{p}: {w}" for p, w in bad); fix = "; ".join(f"in {p}: {w}" + (" (write “people who use it”, with the drug's name where it helps, even where the source says “users”)" if "not person-first" in w else "") for p, w in bad)
             keep_try(attempt + 1, draft["parts"], {q: "a rule: " + "; ".join(w for q2, w in bad if q2 == q) for q, _ in bad}, "a rule was broken: written again"); draft = None; continue
         whole = {}; risk = stakes(item["q"], draft["parts"]); risk = risk if risk and str((stakes_how or {}).get(risk) or "") == "strict" and not NEVER_ALONE.search(item["q"]) else ""
-        verdicts = check(chat, models["checker"], draft["parts"], labels, question=item["q"], whole=whole, risk=risk)
+        verdicts = check(chat, models["checker"], draft["parts"], labels, question=item["q"], whole=whole, risk=risk, editor=note)
         downs = [whole.get("plays_down")] if risk else []
         # the second reader's word on the answer as a whole counts like its word on a sentence: a short answer that answers
         # another question, or a But about something else, is not accepted
@@ -1978,7 +1985,7 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
             more = asked = None
             for mdl in [models[k]] + [x for x in str(models.get(k + "_else") or "").split("|") if x]:
                 w2 = {}
-                try: more = check_marks(chat, mdl.split("#")[0], draft["parts"], labels) if mdl.endswith("#marks") else check(chat, mdl, draft["parts"], labels, whole=w2, risk=risk)
+                try: more = check_marks(chat, mdl.split("#")[0], draft["parts"], labels) if mdl.endswith("#marks") else check(chat, mdl, draft["parts"], labels, whole=w2, risk=risk, editor=note)
                 except (llm.Unavailable, llm.Budget) as e:                 # a free service that is busy or used up must not cost the answer: what the other judges said stands, and the answer waits for this reader
                     rec.setdefault("panel", {})[mdl] = "could not be asked: " + re.sub(r"\s+", " ", str(e))[:160]; more = None; continue
                 # (lane 17) a further reader whose reply held no verdict at all, asked twice, has not read the answer: on 17 November 2026 Gemini 3.8
@@ -3341,6 +3348,8 @@ def selftest():
     calls.clear(); script["writer"] = [W(ok_short)]; script["checker"] = [V(True, True, True, True)]
     r = make(item, found, chat, Enc(), MODELS, fulltext=lambda pmcid: xml, crossref=crossref, ex=ex, note="say what people report, as reports")
     assert r["status"] == "published" and "AN EDITOR READ AN EARLIER ANSWER" in [c for c in calls if c[0] == "writer"][0][2] and "say what people report, as reports" in [c for c in calls if c[0] == "writer"][0][2]
+    assert "AN EDITOR READ AN EARLIER ANSWER" in [c for c in calls if c[0] == "checker"][0][2] and "say what people report, as reports" in [c for c in calls if c[0] == "checker"][0][2]   # (27 November 2026) and to every reader
+    assert "AN EDITOR READ" not in checker_prompt([{"part": "short", "text": "x", "uses": []}], {}) and "AN EDITOR READ" in checker_prompt([{"part": "short", "text": "x", "uses": []}], {}, editor="n")
     # what the readers said of the last draft that fell goes to the writer of the next one (only of this lane, only a reader's word on the short answer or the But)
     fell = {"status": "none", "lane": LANE, "tries": [{"try": 1, "parts": [{"part": "short", "text": "Old.", "ok": False, "by": "a rule", "said": "a rule: x"}]},
             {"try": 3, "why": "the last draft: no answer", "parts": [{"part": "short", "text": "People who use it report better sleep.", "ok": False, "by": "a further reader", "said": "a further reader (x) did not accept it: the passage says 'potential' only"},
