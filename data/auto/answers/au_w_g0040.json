@@ -15,23 +15,17 @@
  ],
  "drugs": [],
  "made": {
-  "on": "2026-11-21",
+  "on": "2026-11-27",
   "models": {
-   "reader": "groq:openai/gpt-oss-20b",
-   "writer": "groq:qwen/qwen3.8-27b",
-   "checker": "gemini:gemini-3.5-flash-lite",
-   "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3.6-flash",
-   "team": "team L",
-   "reader_2": "groq:openai/gpt-oss-20b",
-   "also1_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "reader": "openrouter:openai/gpt-oss-120b",
+   "writer": "openrouter:meta-llama/llama-3.3-70b-instruct",
+   "checker": "openrouter:openai/gpt-6-luna",
+   "planner": "openrouter:openai/gpt-oss-120b",
+   "team": "team R",
+   "reader_2": "openrouter:openai/gpt-oss-120b",
    "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "44935398255",
-  "read_by": {
-   "gpt-oss-20b": 2,
-   "gemma-4-31b-it": 1
-  },
+  "run": "45950406391",
   "read_seconds": 100,
   "from": {
    "papers": 1,
@@ -39,20 +33,17 @@
    "official": 0
   },
   "neurons": 0.0,
-  "seconds": 182
+  "seconds": 137
  },
- "status": "published",
- "why": "passed every gate",
+ "status": "none",
+ "why": "the second reader did not accept the answer",
  "gates": {
-  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-20b read from there",
-  "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "1 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.75, but 0.51, how1 0.72",
-  "check": "every sentence kept was accepted by the second reader (gemini:gemini-3.5-flash-lite) and by gemini:gemini-3.6-flash",
-  "but": "the writer's But was not accepted (the passage does not state that the source is a review of plants rather than a study of people using datura in the way claimed): the code wrote the But itself, from what this answer rests on",
-  "rules": "nothing against it",
-  "checked": "set beside the checked claims of the same page: nothing against them"
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-120b read from there",
+  "time": "4 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
+  "read": "1 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 0 official page(s), 0 paper(s) read in summary only",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.90, but 0.59, how1 0.80",
+  "check": "short: NOT accepted: The passage attributes addiction and dependence to the plants collectively; it does not establish this specifically for Datura stramonium.; but: accepted; how1: NOT accepted: The passage reports the finding about several plants together, not Datura stramonium specifically; the review context does not support attributing the collective finding to Datura."
  },
  "sources": [
   {
@@ -89,10 +80,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-21",
+     "verified_on": "2026-11-27",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-21"
+      "checked_on": "2026-11-27"
      }
     },
     "volume": "31",
@@ -112,8 +103,8 @@
    "design": {
     "passage": 1,
     "where": "Abstract",
-    "quote": "The aim of the present study is to evaluate the plants’ recreational use, mechanism of actions and toxicities.",
-    "text": "Review of Nigerian psychoactive plants focusing on recreational use, mechanisms, and toxicity"
+    "quote": "The aim of the present study is to evaluate the plants’ recreational use, mechanism of actions and toxicities. Relevant published documents on psychoactive plants in Nigeria were obtained from Web of Science between 2002 and 2020.",
+    "text": "Literature review of psychoactive plants in Nigeria"
    },
    "findings": [
     {
@@ -129,69 +120,9 @@
    "tag": "A"
   }
  ],
- "parts": [
-  {
-   "part": "short",
-   "text": "Yes, a 2022 review says datura is very addictive and leads to dependence.",
-   "uses": [
-    "F1"
-   ],
-   "rests_on": [
-    {
-     "label": "F1",
-     "ref": "fasakin_2022",
-     "where": "Abstract",
-     "quote": "They are very addictive and lead to dependence.",
-     "sha": "8a96910dab0ff7a5"
-    }
-   ]
-  },
-  {
-   "part": "but",
-   "text": "This rests on 1 review.",
-   "uses": [
-    "DA"
-   ],
-   "fixed": true,
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "fasakin_2022",
-     "where": "Abstract",
-     "quote": "The aim of the present study is to evaluate the plants’ recreational use, mechanism of actions and toxicities.",
-     "sha": "8a96910dab0ff7a5"
-    }
-   ]
-  },
-  {
-   "part": "how1",
-   "text": "A 2022 review of Nigerian psychoactive plants says datura is very addictive and leads to dependence.",
-   "uses": [
-    "DA",
-    "F1"
-   ],
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "fasakin_2022",
-     "where": "Abstract",
-     "quote": "The aim of the present study is to evaluate the plants’ recreational use, mechanism of actions and toxicities.",
-     "sha": "8a96910dab0ff7a5"
-    },
-    {
-     "label": "F1",
-     "ref": "fasakin_2022",
-     "where": "Abstract",
-     "quote": "They are very addictive and lead to dependence.",
-     "sha": "8a96910dab0ff7a5"
-    }
-   ],
-   "quote": "They are very addictive and lead to dependence",
-   "quote_ref": "fasakin_2022"
-  }
- ],
+ "parts": [],
  "complete": false,
- "missing": "a paper that stands nearer the question could not be read",
+ "missing": "",
  "wanted": [
   {
    "doi": "10.1016/j.bbr.2012.09.025",
@@ -216,7 +147,16 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-21",
+   "lane": 19,
+   "status": "published",
+   "why": "passed every gate",
+   "short": "Yes, a 2022 review says datura is very addictive and leads to dependence.",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "Phytochemistry, Pharmacology, and Toxicology of <i>Datura</i> Species-A Review",
@@ -232,14 +172,7 @@
    "kind": "review",
    "at": "10.1007/s00580-022-03374-w",
    "kept": 1,
-   "thrown": [
-    {
-     "kind": "limit",
-     "text": "The conclusions are based on a literature review of documents, not on new experimental data.",
-     "quote": "Relevant published documents on psychoactive plants in Nigeria were obtained from Web of Science between 2002 and 2020.",
-     "why": "the sentence is not carried by its quote and passage"
-    }
-   ]
+   "thrown": []
   },
   {
    "title": "Genus Datura: An Exploration of Genetic Alterations, Bioactive Compounds, and Pharmacological Activity",
@@ -254,6 +187,41 @@
    "read": "full",
    "kind": "review",
    "at": "10.3390/molecules26092629",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Bioorganic Chemistry, Toxinology, and Pharmaceutical Uses of <i>Datura</i> Metabolites and Derivatives",
+   "read": "full",
+   "kind": "review",
+   "at": "10.3390/toxins17090469",
+   "kept": 0,
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
+  },
+  {
+   "title": "Efficacy of extracts from Datura Metel L. for Psoriasis: a meta-analysis of case series and single-arm studies",
+   "read": "full",
+   "kind": "review",
+   "at": "10.1186/s12906-023-04159-6",
+   "kept": 0,
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
+  },
+  {
+   "title": "The Potential of Scopolamine as an Antidepressant in Major Depressive Disorder: A Systematic Review of Randomized Controlled Trials",
+   "read": "full",
+   "kind": "review",
+   "at": "10.3390/biomedicines11102636",
+   "kept": 0,
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
+  },
+  {
+   "title": "Herbal Highs: Review on Psychoactive Effects and Neuropharmacology",
+   "read": "full",
+   "kind": "review",
+   "at": "10.2174/1570159x14666161031144427",
    "kept": 0,
    "thrown": [],
    "fault": "it was not read: the time this run has for reading was over"
@@ -278,14 +246,14 @@
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.746,
-   "but": 0.5094,
-   "how1": 0.7211
+   "short": 0.8961,
+   "but": 0.5878,
+   "how1": 0.7983
   },
   "scores_quotes_alone": {
-   "short": 0.103,
-   "but": 0.2535,
-   "how1": 0.1282
+   "short": 0.1306,
+   "but": 0.2266,
+   "how1": 0.0367
   }
  },
  "tries": [
@@ -295,7 +263,7 @@
    "parts": [
     {
      "part": "short",
-     "text": "Yes, a 2022 review says datura is very addictive and leads to dependence.",
+     "text": "Yes, Datura stramonium is very addictive and leads to dependence.",
      "rests_on": [
       {
        "label": "F1",
@@ -305,33 +273,35 @@
        "sha": "8a96910dab0ff7a5"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage speaks about several plants together; it does not establish that Datura stramonium specifically is very addictive or leads to dependence. The editor's note says not to present that group claim as a finding about datura."
     },
     {
      "part": "but",
-     "text": "This comes from a review of plants, not a study of people using datura.",
+     "text": "But this is from a literature review of psychoactive plants in Nigeria.",
      "rests_on": [
       {
        "label": "DA",
        "ref": "fasakin_2022",
        "where": "Abstract",
-       "quote": "The aim of the present study is to evaluate the plants’ recreational use, mechanism of actions and toxicities.",
+       "quote": "The aim of the present study is to evaluate the plants’ recreational use, mechanism of actions and toxicities. Relevant published documents on psychoactive plants in Nigeria were obtained from Web of Science between 2002 and 2020.",
        "sha": "8a96910dab0ff7a5"
       }
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "The passage does not state that the research is a review of plants rather than a study of people using datura; it only states that 1186 documents were reviewed."
+     "said": "it is about something else than the short answer (A fair opening would be “Unclear”: the passages do not establish whether datura specifically is addictive. Sentence 2 identifies the review's scope but does not state a limitation or doubt about the claim.)"
     },
     {
      "part": "how1",
-     "text": "A 2022 review of Nigerian psychoactive plants says datura is very addictive and leads to dependence.",
+     "text": "A literature review of psychoactive plants in Nigeria found Datura stramonium to be very addictive.",
      "rests_on": [
       {
        "label": "DA",
        "ref": "fasakin_2022",
        "where": "Abstract",
-       "quote": "The aim of the present study is to evaluate the plants’ recreational use, mechanism of actions and toxicities.",
+       "quote": "The aim of the present study is to evaluate the plants’ recreational use, mechanism of actions and toxicities. Relevant published documents on psychoactive plants in Nigeria were obtained from Web of Science between 2002 and 2020.",
        "sha": "8a96910dab0ff7a5"
       },
       {
@@ -342,7 +312,9 @@
        "sha": "8a96910dab0ff7a5"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "the second reader",
+     "said": "This attributes the review's group-level finding to Datura stramonium specifically. The editor's note says not to present a claim about several plants as a finding about datura."
     }
    ]
   },
@@ -352,7 +324,7 @@
    "parts": [
     {
      "part": "short",
-     "text": "Yes, a 2022 review says datura is very addictive and leads to dependence.",
+     "text": "Yes, Datura stramonium is very addictive and leads to dependence.",
      "rests_on": [
       {
        "label": "F1",
@@ -362,33 +334,33 @@
        "sha": "8a96910dab0ff7a5"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage calls the group of plants addictive; it does not establish that Datura stramonium specifically is very addictive or leads to dependence. The source's group-level statement cannot be attributed to Datura alone."
     },
     {
      "part": "but",
-     "text": "The source is a review of plants, not a study of people using datura.",
+     "text": "But this is from a literature review of psychoactive plants in Nigeria.",
      "rests_on": [
       {
        "label": "DA",
        "ref": "fasakin_2022",
        "where": "Abstract",
-       "quote": "The aim of the present study is to evaluate the plants’ recreational use, mechanism of actions and toxicities.",
+       "quote": "The aim of the present study is to evaluate the plants’ recreational use, mechanism of actions and toxicities. Relevant published documents on psychoactive plants in Nigeria were obtained from Web of Science between 2002 and 2020.",
        "sha": "8a96910dab0ff7a5"
       }
      ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passage states that the study evaluated the plants' recreational use, mechanism of actions and toxicities by reviewing 1186 documents, but it does not state that the source is a review of plants rather than a study of people using datur"
+     "ok": true
     },
     {
      "part": "how1",
-     "text": "A 2022 review of Nigerian psychoactive plants says datura is very addictive and leads to dependence.",
+     "text": "A literature review of psychoactive plants in Nigeria found Datura stramonium is very addictive.",
      "rests_on": [
       {
        "label": "DA",
        "ref": "fasakin_2022",
        "where": "Abstract",
-       "quote": "The aim of the present study is to evaluate the plants’ recreational use, mechanism of actions and toxicities.",
+       "quote": "The aim of the present study is to evaluate the plants’ recreational use, mechanism of actions and toxicities. Relevant published documents on psychoactive plants in Nigeria were obtained from Web of Science between 2002 and 2020.",
        "sha": "8a96910dab0ff7a5"
       },
       {
@@ -399,7 +371,68 @@
        "sha": "8a96910dab0ff7a5"
       }
      ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage reports that the plants together are very addictive; it does not report that the review found Datura stramonium specifically to be very addictive."
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Yes, Datura stramonium is very addictive and leads to dependence.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "fasakin_2022",
+       "where": "Abstract",
+       "quote": "They are very addictive and lead to dependence.",
+       "sha": "8a96910dab0ff7a5"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage attributes addiction and dependence to the plants collectively; it does not establish this specifically for Datura stramonium."
+    },
+    {
+     "part": "but",
+     "text": "But this is from a literature review of psychoactive plants in Nigeria.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "fasakin_2022",
+       "where": "Abstract",
+       "quote": "The aim of the present study is to evaluate the plants’ recreational use, mechanism of actions and toxicities. Relevant published documents on psychoactive plants in Nigeria were obtained from Web of Science between 2002 and 2020.",
+       "sha": "8a96910dab0ff7a5"
+      }
+     ],
      "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "A literature review of psychoactive plants in Nigeria found Datura stramonium is very addictive and leads to dependence.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "fasakin_2022",
+       "where": "Abstract",
+       "quote": "The aim of the present study is to evaluate the plants’ recreational use, mechanism of actions and toxicities. Relevant published documents on psychoactive plants in Nigeria were obtained from Web of Science between 2002 and 2020.",
+       "sha": "8a96910dab0ff7a5"
+      },
+      {
+       "label": "F1",
+       "ref": "fasakin_2022",
+       "where": "Abstract",
+       "quote": "They are very addictive and lead to dependence.",
+       "sha": "8a96910dab0ff7a5"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage reports the finding about several plants together, not Datura stramonium specifically; the review context does not support attributing the collective finding to Datura."
     }
    ]
   }
@@ -407,25 +440,28 @@
  "dropped": [
   {
    "try": 3,
-   "part": "but",
-   "text": "The source is a review of plants, not a study of people using datura.",
+   "part": "how1",
+   "text": "A literature review of psychoactive plants in Nigeria found Datura stramonium is very addictive and leads to dependence.",
    "rests_on": [
     {
      "label": "DA",
      "ref": "fasakin_2022",
      "where": "Abstract",
-     "quote": "The aim of the present study is to evaluate the plants’ recreational use, mechanism of actions and toxicities.",
+     "quote": "The aim of the present study is to evaluate the plants’ recreational use, mechanism of actions and toxicities. Relevant published documents on psychoactive plants in Nigeria were obtained from Web of Science between 2002 and 2020.",
+     "sha": "8a96910dab0ff7a5"
+    },
+    {
+     "label": "F1",
+     "ref": "fasakin_2022",
+     "where": "Abstract",
+     "quote": "They are very addictive and lead to dependence.",
      "sha": "8a96910dab0ff7a5"
     }
    ],
    "by": "the second reader",
-   "said": "the passage does not state that the source is a review of plants rather than a study of people using datura in the way claimed"
+   "said": "The passage reports the finding about several plants together, not Datura stramonium specifically; the review context does not support attributing the collective finding to Datura."
   }
  ],
- "with_checked": {
-  "differs": [],
-  "same": []
- },
  "place": {
   "home": "new:Datura and other nightshades",
   "also": [],

@@ -15,44 +15,40 @@
  ],
  "drugs": [],
  "made": {
-  "on": "2026-11-21",
+  "on": "2026-11-27",
   "models": {
-   "reader": "gemini:gemini-3.5-flash-lite",
-   "writer": "groq:qwen/qwen3.8-27b",
-   "checker": "groq:openai/gpt-oss-120b",
-   "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3.5-flash-lite",
-   "also2": "gemini:gemini-3.6-flash",
-   "team": "team K",
-   "reader_2": "gemini:gemini-3.5-flash-lite",
-   "writer_2": "groq:qwen/qwen3.8-27b",
-   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
-   "reader_first": "gemini:gemma-4-31b-it",
-   "writer_first": "gemini:gemma-4-26b-a4b-it"
+   "reader": "groq:openai/gpt-oss-20b",
+   "writer": "openrouter:meta-llama/llama-3.3-70b-instruct",
+   "checker": "openrouter:openai/gpt-6-luna",
+   "planner": "openrouter:openai/gpt-oss-120b",
+   "team": "team R",
+   "reader_2": "openrouter:openai/gpt-oss-120b",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "44934393052",
-  "read_seconds": 100,
+  "run": "45950406391",
+  "read_by": {
+   "gpt-oss-20b": 2,
+   "gpt-oss-120b": 2,
+   "gemma-4-31b-it": 1
+  },
+  "read_seconds": 62,
   "from": {
    "papers": 2,
    "summaries": 0,
-   "official": 0
+   "official": 1
   },
   "neurons": 0.0,
-  "seconds": 305
+  "seconds": 99
  },
- "status": "published",
- "why": "passed every gate",
+ "status": "none",
+ "why": "the second reader did not accept the answer",
  "gates": {
-  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.5-flash-lite read from there",
-  "time": "3 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "3 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 4 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "1 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
-  "writer": "try 1: no JSON (how the reply ended: length; reasoned 0 characters, wrote 6936) gemma-4-26b-a4b-it gave no answer in the form asked for: qwen3.8-27b wrote from there.",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.97, but 0.03, how1 0.78, how2 0.71",
-  "check": "every sentence kept was accepted by the second reader (groq:openai/gpt-oss-120b) and by gemini:gemini-3.5-flash-lite and by gemini:gemini-3.6-flash; it also found that the short answer answers the question and that the But is about that answer",
-  "but": "the writer's But was not accepted (the passage does not explicitly state that the data are 'not a large study'): the code wrote the But itself, from what this answer rests on",
-  "rules": "nothing against it",
-  "checked": "set beside the checked claims of the same page: nothing against them"
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-20b read from there",
+  "read": "3 findings kept from 3 sources (2 papers read in full, 1 official pages, 0 papers read in summary); 5 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 1 official page(s), 0 paper(s) read in summary only",
+  "rules": "broken at try 2: but: it says “all”, and the words it rests on carry no such word: say what the source says, in its own measure, or leave the word out",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.97, but 0.99, how1 0.96, how2 0.97, how3 0.97",
+  "check": "short: NOT accepted: The duration-depends-on-dose, size, and other-drugs claim comes from a passage about PCP, not 3-MeO-PCP. Also, 10–11 hours is an estimated half-life, not how long 3-MeO-PCP stays in the body.; but: NOT accepted: The passage says two research groups estimated the half-life, but does not establish that only two groups did so.; how1: accepted; how2: accepted; how3: accepted"
  },
  "sources": [
   {
@@ -109,10 +105,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-21",
+     "verified_on": "2026-11-27",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-21"
+      "checked_on": "2026-11-27"
      }
     },
     "volume": "98",
@@ -129,226 +125,186 @@
    "people": true,
    "near": 0.72,
    "money": [],
-   "design": {
-    "passage": 1,
-    "where": "Abstract",
-    "quote": "Here, we report 2 cases of 3-MeO-PCP intoxication in the same patient, and summarize the manifestations of this intoxication reported in literature.",
-    "text": "A case report and literature review of 3-MeO-PCP intoxication"
-   },
+   "design": null,
    "findings": [
     {
      "passage": 35,
      "where": "Discussion › Management",
-     "quote": "3-MeO-PCP's half-life in vivo (estimated at 10 and 11 hours by 2 different research groups) explains the rapid clinical improvement observed in 3-MeO-PCP-only intoxications.",
-     "text": "The in vivo half-life of 3-MeO-PCP is estimated at 10 and 11 hours by 2 different research groups.",
+     "quote": "3‑MeO‑PCP's half‑life in vivo (estimated at 10 and 11 hours by 2 different research groups) explains the rapid clinical improvement observed in 3‑MeO‑PCP‑only intoxications.",
+     "text": "The half‑life of 3‑MeO‑PCP in humans is estimated to be 10 to 11 hours.",
      "id": "F1",
-     "second_hand": ""
-    },
-    {
-     "passage": 31,
-     "where": "Discussion › Confusion between 3-MeO-PCP and its isomers",
-     "quote": "Indeed, we were, thus, able to detect this compound in the patient's blood and urine samples.",
-     "text": "3-MeO-PCP can be detected in the patient's blood and urine samples.",
-     "id": "F2",
-     "second_hand": ""
+     "second_hand": "3-MeO-PCP's half-life in vivo (estimated at 10 and 11 hours by 2 different research groups) explains the rapid clinical improvement observed in 3-MeO-PCP-only intoxications."
     }
    ],
-   "limits": [],
+   "limits": [
+    {
+     "passage": 35,
+     "where": "Discussion › Management",
+     "quote": "3‑MeO‑PCP's half‑life in vivo (estimated at 10 and 11 hours by 2 different research groups) explains the rapid clinical improvement observed in 3‑MeO‑PCP‑only intoxications.",
+     "text": "The half‑life estimate comes from only two research groups and may not represent all individuals.",
+     "id": "L1",
+     "second_hand": "3-MeO-PCP's half-life in vivo (estimated at 10 and 11 hours by 2 different research groups) explains the rapid clinical improvement observed in 3-MeO-PCP-only intoxications."
+    }
+   ],
    "tag": "A"
   },
   {
    "read": "full",
    "ref": {
-    "id": "geraci_2010",
+    "id": "pepe_2024",
     "type": "article-journal",
-    "title": "Phencyclidine false positive induced by lamotrigine (lamictal®) on a rapid urine toxicology screen",
+    "title": "3-methoxy-phencyclidine induced psychotic disorder: A literature review and an 18F-FDG PET/CT case report",
     "author": [
      {
-      "family": "Geraci",
-      "given": "Matthew J."
+      "family": "Pepe",
+      "given": "Maria"
      },
      {
-      "family": "Peele",
-      "given": "James"
+      "family": "Di Nicola",
+      "given": "Marco"
      },
      {
-      "family": "McCoy",
-      "given": "Stacey L."
+      "family": "Cocciolillo",
+      "given": "Fabrizio"
      },
      {
-      "family": "Elias",
-      "given": "Brad"
+      "family": "Chiappini",
+      "given": "Stefania"
+     },
+     {
+      "family": "Martinotti",
+      "given": "Giovanni"
+     },
+     {
+      "family": "Calcagni",
+      "given": "Maria Lucia"
+     },
+     {
+      "family": "Sani",
+      "given": "Gabriele"
      }
     ],
-    "container-title": "International Journal of Emergency Medicine",
+    "container-title": "Pharmaceuticals",
     "issued": {
      "date-parts": [
       [
-       2010
+       2024
       ]
      ]
     },
-    "DOI": "10.1007/s12245-010-0235-3",
+    "DOI": "10.3390/ph17040452",
     "verification": {
      "status": "metadata-verified",
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-21",
+     "verified_on": "2026-11-27",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-21"
+      "checked_on": "2026-11-27"
      }
     },
-    "volume": "3",
+    "volume": "17",
     "issue": "4",
-    "page": "327-331",
-    "PMCID": "PMC3047872"
+    "number": "452",
+    "PMCID": "PMC11053433"
    },
-   "doi": "10.1007/s12245-010-0235-3",
-   "pmcid": "PMC3047872",
-   "title": "Phencyclidine false positive induced by lamotrigine (Lamictal®) on a rapid urine toxicology screen",
-   "year": 2010,
-   "journal": "International journal of emergency medicine",
-   "kind": "other",
+   "doi": "10.3390/ph17040452",
+   "pmcid": "PMC11053433",
+   "title": "3-Methoxy-Phencyclidine Induced Psychotic Disorder: A Literature Review and an <sup>18</sup>F-FDG PET/CT Case Report",
+   "year": 2024,
+   "journal": "Pharmaceuticals (Basel, Switzerland)",
+   "kind": "review",
    "people": true,
-   "near": 0.638,
+   "near": 0.602,
    "money": [
-    "AcknowledgementsThe authors would like to acknowledge Michael Orris, DO, and Elliot Blum for their assistance.Conflicts of interestNone.Open AccessThis article is distributed under the terms of the Creative Commons Attribution Noncommercial License which permits any noncommercial use, distribution, and reproduction in any medium, provided the original author(s) and source are credited."
+    "The authors declare no conflicts of interest.",
+    "This research received no external funding."
    ],
-   "design": {
-    "passage": 1,
-    "where": "Abstract",
-    "quote": "This report describes two cases with unexplained positive results for phencyclidine (PCP).",
-    "text": "two case reports describing unexplained positive results for phencyclidine"
-   },
+   "design": null,
    "findings": [
     {
-     "passage": 8,
-     "where": "Discussion",
-     "quote": "PCP can be seen in the urine 4-6 h after use and can be detected for up to 14 days.",
-     "text": "PCP can be seen in the urine 4-6 hours after use and can be detected for up to 14 days.",
+     "passage": 11,
+     "where": "1. Introduction › 1.2. About 3-Methoxy-Phencyclidine › 1.2.1. General Pharmacology",
+     "quote": "3‑MeO‑PCP‑induced effects arise between 30 and 90 min after ingestion, may last from 4 to 48 h, and can follow the consumption of doses as low as 1 mg.",
+     "text": "The effects of 3‑MeO‑PCP may last from 4 to 48 hours after ingestion.",
+     "id": "F2",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 12,
+     "where": "1. Introduction › 1.2. About 3-Methoxy-Phencyclidine › 1.2.1. General Pharmacology",
+     "quote": "A thorough measurement of blood concentrations leading to toxicity and fatality is missing due to the lack of documented intoxication cases and information about the preservation status of samples.",
+     "text": "Blood concentration data for toxicity and fatality are missing.",
+     "id": "L2",
+     "second_hand": ""
+    }
+   ],
+   "tag": "B"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "frank_pcp",
+    "type": "webpage",
+    "title": "PCP",
+    "author": [
+     {
+      "literal": "FRANK"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      []
+     ]
+    },
+    "URL": "https://www.talktofrank.com/drug/pcp",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       27
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-27"
+    }
+   },
+   "title": "PCP",
+   "year": null,
+   "kind": "official",
+   "people": true,
+   "near": 0.476,
+   "name": "FRANK",
+   "short": "FRANK",
+   "tier": 1,
+   "address": "https://www.talktofrank.com/drug/pcp",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 5,
+     "where": "Mixing PCP with other drugs / How does it make people behave?",
+     "quote": "How long the effects last and the drug stays in your system depends on how much you’ve taken, your size and what other drugs you may have also taken.",
+     "text": "The length of time the drug stays in your system depends on how much you have taken, your size, and any other drugs you may have taken.",
      "id": "F3",
      "second_hand": ""
     }
    ],
    "limits": [],
-   "tag": "B"
+   "tag": "C"
   }
  ],
- "parts": [
-  {
-   "part": "short",
-   "text": "It can be found in blood and urine. PCP can be seen in urine for up to 14 days.",
-   "uses": [
-    "F2",
-    "F3"
-   ],
-   "rests_on": [
-    {
-     "label": "F2",
-     "ref": "berar_2019",
-     "where": "Discussion › Confusion between 3-MeO-PCP and its isomers",
-     "quote": "Indeed, we were, thus, able to detect this compound in the patient's blood and urine samples.",
-     "sha": "512c53e8ea3e344a"
-    },
-    {
-     "label": "F3",
-     "ref": "geraci_2010",
-     "where": "Discussion",
-     "quote": "PCP can be seen in the urine 4-6 h after use and can be detected for up to 14 days.",
-     "sha": "771ba3e7f6be40ed"
-    }
-   ]
-  },
-  {
-   "part": "but",
-   "text": "This rests on 1 review and 1 study in people.",
-   "uses": [
-    "DA",
-    "DB"
-   ],
-   "fixed": true,
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "berar_2019",
-     "where": "Abstract",
-     "quote": "Here, we report 2 cases of 3-MeO-PCP intoxication in the same patient, and summarize the manifestations of this intoxication reported in literature.",
-     "sha": "d9196508274ec132"
-    },
-    {
-     "label": "DB",
-     "ref": "geraci_2010",
-     "where": "Abstract",
-     "quote": "This report describes two cases with unexplained positive results for phencyclidine (PCP).",
-     "sha": "7e3309e335f4cfb2"
-    }
-   ]
-  },
-  {
-   "part": "how1",
-   "text": "A case report and review found 3-MeO-PCP in blood and urine, with a half-life of 10 to 11 hours.",
-   "uses": [
-    "DA",
-    "F1",
-    "F2"
-   ],
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "berar_2019",
-     "where": "Abstract",
-     "quote": "Here, we report 2 cases of 3-MeO-PCP intoxication in the same patient, and summarize the manifestations of this intoxication reported in literature.",
-     "sha": "d9196508274ec132"
-    },
-    {
-     "label": "F1",
-     "ref": "berar_2019",
-     "where": "Discussion › Management",
-     "quote": "3-MeO-PCP's half-life in vivo (estimated at 10 and 11 hours by 2 different research groups) explains the rapid clinical improvement observed in 3-MeO-PCP-only intoxications.",
-     "sha": "32edae4ded5243e9"
-    },
-    {
-     "label": "F2",
-     "ref": "berar_2019",
-     "where": "Discussion › Confusion between 3-MeO-PCP and its isomers",
-     "quote": "Indeed, we were, thus, able to detect this compound in the patient's blood and urine samples.",
-     "sha": "512c53e8ea3e344a"
-    }
-   ],
-   "quote": "3-MeO-PCP's half-life in vivo (estimated at 10 and 11 hours by 2 different research groups)",
-   "quote_ref": "berar_2019"
-  },
-  {
-   "part": "how2",
-   "text": "Two case reports say PCP can be seen in urine 4 to 6 hours after use and for up to 14 days.",
-   "uses": [
-    "DB",
-    "F3"
-   ],
-   "rests_on": [
-    {
-     "label": "DB",
-     "ref": "geraci_2010",
-     "where": "Abstract",
-     "quote": "This report describes two cases with unexplained positive results for phencyclidine (PCP).",
-     "sha": "7e3309e335f4cfb2"
-    },
-    {
-     "label": "F3",
-     "ref": "geraci_2010",
-     "where": "Discussion",
-     "quote": "PCP can be seen in the urine 4-6 h after use and can be detected for up to 14 days.",
-     "sha": "771ba3e7f6be40ed"
-    }
-   ],
-   "quote": "urine 4-6 h after use and can be detected for up to 14 days",
-   "quote_ref": "geraci_2010"
-  }
- ],
+ "parts": [],
  "complete": false,
- "missing": "Detection times for 3-MeO-PCP specifically",
+ "missing": "whether standard drug tests can detect 3‑MeO‑PCP",
  "wanted": [
   {
    "doi": "10.4065/83.1.66",
@@ -373,26 +329,41 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-21",
+   "lane": 19,
+   "status": "published",
+   "why": "passed every gate",
+   "short": "It can be found in blood and urine. PCP can be seen in urine for up to 14 days.",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "Intoxication with 3-MeO-PCP alone: A case report and literature review",
    "read": "full",
    "kind": "review",
    "at": "10.1097/md.0000000000018295",
-   "kept": 2,
+   "kept": 1,
    "thrown": [
     {
-     "kind": "limit",
-     "text": "",
-     "quote": "Although it can lead to severe intoxications, the main manifestations and optimal management have not been well characterized.",
-     "why": "no sentence"
+     "kind": "text",
+     "text": "Case report and literature review of 3‑MeO‑PCP intoxication",
+     "quote": "We report 2 cases of 3‑MeO‑PCP intoxication in the same patient, and summarize the manifestations of this intoxication reported in literature.",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    },
+    {
+     "kind": "finding",
+     "text": "3‑MeO‑PCP can be detected in both blood and urine samples.",
+     "quote": "we were, thus, able to detect this compound in the patient's blood and urine samples.",
+     "why": "a number of the sentence is not in its quote"
     },
     {
      "kind": "limit",
-     "text": "",
-     "quote": "However, there is a significant lack of accurate literature data on intoxications by this NPS.",
-     "why": "no sentence"
+     "text": "Detection of 3‑MeO‑PCP requires specialized analytical techniques and may not be routinely available in all drug‑testing laboratories.",
+     "quote": "Several analytical techniques (ie, liquid chromatography with diode array detection, gas chromatography mass spectrometry, and LC‑HRMS) were needed to differentiate 3‑MeO‑PCP from its isomers, such as",
+     "why": "the sentence is not carried by its quote and passage"
     }
    ]
   },
@@ -401,29 +372,15 @@
    "read": "full",
    "kind": "review",
    "at": "10.3390/ph17040452",
-   "kept": 0,
+   "kept": 1,
    "thrown": [
     {
      "kind": "text",
-     "text": "a literature review of 3-Methoxy-Phencyclidine and a case report of an SIP in a 29-year-old man",
-     "quote": "This literature review aimed to summarize available evidence about 3-MeO-PCP mechanisms of action and physical and psychotropic effects and to spread preliminary findings about persistent psychotic sy",
-     "why": "a number of the sentence is not in its quote"
-    },
-    {
-     "kind": "finding",
-     "text": "Effects induced by 3-MeO-PCP arise between 30 and 90 minutes after ingestion, may last from 4 to 48 hours, and can follow the consumption of doses as low as 1 mg.",
-     "quote": "3-MeO-PCP-induced effects arise between 30 and 90 min after ingestion, may last from 4 to 48 h, and can follow the consumption of doses as low as 1 mg.",
-     "why": "it holds an amount or a time between uses"
+     "text": "Literature review and case report of a 29‑year‑old man",
+     "quote": "This literature review aimed to summarize ... Additionally, the case of an SIP is reported in a 29‑year‑old man.",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
     }
    ]
-  },
-  {
-   "title": "Phencyclidine false positive induced by lamotrigine (Lamictal®) on a rapid urine toxicology screen",
-   "read": "full",
-   "kind": "other",
-   "at": "10.1007/s12245-010-0235-3",
-   "kept": 1,
-   "thrown": []
   },
   {
    "title": "PCP",
@@ -431,8 +388,7 @@
    "kind": "official",
    "at": "https://www.canada.ca/en/health-canada/services/substance-use/controlled-illegal-drugs/pcp.html",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
   },
   {
    "title": "PCP",
@@ -440,146 +396,342 @@
    "kind": "official",
    "at": "https://www.drugscience.org.uk/drugs/pcp",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
   },
   {
    "title": "PCP",
    "read": "page",
    "kind": "official",
    "at": "https://www.talktofrank.com/drug/pcp",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 1,
+   "thrown": [
+    {
+     "kind": "limit",
+     "text": "The duration is uncertain because it varies with dose, body size, and other substances used.",
+     "quote": "How long the effects last and the drug stays in your system depends on how much you’ve taken, your size and what other drugs you may have also taken.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   }
  ],
  "plan": {
   "short": [
-   "F1",
-   "F2",
-   "F3"
+   "F3",
+   "F1"
   ],
-  "direct": "It can",
-  "but": [],
+  "direct": "",
+  "but": [
+   "L1"
+  ],
   "how": [
    [
-    "DA",
-    "F1",
-    "F2"
+    "F3"
    ],
    [
-    "DB",
-    "F3"
+    "L1",
+    "F1"
+   ],
+   [
+    "L2",
+    "F2"
    ]
   ],
-  "unanswered": "duration and detectability of other PCP-like drugs besides PCP and 3-MeO-PCP"
- },
- "panel_gap": [],
- "own": {
-  "model": "pharmakon-check-0",
-  "threshold": 0.05,
-  "scores": {
-   "short": 0.9659,
-   "but": 0.0277,
-   "how1": 0.778,
-   "how2": 0.7071
-  },
-  "scores_quotes_alone": {
-   "short": 0.9331,
-   "but": 0.0496,
-   "how1": 0.8954,
-   "how2": 0.375
-  }
+  "unanswered": "whether standard drug tests can detect 3‑MeO‑PCP"
  },
  "tries": [
   {
-   "try": 2,
-   "why": "the short answer or the But was not accepted: written again",
+   "try": 1,
+   "why": "a rule was broken: written again",
    "parts": [
     {
      "part": "short",
-     "text": "It can stay in the body for days. 3-MeO-PCP has a half-life of 10 to 11 hours. PCP can be found in urine for up to 14 days.",
+     "text": "The time 3-MeO-PCP stays in your body depends on how much you take and other factors. Two research groups estimated its half-life at 10 to 11 hours.",
      "rests_on": [
+      {
+       "label": "F3",
+       "ref": "frank_pcp",
+       "where": "Mixing PCP with other drugs / How does it make people behave?",
+       "quote": "How long the effects last and the drug stays in your system depends on how much you’ve taken, your size and what other drugs you may have also taken.",
+       "sha": "9c57ffaef1535a62"
+      },
       {
        "label": "F1",
        "ref": "berar_2019",
        "where": "Discussion › Management",
-       "quote": "3-MeO-PCP's half-life in vivo (estimated at 10 and 11 hours by 2 different research groups) explains the rapid clinical improvement observed in 3-MeO-PCP-only intoxications.",
+       "quote": "3‑MeO‑PCP's half‑life in vivo (estimated at 10 and 11 hours by 2 different research groups) explains the rapid clinical improvement observed in 3‑MeO‑PCP‑only intoxications.",
        "sha": "32edae4ded5243e9"
-      },
-      {
-       "label": "F3",
-       "ref": "geraci_2010",
-       "where": "Discussion",
-       "quote": "PCP can be seen in the urine 4-6 h after use and can be detected for up to 14 days.",
-       "sha": "771ba3e7f6be40ed"
       }
      ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The claim that 3-MeO-PCP can stay in the body for days is not stated in the passages."
+     "ok": true
     },
     {
      "part": "but",
-     "text": "The 3-MeO-PCP data comes from a case report and literature review, not a large study of many people.",
+     "text": "The half-life estimate may not represent all individuals.",
      "rests_on": [
       {
-       "label": "DA",
+       "label": "L1",
        "ref": "berar_2019",
-       "where": "Abstract",
-       "quote": "Here, we report 2 cases of 3-MeO-PCP intoxication in the same patient, and summarize the manifestations of this intoxication reported in literature.",
-       "sha": "d9196508274ec132"
+       "where": "Discussion › Management",
+       "quote": "3‑MeO‑PCP's half‑life in vivo (estimated at 10 and 11 hours by 2 different research groups) explains the rapid clinical improvement observed in 3‑MeO‑PCP‑only intoxications.",
+       "sha": "32edae4ded5243e9"
       }
      ],
      "ok": false,
-     "by": "the second reader",
-     "said": "The passages do not explicitly say the data are not from a large study of many people."
+     "by": "a rule",
+     "said": "a rule: it says “all”, and the words it rests on carry no such word: say what the source says, in its own measure, or leave the word out"
     },
     {
      "part": "how1",
-     "text": "A case report and review of 3-MeO-PCP intoxication found it in blood and urine. Two groups estimated its half-life at 10 and 11 hours.",
+     "text": "FRANK says the time in your system depends on dose, size, and other drugs.",
      "rests_on": [
       {
-       "label": "DA",
-       "ref": "berar_2019",
-       "where": "Abstract",
-       "quote": "Here, we report 2 cases of 3-MeO-PCP intoxication in the same patient, and summarize the manifestations of this intoxication reported in literature.",
-       "sha": "d9196508274ec132"
-      },
-      {
-       "label": "F1",
-       "ref": "berar_2019",
-       "where": "Discussion › Management",
-       "quote": "3-MeO-PCP's half-life in vivo (estimated at 10 and 11 hours by 2 different research groups) explains the rapid clinical improvement observed in 3-MeO-PCP-only intoxications.",
-       "sha": "32edae4ded5243e9"
-      },
-      {
-       "label": "F2",
-       "ref": "berar_2019",
-       "where": "Discussion › Confusion between 3-MeO-PCP and its isomers",
-       "quote": "Indeed, we were, thus, able to detect this compound in the patient's blood and urine samples.",
-       "sha": "512c53e8ea3e344a"
+       "label": "F3",
+       "ref": "frank_pcp",
+       "where": "Mixing PCP with other drugs / How does it make people behave?",
+       "quote": "How long the effects last and the drug stays in your system depends on how much you’ve taken, your size and what other drugs you may have also taken.",
+       "sha": "9c57ffaef1535a62"
       }
      ],
      "ok": true
     },
     {
      "part": "how2",
-     "text": "Two case reports on PCP false positives noted that PCP can appear in urine 4 to 6 hours after use and last up to 14 days.",
+     "text": "A review cites two research groups estimating 3-MeO-PCP's half-life at 10 to 11 hours.",
      "rests_on": [
       {
-       "label": "DB",
-       "ref": "geraci_2010",
-       "where": "Abstract",
-       "quote": "This report describes two cases with unexplained positive results for phencyclidine (PCP).",
-       "sha": "7e3309e335f4cfb2"
+       "label": "F1",
+       "ref": "berar_2019",
+       "where": "Discussion › Management",
+       "quote": "3‑MeO‑PCP's half‑life in vivo (estimated at 10 and 11 hours by 2 different research groups) explains the rapid clinical improvement observed in 3‑MeO‑PCP‑only intoxications.",
+       "sha": "32edae4ded5243e9"
       },
       {
+       "label": "L1",
+       "ref": "berar_2019",
+       "where": "Discussion › Management",
+       "quote": "3‑MeO‑PCP's half‑life in vivo (estimated at 10 and 11 hours by 2 different research groups) explains the rapid clinical improvement observed in 3‑MeO‑PCP‑only intoxications.",
+       "sha": "32edae4ded5243e9"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2024 review found the effects of 3-MeO-PCP may last 4 to 48 hours, but did not discuss drug tests.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "pepe_2024",
+       "where": "1. Introduction › 1.2. About 3-Methoxy-Phencyclidine › 1.2.1. General Pharmacology",
+       "quote": "3‑MeO‑PCP‑induced effects arise between 30 and 90 min after ingestion, may last from 4 to 48 h, and can follow the consumption of doses as low as 1 mg.",
+       "sha": "fb74a3fe2da20561"
+      },
+      {
+       "label": "L2",
+       "ref": "pepe_2024",
+       "where": "1. Introduction › 1.2. About 3-Methoxy-Phencyclidine › 1.2.1. General Pharmacology",
+       "quote": "A thorough measurement of blood concentrations leading to toxicity and fatality is missing due to the lack of documented intoxication cases and information about the preservation status of samples.",
+       "sha": "d38b3d8b91341f4c"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "a rule was broken: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "The length of time 3-MeO-PCP stays in your body depends on how much you have taken, your size, and any other drugs you may have taken. Two research groups estimated its half-life at 10 to 11 hours.",
+     "rests_on": [
+      {
        "label": "F3",
-       "ref": "geraci_2010",
-       "where": "Discussion",
-       "quote": "PCP can be seen in the urine 4-6 h after use and can be detected for up to 14 days.",
-       "sha": "771ba3e7f6be40ed"
+       "ref": "frank_pcp",
+       "where": "Mixing PCP with other drugs / How does it make people behave?",
+       "quote": "How long the effects last and the drug stays in your system depends on how much you’ve taken, your size and what other drugs you may have also taken.",
+       "sha": "9c57ffaef1535a62"
+      },
+      {
+       "label": "F1",
+       "ref": "berar_2019",
+       "where": "Discussion › Management",
+       "quote": "3‑MeO‑PCP's half‑life in vivo (estimated at 10 and 11 hours by 2 different research groups) explains the rapid clinical improvement observed in 3‑MeO‑PCP‑only intoxications.",
+       "sha": "32edae4ded5243e9"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "The half-life estimate comes from only two research groups and may not represent all individuals.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "berar_2019",
+       "where": "Discussion › Management",
+       "quote": "3‑MeO‑PCP's half‑life in vivo (estimated at 10 and 11 hours by 2 different research groups) explains the rapid clinical improvement observed in 3‑MeO‑PCP‑only intoxications.",
+       "sha": "32edae4ded5243e9"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: it says “all”, and the words it rests on carry no such word: say what the source says, in its own measure, or leave the word out"
+    },
+    {
+     "part": "how1",
+     "text": "FRANK says the length of time the drug stays in your system depends on several factors.",
+     "rests_on": [
+      {
+       "label": "F3",
+       "ref": "frank_pcp",
+       "where": "Mixing PCP with other drugs / How does it make people behave?",
+       "quote": "How long the effects last and the drug stays in your system depends on how much you’ve taken, your size and what other drugs you may have also taken.",
+       "sha": "9c57ffaef1535a62"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A review cites two research groups estimating 3-MeO-PCP's half-life at 10 to 11 hours.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "berar_2019",
+       "where": "Discussion › Management",
+       "quote": "3‑MeO‑PCP's half‑life in vivo (estimated at 10 and 11 hours by 2 different research groups) explains the rapid clinical improvement observed in 3‑MeO‑PCP‑only intoxications.",
+       "sha": "32edae4ded5243e9"
+      },
+      {
+       "label": "L1",
+       "ref": "berar_2019",
+       "where": "Discussion › Management",
+       "quote": "3‑MeO‑PCP's half‑life in vivo (estimated at 10 and 11 hours by 2 different research groups) explains the rapid clinical improvement observed in 3‑MeO‑PCP‑only intoxications.",
+       "sha": "32edae4ded5243e9"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2024 review reports the effects of 3-MeO-PCP may last from 4 to 48 hours after ingestion.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "pepe_2024",
+       "where": "1. Introduction › 1.2. About 3-Methoxy-Phencyclidine › 1.2.1. General Pharmacology",
+       "quote": "3‑MeO‑PCP‑induced effects arise between 30 and 90 min after ingestion, may last from 4 to 48 h, and can follow the consumption of doses as low as 1 mg.",
+       "sha": "fb74a3fe2da20561"
+      },
+      {
+       "label": "L2",
+       "ref": "pepe_2024",
+       "where": "1. Introduction › 1.2. About 3-Methoxy-Phencyclidine › 1.2.1. General Pharmacology",
+       "quote": "A thorough measurement of blood concentrations leading to toxicity and fatality is missing due to the lack of documented intoxication cases and information about the preservation status of samples.",
+       "sha": "d38b3d8b91341f4c"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "The length of time 3-MeO-PCP stays in your body depends on how much you have taken, your size, and other drugs. Its half-life is estimated at 10 to 11 hours.",
+     "rests_on": [
+      {
+       "label": "F3",
+       "ref": "frank_pcp",
+       "where": "Mixing PCP with other drugs / How does it make people behave?",
+       "quote": "How long the effects last and the drug stays in your system depends on how much you’ve taken, your size and what other drugs you may have also taken.",
+       "sha": "9c57ffaef1535a62"
+      },
+      {
+       "label": "F1",
+       "ref": "berar_2019",
+       "where": "Discussion › Management",
+       "quote": "3‑MeO‑PCP's half‑life in vivo (estimated at 10 and 11 hours by 2 different research groups) explains the rapid clinical improvement observed in 3‑MeO‑PCP‑only intoxications.",
+       "sha": "32edae4ded5243e9"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The duration-depends-on-dose, size, and other-drugs claim comes from a passage about PCP, not 3-MeO-PCP. Also, 10–11 hours is an estimated half-life, not how long 3-MeO-PCP stays in the body."
+    },
+    {
+     "part": "but",
+     "text": "The half-life estimate comes from only two research groups.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "berar_2019",
+       "where": "Discussion › Management",
+       "quote": "3‑MeO‑PCP's half‑life in vivo (estimated at 10 and 11 hours by 2 different research groups) explains the rapid clinical improvement observed in 3‑MeO‑PCP‑only intoxications.",
+       "sha": "32edae4ded5243e9"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage says two research groups estimated the half-life, but does not establish that only two groups did so."
+    },
+    {
+     "part": "how1",
+     "text": "FRANK says the length of time depends on dose, size, and other drugs.",
+     "rests_on": [
+      {
+       "label": "F3",
+       "ref": "frank_pcp",
+       "where": "Mixing PCP with other drugs / How does it make people behave?",
+       "quote": "How long the effects last and the drug stays in your system depends on how much you’ve taken, your size and what other drugs you may have also taken.",
+       "sha": "9c57ffaef1535a62"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A review cites two research groups estimating 3-MeO-PCP's half-life at 10 to 11 hours.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "berar_2019",
+       "where": "Discussion › Management",
+       "quote": "3‑MeO‑PCP's half‑life in vivo (estimated at 10 and 11 hours by 2 different research groups) explains the rapid clinical improvement observed in 3‑MeO‑PCP‑only intoxications.",
+       "sha": "32edae4ded5243e9"
+      },
+      {
+       "label": "L1",
+       "ref": "berar_2019",
+       "where": "Discussion › Management",
+       "quote": "3‑MeO‑PCP's half‑life in vivo (estimated at 10 and 11 hours by 2 different research groups) explains the rapid clinical improvement observed in 3‑MeO‑PCP‑only intoxications.",
+       "sha": "32edae4ded5243e9"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2024 review found the effects of 3-MeO-PCP may last from 4 to 48 hours.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "pepe_2024",
+       "where": "1. Introduction › 1.2. About 3-Methoxy-Phencyclidine › 1.2.1. General Pharmacology",
+       "quote": "3‑MeO‑PCP‑induced effects arise between 30 and 90 min after ingestion, may last from 4 to 48 h, and can follow the consumption of doses as low as 1 mg.",
+       "sha": "fb74a3fe2da20561"
+      },
+      {
+       "label": "L2",
+       "ref": "pepe_2024",
+       "where": "1. Introduction › 1.2. About 3-Methoxy-Phencyclidine › 1.2.1. General Pharmacology",
+       "quote": "A thorough measurement of blood concentrations leading to toxicity and fatality is missing due to the lack of documented intoxication cases and information about the preservation status of samples.",
+       "sha": "d38b3d8b91341f4c"
       }
      ],
      "ok": true
@@ -587,27 +739,24 @@
    ]
   }
  ],
- "dropped": [
-  {
-   "try": 3,
-   "part": "but",
-   "text": "The 3-MeO-PCP data come from a case report and literature review, not a large study.",
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "berar_2019",
-     "where": "Abstract",
-     "quote": "Here, we report 2 cases of 3-MeO-PCP intoxication in the same patient, and summarize the manifestations of this intoxication reported in literature.",
-     "sha": "d9196508274ec132"
-    }
-   ],
-   "by": "the second reader",
-   "said": "the passage does not explicitly state that the data are 'not a large study'"
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.9685,
+   "but": 0.988,
+   "how1": 0.9575,
+   "how2": 0.9668,
+   "how3": 0.9711
+  },
+  "scores_quotes_alone": {
+   "short": 0.8685,
+   "but": 0.6601,
+   "how1": 0.9028,
+   "how2": 0.8448,
+   "how3": 0.9422
   }
- ],
- "with_checked": {
-  "differs": [],
-  "same": []
  },
  "place": {
   "home": "new:PCP-like drugs (3-MeO-PCP, 3-MeO-PCE)",
