@@ -15,36 +15,39 @@
  ],
  "drugs": [],
  "made": {
-  "on": "2026-11-26",
+  "on": "2026-11-27",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
-   "writer": "openrouter:meta-llama/llama-3.3-70b-instruct",
-   "checker": "openrouter:openai/gpt-oss-120b",
-   "planner": "openrouter:openai/gpt-oss-120b",
-   "team": "team R",
-   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "writer_2": "groq:qwen/qwen3.8-27b"
+   "reader": "gemini:gemini-3.1-flash-lite",
+   "writer": "gemini:gemma-4-26b-a4b-it",
+   "checker": "groq:openai/gpt-oss-120b",
+   "planner": "gemini:gemma-4-31b-it",
+   "also1": "gemini:gemini-3.5-flash-lite",
+   "also2": "gemini:gemini-3.6-flash",
+   "team": "team K",
+   "reader_2": "gemini:gemini-3.5-flash-lite",
+   "reader_3": "openrouter:meta-llama/llama-3.3-70b-instruct",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "45874502660",
-  "read_seconds": 31,
+  "run": "46040483450",
+  "read_seconds": 35,
   "from": {
    "papers": 2,
    "summaries": 0,
    "official": 0
   },
   "neurons": 0.0,
-  "seconds": 95
+  "seconds": 316
  },
- "status": "published",
- "why": "passed every gate",
+ "status": "none",
+ "why": "no draft passed: not accepted at try 2: a second reader did not accept but (it is about something else than the short answer). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
  "gates": {
-  "read": "3 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.97, but 0.99, how1 0.91, how2 0.89",
-  "check": "every sentence kept was accepted by the second reader (openrouter:openai/gpt-oss-120b); 1 How-do-we-know line(s) dropped",
-  "but": "the writer's But was not accepted (it is about something else than the short answer (Sentence 1 directly describes the mechanism of suvorexant, answering the question about how it works in the br): the code wrote the But itself, from what this answer rests on",
-  "rules": "nothing against it",
-  "checked": "set beside the checked claims of the same page: nothing against them"
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.1-flash-lite read from there",
+  "read": "3 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 0 official page(s), 0 paper(s) read in summary only",
+  "writer": "try 1: no JSON (how the reply ended: length; reasoned 0 characters, wrote 8610) try 3: no JSON (how the reply ended: length; reasoned 0 characters, wrote 8862)",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.61, but 0.81, how1 0.93, how2 0.47",
+  "check": "not accepted at try 2: a second reader did not accept but (it is about something else than the short answer). Say only what the items say, answer the question itself, and let the But be a limit of that answer."
  },
  "sources": [
   {
@@ -77,10 +80,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-26",
+     "verified_on": "2026-11-27",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-26"
+      "checked_on": "2026-11-27"
      }
     },
     "volume": "Volume 8",
@@ -96,22 +99,19 @@
    "people": true,
    "near": 0.67,
    "money": [],
-   "design": null,
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "Dual orexin receptor antagonists represent a new class of medications for the treatment of insomnia, which block the binding of wakefulness-promoting neuropeptides orexin A and orexin B to their respective receptor sites.",
+    "text": "a critical appraisal of the research on suvorexant for insomnia"
+   },
    "findings": [
     {
      "passage": 1,
      "where": "Abstract",
      "quote": "Dual orexin receptor antagonists represent a new class of medications for the treatment of insomnia, which block the binding of wakefulness-promoting neuropeptides orexin A and orexin B to their respective receptor sites.",
-     "text": "Dual orexin receptor antagonists are a new class of medications that block the binding of wakefulness-promoting neuropeptides orexin A and orexin B to their respective receptor sites.",
+     "text": "Suvorexant works by blocking the binding of the wakefulness-promoting neuropeptides orexin A and orexin B to their receptor sites.",
      "id": "F1",
-     "second_hand": ""
-    },
-    {
-     "passage": 1,
-     "where": "Abstract",
-     "quote": "Suvorexant (Belsomra) is the first dual orexin receptor antagonist to be approved in the US and Japan and has demonstrated efficacy in decreasing time to sleep onset and increasing total sleep time.",
-     "text": "Suvorexant is the first dual orexin receptor antagonist approved in the US and Japan and has demonstrated efficacy in decreasing time to sleep onset and increasing total sleep time.",
-     "id": "F2",
      "second_hand": ""
     }
    ],
@@ -119,8 +119,8 @@
     {
      "passage": 41,
      "where": "Safety considerations › Dosing › Place in therapy",
-     "quote": "However, more real-world experience is needed with the medication to fully understand its safety and efficacy implications as the patient populations studied in clinical trials of suvorexant have largely been healthy patients with insomnia.",
-     "text": "More real-world experience is needed to fully understand safety and efficacy implications because clinical trials largely studied healthy patients with insomnia.",
+     "quote": "more real-world experience is needed with the medication to fully understand its safety and efficacy implications as the patient populations studied in clinical trials of suvorexant have largely been healthy patients with insomnia.",
+     "text": "More real-world experience is required to fully understand the safety and efficacy of the medication because clinical trial participants were mostly healthy patients with insomnia.",
      "id": "L1",
      "second_hand": ""
     }
@@ -165,10 +165,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-26",
+     "verified_on": "2026-11-27",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-26"
+      "checked_on": "2026-11-27"
      }
     },
     "volume": "99",
@@ -188,17 +188,25 @@
     "The authors report no conflicts of interest in this work."
    ],
    "design": {
-    "passage": 1,
-    "where": "Abstract",
-    "quote": "The goal of this study was to perform a meta-analysis to overall estimate the effectiveness of suvorexant in preventing delirium and its related consequences.",
-    "text": "a meta-analysis of clinical studies evaluating suvorexant for the prevention of delirium"
+    "passage": 18,
+    "where": "Discussion",
+    "quote": "To our knowledge, this is the first meta-analysis to comprehensively evaluate the pharmaceutical effects of suvorexant for the prevention of delirium and its related consequences. In present study, 7 case-control studies were included",
+    "text": "a meta-analysis of 7 case-control studies evaluating the effectiveness of suvorexant for the prevention of delirium"
    },
    "findings": [
     {
      "passage": 19,
      "where": "Discussion",
-     "quote": "Suvorexant is a selective dual antagonist for orexin-A and orexin-B receptor. Orexin-A and -B are neuropeptides secreted by perifornical and lateral hypothalamic neurons. By binding to the corresponding receptor, orexin can mediate the excitability of neurons via regulating various ion (potassium, calcium) channels. Thus, block of the orexin-receptor pathway may be potentially effective for reducing the excitability of brain neurons.",
-     "text": "Suvorexant acts as a selective dual antagonist for orexin-A and orexin-B receptors, and blocking the orexin-receptor pathway can potentially reduce the excitability of brain neurons.",
+     "quote": "Suvorexant is a selective dual antagonist for orexin-A and orexin-B receptor. Orexin-A and -B are neuropeptides secreted by perifornical and lateral hypothalamic neurons. By binding to the corresponding receptor, orexin can mediate the excitability of neurons via regulating various ion (potassium, calcium) channels.",
+     "text": "Suvorexant is a selective dual antagonist for orexin-A and orexin-B receptors, which are neuropeptides that mediate neuronal excitability by regulating ion channels.",
+     "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 19,
+     "where": "Discussion",
+     "quote": "Thus, block of the orexin-receptor pathway may be potentially effective for reducing the excitability of brain neurons.",
+     "text": "Blocking the orexin-receptor pathway may be effective for reducing the excitability of brain neurons.",
      "id": "F3",
      "second_hand": ""
     }
@@ -207,8 +215,8 @@
     {
      "passage": 20,
      "where": "Discussion",
-     "quote": "First, suvorexant was approved only in a few countries (Japan and USA), which led to all the included studies performed in Japan. Whether it is effective for the patients of other countries needs subsequent follow-up reports.",
-     "text": "All included studies were performed in Japan because suvorexant was approved only in a few countries, so it needs subsequent follow-up reports to determine whether it is effective for patients in other countries.",
+     "quote": "Third, the sample size was small. This may be also another one reason to influence the efficacy estimation for suvorexant.",
+     "text": "The small sample size of the studies may influence the estimation of the efficacy of suvorexant.",
      "id": "L2",
      "second_hand": ""
     }
@@ -216,85 +224,9 @@
    "tag": "B"
   }
  ],
- "parts": [
-  {
-   "part": "short",
-   "text": "Suvorexant blocks orexin receptors, which can reduce neuron excitability.",
-   "uses": [
-    "F1",
-    "F3"
-   ],
-   "rests_on": [
-    {
-     "label": "F1",
-     "ref": "anderson_2016",
-     "where": "Abstract",
-     "quote": "Dual orexin receptor antagonists represent a new class of medications for the treatment of insomnia, which block the binding of wakefulness-promoting neuropeptides orexin A and orexin B to their respective receptor sites.",
-     "sha": "7d6b6ebf3b988f28"
-    },
-    {
-     "label": "F3",
-     "ref": "xu_2020",
-     "where": "Discussion",
-     "quote": "Suvorexant is a selective dual antagonist for orexin-A and orexin-B receptor. Orexin-A and -B are neuropeptides secreted by perifornical and lateral hypothalamic neurons. By binding to the corresponding receptor, orexin can mediate the excitability of neurons via regulating various ion (potassium, calcium) channels. Thus, block of the orexin-receptor pathway may be potentially effective for reducing the excitability of brain neurons.",
-     "sha": "7e3de9c060570035"
-    }
-   ]
-  },
-  {
-   "part": "but",
-   "text": "This rests on 2 reviews.",
-   "uses": [
-    "F1",
-    "DB"
-   ],
-   "fixed": true,
-   "rests_on": [
-    {
-     "label": "F1",
-     "ref": "anderson_2016",
-     "where": "Abstract",
-     "quote": "Dual orexin receptor antagonists represent a new class of medications for the treatment of insomnia, which block the binding of wakefulness-promoting neuropeptides orexin A and orexin B to their respective receptor sites.",
-     "sha": "7d6b6ebf3b988f28"
-    },
-    {
-     "label": "DB",
-     "ref": "xu_2020",
-     "where": "Abstract",
-     "quote": "The goal of this study was to perform a meta-analysis to overall estimate the effectiveness of suvorexant in preventing delirium and its related consequences.",
-     "sha": "33dade078f537595"
-    }
-   ]
-  },
-  {
-   "part": "how1",
-   "text": "A 2016 review found suvorexant blocks orexin A and B receptors.",
-   "uses": [
-    "F1",
-    "F2"
-   ],
-   "rests_on": [
-    {
-     "label": "F1",
-     "ref": "anderson_2016",
-     "where": "Abstract",
-     "quote": "Dual orexin receptor antagonists represent a new class of medications for the treatment of insomnia, which block the binding of wakefulness-promoting neuropeptides orexin A and orexin B to their respective receptor sites.",
-     "sha": "7d6b6ebf3b988f28"
-    },
-    {
-     "label": "F2",
-     "ref": "anderson_2016",
-     "where": "Abstract",
-     "quote": "Suvorexant (Belsomra) is the first dual orexin receptor antagonist to be approved in the US and Japan and has demonstrated efficacy in decreasing time to sleep onset and increasing total sleep time.",
-     "sha": "7d6b6ebf3b988f28"
-    }
-   ],
-   "quote": "Suvorexant (Belsomra) is the first dual orexin receptor antagonist to be approved in the US",
-   "quote_ref": "anderson_2016"
-  }
- ],
+ "parts": [],
  "complete": false,
- "missing": "a paper that stands nearer the question could not be read",
+ "missing": "",
  "wanted": [
   {
    "doi": "10.2174/0115748863337982250212111648",
@@ -319,198 +251,80 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-26",
+   "lane": 19,
+   "status": "published",
+   "why": "passed every gate",
+   "short": "Suvorexant blocks orexin receptors, which can reduce neuron excitability.",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "Novel class of medications, orexin receptor antagonists, in the treatment of insomnia - critical appraisal of suvorexant",
    "read": "full",
    "kind": "review",
    "at": "10.2147/nss.s76910",
-   "kept": 2,
-   "thrown": [
-    {
-     "kind": "text",
-     "text": "critical appraisal of suvorexant",
-     "quote": "Novel class of medications, orexin receptor antagonists, in the treatment of insomnia - critical appraisal of suvorexant (2016), Nature and science of sleep.",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
-    }
-   ]
+   "kept": 1,
+   "thrown": []
   },
   {
    "title": "Suvorexant for the prevention of delirium: A meta-analysis",
    "read": "full",
    "kind": "review",
    "at": "10.1097/md.0000000000021043",
-   "kept": 1,
+   "kept": 2,
    "thrown": []
   }
  ],
  "plan": {
   "short": [
    "F1",
+   "F2",
    "F3"
   ],
   "direct": "",
-  "but": [
-   "L1"
-  ],
+  "but": [],
   "how": [
    [
-    "F1",
-    "F2"
+    "DA",
+    "F1"
    ],
    [
+    "DB",
+    "F2",
     "F3"
    ]
   ],
-  "unanswered": "specific downstream neural effects of orexin blockade"
+  "unanswered": ""
  },
  "panel_gap": [],
  "own": {
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.9735,
-   "but": 0.9872,
-   "how1": 0.9099,
-   "how2": 0.8858
+   "short": 0.6069,
+   "but": 0.8138,
+   "how1": 0.9323,
+   "how2": 0.4702
   },
   "scores_quotes_alone": {
-   "short": 0.8215,
-   "but": 0.9766,
-   "how1": 0.8775,
-   "how2": 0.3194
+   "short": 0.948,
+   "but": 0.5024,
+   "how1": 0.1661,
+   "how2": 0.6928
   }
  },
  "tries": [
-  {
-   "try": 1,
-   "why": "the short answer or the But was not accepted: written again",
-   "parts": [
-    {
-     "part": "short",
-     "text": "Suvorexant blocks wakefulness-promoting neuropeptides orexin A and B. It reduces brain neuron excitability.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "anderson_2016",
-       "where": "Abstract",
-       "quote": "Dual orexin receptor antagonists represent a new class of medications for the treatment of insomnia, which block the binding of wakefulness-promoting neuropeptides orexin A and orexin B to their respective receptor sites.",
-       "sha": "7d6b6ebf3b988f28"
-      },
-      {
-       "label": "F3",
-       "ref": "xu_2020",
-       "where": "Discussion",
-       "quote": "Suvorexant is a selective dual antagonist for orexin-A and orexin-B receptor. Orexin-A and -B are neuropeptides secreted by perifornical and lateral hypothalamic neurons. By binding to the corresponding receptor, orexin can mediate the excitability of neurons via regulating various ion (potassium, calcium) channels. Thus, block of the orexin-receptor pathway may be potentially effective for reducing the excitability of brain neurons.",
-       "sha": "7e3de9c060570035"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passage states that suvorexant blocks orexin A and B, but only suggests it \"may be potentially effective for reducing the excitability of brain neurons\". The sentence asserts a definite reduction in excitability, which overstates the ce"
-    },
-    {
-     "part": "but",
-     "text": "More real-world experience is needed, as clinical trials studied healthy patients with insomnia.",
-     "rests_on": [
-      {
-       "label": "L1",
-       "ref": "anderson_2016",
-       "where": "Safety considerations › Dosing › Place in therapy",
-       "quote": "However, more real-world experience is needed with the medication to fully understand its safety and efficacy implications as the patient populations studied in clinical trials of suvorexant have largely been healthy patients with insomnia.",
-       "sha": "f93093d2926bea89"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "it is about something else than the short answer (Sentence 1 directly describes the drug's mechanism (blocking orexin neuropeptides) and thus answers the question about how suvorexant works in the brain, even though it overstates the certainty about reducing neuronal excitability. Sentence)"
-    },
-    {
-     "part": "how1",
-     "text": "A 2016 review found suvorexant decreases time to sleep onset and increases total sleep time.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "anderson_2016",
-       "where": "Abstract",
-       "quote": "Dual orexin receptor antagonists represent a new class of medications for the treatment of insomnia, which block the binding of wakefulness-promoting neuropeptides orexin A and orexin B to their respective receptor sites.",
-       "sha": "7d6b6ebf3b988f28"
-      },
-      {
-       "label": "F2",
-       "ref": "anderson_2016",
-       "where": "Abstract",
-       "quote": "Suvorexant (Belsomra) is the first dual orexin receptor antagonist to be approved in the US and Japan and has demonstrated efficacy in decreasing time to sleep onset and increasing total sleep time.",
-       "sha": "7d6b6ebf3b988f28"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "A 2020 meta-analysis found suvorexant reduces brain neuron excitability.",
-     "rests_on": [
-      {
-       "label": "F3",
-       "ref": "xu_2020",
-       "where": "Discussion",
-       "quote": "Suvorexant is a selective dual antagonist for orexin-A and orexin-B receptor. Orexin-A and -B are neuropeptides secreted by perifornical and lateral hypothalamic neurons. By binding to the corresponding receptor, orexin can mediate the excitability of neurons via regulating various ion (potassium, calcium) channels. Thus, block of the orexin-receptor pathway may be potentially effective for reducing the excitability of brain neurons.",
-       "sha": "7e3de9c060570035"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The meta‑analysis discussion only proposes that blocking orexin receptors \"may be potentially effective for reducing\" neuronal excitability; it does not report a finding that suvorexant actually reduces excitability."
-    }
-   ]
-  },
   {
    "try": 2,
    "why": "the short answer or the But was not accepted: written again",
    "parts": [
     {
      "part": "short",
-     "text": "Suvorexant blocks orexin A and B, reducing brain neuron excitability.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "anderson_2016",
-       "where": "Abstract",
-       "quote": "Dual orexin receptor antagonists represent a new class of medications for the treatment of insomnia, which block the binding of wakefulness-promoting neuropeptides orexin A and orexin B to their respective receptor sites.",
-       "sha": "7d6b6ebf3b988f28"
-      },
-      {
-       "label": "F3",
-       "ref": "xu_2020",
-       "where": "Discussion",
-       "quote": "Suvorexant is a selective dual antagonist for orexin-A and orexin-B receptor. Orexin-A and -B are neuropeptides secreted by perifornical and lateral hypothalamic neurons. By binding to the corresponding receptor, orexin can mediate the excitability of neurons via regulating various ion (potassium, calcium) channels. Thus, block of the orexin-receptor pathway may be potentially effective for reducing the excitability of brain neurons.",
-       "sha": "7e3de9c060570035"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "Passages only suggest that blocking orexin receptors may reduce neuron excitability; the sentence states a definite reduction."
-    },
-    {
-     "part": "but",
-     "text": "More real-world experience is needed to fully understand its effects.",
-     "rests_on": [
-      {
-       "label": "L1",
-       "ref": "anderson_2016",
-       "where": "Safety considerations › Dosing › Place in therapy",
-       "quote": "However, more real-world experience is needed with the medication to fully understand its safety and efficacy implications as the patient populations studied in clinical trials of suvorexant have largely been healthy patients with insomnia.",
-       "sha": "f93093d2926bea89"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "it is about something else than the short answer (Sentence 1 directly addresses how suvorexant works, but its claim about reducing excitability is stronger than the tentative language in the passages. Sentence 2 expresses a limitation about real‑world data, which does not specifically qual)"
-    },
-    {
-     "part": "how1",
-     "text": "A 2016 review found suvorexant blocks orexin A and B.",
+     "text": "Suvorexant works by blocking the binding of the wakefulness-promoting neuropeptides orexin A and orexin B to their receptor sites. This may reduce the excitability of brain neurons.",
      "rests_on": [
       {
        "label": "F1",
@@ -521,9 +335,53 @@
       },
       {
        "label": "F2",
+       "ref": "xu_2020",
+       "where": "Discussion",
+       "quote": "Suvorexant is a selective dual antagonist for orexin-A and orexin-B receptor. Orexin-A and -B are neuropeptides secreted by perifornical and lateral hypothalamic neurons. By binding to the corresponding receptor, orexin can mediate the excitability of neurons via regulating various ion (potassium, calcium) channels.",
+       "sha": "7e3de9c060570035"
+      },
+      {
+       "label": "F3",
+       "ref": "xu_2020",
+       "where": "Discussion",
+       "quote": "Thus, block of the orexin-receptor pathway may be potentially effective for reducing the excitability of brain neurons.",
+       "sha": "7e3de9c060570035"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "The information comes from a critical appraisal of research on suvorexant for insomnia.",
+     "rests_on": [
+      {
+       "label": "DA",
        "ref": "anderson_2016",
        "where": "Abstract",
-       "quote": "Suvorexant (Belsomra) is the first dual orexin receptor antagonist to be approved in the US and Japan and has demonstrated efficacy in decreasing time to sleep onset and increasing total sleep time.",
+       "quote": "Dual orexin receptor antagonists represent a new class of medications for the treatment of insomnia, which block the binding of wakefulness-promoting neuropeptides orexin A and orexin B to their respective receptor sites.",
+       "sha": "7d6b6ebf3b988f28"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer"
+    },
+    {
+     "part": "how1",
+     "text": "A critical appraisal of research on suvorexant for insomnia found it blocks the binding of orexin A and orexin B to their receptor sites.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "anderson_2016",
+       "where": "Abstract",
+       "quote": "Dual orexin receptor antagonists represent a new class of medications for the treatment of insomnia, which block the binding of wakefulness-promoting neuropeptides orexin A and orexin B to their respective receptor sites.",
+       "sha": "7d6b6ebf3b988f28"
+      },
+      {
+       "label": "F1",
+       "ref": "anderson_2016",
+       "where": "Abstract",
+       "quote": "Dual orexin receptor antagonists represent a new class of medications for the treatment of insomnia, which block the binding of wakefulness-promoting neuropeptides orexin A and orexin B to their respective receptor sites.",
        "sha": "7d6b6ebf3b988f28"
       }
      ],
@@ -531,61 +389,35 @@
     },
     {
      "part": "how2",
-     "text": "A 2020 meta-analysis found blocking orexin receptors reduces neuron excitability.",
+     "text": "A meta-analysis of 7 case-control studies found suvorexant is a selective dual antagonist for orexin-A and orexin-B receptors, which may reduce brain neuron excitability.",
      "rests_on": [
+      {
+       "label": "DB",
+       "ref": "xu_2020",
+       "where": "Discussion",
+       "quote": "To our knowledge, this is the first meta-analysis to comprehensively evaluate the pharmaceutical effects of suvorexant for the prevention of delirium and its related consequences. In present study, 7 case-control studies were included",
+       "sha": "c469914580820fe0"
+      },
+      {
+       "label": "F2",
+       "ref": "xu_2020",
+       "where": "Discussion",
+       "quote": "Suvorexant is a selective dual antagonist for orexin-A and orexin-B receptor. Orexin-A and -B are neuropeptides secreted by perifornical and lateral hypothalamic neurons. By binding to the corresponding receptor, orexin can mediate the excitability of neurons via regulating various ion (potassium, calcium) channels.",
+       "sha": "7e3de9c060570035"
+      },
       {
        "label": "F3",
        "ref": "xu_2020",
        "where": "Discussion",
-       "quote": "Suvorexant is a selective dual antagonist for orexin-A and orexin-B receptor. Orexin-A and -B are neuropeptides secreted by perifornical and lateral hypothalamic neurons. By binding to the corresponding receptor, orexin can mediate the excitability of neurons via regulating various ion (potassium, calcium) channels. Thus, block of the orexin-receptor pathway may be potentially effective for reducing the excitability of brain neurons.",
+       "quote": "Thus, block of the orexin-receptor pathway may be potentially effective for reducing the excitability of brain neurons.",
        "sha": "7e3de9c060570035"
       }
      ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "Passages indicate a potential (may be effective) reduction in excitability; the sentence claims a definitive finding."
+     "ok": true
     }
    ]
   }
  ],
- "dropped": [
-  {
-   "try": 3,
-   "part": "but",
-   "text": "More real-world experience is needed to fully understand its effects.",
-   "rests_on": [
-    {
-     "label": "L1",
-     "ref": "anderson_2016",
-     "where": "Safety considerations › Dosing › Place in therapy",
-     "quote": "However, more real-world experience is needed with the medication to fully understand its safety and efficacy implications as the patient populations studied in clinical trials of suvorexant have largely been healthy patients with insomnia.",
-     "sha": "f93093d2926bea89"
-    }
-   ],
-   "by": "the second reader",
-   "said": "it is about something else than the short answer (Sentence 1 directly describes the mechanism of suvorexant, answering the question about how it works in the brain. Sentence 2 discusses the need for more real‑world data, which is a limitation about safety/efficacy, not a direct limitation )"
-  },
-  {
-   "try": 3,
-   "part": "how2",
-   "text": "A 2020 meta-analysis found blocking orexin receptors can reduce neuron excitability.",
-   "rests_on": [
-    {
-     "label": "F3",
-     "ref": "xu_2020",
-     "where": "Discussion",
-     "quote": "Suvorexant is a selective dual antagonist for orexin-A and orexin-B receptor. Orexin-A and -B are neuropeptides secreted by perifornical and lateral hypothalamic neurons. By binding to the corresponding receptor, orexin can mediate the excitability of neurons via regulating various ion (potassium, calcium) channels. Thus, block of the orexin-receptor pathway may be potentially effective for reducing the excitability of brain neurons.",
-     "sha": "7e3de9c060570035"
-    }
-   ],
-   "by": "the second reader",
-   "said": "The passage states that blocking orexin receptors \"may be potentially effective\" for reducing excitability, which is less certain than the sentence’s claim that the meta‑analysis \"found\" it can reduce excitability."
-  }
- ],
- "with_checked": {
-  "differs": [],
-  "same": []
- },
  "place": {
   "home": "new:Sleep medicines that block orexin",
   "also": [],
