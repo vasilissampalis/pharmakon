@@ -19,33 +19,32 @@
  "made": {
   "on": "2026-11-27",
   "models": {
-   "reader": "openrouter:openai/gpt-oss-120b",
-   "writer": "openrouter:meta-llama/llama-3.3-70b-instruct",
-   "checker": "openrouter:openai/gpt-6-luna",
-   "planner": "openrouter:openai/gpt-oss-120b",
-   "team": "team R",
-   "reader_2": "openrouter:openai/gpt-oss-120b",
-   "reader_first": "gemini:gemma-4-31b-it"
+   "reader": "gemini:gemma-4-31b-it",
+   "writer": "groq:qwen/qwen3.8-27b",
+   "checker": "gemini:gemini-3.5-flash-lite",
+   "planner": "gemini:gemma-4-31b-it",
+   "also1": "gemini:gemini-3.6-flash",
+   "team": "team L",
+   "reader_2": "groq:openai/gpt-oss-20b",
+   "reader_3": "openrouter:openai/gpt-oss-120b",
+   "also1_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "45942570270",
+  "run": "46059440144",
   "read_seconds": 100,
   "from": {
-   "papers": 2,
+   "papers": 1,
    "summaries": 0,
    "official": 0
   },
   "neurons": 0.0,
-  "seconds": 224
+  "seconds": 100
  },
  "status": "none",
- "why": "the second reader did not accept the answer",
+ "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (2 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)",
  "gates": {
-  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-120b read from there",
-  "read": "4 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 6 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 0 official page(s), 0 paper(s) read in summary only",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.55, but 0.98, how2 0.43",
-  "check": "short: NOT accepted: The passages do not say antidepressants change a mushroom trip. The reported serotonin-syndrome case involved fluoxetine and ayahuasca, not a mushroom. This also repeats the editor-flagged broad claim rather than grounding the trip-effect c; but: accepted; how2: NOT accepted: The passage says the compounds generally lack large-scale, long-term randomized controlled trials. The sentence drops the limiting terms “long-term” and “randomized controlled,” so it makes a broader claim about large-scale trials.",
-  "rules": "1 How-do-we-know line(s) left out for a rule (how1: a number that is not in the paper's words it rests on (10))"
+  "time": "2 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
+  "read": "3 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 0 official page(s), 0 paper(s) read in summary only"
  },
  "sources": [
   {
@@ -124,24 +123,32 @@
    "design": {
     "passage": 1,
     "where": "Abstract",
-    "quote": "In this scoping review, we summarise the existing literature on the concomitant use of conventional ADs with classic psychedelics in humans",
-    "text": "Scoping review of human studies on concomitant antidepressants and classic psychedelics"
+    "quote": "In this scoping review, we summarise the existing literature on the concomitant use of conventional ADs with classic psychedelics in humans with the aims to assess safety, tolerability, efficacy, and subjective effects.",
+    "text": "A scoping review of existing literature on the concomitant use of conventional antidepressants and classic psychedelics in humans."
    },
    "findings": [
     {
-     "passage": 17,
-     "where": "Results › Safety",
-     "quote": "Ten studies evaluating the safety of the concomitant use of ADs and classic psychedelics showed no signs of serotonin toxicity or syndrome",
-     "text": "Ten studies reported no signs of serotonin toxicity or serotonin syndrome when antidepressants were used together with classic psychedelics.",
+     "passage": 37,
+     "where": "Discussion",
+     "quote": "The main findings indicate that this combination appears generally safe and tolerable with no robust evidence of increased risk for serotonin toxicity or syndrome.",
+     "text": "The combination of antidepressants and classic psychedelics appears generally safe and tolerable with no robust evidence of an increased risk for serotonin toxicity or syndrome.",
      "id": "F1",
+     "second_hand": "The main findings indicate that this combination appears generally safe and tolerable with no robust evidence of increased risk for serotonin toxicity or syndrome."
+    },
+    {
+     "passage": 37,
+     "where": "Discussion",
+     "quote": "A final observation was the potential attenuation of acute subjective effects of psychedelics, although other studies did not show this.",
+     "text": "Antidepressants may potentially attenuate the acute subjective effects of psychedelics, although other studies did not show this effect.",
+     "id": "F2",
      "second_hand": ""
     },
     {
      "passage": 17,
      "where": "Results › Safety",
-     "quote": "one case study involving a 36-year old man who received the SSRI fluoxetine 20 mg daily for several months for his mild MDD developed symptoms of serotonin syndrome, approximately one hour after 100 ml of ayahuasca",
-     "text": "A single case reported serotonin syndrome after ayahuasca use in a person taking fluoxetine.",
-     "id": "F2",
+     "quote": "Ten studies evaluating the safety of the concomitant use of ADs and classic psychedelics showed no signs of serotonin toxicity or syndrome.",
+     "text": "Ten studies evaluating the safety of using antidepressants and classic psychedelics together showed no signs of serotonin toxicity or syndrome.",
+     "id": "F3",
      "second_hand": ""
     }
    ],
@@ -149,135 +156,18 @@
     {
      "passage": 40,
      "where": "Discussion",
-     "quote": "Findings from this scoping review must be interpreted with caution due to a paucity of randomized controlled trials, with current evidence largely derived from case reports (;;;;), qualitative studies (;;), surveys, and/or open-label studies lacking a control group (;;;;)",
-     "text": "The evidence is limited because few randomized controlled trials exist and most data come from case reports, qualitative studies, surveys, or open‑label studies without control groups.",
+     "quote": "the complex interplay between specific dosages of ADs and classic psychedelics remains poorly understood, necessitating controlled studies to elucidate specific dose-response relationships and the distinct effects of particular AD classes.",
+     "text": "The relationship between specific dosages of antidepressants and classic psychedelics is not well understood and requires further controlled study.",
      "id": "L1",
      "second_hand": ""
     }
    ],
    "tag": "A"
-  },
-  {
-   "read": "full",
-   "ref": {
-    "id": "gawowska_2026",
-    "type": "article-journal",
-    "title": "Safety and efficacy of natural and conventional psychiatric treatments: A comparative review of mushroom-derived compounds and medicinal plants in the management of mental disorders",
-    "author": [
-     {
-      "family": "Gawłowska",
-      "given": "Katarzyna"
-     },
-     {
-      "family": "Nowakowska",
-      "given": "Katarzyna Kaja"
-     },
-     {
-      "family": "Makówka",
-      "given": "Julia Wiktoria"
-     },
-     {
-      "family": "Bajurny",
-      "given": "Wojciech"
-     },
-     {
-      "family": "Góral",
-      "given": "Magdalena Patrycja"
-     },
-     {
-      "family": "Bocheńska",
-      "given": "Agata"
-     },
-     {
-      "family": "Kopecki",
-      "given": "Szymon Dariusz"
-     },
-     {
-      "family": "Grodzińska",
-      "given": "Weronika Marta"
-     },
-     {
-      "family": "Chłopaś-Konowałek",
-      "given": "Agnieszka"
-     }
-    ],
-    "container-title": "Molecules",
-    "issued": {
-     "date-parts": [
-      [
-       2026
-      ]
-     ]
-    },
-    "DOI": "10.3390/molecules31173130",
-    "verification": {
-     "status": "metadata-verified",
-     "metadata_source": "crossref",
-     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
-     "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-27",
-     "retraction_check": {
-      "status": "clear",
-      "checked_on": "2026-11-27"
-     }
-    },
-    "volume": "31",
-    "issue": "17",
-    "number": "3130",
-    "PMCID": "PMC13567430"
-   },
-   "doi": "10.3390/molecules31173130",
-   "pmcid": "PMC13567430",
-   "title": "Safety and Efficacy of Natural and Conventional Psychiatric Treatments: A Comparative Review of Mushroom-Derived Compounds and Medicinal Plants in the Management of Mental Disorders",
-   "year": 2026,
-   "journal": "Molecules (Basel, Switzerland)",
-   "kind": "review",
-   "people": true,
-   "near": 0.672,
-   "money": [
-    "The authors declare no conflicts of interest.",
-    "This research received no external funding."
-   ],
-   "design": {
-    "passage": 1,
-    "where": "Abstract",
-    "quote": "This narrative review critically evaluates the pharmacological efficacy, mechanisms of action, and safety profiles of selected natural compounds",
-    "text": "Narrative review comparing mushroom-derived compounds with standard psychiatric treatments"
-   },
-   "findings": [
-    {
-     "passage": 50,
-     "where": "5. Mushroom-Derived Compounds › 5.2. “Minor” Psilocybin-Related Tryptamines: Baeocystin, Norbaeocystin, Aeruginascin",
-     "quote": "baeocystin could potentially induce a synergistic effect with psilocin by competing for MAO, effectively increasing the concentration of psilocin in the blood.",
-     "text": "Baeocystin may synergize with psilocin by competing for MAO, potentially raising psilocin blood levels.",
-     "id": "F3",
-     "second_hand": ""
-    },
-    {
-     "passage": 75,
-     "where": "6. Current Limitations and Challenges in the Clinical Translation of Natural Therapies",
-     "quote": "the vast majority of mushroom-derived and botanical compounds lack large-scale, long-term randomized controlled trials (RCTs).",
-     "text": "Most mushroom-derived compounds have not been tested in large‑scale, long‑term randomized controlled trials, so safety of mixing with psychiatric medicines is not established.",
-     "id": "F4",
-     "second_hand": ""
-    }
-   ],
-   "limits": [
-    {
-     "passage": 75,
-     "where": "6. Current Limitations and Challenges in the Clinical Translation of Natural Therapies",
-     "quote": "the vast majority of mushroom-derived and botanical compounds lack large-scale, long-term randomized controlled trials (RCTs).",
-     "text": "The majority of mushroom-derived compounds lack large‑scale, long‑term randomized controlled trials, limiting knowledge of their safety.",
-     "id": "L2",
-     "second_hand": ""
-    }
-   ],
-   "tag": "B"
   }
  ],
  "parts": [],
  "complete": false,
- "missing": "effects of non‑antidepressant psychiatric medicines",
+ "missing": "",
  "wanted": [
   {
    "doi": "10.1124/pharmrev.120.000056",
@@ -318,6 +208,14 @@
    "why": "passed every gate, and the stricter bar for an answer about mixing drugs",
    "short": "It can weaken the acute subjective effects of psychedelics. FRANK says mixing drugs is always risky.",
    "complete": true
+  },
+  {
+   "on": "2026-11-27",
+   "lane": 19,
+   "status": "none",
+   "why": "the second reader did not accept the answer",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -327,36 +225,21 @@
    "kind": "study",
    "at": "10.1177/02698811241237870",
    "kept": 0,
-   "thrown": [
-    {
-     "why": "the reader gave no JSON"
-    }
-   ]
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
   },
   {
    "title": "Concomitant use of antidepressants and classic psychedelics: A scoping review",
    "read": "full",
    "kind": "other",
    "at": "10.1177/02698811251368360",
-   "kept": 2,
+   "kept": 3,
    "thrown": [
     {
-     "kind": "finding",
-     "text": "The combination of antidepressants and classic psychedelics is generally safe and tolerable with no increased risk of serotonin syndrome, especially for psilocybin.",
-     "quote": "we found that the concomitant use of ADs and classic psychedelics is generally safe and tolerable, with no increased risk of serotonin syndrome, particularly for psilocybin.",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
-    },
-    {
-     "kind": "finding",
-     "text": "Antidepressants may attenuate the acute subjective effects of psychedelic mushrooms.",
-     "quote": "a final observation was the potential attenuation of acute subjective effects of psychedelics",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
-    },
-    {
      "kind": "limit",
-     "text": "Specific dose‑response relationships between antidepressants and classic psychedelics are not well known.",
-     "quote": "the complex interplay between specific dosages of ADs and classic psychedelics remains poorly understood",
-     "why": "the sentence is not carried by its quote and passage"
+     "text": "The findings must be interpreted with caution because there are few randomized controlled trials and the evidence is largely derived from case reports, qualitative studies, surveys, and open-label stu",
+     "quote": "Findings from this scoping review must be interpreted with caution due to a paucity of randomized controlled trials, with current evidence largely derived from case reports, qualitative studies, surve",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
     }
    ]
   },
@@ -366,14 +249,7 @@
    "kind": "review",
    "at": "10.1007/s11864-022-00954-4",
    "kept": 0,
-   "thrown": [
-    {
-     "kind": "limit",
-     "text": "Evidence for antidepressants in cancer-related depression and pain is sparse, low-quality, and inconclusive.",
-     "quote": "Antidepressant medications, established as front-line therapy for depression in multiple disease states, have sparse and low-quality evidence for depression and pain across cancer settings. This inclu",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
-    }
-   ]
+   "thrown": []
   },
   {
    "title": "Psilocybin in pharmacotherapy of obsessive-compulsive disorder",
@@ -381,427 +257,11 @@
    "kind": "review",
    "at": "10.1007/s43440-024-00633-1",
    "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Safety and Efficacy of Natural and Conventional Psychiatric Treatments: A Comparative Review of Mushroom-Derived Compounds and Medicinal Plants in the Management of Mental Disorders",
-   "read": "full",
-   "kind": "review",
-   "at": "10.3390/molecules31173130",
-   "kept": 2,
-   "thrown": [
-    {
-     "kind": "finding",
-     "text": "Psilocybin-related tryptamines are substrates for MAO‑A, so MAO‑inhibiting antidepressants could alter their metabolism.",
-     "quote": "psilocybin-related tryptamines and their dephosphorylated forms are, similar to psilocin, substrates for MAO—A.",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
-    }
-   ]
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
   }
  ],
- "plan": {
-  "short": [
-   "F3",
-   "F1",
-   "F2"
-  ],
-  "direct": "It depends",
-  "but": [
-   "L1"
-  ],
-  "how": [
-   [
-    "DA",
-    "F1",
-    "F2"
-   ],
-   [
-    "DB",
-    "F3",
-    "F4"
-   ]
-  ],
-  "unanswered": "effects of non‑antidepressant psychiatric medicines"
- },
- "panel_gap": [],
- "own": {
-  "model": "pharmakon-check-0",
-  "threshold": 0.05,
-  "scores": {
-   "short": 0.5522,
-   "but": 0.9805,
-   "how2": 0.435
-  },
-  "scores_quotes_alone": {
-   "short": 0.3219,
-   "but": 0.9808,
-   "how2": 0.5738
-  }
- },
- "tries": [
-  {
-   "try": 1,
-   "why": "the short answer or the But was not accepted: written again",
-   "parts": [
-    {
-     "part": "short",
-     "text": "It depends. Antidepressants may change a mushroom trip, and the mix can be risky in some people.",
-     "rests_on": [
-      {
-       "label": "F3",
-       "ref": "gawowska_2026",
-       "where": "5. Mushroom-Derived Compounds › 5.2. “Minor” Psilocybin-Related Tryptamines: Baeocystin, Norbaeocystin, Aeruginascin",
-       "quote": "baeocystin could potentially induce a synergistic effect with psilocin by competing for MAO, effectively increasing the concentration of psilocin in the blood.",
-       "sha": "d5762ec795f602af"
-      },
-      {
-       "label": "F1",
-       "ref": "tap_2025",
-       "where": "Results › Safety",
-       "quote": "Ten studies evaluating the safety of the concomitant use of ADs and classic psychedelics showed no signs of serotonin toxicity or syndrome",
-       "sha": "50799c401c023861"
-      },
-      {
-       "label": "F2",
-       "ref": "tap_2025",
-       "where": "Results › Safety",
-       "quote": "one case study involving a 36-year old man who received the SSRI fluoxetine 20 mg daily for several months for his mild MDD developed symptoms of serotonin syndrome, approximately one hour after 100 ml of ayahuasca",
-       "sha": "50799c401c023861"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passages do not say antidepressants change a mushroom trip. The mushroom passage discusses possible effects of baeocystin, while the antidepressant review reports safety findings and an ayahuasca case, not altered trip effects from anti"
-    },
-    {
-     "part": "but",
-     "text": "The evidence is limited, with few randomized controlled trials.",
-     "rests_on": [
-      {
-       "label": "L1",
-       "ref": "tap_2025",
-       "where": "Discussion",
-       "quote": "Findings from this scoping review must be interpreted with caution due to a paucity of randomized controlled trials, with current evidence largely derived from case reports (;;;;), qualitative studies (;;), surveys, and/or open-label studies lacking a control group (;;;;)",
-       "sha": "5d24e056ad82b31e"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how1",
-     "text": "A 2025 scoping review of human studies found no serotonin toxicity in most people taking antidepressants with classic psychedelics.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "tap_2025",
-       "where": "Abstract",
-       "quote": "In this scoping review, we summarise the existing literature on the concomitant use of conventional ADs with classic psychedelics in humans",
-       "sha": "600392ba11401f2d"
-      },
-      {
-       "label": "F1",
-       "ref": "tap_2025",
-       "where": "Results › Safety",
-       "quote": "Ten studies evaluating the safety of the concomitant use of ADs and classic psychedelics showed no signs of serotonin toxicity or syndrome",
-       "sha": "50799c401c023861"
-      },
-      {
-       "label": "F2",
-       "ref": "tap_2025",
-       "where": "Results › Safety",
-       "quote": "one case study involving a 36-year old man who received the SSRI fluoxetine 20 mg daily for several months for his mild MDD developed symptoms of serotonin syndrome, approximately one hour after 100 ml of ayahuasca",
-       "sha": "50799c401c023861"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The review reports findings from studies, including isolated reports suggestive of toxicity and one case with serotonin-syndrome symptoms; it does not establish that most people taking the combination had no serotonin toxicity."
-    },
-    {
-     "part": "how2",
-     "text": "A 2026 review found baeocystin may raise psilocin blood levels, and most mushroom-derived compounds lack large-scale trials.",
-     "rests_on": [
-      {
-       "label": "DB",
-       "ref": "gawowska_2026",
-       "where": "Abstract",
-       "quote": "This narrative review critically evaluates the pharmacological efficacy, mechanisms of action, and safety profiles of selected natural compounds",
-       "sha": "43f150cc2ed9738a"
-      },
-      {
-       "label": "F3",
-       "ref": "gawowska_2026",
-       "where": "5. Mushroom-Derived Compounds › 5.2. “Minor” Psilocybin-Related Tryptamines: Baeocystin, Norbaeocystin, Aeruginascin",
-       "quote": "baeocystin could potentially induce a synergistic effect with psilocin by competing for MAO, effectively increasing the concentration of psilocin in the blood.",
-       "sha": "d5762ec795f602af"
-      },
-      {
-       "label": "F4",
-       "ref": "gawowska_2026",
-       "where": "6. Current Limitations and Challenges in the Clinical Translation of Natural Therapies",
-       "quote": "the vast majority of mushroom-derived and botanical compounds lack large-scale, long-term randomized controlled trials (RCTs).",
-       "sha": "262913fa1b0fd9de"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passages say most relevant compounds lack large-scale, long-term randomized controlled trials. They do not establish that most mushroom-derived compounds lack large-scale trials of any kind."
-    }
-   ]
-  },
-  {
-   "try": 2,
-   "why": "the short answer or the But was not accepted: written again",
-   "parts": [
-    {
-     "part": "short",
-     "text": "It depends. Antidepressants may not cause serotonin syndrome with classic psychedelics, but one case reported it with ayahuasca.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "tap_2025",
-       "where": "Results › Safety",
-       "quote": "Ten studies evaluating the safety of the concomitant use of ADs and classic psychedelics showed no signs of serotonin toxicity or syndrome",
-       "sha": "50799c401c023861"
-      },
-      {
-       "label": "F2",
-       "ref": "tap_2025",
-       "where": "Results › Safety",
-       "quote": "one case study involving a 36-year old man who received the SSRI fluoxetine 20 mg daily for several months for his mild MDD developed symptoms of serotonin syndrome, approximately one hour after 100 ml of ayahuasca",
-       "sha": "50799c401c023861"
-      },
-      {
-       "label": "F3",
-       "ref": "gawowska_2026",
-       "where": "5. Mushroom-Derived Compounds › 5.2. “Minor” Psilocybin-Related Tryptamines: Baeocystin, Norbaeocystin, Aeruginascin",
-       "quote": "baeocystin could potentially induce a synergistic effect with psilocin by competing for MAO, effectively increasing the concentration of psilocin in the blood.",
-       "sha": "d5762ec795f602af"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "It generalizes from studies with no signs of serotonin syndrome despite other suggestive reports and a case, and it downplays the risk of mixing. That repeats what the editor’s note warns against. The passages also do not establish that ant"
-    },
-    {
-     "part": "but",
-     "text": "The evidence is limited due to few randomized controlled trials.",
-     "rests_on": [
-      {
-       "label": "L1",
-       "ref": "tap_2025",
-       "where": "Discussion",
-       "quote": "Findings from this scoping review must be interpreted with caution due to a paucity of randomized controlled trials, with current evidence largely derived from case reports (;;;;), qualitative studies (;;), surveys, and/or open-label studies lacking a control group (;;;;)",
-       "sha": "5d24e056ad82b31e"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "A 2026 review found baeocystin may synergize with psilocin, and most mushroom-derived compounds lack large-scale trials.",
-     "rests_on": [
-      {
-       "label": "DB",
-       "ref": "gawowska_2026",
-       "where": "Abstract",
-       "quote": "This narrative review critically evaluates the pharmacological efficacy, mechanisms of action, and safety profiles of selected natural compounds",
-       "sha": "43f150cc2ed9738a"
-      },
-      {
-       "label": "F3",
-       "ref": "gawowska_2026",
-       "where": "5. Mushroom-Derived Compounds › 5.2. “Minor” Psilocybin-Related Tryptamines: Baeocystin, Norbaeocystin, Aeruginascin",
-       "quote": "baeocystin could potentially induce a synergistic effect with psilocin by competing for MAO, effectively increasing the concentration of psilocin in the blood.",
-       "sha": "d5762ec795f602af"
-      },
-      {
-       "label": "F4",
-       "ref": "gawowska_2026",
-       "where": "6. Current Limitations and Challenges in the Clinical Translation of Natural Therapies",
-       "quote": "the vast majority of mushroom-derived and botanical compounds lack large-scale, long-term randomized controlled trials (RCTs).",
-       "sha": "262913fa1b0fd9de"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The review says baeocystin could potentially have a synergistic effect and that this was not investigated in the analyzed reports; it does not say the review found that it may synergize. The trials claim also broadens the passage, which spe"
-    }
-   ]
-  },
-  {
-   "try": 3,
-   "why": "the last draft: no answer",
-   "parts": [
-    {
-     "part": "short",
-     "text": "It depends. Antidepressants may change a mushroom trip. One case reported serotonin syndrome.",
-     "rests_on": [
-      {
-       "label": "F3",
-       "ref": "gawowska_2026",
-       "where": "5. Mushroom-Derived Compounds › 5.2. “Minor” Psilocybin-Related Tryptamines: Baeocystin, Norbaeocystin, Aeruginascin",
-       "quote": "baeocystin could potentially induce a synergistic effect with psilocin by competing for MAO, effectively increasing the concentration of psilocin in the blood.",
-       "sha": "d5762ec795f602af"
-      },
-      {
-       "label": "F1",
-       "ref": "tap_2025",
-       "where": "Results › Safety",
-       "quote": "Ten studies evaluating the safety of the concomitant use of ADs and classic psychedelics showed no signs of serotonin toxicity or syndrome",
-       "sha": "50799c401c023861"
-      },
-      {
-       "label": "F2",
-       "ref": "tap_2025",
-       "where": "Results › Safety",
-       "quote": "one case study involving a 36-year old man who received the SSRI fluoxetine 20 mg daily for several months for his mild MDD developed symptoms of serotonin syndrome, approximately one hour after 100 ml of ayahuasca",
-       "sha": "50799c401c023861"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passages do not say antidepressants change a mushroom trip. The reported serotonin-syndrome case involved fluoxetine and ayahuasca, not a mushroom. This also repeats the editor-flagged broad claim rather than grounding the trip-effect c"
-    },
-    {
-     "part": "but",
-     "text": "The evidence is limited due to few randomized controlled trials.",
-     "rests_on": [
-      {
-       "label": "L1",
-       "ref": "tap_2025",
-       "where": "Discussion",
-       "quote": "Findings from this scoping review must be interpreted with caution due to a paucity of randomized controlled trials, with current evidence largely derived from case reports (;;;;), qualitative studies (;;), surveys, and/or open-label studies lacking a control group (;;;;)",
-       "sha": "5d24e056ad82b31e"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "A 2026 review found baeocystin may synergize with psilocin, and most mushroom-derived compounds lack large-scale trials.",
-     "rests_on": [
-      {
-       "label": "DB",
-       "ref": "gawowska_2026",
-       "where": "Abstract",
-       "quote": "This narrative review critically evaluates the pharmacological efficacy, mechanisms of action, and safety profiles of selected natural compounds",
-       "sha": "43f150cc2ed9738a"
-      },
-      {
-       "label": "F3",
-       "ref": "gawowska_2026",
-       "where": "5. Mushroom-Derived Compounds › 5.2. “Minor” Psilocybin-Related Tryptamines: Baeocystin, Norbaeocystin, Aeruginascin",
-       "quote": "baeocystin could potentially induce a synergistic effect with psilocin by competing for MAO, effectively increasing the concentration of psilocin in the blood.",
-       "sha": "d5762ec795f602af"
-      },
-      {
-       "label": "F4",
-       "ref": "gawowska_2026",
-       "where": "6. Current Limitations and Challenges in the Clinical Translation of Natural Therapies",
-       "quote": "the vast majority of mushroom-derived and botanical compounds lack large-scale, long-term randomized controlled trials (RCTs).",
-       "sha": "262913fa1b0fd9de"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passage says the compounds generally lack large-scale, long-term randomized controlled trials. The sentence drops the limiting terms “long-term” and “randomized controlled,” so it makes a broader claim about large-scale trials."
-    }
-   ]
-  }
- ],
- "dropped": [
-  {
-   "try": 2,
-   "part": "how1",
-   "text": "A 2025 scoping review of human studies found no signs of serotonin toxicity in 10 studies, but one case reported serotonin syndrome.",
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "tap_2025",
-     "where": "Abstract",
-     "quote": "In this scoping review, we summarise the existing literature on the concomitant use of conventional ADs with classic psychedelics in humans",
-     "sha": "600392ba11401f2d"
-    },
-    {
-     "label": "F1",
-     "ref": "tap_2025",
-     "where": "Results › Safety",
-     "quote": "Ten studies evaluating the safety of the concomitant use of ADs and classic psychedelics showed no signs of serotonin toxicity or syndrome",
-     "sha": "50799c401c023861"
-    },
-    {
-     "label": "F2",
-     "ref": "tap_2025",
-     "where": "Results › Safety",
-     "quote": "one case study involving a 36-year old man who received the SSRI fluoxetine 20 mg daily for several months for his mild MDD developed symptoms of serotonin syndrome, approximately one hour after 100 ml of ayahuasca",
-     "sha": "50799c401c023861"
-    }
-   ],
-   "by": "a rule",
-   "said": "a rule: a number that is not in the paper's words it rests on (10)"
-  },
-  {
-   "try": 3,
-   "part": "how1",
-   "text": "A 2025 scoping review of human studies found no signs of serotonin toxicity in 10 studies, but one case reported serotonin syndrome.",
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "tap_2025",
-     "where": "Abstract",
-     "quote": "In this scoping review, we summarise the existing literature on the concomitant use of conventional ADs with classic psychedelics in humans",
-     "sha": "600392ba11401f2d"
-    },
-    {
-     "label": "F1",
-     "ref": "tap_2025",
-     "where": "Results › Safety",
-     "quote": "Ten studies evaluating the safety of the concomitant use of ADs and classic psychedelics showed no signs of serotonin toxicity or syndrome",
-     "sha": "50799c401c023861"
-    },
-    {
-     "label": "F2",
-     "ref": "tap_2025",
-     "where": "Results › Safety",
-     "quote": "one case study involving a 36-year old man who received the SSRI fluoxetine 20 mg daily for several months for his mild MDD developed symptoms of serotonin syndrome, approximately one hour after 100 ml of ayahuasca",
-     "sha": "50799c401c023861"
-    }
-   ],
-   "by": "a rule",
-   "said": "a rule: a number that is not in the paper's words it rests on (10)"
-  },
-  {
-   "try": 3,
-   "part": "how2",
-   "text": "A 2026 review found baeocystin may synergize with psilocin, and most mushroom-derived compounds lack large-scale trials.",
-   "rests_on": [
-    {
-     "label": "DB",
-     "ref": "gawowska_2026",
-     "where": "Abstract",
-     "quote": "This narrative review critically evaluates the pharmacological efficacy, mechanisms of action, and safety profiles of selected natural compounds",
-     "sha": "43f150cc2ed9738a"
-    },
-    {
-     "label": "F3",
-     "ref": "gawowska_2026",
-     "where": "5. Mushroom-Derived Compounds › 5.2. “Minor” Psilocybin-Related Tryptamines: Baeocystin, Norbaeocystin, Aeruginascin",
-     "quote": "baeocystin could potentially induce a synergistic effect with psilocin by competing for MAO, effectively increasing the concentration of psilocin in the blood.",
-     "sha": "d5762ec795f602af"
-    },
-    {
-     "label": "F4",
-     "ref": "gawowska_2026",
-     "where": "6. Current Limitations and Challenges in the Clinical Translation of Natural Therapies",
-     "quote": "the vast majority of mushroom-derived and botanical compounds lack large-scale, long-term randomized controlled trials (RCTs).",
-     "sha": "262913fa1b0fd9de"
-    }
-   ],
-   "by": "the second reader",
-   "said": "The passage says the compounds generally lack large-scale, long-term randomized controlled trials. The sentence drops the limiting terms “long-term” and “randomized controlled,” so it makes a broader claim about large-scale trials."
-  }
- ],
+ "soft": "a source could not be fetched",
  "place": {
   "home": "interactions",
   "also": [

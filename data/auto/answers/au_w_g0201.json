@@ -17,7 +17,7 @@
  "made": {
   "on": "2026-11-27",
   "models": {
-   "reader": "groq:openai/gpt-oss-20b",
+   "reader": "gemini:gemini-3.1-flash-lite",
    "writer": "gemini:gemma-4-26b-a4b-it",
    "checker": "gemini:gemini-3.5-flash-lite",
    "planner": "gemini:gemma-4-31b-it",
@@ -28,7 +28,7 @@
    "also1_else": "gemini:gemma-4-31b-it",
    "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "46058117603",
+  "run": "46059440144",
   "read_seconds": 100,
   "from": {
    "papers": 0,
@@ -39,11 +39,11 @@
   "seconds": 100
  },
  "status": "none",
- "why": "no source that can be read gave a finding for this question (1 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
+ "why": "no source that can be read gave a finding for this question (2 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)",
  "gates": {
-  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-20b read from there",
-  "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)"
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.1-flash-lite read from there",
+  "time": "2 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
+  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)"
  },
  "sources": [],
  "parts": [],
@@ -81,6 +81,14 @@
    "why": "passed every gate",
    "short": "It depends. The NZ Drug Foundation says daily use can lead to tolerance, while a 1983 review says it does not occur with repeated administration.",
    "complete": false
+  },
+  {
+   "on": "2026-11-27",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question (1 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -98,14 +106,7 @@
    "kind": "review",
    "at": "10.3389/fphar.2025.1614865",
    "kept": 0,
-   "thrown": [
-    {
-     "kind": "text",
-     "text": "Review article on etomidate analogues",
-     "quote": "Recent progress in the development of etomidate analogues (2025), Frontiers in pharmacology.",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
-    }
-   ]
+   "thrown": []
   },
   {
    "title": "Pro/con debate: Is etomidate safe in hemodynamically unstable critically ill patients?",
@@ -113,7 +114,8 @@
    "kind": "review",
    "at": "10.1186/cc11242",
    "kept": 0,
-   "thrown": []
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
   },
   {
    "title": "Etomidate derivatives: Novel pharmaceutical agents in anesthesia",
