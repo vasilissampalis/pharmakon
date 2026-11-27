@@ -150,7 +150,10 @@ def ledger():
         try: d = json.load(open(LEDGER, encoding="utf-8"))
         except (OSError, ValueError): d = {}
     if d.get("day") != today():        # a new day by UTC: Cloudflare's count begins again. What is counted by another clock is kept: Groq's allowance comes back over 24 hours, and each other service has its own day (svc_used: Google's begins at midnight Pacific time)
-        d = dict({"day": today(), "neurons": 0.0, "calls": 0, "by_model": {}}, **{k: d[k] for k in ("groq_rolling", "svc", "groq_pay") if isinstance(d.get(k), dict)})
+        # (27 November 2026) every paid service's month ("<svc>_pay") and its last read balance ("<svc>_credit") are kept too: until now only
+        # Groq's was, so OpenRouter's month of spending was forgotten at each midnight by UTC (found the night after it was switched on, when the
+        # ledger of 27 November held that day alone); its daily share and the credit it follows still held it within the credit bought.
+        d = dict({"day": today(), "neurons": 0.0, "calls": 0, "by_model": {}}, **{k: d[k] for k in d if isinstance(d.get(k), dict) and (k in ("groq_rolling", "svc") or k.endswith("_pay") or k.endswith("_credit"))})
     return d
 
 
@@ -712,6 +715,9 @@ def pay_selftest():
         pay_count("m", 30000, 0, False); assert not pay_share(0.01, False)[0], "the day's share spent: the list waits"
         assert pay_share(0.5, True)[0], "a person still may"
         today = lambda: "2026-11-02"; assert pay_share(0.01, False)[0], "a new day: a new share"
+        L = ledger(); L["openrouter_pay"] = {"month": "2026-11", "usd": 0.41, "days": {"2026-11-01": {"visitors": 0.0, "list": 0.41}}}; L["openrouter_credit"] = {"t": 1, "left": 9.5}; L["day"] = "2026-11-01"; json.dump(L, open(LEDGER, "w"))
+        L2 = ledger(); assert L2["day"] == "2026-11-02" and abs(L2["openrouter_pay"]["usd"] - 0.41) < 1e-9 and L2["openrouter_credit"]["left"] == 9.5, "a new day keeps every paid service's month and its credit (27 November 2026)"
+        L2.pop("openrouter_pay"); L2.pop("openrouter_credit"); json.dump(L2, open(LEDGER, "w"))
         pay_count("m", 1000000, 0, True); assert abs(_pay_ledger(ledger())["days"]["2026-11-02"]["visitors"] - 1.0) < 1e-9
         assert not pay_share(0.01, False)[0], "a busy day for visitors (1.00) raises the floor past the pot: the list stops at once"
         today = lambda: "2026-11-30"                                          # the last day; the busy day is more than a week ago

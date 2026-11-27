@@ -115,3 +115,10 @@ Unchanged: every gate of the lane (`lane.py`), Groq, Gemini, Cloudflare, every k
 3. With `paid` on and `lane` off, the exams and the writers' trial run (moved into `data/auto/requests/`). Nothing is published by them.
 4. The editor reads every result and shows it to him: does gpt-oss-120b at OpenRouter's providers judge as at Groq; are the writer's drafts in the right form; how did the stronger models do.
 5. Only on his word: `lane` on, and team R works as the backup. A stronger model enters a team only after it passed the exams, and only on his word.
+
+## A fault found on the first night (27 November 2026, 02:40 Athens)
+
+At the turn of the day by UTC the ledger (`data/auto/lane/usage.json`, `llm.ledger`) kept only Groq's month of spending, so
+OpenRouter's month began again every midnight: its month pot ($9.50) could never be reached, and only the day's share
+(`even`) and the credit it follows (`follow_credit`) held the spending, both within the $10 bought. Every paid service's
+month and last read balance are now kept (self-test added), and the 26th's $0.41 is written back into November's total.
