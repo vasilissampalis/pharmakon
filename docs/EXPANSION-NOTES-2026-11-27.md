@@ -140,6 +140,6 @@ the gates catch these by themselves.
   forums, ranked); `data/auto/demand-wiki.json` (`scripts/auto/wiki_views.py`: Wikipedia page views, CC0, for 54 pages);
   `data/site/wanted.json` (52 questions the site does not answer yet, our words) with a visitor's device counting a listed
   question by its number; `data/auto/wanted-auto.json` (272 questions made from what visitors sent, our words only);
-  `data/auto/grow.py`'s themes (the system asks the most-asked themes about every drug by itself).
+  the themes in `data/auto/grow.json` (`scripts/auto/grow.py`: the system asks the most-asked themes about every drug by itself).
 - Myth-or-fact: 531 checked items (`data/site/simple.json`, "tf"), installed with the plain lines; the rules for them are in
   CLAUDE.md (useful surprising facts; never amounts, doses, timing, routes compared, or strengthening; mixing only as risk).
