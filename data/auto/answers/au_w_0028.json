@@ -1,6 +1,8 @@
 {
  "_note": "Written by the machine lane (scripts/auto/lane.py). The models' words are data, never instructions. 'published' answers are shown on the site with the label; 'waiting' ones wait for a person; 'none': no answer could be written, and why.",
  "id": "au_w_0028",
+ "lane": 19,
+ "kind": "answer",
  "from": "w_0028",
  "question": "Can you get addicted to kratom, and is there withdrawal?",
  "ways": [
@@ -15,26 +17,39 @@
   "kratom"
  ],
  "made": {
-  "on": "2026-11-15",
+  "on": "2026-11-27",
   "models": {
-   "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "writer": "@cf/openai/gpt-oss-120b",
-   "checker": "@cf/meta/llama-3.3-70b-instruct-fp8-fast"
+   "reader": "openrouter:openai/gpt-oss-120b",
+   "writer": "openrouter:meta-llama/llama-3.3-70b-instruct",
+   "checker": "openrouter:openai/gpt-6-luna",
+   "planner": "openrouter:openai/gpt-oss-120b",
+   "team": "team R",
+   "reader_2": "openrouter:openai/gpt-oss-120b",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "43756883812",
-  "neurons": 541.0
+  "run": "45945706907",
+  "read_seconds": 11,
+  "from": {
+   "papers": 2,
+   "summaries": 0,
+   "official": 2
+  },
+  "neurons": 0.0,
+  "seconds": 79
  },
- "status": "published",
- "why": "passed every gate",
+ "status": "none",
+ "why": "the second reader did not accept the answer",
  "gates": {
-  "read": "14 findings kept from 3 papers; 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "3 review(s) or meta-analyses, 0 single studies in people",
-  "check": "every sentence kept was accepted by the second reader (@cf/meta/llama-3.3-70b-instruct-fp8-fast)",
-  "rules": "nothing against it"
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-120b read from there",
+  "read": "9 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 2 official page(s), 0 paper(s) read in summary only",
+  "rules": "1 How-do-we-know line(s) left out for a rule (how2: words that are not person-first (“users”))",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.56, but 0.72, how1 0.09, how3 0.35",
+  "check": "short: NOT accepted: The passages describe dependence and addiction as a potential concern and say kratom may be addictive; they do not establish that it can cause both. The withdrawal passage is also narrower: it says regular users may experience withdrawal, n; but: NOT accepted: The passage says kratom may cause dependence if taken in sufficient quantities for an extended period; it does not say evidence is limited to those cases.; how1: NOT accepted: The passage does not identify Drug Science as a UK charity of scientists. It also qualifies possible dependence as occurring with sufficient quantities taken for an extended period, a limitation omitted here.; how3: NOT accepted: The review says dependence and addiction are a potential concern; it does not say kratom can cause them. The withdrawal claim is consistent with the passage, which says patients with kratom withdrawal tend to have symptoms similar to opioid"
  },
  "sources": [
   {
-   "tag": "A",
+   "read": "full",
    "ref": {
     "id": "eastlack_2020",
     "type": "article-journal",
@@ -67,10 +82,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-15",
+     "verified_on": "2026-11-27",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-15"
+      "checked_on": "2026-11-27"
      }
     },
     "volume": "9",
@@ -82,67 +97,51 @@
    "pmcid": "PMC7203303",
    "title": "Kratom-Pharmacology, Clinical Implications, and Outlook: A Comprehensive Review",
    "year": 2020,
+   "journal": "Pain and therapy",
    "kind": "review",
    "people": false,
    "near": 0.761,
+   "money": [
+    "AcknowledgementsFundingNo funding or sponsorship was received for this study or publication of this article.AuthorshipAll named authors meet the International Committee of Medical Journal Editors (ICMJE) criteria for authorship for this article, take responsibility for the integrity of the work as a whole, and have given their approval for this version to be published.DisclosuresSteven C. Eastlack and Elyse M. Cornett have nothing to disclose. Alan David Kaye is a member of the journal’s Editorial Board.Compliance with Ethics GuidelinesThis article is based on previously conducted studies and does not contain any studies with human participants or animals performed by any of the authors.Data AvailabilityData sharing is not applicable for this article, as no data sets were generated or analyzed during the current study."
+   ],
    "design": {
     "passage": 1,
     "where": "Abstract",
-    "quote": "This manuscript will discuss the most current epidemiology, pharmacology, toxicity, and management related to kratom, while seeking to provide a contemporary perspective on the issue and its role in the greater context of the opioid epidemic.",
-    "text": "A comprehensive review of kratom"
+    "quote": "This manuscript will discuss the most current epidemiology, pharmacology, toxicity, and management related to kratom",
+    "text": "Comprehensive review of kratom pharmacology, toxicity, and clinical implications"
    },
    "findings": [
     {
-     "passage": 19,
-     "where": "Potential for Addiction and Toxicity",
-     "quote": "Nevertheless, the successful instrumentation of kratom does not preclude the potential for prolonged drug use, which under certain circumstances can degenerate into outright addiction.",
-     "text": "Kratom has potential for dependence and addiction.",
-     "id": "F1"
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "Recent evidence has revealed that kratom has physiological effects similar to opioids, including pain relief and euphoria, as well as stimulant properties, which together raise potential concern for dependence and addiction.",
+     "text": "Kratom can cause dependence and addiction.",
+     "id": "F1",
+     "second_hand": ""
     },
     {
      "passage": 26,
      "where": "Considerations for Treatment and Management",
      "quote": "Patients presenting with symptoms of kratom withdrawal tend to exhibit a clinical picture similar to that seen in opioid withdrawal.",
-     "text": "Kratom withdrawal symptoms are similar to opioid withdrawal symptoms.",
-     "id": "F2"
-    },
-    {
-     "passage": 7,
-     "where": "Kratom: Background, Prevalence, and Legal Status",
-     "quote": "Its potential for dependence and addiction has long been apparent, and led to its categorization as a banned substance in both Malaysia and Thailand in the mid-twentieth century",
-     "text": "Kratom has been banned in Malaysia and Thailand due to its potential for dependence and addiction.",
-     "id": "F3"
-    },
-    {
-     "passage": 21,
-     "where": "Clinical Presentations of Kratom Abuse",
-     "quote": "Toxicity occurred in a dose-dependent manner, particularly when doses of kratom powder exceeded 8 g.",
-     "text": "Kratom toxicity occurs in a dose-dependent manner, particularly with doses exceeding 8 g.",
-     "id": "F4"
-    },
-    {
-     "passage": 26,
-     "where": "Considerations for Treatment and Management",
-     "quote": "Additionally, a significant number of patients report psychiatric symptoms, most commonly nervousness, anxiety, and depression.",
-     "text": "Kratom withdrawal can include psychiatric symptoms such as nervousness, anxiety, and depression.",
-     "id": "F5"
+     "text": "People who use kratom can experience withdrawal symptoms similar to opioid withdrawal.",
+     "id": "F2",
+     "second_hand": ""
     }
    ],
    "limits": [
     {
-     "passage": 24,
-     "where": "Considerations for Treatment and Management",
-     "quote": "While there are no published guidelines specifically indicated for kratom, it is reasonable to begin management in a manner similar to that employed for patients presenting with opioid abuse.",
-     "text": "There are no published guidelines specifically for kratom management.",
-     "id": "L1"
+     "passage": 19,
+     "where": "Potential for Addiction and Toxicity",
+     "quote": "the use of kratom in place of established medical opioid replacement regimens has little basis in evidence",
+     "text": "There is little evidence supporting kratom as a replacement for medical opioid regimens.",
+     "id": "L1",
+     "second_hand": ""
     }
    ],
-   "money": [
-    "AcknowledgementsFundingNo funding or sponsorship was received for this study or publication of this article.AuthorshipAll named authors meet the International Committee of Medical Journal Editors (ICMJE) criteria for authorship for this article, take responsibility for the integrity of the work as a whole, and have given their approval for this version to be published.DisclosuresSteven C. Eastlack and Elyse M. Cornett have nothing to disclose. Alan David Kaye is a member of the journal’s Editorial Board.Compliance with Ethics GuidelinesThis article is based on previously conducted studies and does not contain any studies with human participants or animals performed by any of the authors.Data AvailabilityData sharing is not applicable for this article, as no data sets were generated or analyzed during the current study."
-   ]
+   "tag": "A"
   },
   {
-   "tag": "B",
+   "read": "full",
    "ref": {
     "id": "henningfield_2018",
     "type": "article-journal",
@@ -175,10 +174,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-15",
+     "verified_on": "2026-11-27",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-15"
+      "checked_on": "2026-11-27"
      },
      "online_first_year": 2017
     },
@@ -191,326 +190,213 @@
    "pmcid": "PMC5813050",
    "title": "The abuse potential of kratom according the 8 factors of the controlled substances act: implications for regulation and research",
    "year": 2018,
+   "journal": "Psychopharmacology",
    "kind": "review",
    "people": true,
    "near": 0.736,
+   "money": [],
    "design": {
     "passage": 2,
     "where": "Abstract",
     "quote": "The objective of the study is to provide a review of kratom abuse potential and its evaluation according to the 8 factors of the CSA.",
-    "text": "evaluation of kratom according to the 8 factors of the Controlled Substances Act"
+    "text": "review of kratom abuse potential using the eight factors of the Controlled Substances Act"
    },
    "findings": [
     {
      "passage": 14,
      "where": "Introduction › Factor 1. Actual and relative potential for abuse",
-     "quote": "Similarly, whereas kratom can cause signs consistent with dependence without typically causing harm or social problems",
-     "text": "kratom can cause signs consistent with dependence without typically causing harm or social problems.",
-     "id": "F6"
+     "quote": "kratom can cause signs consistent with dependence without typically causing harm or social problems (Aziz; Hassan et al.; Henningfield; Lanier et al.; Ward et al.; Warner et al.), and that “it also carries some abuse liability” at very high doses",
+     "text": "Kratom can cause signs consistent with dependence without typically causing harm or social problems.",
+     "id": "F3",
+     "second_hand": ""
     },
     {
      "passage": 65,
      "where": "Introduction › Factor 7: its psychic or physiological dependence liability",
-     "quote": "Typical withdrawal symptoms include hostility, aggression, excessive tearing, inability to work, aching of muscle or bones, and jerky limb movements.",
-     "text": "abrupt abstinence from kratom can be followed by opioid-like withdrawal symptoms in humans, including hostility, aggression, excessive tearing, inability to work, aching of muscle or bones, and jerky limb movements.",
-     "id": "F7"
-    },
-    {
-     "passage": 17,
-     "where": "Introduction › Animal data on drug discrimination › Rewarding effects",
-     "quote": "Clinical reports and testimonials suggest that in contrast to the effects of increasing the dose of substances of high abuse potential",
-     "text": "in clinical reports and testimonials, increasing the dose of kratom is more likely to produce undesirable gastrointestinal effects, constipation, lethargy, and little additional mood enhancement.",
-     "id": "F8"
+     "quote": "Suwanlert reported that following the chronic exposure to M. speciosa preparations, abrupt abstinence can be followed by opioid-like withdrawal symptoms in humans.",
+     "text": "Abrupt abstinence after chronic exposure to kratom can be followed by opioid-like withdrawal symptoms in humans.",
+     "id": "F4",
+     "second_hand": ""
     },
     {
      "passage": 42,
      "where": "Introduction › Factor 5: the scope, duration, and significance of abuse",
-     "quote": "there appears to be little, if any, abuse of kratom in the US",
-     "text": "there appears to be little, if any, abuse of kratom in the US.",
-     "id": "F9"
-    },
-    {
-     "passage": 48,
-     "where": "Introduction › Factor 5: the scope, duration, and significance of abuse › Online anonymous surveys",
-     "quote": "Garcia-Romeu et al. found that among 2017 current kratom users, the primary reasons for use included alleviating pain (91% of respondents), anxiety (68%), or depression (65%).",
-     "text": "in one survey, 91% of respondents used kratom to alleviate pain, 68% for anxiety, and 65% for depression.",
-     "id": "F10"
+     "quote": "there appears to be little, if any, abuse of kratom in the US.",
+     "text": "There appears to be little, if any, abuse of kratom in the United States.",
+     "id": "F5",
+     "second_hand": ""
     }
    ],
    "limits": [
     {
-     "passage": 33,
-     "where": "Introduction › Factor 3: the state of current scientific knowledge regarding the drug or other substance",
-     "quote": "In the case of kratom, which is marketed and used virtually exclusively in forms for oral ingestion, it seems reasonable to conclude that the physiochemical properties contribute to the relative safety and low abuse profile as compared to prototypic opioids and cocaine-like stimulants.",
-     "text": "the physiochemical properties of kratom in its available and used formulation may influence its abuse potential, but more research is needed.",
-     "id": "L2"
-    },
-    {
-     "passage": 51,
-     "where": "Introduction › Factor 5: the scope, duration, and significance of abuse › Testimonials regarding benefits",
-     "quote": "It is not possible to estimate what fraction of people with opioid substance use disorders are using kratom to reduce or abstain from opioids",
-     "text": "it is not possible to estimate what fraction of people with opioid substance use disorders are using kratom to reduce or abstain from opioids.",
-     "id": "L3"
+     "passage": 65,
+     "where": "Introduction › Factor 7: its psychic or physiological dependence liability",
+     "quote": "There have not been laboratory studies of physical or psychological dependence or abuse potential in humans caused by kratom.",
+     "text": "Laboratory studies of physical or psychological dependence or abuse potential in humans caused by kratom have not been conducted.",
+     "id": "L2",
+     "second_hand": ""
     }
    ],
-   "money": []
+   "tag": "B"
   },
   {
-   "tag": "C",
+   "read": "page",
    "ref": {
-    "id": "green_2024",
-    "type": "article-journal",
-    "title": "Kratom as a potential substance use disorder harm reduction agent",
+    "id": "drugscience_kratom",
+    "type": "webpage",
+    "title": "Kratom",
     "author": [
      {
-      "family": "Green",
-      "given": "MeShell"
-     },
-     {
-      "family": "Vadiei",
-      "given": "Nina"
-     },
-     {
-      "family": "Veltri",
-      "given": "Charles A."
-     },
-     {
-      "family": "Grundmann",
-      "given": "Oliver"
-     },
-     {
-      "family": "Evoy",
-      "given": "Kirk E."
+      "literal": "Drug Science"
      }
     ],
-    "container-title": "Frontiers in Public Health",
     "issued": {
      "date-parts": [
+      []
+     ]
+    },
+    "URL": "https://www.drugscience.org.uk/drugs/kratom",
+    "accessed": {
+     "date-parts": [
       [
-       2024
+       2026,
+       11,
+       27
       ]
      ]
     },
-    "DOI": "10.3389/fpubh.2024.1416689",
     "verification": {
-     "status": "metadata-verified",
-     "metadata_source": "crossref",
-     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
-     "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-15",
-     "retraction_check": {
-      "status": "clear",
-      "checked_on": "2026-11-15"
-     }
-    },
-    "volume": "12",
-    "number": "1416689",
-    "PMCID": "PMC11169875"
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-27"
+    }
    },
-   "doi": "10.3389/fpubh.2024.1416689",
-   "pmcid": "PMC11169875",
-   "title": "Kratom as a potential substance use disorder harm reduction agent",
-   "year": 2024,
-   "kind": "review",
+   "title": "Kratom",
+   "year": null,
+   "kind": "official",
    "people": true,
-   "near": 0.755,
-   "design": {
-    "passage": 3,
-    "where": "Introduction",
-    "quote": "This review describes evidence for kratom’s potential efficacy in helping to manage various SUDs and the need for additional research.",
-    "text": "A review of kratom's potential as a harm reduction agent"
-   },
+   "near": 0.808,
+   "name": "Drug Science",
+   "short": "Drug Science, a UK charity of scientists",
+   "tier": 2,
+   "address": "https://www.drugscience.org.uk/drugs/kratom",
+   "money": [],
+   "label": false,
+   "design": null,
    "findings": [
     {
      "passage": 7,
-     "where": "Introduction › History and patterns of use",
-     "quote": "It is also well-established that routine kratom use can lead to dependence and withdrawal upon abrupt discontinuation.",
-     "text": "Routine kratom use can lead to dependence and withdrawal.",
-     "id": "F11"
+     "where": "Is Kratom addictive, and what are the long-term effects?",
+     "quote": "There is some evidence that kratom may cause dependence, if taken in sufficient quantities for an extended period of time.",
+     "text": "Kratom may cause dependence when taken in sufficient quantities for an extended period.",
+     "id": "F6",
+     "second_hand": ""
     },
     {
-     "passage": 6,
-     "where": "Introduction › History and patterns of use",
-     "quote": "Two areas of benefit reported by kratom users are to alleviate withdrawal symptoms and reduce opioid, stimulant, or alcohol cravings",
-     "text": "Kratom users report using it to alleviate withdrawal symptoms and reduce cravings.",
-     "id": "F12"
+     "passage": 7,
+     "where": "Is Kratom addictive, and what are the long-term effects?",
+     "quote": "Withdrawal symptoms are likely to be much milder than those associated with opioids, bearing in mind one of the most common uses of Kratom is to lessen the effects of opioid withdrawal.",
+     "text": "Withdrawal symptoms from kratom are likely much milder than opioid withdrawal symptoms.",
+     "id": "F7",
+     "second_hand": ""
     },
     {
-     "passage": 14,
-     "where": "Opioid use disorder",
-     "quote": "kratom tea administration following a four- or seven-day morphine induction significantly reduced several withdrawal behaviors",
-     "text": "In a mouse study, kratom tea reduced opioid withdrawal symptoms.",
-     "id": "F13"
-    },
-    {
-     "passage": 15,
-     "where": "Opioid use disorder",
-     "quote": "Most reported using kratom to treat heroin withdrawal (77%), as a heroin replacement (59%), and to reduce heroin intake (58%)",
-     "text": "In one survey, 77% of kratom users reported using it to treat heroin withdrawal.",
-     "id": "F14"
+     "passage": 8,
+     "where": "Harm Reduction and Drug-Drug Interactions",
+     "quote": "kratom can produce mild withdrawal symptoms after regular use, so caution is advised with regards to frequency of consumption.",
+     "text": "Kratom can produce mild withdrawal symptoms after regular use.",
+     "id": "F8",
+     "second_hand": ""
     }
    ],
    "limits": [
     {
      "passage": 7,
-     "where": "Introduction › History and patterns of use",
-     "quote": "Controlled clinical studies are lacking to adequately assess adverse effect prevalence, and safety information is largely based on self-reported, observational data",
-     "text": "The study's findings are limited by a lack of controlled clinical studies.",
-     "id": "L4"
-    },
-    {
-     "passage": 26,
-     "where": "Discussion and conclusion",
-     "quote": "much more research is needed before recommending kratom for clinical use",
-     "text": "More research is needed to fully understand kratom's effects.",
-     "id": "L5"
+     "where": "Is Kratom addictive, and what are the long-term effects?",
+     "quote": "There is some evidence that kratom may cause dependence, if taken in sufficient quantities for an extended period of time.",
+     "text": "Evidence for dependence is limited to cases with sufficient quantities taken for an extended period.",
+     "id": "L3",
+     "second_hand": ""
     }
    ],
-   "money": [
-    "The author(s) declare that no financial support was received for the research, authorship, and/or publication of this article.",
-    "The authors declare that the research was conducted in the absence of any commercial or financial relationships that could be construed as a potential conflict of interest.",
-    "The author(s) declared that they were an editorial board member of Frontiers, at the time of submission. This had no impact on the peer review process and the final decision."
-   ]
+   "tag": "C"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "nccih_kratom",
+    "type": "webpage",
+    "title": "Kratom",
+    "author": [
+     {
+      "literal": "National Center for Complementary and Integrative Health"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      []
+     ]
+    },
+    "URL": "https://www.nccih.nih.gov/health/kratom",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       27
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-27"
+    }
+   },
+   "title": "Kratom",
+   "year": null,
+   "kind": "official",
+   "people": true,
+   "near": 0.745,
+   "name": "National Center for Complementary and Integrative Health",
+   "short": "the US National Center for Complementary and Integrative Health",
+   "tier": 1,
+   "address": "https://www.nccih.nih.gov/health/kratom",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 5,
+     "where": "Safety",
+     "quote": "kratom itself may have the potential to be addictive. Regular kratom users may experience withdrawal symptoms if they stop using it.",
+     "text": "Kratom may be addictive and regular kratom users may experience withdrawal symptoms if they stop using it.",
+     "id": "F9",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 2,
+     "where": "Top of the page",
+     "quote": "Research on kratom is in its early stages. Much remains to be learned about the short- and long-term effects of kratom in the body, its safety, and whether it may have therapeutic uses.",
+     "text": "Research on kratom is in its early stages and much remains to be learned about its short- and long-term effects, safety, and therapeutic potential.",
+     "id": "L4",
+     "second_hand": ""
+    }
+   ],
+   "tag": "D"
   }
  ],
- "parts": [
-  {
-   "part": "short",
-   "text": "Yes, kratom can lead to dependence or addiction, and stopping it can cause withdrawal symptoms similar to those of opioids.",
-   "uses": [
-    "F1",
-    "F2"
-   ],
-   "rests_on": [
-    {
-     "label": "F1",
-     "ref": "eastlack_2020",
-     "where": "Potential for Addiction and Toxicity",
-     "quote": "Nevertheless, the successful instrumentation of kratom does not preclude the potential for prolonged drug use, which under certain circumstances can degenerate into outright addiction.",
-     "sha": "3624725406de24e1"
-    },
-    {
-     "label": "F2",
-     "ref": "eastlack_2020",
-     "where": "Considerations for Treatment and Management",
-     "quote": "Patients presenting with symptoms of kratom withdrawal tend to exhibit a clinical picture similar to that seen in opioid withdrawal.",
-     "sha": "1e823a64ca031fff"
-    }
-   ]
-  },
-  {
-   "part": "but",
-   "text": "The evidence comes mainly from reviews and lacks controlled clinical studies, so the exact risk levels are uncertain.",
-   "uses": [
-    "L4"
-   ],
-   "rests_on": [
-    {
-     "label": "L4",
-     "ref": "green_2024",
-     "where": "Introduction › History and patterns of use",
-     "quote": "Controlled clinical studies are lacking to adequately assess adverse effect prevalence, and safety information is largely based on self-reported, observational data",
-     "sha": "a433af336ffb279c"
-    }
-   ]
-  },
-  {
-   "part": "how1",
-   "text": "A 2020 comprehensive review discussed kratom’s pharmacology and noted its potential for dependence and addiction and that withdrawal symptoms resemble opioid withdrawal.",
-   "uses": [
-    "DA",
-    "F1",
-    "F2"
-   ],
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "eastlack_2020",
-     "where": "Abstract",
-     "quote": "This manuscript will discuss the most current epidemiology, pharmacology, toxicity, and management related to kratom, while seeking to provide a contemporary perspective on the issue and its role in the greater context of the opioid epidemic.",
-     "sha": "ebd49b9d1775d58e"
-    },
-    {
-     "label": "F1",
-     "ref": "eastlack_2020",
-     "where": "Potential for Addiction and Toxicity",
-     "quote": "Nevertheless, the successful instrumentation of kratom does not preclude the potential for prolonged drug use, which under certain circumstances can degenerate into outright addiction.",
-     "sha": "3624725406de24e1"
-    },
-    {
-     "label": "F2",
-     "ref": "eastlack_2020",
-     "where": "Considerations for Treatment and Management",
-     "quote": "Patients presenting with symptoms of kratom withdrawal tend to exhibit a clinical picture similar to that seen in opioid withdrawal.",
-     "sha": "1e823a64ca031fff"
-    }
-   ]
-  },
-  {
-   "part": "how2",
-   "text": "A 2018 review evaluated kratom under the Controlled Substances Act, finding it can cause dependence signs and that abrupt stop may produce opioid‑like withdrawal symptoms.",
-   "uses": [
-    "DB",
-    "F6",
-    "F7"
-   ],
-   "rests_on": [
-    {
-     "label": "DB",
-     "ref": "henningfield_2018",
-     "where": "Abstract",
-     "quote": "The objective of the study is to provide a review of kratom abuse potential and its evaluation according to the 8 factors of the CSA.",
-     "sha": "c3302d4987f281b3"
-    },
-    {
-     "label": "F6",
-     "ref": "henningfield_2018",
-     "where": "Introduction › Factor 1. Actual and relative potential for abuse",
-     "quote": "Similarly, whereas kratom can cause signs consistent with dependence without typically causing harm or social problems",
-     "sha": "aef4139bd924a9f8"
-    },
-    {
-     "label": "F7",
-     "ref": "henningfield_2018",
-     "where": "Introduction › Factor 7: its psychic or physiological dependence liability",
-     "quote": "Typical withdrawal symptoms include hostility, aggression, excessive tearing, inability to work, aching of muscle or bones, and jerky limb movements.",
-     "sha": "a7b010c53f746e40"
-    }
-   ]
-  },
-  {
-   "part": "how3",
-   "text": "A 2024 review on kratom as a harm‑reduction agent reported routine use can lead to dependence and withdrawal when stopped abruptly.",
-   "uses": [
-    "DC",
-    "F11"
-   ],
-   "rests_on": [
-    {
-     "label": "DC",
-     "ref": "green_2024",
-     "where": "Introduction",
-     "quote": "This review describes evidence for kratom’s potential efficacy in helping to manage various SUDs and the need for additional research.",
-     "sha": "7f00c85f179e5eea"
-    },
-    {
-     "label": "F11",
-     "ref": "green_2024",
-     "where": "Introduction › History and patterns of use",
-     "quote": "It is also well-established that routine kratom use can lead to dependence and withdrawal upon abrupt discontinuation.",
-     "sha": "a433af336ffb279c"
-    }
-   ]
-  }
- ],
+ "parts": [],
  "complete": false,
- "missing": "a paper that stands nearer the question could not be read",
+ "missing": "",
  "wanted": [
   {
    "doi": "10.2174/1389450121666200719011653",
    "apa": "Bin Abdullah, M. F. I. L. (2020). Kratom dependence and treatment options: A comprehensive review of the literature. Current Drug Targets, 21(15), 1566–1579. https://doi.org/10.2174/1389450121666200719011653",
-   "near": 0.815,
-   "why": "a review or meta-analysis in people; nearness to the question 0.81; cited 18 times; its full text is not open",
+   "near": 0.818,
+   "why": "a review or meta-analysis in people; nearness to the question 0.82; cited 18 times; its full text is not open",
    "file": "binabdullah_2020_1389450121666200719011653.pdf"
   },
   {
@@ -528,5 +414,530 @@
    "file": "sablaban_2023_10550887_2022_2066459.pdf"
   }
  ],
- "person": null
+ "person": null,
+ "history": [
+  {
+   "on": "2026-11-15",
+   "lane": null,
+   "status": "published",
+   "why": "passed every gate",
+   "short": "Yes, kratom can lead to dependence or addiction, and stopping it can cause withdrawal symptoms similar to those of opioids.",
+   "complete": false
+  }
+ ],
+ "looked": [
+  {
+   "title": "Kratom-Pharmacology, Clinical Implications, and Outlook: A Comprehensive Review",
+   "read": "full",
+   "kind": "review",
+   "at": "10.1007/s40122-020-00151-x",
+   "kept": 2,
+   "thrown": []
+  },
+  {
+   "title": "The abuse potential of kratom according the 8 factors of the controlled substances act: implications for regulation and research",
+   "read": "full",
+   "kind": "review",
+   "at": "10.1007/s00213-017-4813-4",
+   "kept": 3,
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "Kratom also carries some abuse liability at very high doses.",
+     "quote": "it also carries some abuse liability at very high doses",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
+  },
+  {
+   "title": "Kratom",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.drugscience.org.uk/drugs/kratom",
+   "kept": 3,
+   "thrown": [
+    {
+     "kind": "limit",
+     "text": "The milder withdrawal is described as likely, not confirmed by direct measurement.",
+     "quote": "Withdrawal symptoms are likely to be much milder than those associated with opioids, bearing in mind one of the most common uses of Kratom is to lessen the effects of opioid withdrawal.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
+  },
+  {
+   "title": "Kratom",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.nccih.nih.gov/health/kratom",
+   "kept": 1,
+   "thrown": []
+  }
+ ],
+ "plan": {
+  "short": [
+   "F1",
+   "F2",
+   "F9"
+  ],
+  "direct": "Yes",
+  "but": [
+   "L3"
+  ],
+  "how": [
+   [
+    "F6",
+    "F8"
+   ],
+   [
+    "F9"
+   ],
+   [
+    "DA",
+    "F1",
+    "F2"
+   ]
+  ],
+  "unanswered": ""
+ },
+ "dropped": [
+  {
+   "try": 1,
+   "part": "how2",
+   "text": "The US National Center for Complementary and Integrative Health says kratom may be addictive and regular users may experience withdrawal symptoms.",
+   "rests_on": [
+    {
+     "label": "F9",
+     "ref": "nccih_kratom",
+     "where": "Safety",
+     "quote": "kratom itself may have the potential to be addictive. Regular kratom users may experience withdrawal symptoms if they stop using it.",
+     "sha": "271286f7d50eb4ad"
+    }
+   ],
+   "by": "a rule",
+   "said": "a rule: words that are not person-first (“users”)"
+  },
+  {
+   "try": 2,
+   "part": "how2",
+   "text": "The US National Center for Complementary and Integrative Health says kratom may be addictive and regular users may experience withdrawal symptoms.",
+   "rests_on": [
+    {
+     "label": "F9",
+     "ref": "nccih_kratom",
+     "where": "Safety",
+     "quote": "kratom itself may have the potential to be addictive. Regular kratom users may experience withdrawal symptoms if they stop using it.",
+     "sha": "271286f7d50eb4ad"
+    }
+   ],
+   "by": "a rule",
+   "said": "a rule: words that are not person-first (“users”)"
+  },
+  {
+   "try": 3,
+   "part": "how2",
+   "text": "The US National Center for Complementary and Integrative Health says kratom may be addictive and regular users may experience withdrawal symptoms.",
+   "rests_on": [
+    {
+     "label": "F9",
+     "ref": "nccih_kratom",
+     "where": "Safety",
+     "quote": "kratom itself may have the potential to be addictive. Regular kratom users may experience withdrawal symptoms if they stop using it.",
+     "sha": "271286f7d50eb4ad"
+    }
+   ],
+   "by": "a rule",
+   "said": "a rule: words that are not person-first (“users”)"
+  },
+  {
+   "try": 3,
+   "part": "how1",
+   "text": "Drug Science, a UK charity of scientists says kratom may cause dependence and can produce mild withdrawal symptoms after regular use.",
+   "rests_on": [
+    {
+     "label": "F6",
+     "ref": "drugscience_kratom",
+     "where": "Is Kratom addictive, and what are the long-term effects?",
+     "quote": "There is some evidence that kratom may cause dependence, if taken in sufficient quantities for an extended period of time.",
+     "sha": "84bebe57daccd5b5"
+    },
+    {
+     "label": "F8",
+     "ref": "drugscience_kratom",
+     "where": "Harm Reduction and Drug-Drug Interactions",
+     "quote": "kratom can produce mild withdrawal symptoms after regular use, so caution is advised with regards to frequency of consumption.",
+     "sha": "e8df38808266bfb5"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The passage does not identify Drug Science as a UK charity of scientists. It also qualifies possible dependence as occurring with sufficient quantities taken for an extended period, a limitation omitted here."
+  },
+  {
+   "try": 3,
+   "part": "how3",
+   "text": "A 2020 review of kratom pharmacology, toxicity, and clinical implications found kratom can cause dependence and addiction, and people who use kratom can experience withdrawal symptoms similar to opioid withdrawal.",
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "eastlack_2020",
+     "where": "Abstract",
+     "quote": "This manuscript will discuss the most current epidemiology, pharmacology, toxicity, and management related to kratom",
+     "sha": "ebd49b9d1775d58e"
+    },
+    {
+     "label": "F1",
+     "ref": "eastlack_2020",
+     "where": "Abstract",
+     "quote": "Recent evidence has revealed that kratom has physiological effects similar to opioids, including pain relief and euphoria, as well as stimulant properties, which together raise potential concern for dependence and addiction.",
+     "sha": "ebd49b9d1775d58e"
+    },
+    {
+     "label": "F2",
+     "ref": "eastlack_2020",
+     "where": "Considerations for Treatment and Management",
+     "quote": "Patients presenting with symptoms of kratom withdrawal tend to exhibit a clinical picture similar to that seen in opioid withdrawal.",
+     "sha": "1e823a64ca031fff"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The review says dependence and addiction are a potential concern; it does not say kratom can cause them. The withdrawal claim is consistent with the passage, which says patients with kratom withdrawal tend to have symptoms similar to opioid"
+  }
+ ],
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.5556,
+   "but": 0.7248,
+   "how1": 0.087,
+   "how3": 0.3462
+  },
+  "scores_quotes_alone": {
+   "short": 0.457,
+   "but": 0.5757,
+   "how1": 0.1186,
+   "how3": 0.4091
+  }
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Yes, kratom can cause dependence and addiction, and people who use it can experience withdrawal symptoms.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "eastlack_2020",
+       "where": "Abstract",
+       "quote": "Recent evidence has revealed that kratom has physiological effects similar to opioids, including pain relief and euphoria, as well as stimulant properties, which together raise potential concern for dependence and addiction.",
+       "sha": "ebd49b9d1775d58e"
+      },
+      {
+       "label": "F2",
+       "ref": "eastlack_2020",
+       "where": "Considerations for Treatment and Management",
+       "quote": "Patients presenting with symptoms of kratom withdrawal tend to exhibit a clinical picture similar to that seen in opioid withdrawal.",
+       "sha": "1e823a64ca031fff"
+      },
+      {
+       "label": "F9",
+       "ref": "nccih_kratom",
+       "where": "Safety",
+       "quote": "kratom itself may have the potential to be addictive. Regular kratom users may experience withdrawal symptoms if they stop using it.",
+       "sha": "271286f7d50eb4ad"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages describe dependence and addiction as a potential concern or say kratom may have the potential to be addictive; they do not establish that kratom can cause both. The withdrawal claim is supported for regular users who stop."
+    },
+    {
+     "part": "but",
+     "text": "Evidence for dependence is limited to cases with sufficient quantities taken for an extended period.",
+     "rests_on": [
+      {
+       "label": "L3",
+       "ref": "drugscience_kratom",
+       "where": "Is Kratom addictive, and what are the long-term effects?",
+       "quote": "There is some evidence that kratom may cause dependence, if taken in sufficient quantities for an extended period of time.",
+       "sha": "84bebe57daccd5b5"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage says there is some evidence kratom may cause dependence if taken in sufficient quantities for an extended period. It does not say evidence for dependence is limited exclusively to such cases."
+    },
+    {
+     "part": "how1",
+     "text": "Drug Science, a UK charity of scientists says kratom may cause dependence and produce mild withdrawal symptoms after regular use.",
+     "rests_on": [
+      {
+       "label": "F6",
+       "ref": "drugscience_kratom",
+       "where": "Is Kratom addictive, and what are the long-term effects?",
+       "quote": "There is some evidence that kratom may cause dependence, if taken in sufficient quantities for an extended period of time.",
+       "sha": "84bebe57daccd5b5"
+      },
+      {
+       "label": "F8",
+       "ref": "drugscience_kratom",
+       "where": "Harm Reduction and Drug-Drug Interactions",
+       "quote": "kratom can produce mild withdrawal symptoms after regular use, so caution is advised with regards to frequency of consumption.",
+       "sha": "e8df38808266bfb5"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages do not identify Drug Science as a UK charity of scientists. They also qualify the dependence claim with sufficient quantities and an extended period, which the sentence omits. The passage does support mild withdrawal symptoms a"
+    },
+    {
+     "part": "how3",
+     "text": "A 2020 review of kratom pharmacology, toxicity, and clinical implications found kratom can cause dependence and addiction, and withdrawal symptoms similar to opioid withdrawal.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "eastlack_2020",
+       "where": "Abstract",
+       "quote": "This manuscript will discuss the most current epidemiology, pharmacology, toxicity, and management related to kratom",
+       "sha": "ebd49b9d1775d58e"
+      },
+      {
+       "label": "F1",
+       "ref": "eastlack_2020",
+       "where": "Abstract",
+       "quote": "Recent evidence has revealed that kratom has physiological effects similar to opioids, including pain relief and euphoria, as well as stimulant properties, which together raise potential concern for dependence and addiction.",
+       "sha": "ebd49b9d1775d58e"
+      },
+      {
+       "label": "F2",
+       "ref": "eastlack_2020",
+       "where": "Considerations for Treatment and Management",
+       "quote": "Patients presenting with symptoms of kratom withdrawal tend to exhibit a clinical picture similar to that seen in opioid withdrawal.",
+       "sha": "1e823a64ca031fff"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The review describes dependence and addiction as a potential concern; it does not say it found that kratom can cause them. Its passage does support that kratom withdrawal can present a clinical picture similar to opioid withdrawal."
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Yes, kratom can cause dependence and addiction, and people who use it can experience withdrawal symptoms.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "eastlack_2020",
+       "where": "Abstract",
+       "quote": "Recent evidence has revealed that kratom has physiological effects similar to opioids, including pain relief and euphoria, as well as stimulant properties, which together raise potential concern for dependence and addiction.",
+       "sha": "ebd49b9d1775d58e"
+      },
+      {
+       "label": "F2",
+       "ref": "eastlack_2020",
+       "where": "Considerations for Treatment and Management",
+       "quote": "Patients presenting with symptoms of kratom withdrawal tend to exhibit a clinical picture similar to that seen in opioid withdrawal.",
+       "sha": "1e823a64ca031fff"
+      },
+      {
+       "label": "F9",
+       "ref": "nccih_kratom",
+       "where": "Safety",
+       "quote": "kratom itself may have the potential to be addictive. Regular kratom users may experience withdrawal symptoms if they stop using it.",
+       "sha": "271286f7d50eb4ad"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages raise a potential concern about dependence and addiction and say kratom may have addictive potential; they do not establish that it can cause both. The withdrawal claim is supported, but that does not support the whole sentence"
+    },
+    {
+     "part": "but",
+     "text": "Evidence for dependence is limited to cases with sufficient quantities taken for an extended period.",
+     "rests_on": [
+      {
+       "label": "L3",
+       "ref": "drugscience_kratom",
+       "where": "Is Kratom addictive, and what are the long-term effects?",
+       "quote": "There is some evidence that kratom may cause dependence, if taken in sufficient quantities for an extended period of time.",
+       "sha": "84bebe57daccd5b5"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage says there is some evidence kratom may cause dependence if taken in sufficient quantities for an extended time. It does not say evidence is limited to those cases."
+    },
+    {
+     "part": "how1",
+     "text": "Drug Science says kratom may cause dependence and can produce mild withdrawal symptoms after regular use.",
+     "rests_on": [
+      {
+       "label": "F6",
+       "ref": "drugscience_kratom",
+       "where": "Is Kratom addictive, and what are the long-term effects?",
+       "quote": "There is some evidence that kratom may cause dependence, if taken in sufficient quantities for an extended period of time.",
+       "sha": "84bebe57daccd5b5"
+      },
+      {
+       "label": "F8",
+       "ref": "drugscience_kratom",
+       "where": "Harm Reduction and Drug-Drug Interactions",
+       "quote": "kratom can produce mild withdrawal symptoms after regular use, so caution is advised with regards to frequency of consumption.",
+       "sha": "e8df38808266bfb5"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2020 review of kratom pharmacology found it can cause dependence and addiction, and withdrawal symptoms similar to opioid withdrawal.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "eastlack_2020",
+       "where": "Abstract",
+       "quote": "This manuscript will discuss the most current epidemiology, pharmacology, toxicity, and management related to kratom",
+       "sha": "ebd49b9d1775d58e"
+      },
+      {
+       "label": "F1",
+       "ref": "eastlack_2020",
+       "where": "Abstract",
+       "quote": "Recent evidence has revealed that kratom has physiological effects similar to opioids, including pain relief and euphoria, as well as stimulant properties, which together raise potential concern for dependence and addiction.",
+       "sha": "ebd49b9d1775d58e"
+      },
+      {
+       "label": "F2",
+       "ref": "eastlack_2020",
+       "where": "Considerations for Treatment and Management",
+       "quote": "Patients presenting with symptoms of kratom withdrawal tend to exhibit a clinical picture similar to that seen in opioid withdrawal.",
+       "sha": "1e823a64ca031fff"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The review says kratom’s effects raise a potential concern for dependence and addiction; it does not say the review found that kratom can cause them. The withdrawal comparison is supported."
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Yes, kratom can cause dependence and addiction, and people who use kratom can experience withdrawal symptoms.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "eastlack_2020",
+       "where": "Abstract",
+       "quote": "Recent evidence has revealed that kratom has physiological effects similar to opioids, including pain relief and euphoria, as well as stimulant properties, which together raise potential concern for dependence and addiction.",
+       "sha": "ebd49b9d1775d58e"
+      },
+      {
+       "label": "F2",
+       "ref": "eastlack_2020",
+       "where": "Considerations for Treatment and Management",
+       "quote": "Patients presenting with symptoms of kratom withdrawal tend to exhibit a clinical picture similar to that seen in opioid withdrawal.",
+       "sha": "1e823a64ca031fff"
+      },
+      {
+       "label": "F9",
+       "ref": "nccih_kratom",
+       "where": "Safety",
+       "quote": "kratom itself may have the potential to be addictive. Regular kratom users may experience withdrawal symptoms if they stop using it.",
+       "sha": "271286f7d50eb4ad"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages describe dependence and addiction as a potential concern and say kratom may be addictive; they do not establish that it can cause both. The withdrawal passage is also narrower: it says regular users may experience withdrawal, n"
+    },
+    {
+     "part": "but",
+     "text": "Evidence for dependence is limited to cases with sufficient quantities taken for an extended period.",
+     "rests_on": [
+      {
+       "label": "L3",
+       "ref": "drugscience_kratom",
+       "where": "Is Kratom addictive, and what are the long-term effects?",
+       "quote": "There is some evidence that kratom may cause dependence, if taken in sufficient quantities for an extended period of time.",
+       "sha": "84bebe57daccd5b5"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage says kratom may cause dependence if taken in sufficient quantities for an extended period; it does not say evidence is limited to those cases."
+    },
+    {
+     "part": "how1",
+     "text": "Drug Science, a UK charity of scientists says kratom may cause dependence and can produce mild withdrawal symptoms after regular use.",
+     "rests_on": [
+      {
+       "label": "F6",
+       "ref": "drugscience_kratom",
+       "where": "Is Kratom addictive, and what are the long-term effects?",
+       "quote": "There is some evidence that kratom may cause dependence, if taken in sufficient quantities for an extended period of time.",
+       "sha": "84bebe57daccd5b5"
+      },
+      {
+       "label": "F8",
+       "ref": "drugscience_kratom",
+       "where": "Harm Reduction and Drug-Drug Interactions",
+       "quote": "kratom can produce mild withdrawal symptoms after regular use, so caution is advised with regards to frequency of consumption.",
+       "sha": "e8df38808266bfb5"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage does not identify Drug Science as a UK charity of scientists. It also qualifies possible dependence as occurring with sufficient quantities taken for an extended period, a limitation omitted here."
+    },
+    {
+     "part": "how3",
+     "text": "A 2020 review of kratom pharmacology, toxicity, and clinical implications found kratom can cause dependence and addiction, and people who use kratom can experience withdrawal symptoms similar to opioid withdrawal.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "eastlack_2020",
+       "where": "Abstract",
+       "quote": "This manuscript will discuss the most current epidemiology, pharmacology, toxicity, and management related to kratom",
+       "sha": "ebd49b9d1775d58e"
+      },
+      {
+       "label": "F1",
+       "ref": "eastlack_2020",
+       "where": "Abstract",
+       "quote": "Recent evidence has revealed that kratom has physiological effects similar to opioids, including pain relief and euphoria, as well as stimulant properties, which together raise potential concern for dependence and addiction.",
+       "sha": "ebd49b9d1775d58e"
+      },
+      {
+       "label": "F2",
+       "ref": "eastlack_2020",
+       "where": "Considerations for Treatment and Management",
+       "quote": "Patients presenting with symptoms of kratom withdrawal tend to exhibit a clinical picture similar to that seen in opioid withdrawal.",
+       "sha": "1e823a64ca031fff"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The review says dependence and addiction are a potential concern; it does not say kratom can cause them. The withdrawal claim is consistent with the passage, which says patients with kratom withdrawal tend to have symptoms similar to opioid"
+    }
+   ]
+  }
+ ],
+ "place": {
+  "home": "kratom",
+  "also": [],
+  "cls": null,
+  "why": "it names a drug that has a page (kratom belongs there)"
+ }
 }

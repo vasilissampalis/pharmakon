@@ -17,39 +17,36 @@
   "caffeine"
  ],
  "made": {
-  "on": "2026-11-19",
+  "on": "2026-11-27",
   "models": {
-   "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "writer": "groq:qwen/qwen3.8-27b",
-   "checker": "@cf/openai/gpt-oss-120b",
-   "planner": "groq:openai/gpt-oss-120b",
-   "team": "team C",
-   "reader_2": "groq:openai/gpt-oss-20b",
-   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast"
+   "reader": "openrouter:openai/gpt-oss-120b",
+   "writer": "openrouter:meta-llama/llama-3.3-70b-instruct",
+   "checker": "openrouter:openai/gpt-6-luna",
+   "planner": "openrouter:openai/gpt-oss-120b",
+   "team": "team R",
+   "reader_2": "openrouter:openai/gpt-oss-120b",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "44461876141",
-  "read_by": {
-   "gemini-3.5-flash-lite": 2,
-   "gemini-3.1-flash-lite": 2
-  },
-  "read_seconds": 71,
+  "run": "45945706907",
+  "read_seconds": 35,
   "from": {
-   "papers": 2,
+   "papers": 1,
    "summaries": 0,
    "official": 1
   },
-  "neurons": 392.0,
-  "seconds": 104
+  "neurons": 0.0,
+  "seconds": 88
  },
  "status": "published",
  "why": "passed every gate",
  "gates": {
-  "read": "12 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 3 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 1 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.45, but 0.98, how1 0.96, how2 0.92, how3 0.91, how4 0.06",
-  "check": "every sentence kept was accepted by the second reader (@cf/openai/gpt-oss-120b); it also found that the short answer answers the question and that the But is about that answer",
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-120b read from there",
+  "read": "10 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 6 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 1 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.41, but 0.98, how1 0.49, how2 0.04, how3 0.95, how4 0.04",
+  "check": "every sentence kept was accepted by the second reader (openrouter:openai/gpt-6-luna); 3 How-do-we-know line(s) dropped; it also found that the short answer answers the question and that the But is about that answer",
   "rules": "nothing against it",
-  "checked": "set beside the checked claims of the same page: nothing against them"
+  "checked": "set beside the checked claims of the same page: nothing against them; 2 sentence(s) say what a checked claim says"
  },
  "sources": [
   {
@@ -90,10 +87,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-19",
+     "verified_on": "2026-11-27",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-19"
+      "checked_on": "2026-11-27"
      }
     },
     "volume": "13",
@@ -115,31 +112,31 @@
    "design": {
     "passage": 1,
     "where": "Abstract",
-    "quote": "The present review summarizes the main findings concerning caffeine’s mechanisms of action",
-    "text": "a review summarizing main findings concerning caffeine"
+    "quote": "The present review summarizes the main findings concerning caffeine’s mechanisms of action (focusing on adenosine antagonism, intracellular calcium mobilization, and phosphodiesterases inhibition), use, abuse, dependence, intoxication, and lethal effects.",
+    "text": "review article summarizing caffeine mechanisms and effects"
    },
    "findings": [
     {
      "passage": 20,
      "where": "RESULTS › Pharmacokinetics and Pharmacodynamics",
      "quote": "In conclusion, there are significant inter-individual differences in the metabolism, clearance, and elimination of caffeine and its metabolites.",
-     "text": "There are significant inter-individual differences in the metabolism, clearance, and elimination of caffeine and its metabolites.",
+     "text": "People differ significantly in how they metabolize, clear, and eliminate caffeine.",
      "id": "F1",
      "second_hand": ""
     },
     {
-     "passage": 20,
-     "where": "RESULTS › Pharmacokinetics and Pharmacodynamics",
-     "quote": "Several extrinsic factors influence metabolic and excretion rates, such as smoking, food intake, gastric emptying speed, pregnancy, hepatic and cardiovascular diseases, viral infections, and concomitant drug use.",
-     "text": "Several extrinsic factors influence metabolic and excretion rates, such as smoking, food intake, gastric emptying speed, pregnancy, hepatic and cardiovascular diseases, viral infections, and concomitant drug use.",
+     "passage": 55,
+     "where": "RESULTS › Tolerance and Safety Doses",
+     "quote": "The recent literature suggests that the development of caffeine tolerance is partial and may differ with regard to caffeine’s central vs. peripheral effects.",
+     "text": "Tolerance to caffeine develops only partially and may be different for central (brain) versus peripheral effects.",
      "id": "F2",
      "second_hand": ""
     },
     {
      "passage": 59,
      "where": "RESULTS › Caffeine-containing Products",
-     "quote": "Genetic factors may also contribute to an individual’s vulnerability to caffeine-related disorders.",
-     "text": "Genetic factors may also contribute to an individual’s vulnerability to caffeine-related disorders.",
+     "quote": "Genetic factors may also contribute to an individual’s vulnerability to caffeine‑related disorders.",
+     "text": "Genetic factors can make some individuals more vulnerable to caffeine‑related effects.",
      "id": "F3",
      "second_hand": ""
     }
@@ -149,125 +146,12 @@
      "passage": 55,
      "where": "RESULTS › Tolerance and Safety Doses",
      "quote": "The extent of the development of tolerance towards caffeine’s effects is unclear.",
-     "text": "The extent of the development of tolerance towards caffeine's effects is unclear.",
+     "text": "The degree to which tolerance to caffeine’s effects develops is unclear.",
      "id": "L1",
      "second_hand": ""
     }
    ],
    "tag": "A"
-  },
-  {
-   "read": "full",
-   "ref": {
-    "id": "fulton_2018",
-    "type": "article-journal",
-    "title": "Impact of genetic variability on physiological responses to caffeine in humans: A systematic review",
-    "author": [
-     {
-      "family": "Fulton",
-      "given": "Jacob L."
-     },
-     {
-      "family": "Dinas",
-      "given": "Petros C."
-     },
-     {
-      "family": "Carrillo",
-      "given": "Andres E."
-     },
-     {
-      "family": "Edsall",
-      "given": "Jason R."
-     },
-     {
-      "family": "Ryan",
-      "given": "Emily J."
-     },
-     {
-      "family": "Ryan",
-      "given": "Edward J."
-     }
-    ],
-    "container-title": "Nutrients",
-    "issued": {
-     "date-parts": [
-      [
-       2018
-      ]
-     ]
-    },
-    "DOI": "10.3390/nu10101373",
-    "verification": {
-     "status": "metadata-verified",
-     "metadata_source": "crossref",
-     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
-     "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-19",
-     "retraction_check": {
-      "status": "clear",
-      "checked_on": "2026-11-19"
-     }
-    },
-    "volume": "10",
-    "issue": "10",
-    "number": "1373",
-    "PMCID": "PMC6212886"
-   },
-   "doi": "10.3390/nu10101373",
-   "pmcid": "PMC6212886",
-   "title": "Impact of Genetic Variability on Physiological Responses to Caffeine in Humans: A Systematic Review",
-   "year": 2018,
-   "journal": "Nutrients",
-   "kind": "review",
-   "people": true,
-   "near": 0.746,
-   "money": [
-    "This research received no external funding.",
-    "The authors declare no conflict of interest."
-   ],
-   "design": {
-    "passage": 1,
-    "where": "Abstract",
-    "quote": "The purpose of the present review was to systematically recognize how select single nucleotide polymorphisms (SNPs) impact habitual use of caffeine as well as the ergogenic and anxiogenic consequences of caffeine.",
-    "text": "a systematic review of human studies on genetic variation and caffeine responses"
-   },
-   "findings": [
-    {
-     "passage": 23,
-     "where": "4. Discussion › 4.2. Anxiogenic Consequences",
-     "quote": "Particularly, caffeine-naïve females possessing the ADORA2A (rs5751876) TT genotype may be especially prone to experiencing anxiety following caffeine consumption.",
-     "text": "Caffeine-naïve females with the ADORA2A (rs5751876) TT genotype may be more likely to experience anxiety after consuming caffeine.",
-     "id": "F4",
-     "second_hand": ""
-    },
-    {
-     "passage": 23,
-     "where": "4. Discussion › 4.2. Anxiogenic Consequences",
-     "quote": "Thus, the available evidence suggests that habitual use may lead to tolerance to the anxiogenic consequences of caffeine regardless of select genetic variations.",
-     "text": "Habitual caffeine use may create tolerance to the anxiety-inducing effects of caffeine, regardless of specific genetic variations.",
-     "id": "F5",
-     "second_hand": "Thus, the available evidence suggests that habitual use may lead to tolerance to the anxiogenic consequences of caffeine regardless of select genetic variations."
-    },
-    {
-     "passage": 28,
-     "where": "5. Conclusions",
-     "quote": "The literature also demonstrates that gender, habitual caffeine consumption, and variability in the ADORA2A gene collectively influence individual susceptibility to the anxiogenic consequences of caffeine",
-     "text": "Gender, habitual caffeine consumption, and ADORA2A gene variability together influence how susceptible an individual is to the anxiety-inducing effects of caffeine.",
-     "id": "F6",
-     "second_hand": ""
-    }
-   ],
-   "limits": [
-    {
-     "passage": 28,
-     "where": "5. Conclusions",
-     "quote": "We recommend all future studies in this area utilize an interdisciplinary approach as the physiological consequences of caffeine in humans are likely dependent on a complex interaction of genetic, physiological, and behavioral factors.",
-     "text": "Future research should use an interdisciplinary approach because caffeine's effects likely depend on complex interactions between genetic, physiological, and behavioral factors.",
-     "id": "L2",
-     "second_hand": ""
-    }
-   ],
-   "tag": "B"
   },
   {
    "read": "page",
@@ -295,14 +179,14 @@
       [
        2026,
        11,
-       19
+       27
       ]
      ]
     },
     "verification": {
      "status": "made by code",
      "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-19"
+     "verified_on": "2026-11-27"
     }
    },
    "title": "Caffeine",
@@ -322,24 +206,24 @@
      "passage": 6,
      "where": "Effects of caffeine",
      "quote": "Caffeine can affect everyone differently, based on: size, weight and health; whether the person is used to taking it; whether other drugs are taken around the same time; the amount taken; the environment (where the drug is taken).",
-     "text": "Caffeine affects each person differently based on their size, weight, health, familiarity with taking it, other drugs taken around the same time, the amount taken, and the environment.",
-     "id": "F7",
+     "text": "Caffeine affects people differently depending on size, weight, health, tolerance, other drugs, dose, and environment.",
+     "id": "F5",
      "second_hand": ""
     },
     {
      "passage": 16,
      "where": "Long-term effects / Caffeine and mental health",
-     "quote": "Caffeine can affect mental health differently depending on the person, how much caffeine they usually have, and their individual risk factors.",
-     "text": "Caffeine affects mental health differently depending on the person, the amount of caffeine they usually have, and their individual risk factors.",
-     "id": "F8",
+     "quote": "Lower amounts of caffeine (1 - 2 cups of coffee) may improve mood and alertness, while higher amounts (more than 2 cups) can increase feelings of anxiety, stress, and restlessness.",
+     "text": "Consuming more than 2 cups of coffee can increase feelings of anxiety, stress, and restlessness.",
+     "id": "F6",
      "second_hand": ""
     },
     {
      "passage": 17,
      "where": "Long-term effects / Caffeine and mental health",
      "quote": "People experiencing anxiety, heart conditions, or sleep problems may be more sensitive to caffeine, which can make their symptoms worse.",
-     "text": "People experiencing anxiety, heart conditions, or sleep problems may be more sensitive to caffeine, which can make their symptoms worse.",
-     "id": "F9",
+     "text": "People with existing anxiety, heart conditions, or sleep problems may be more sensitive to caffeine, worsening their symptoms.",
+     "id": "F7",
      "second_hand": ""
     }
    ],
@@ -350,20 +234,18 @@
  "parts": [
   {
    "part": "short",
-   "text": "It depends on genes, body size, and if you are used to caffeine. Some people may feel anxious, while others do not.",
+   "text": "It depends on size, weight, health, and tolerance. People differ in how they metabolize caffeine.",
    "uses": [
-    "F4",
-    "F1",
-    "F7",
-    "F5"
+    "F5",
+    "F1"
    ],
    "rests_on": [
     {
-     "label": "F4",
-     "ref": "fulton_2018",
-     "where": "4. Discussion › 4.2. Anxiogenic Consequences",
-     "quote": "Particularly, caffeine-naïve females possessing the ADORA2A (rs5751876) TT genotype may be especially prone to experiencing anxiety following caffeine consumption.",
-     "sha": "ff48d82ec9a9b01f"
+     "label": "F5",
+     "ref": "adf_caffeine",
+     "where": "Effects of caffeine",
+     "quote": "Caffeine can affect everyone differently, based on: size, weight and health; whether the person is used to taking it; whether other drugs are taken around the same time; the amount taken; the environment (where the drug is taken).",
+     "sha": "df07776444fa7124"
     },
     {
      "label": "F1",
@@ -371,26 +253,12 @@
      "where": "RESULTS › Pharmacokinetics and Pharmacodynamics",
      "quote": "In conclusion, there are significant inter-individual differences in the metabolism, clearance, and elimination of caffeine and its metabolites.",
      "sha": "630d61109bb442f6"
-    },
-    {
-     "label": "F7",
-     "ref": "adf_caffeine",
-     "where": "Effects of caffeine",
-     "quote": "Caffeine can affect everyone differently, based on: size, weight and health; whether the person is used to taking it; whether other drugs are taken around the same time; the amount taken; the environment (where the drug is taken).",
-     "sha": "df07776444fa7124"
-    },
-    {
-     "label": "F5",
-     "ref": "fulton_2018",
-     "where": "4. Discussion › 4.2. Anxiogenic Consequences",
-     "quote": "Thus, the available evidence suggests that habitual use may lead to tolerance to the anxiogenic consequences of caffeine regardless of select genetic variations.",
-     "sha": "ff48d82ec9a9b01f"
     }
    ]
   },
   {
    "part": "but",
-   "text": "The extent of the development of tolerance towards caffeine's effects is unclear.",
+   "text": "The degree to which tolerance to caffeine’s effects develops is unclear.",
    "uses": [
     "L1"
    ],
@@ -406,114 +274,28 @@
   },
   {
    "part": "how1",
-   "text": "A 2018 review of human studies says caffeine-naive females with a specific gene may be more likely to feel anxious.",
+   "text": "Australia's Alcohol and Drug Foundation says caffeine affects people differently based on size, weight, and health.",
    "uses": [
-    "DB",
-    "F4"
-   ],
-   "rests_on": [
-    {
-     "label": "DB",
-     "ref": "fulton_2018",
-     "where": "Abstract",
-     "quote": "The purpose of the present review was to systematically recognize how select single nucleotide polymorphisms (SNPs) impact habitual use of caffeine as well as the ergogenic and anxiogenic consequences of caffeine.",
-     "sha": "c75b84aabc23c41c"
-    },
-    {
-     "label": "F4",
-     "ref": "fulton_2018",
-     "where": "4. Discussion › 4.2. Anxiogenic Consequences",
-     "quote": "Particularly, caffeine-naïve females possessing the ADORA2A (rs5751876) TT genotype may be especially prone to experiencing anxiety following caffeine consumption.",
-     "sha": "ff48d82ec9a9b01f"
-    }
-   ],
-   "quote": "caffeine-naïve females possessing the ADORA2A (rs5751876) TT genotype may be especially prone to experiencing anxiety",
-   "quote_ref": "fulton_2018"
-  },
-  {
-   "part": "how2",
-   "text": "The same review reports that habitual use may lead to tolerance to anxiety, regardless of genes.",
-   "uses": [
-    "F5"
+    "F5",
+    "F6"
    ],
    "rests_on": [
     {
      "label": "F5",
-     "ref": "fulton_2018",
-     "where": "4. Discussion › 4.2. Anxiogenic Consequences",
-     "quote": "Thus, the available evidence suggests that habitual use may lead to tolerance to the anxiogenic consequences of caffeine regardless of select genetic variations.",
-     "sha": "ff48d82ec9a9b01f"
-    }
-   ],
-   "quote": "Thus, the available evidence suggests that habitual use may lead to tolerance to the anxiogenic",
-   "quote_ref": "fulton_2018"
-  },
-  {
-   "part": "how3",
-   "text": "A 2015 review says there are big differences in how people process caffeine, and genes may affect risk.",
-   "uses": [
-    "DA",
-    "F1",
-    "F3"
-   ],
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "cappelletti_2015",
-     "where": "Abstract",
-     "quote": "The present review summarizes the main findings concerning caffeine’s mechanisms of action",
-     "sha": "7335d4630aea9b8a"
-    },
-    {
-     "label": "F1",
-     "ref": "cappelletti_2015",
-     "where": "RESULTS › Pharmacokinetics and Pharmacodynamics",
-     "quote": "In conclusion, there are significant inter-individual differences in the metabolism, clearance, and elimination of caffeine and its metabolites.",
-     "sha": "630d61109bb442f6"
-    },
-    {
-     "label": "F3",
-     "ref": "cappelletti_2015",
-     "where": "RESULTS › Caffeine-containing Products",
-     "quote": "Genetic factors may also contribute to an individual’s vulnerability to caffeine-related disorders.",
-     "sha": "860ae2e63c72a32a"
-    }
-   ],
-   "quote": "In conclusion, there are significant inter-individual differences in the metabolism, clearance, and elimination of caffeine",
-   "quote_ref": "cappelletti_2015"
-  },
-  {
-   "part": "how4",
-   "text": "Australia's Alcohol and Drug Foundation says size, health, and other drugs affect how caffeine works on each person.",
-   "uses": [
-    "F7",
-    "F8",
-    "F9"
-   ],
-   "rests_on": [
-    {
-     "label": "F7",
      "ref": "adf_caffeine",
      "where": "Effects of caffeine",
      "quote": "Caffeine can affect everyone differently, based on: size, weight and health; whether the person is used to taking it; whether other drugs are taken around the same time; the amount taken; the environment (where the drug is taken).",
      "sha": "df07776444fa7124"
     },
     {
-     "label": "F8",
+     "label": "F6",
      "ref": "adf_caffeine",
      "where": "Long-term effects / Caffeine and mental health",
-     "quote": "Caffeine can affect mental health differently depending on the person, how much caffeine they usually have, and their individual risk factors.",
+     "quote": "Lower amounts of caffeine (1 - 2 cups of coffee) may improve mood and alertness, while higher amounts (more than 2 cups) can increase feelings of anxiety, stress, and restlessness.",
      "sha": "60de4314ad06b51f"
-    },
-    {
-     "label": "F9",
-     "ref": "adf_caffeine",
-     "where": "Long-term effects / Caffeine and mental health",
-     "quote": "People experiencing anxiety, heart conditions, or sleep problems may be more sensitive to caffeine, which can make their symptoms worse.",
-     "sha": "88d2a6941c47c13b"
     }
    ],
-   "quote": "size, weight and health; whether the person is used to taking it; whether other drugs",
+   "quote": "Caffeine can affect everyone differently, based on: size, weight and health",
    "quote_ref": "adf_caffeine"
   }
  ],
@@ -543,7 +325,16 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-19",
+   "lane": 19,
+   "status": "published",
+   "why": "passed every gate",
+   "short": "It depends on genes, body size, and if you are used to caffeine. Some people may feel anxious, while others do not.",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "Caffeine: cognitive and physical performance enhancer or psychoactive drug?",
@@ -551,32 +342,43 @@
    "kind": "review",
    "at": "10.2174/1570159x13666141210215655",
    "kept": 3,
-   "thrown": [
-    {
-     "kind": "finding",
-     "text": "In comparison with placebo, caffeine at a dose of 250 mg elevated blood pressure in nonhabitual drinkers, but not in habitual ones.",
-     "quote": "In comparison with placebo, caffeine at a dose of 250 mg elevated blood pressure in nonhabitual drinkers, but not in habitual ones.",
-     "why": "it holds an amount or a time between uses"
-    }
-   ]
+   "thrown": []
   },
   {
    "title": "Impact of Genetic Variability on Physiological Responses to Caffeine in Humans: A Systematic Review",
    "read": "full",
    "kind": "review",
    "at": "10.3390/nu10101373",
-   "kept": 3,
+   "kept": 1,
    "thrown": [
     {
      "kind": "finding",
-     "text": "Variations in the ADORA2A gene, specifically rs5751876, are linked to the anxiety-inducing effects of caffeine.",
-     "quote": "Our search provided strong evidence that SNPs in the ADORA2A gene (primarily rs5751876) are associated with the anxiogenic impact of caffeine.",
+     "text": "People with the ADORA2A rs5751876 TT genotype, especially caffeine‑naïve females, are more likely to feel anxiety after drinking coffee.",
+     "quote": "Our search provided strong evidence that SNPs in the ADORA2A gene (primarily rs5751876) are associated with the anxiogenic impact of caffeine. Particularly, caffeine‑naïve females possessing the ADORA",
+     "why": "the sentence is not carried by its quote and passage"
+    },
+    {
+     "kind": "finding",
+     "text": "Gender, how often a person drinks coffee, and ADORA2A genetic differences together affect how likely they are to experience anxiety from coffee.",
+     "quote": "The literature also demonstrates that gender, habitual caffeine consumption, and variability in the ADORA2A gene collectively influence individual susceptibility to the anxiogenic consequences of caff",
+     "why": "the sentence is not carried by its quote and passage"
+    },
+    {
+     "kind": "finding",
+     "text": "Differences in the CYP1A2 gene, together with factors like heavy coffee drinking or smoking, change how quickly caffeine is metabolized, which can influence its anxiety‑producing effects.",
+     "quote": "variability in the CYP1A2 gene, in conjunction with environmental factors (heavy coffee drinking, smoking), impact the metabolism of caffeine.",
      "why": "the sentence is not carried by its quote and passage"
     },
     {
      "kind": "limit",
-     "text": "The effects of CYP1A2 and ADORA2A gene variability on the physical performance benefits of caffeine require further research.",
-     "quote": "Future work is warranted to elucidate the effects of variability in the CYP1A2 and ADORA2A genes on the ergogenic impact of caffeine.",
+     "text": "The risk of bias in some study domains was unclear, which limits confidence in the findings.",
+     "quote": "The included RCTs displayed unclear and low risk of bias in the selection, performance, and detection biases, while they mostly displayed low risk of bias in the attrition, reporting, and other biases",
+     "why": "the sentence is not carried by its quote and passage"
+    },
+    {
+     "kind": "limit",
+     "text": "More research is needed to understand exactly how the identified genes cause differences in caffeine‑related anxiety.",
+     "quote": "further exploration is warranted to clarify how these genes directly or indirectly impact physiological and/or psychological mechanisms responsible for the variability in consumption of caffeine acros",
      "why": "the sentence is not carried by its quote and passage"
     }
    ]
@@ -595,15 +397,20 @@
    "kind": "official",
    "at": "https://www.drugscience.org.uk/drugs/caffeine",
    "kept": 3,
-   "thrown": []
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "If a person does not believe caffeine will make them more alert, it may not increase alertness, possibly reducing anxiety effects.",
+     "quote": "If you consume caffeine without believing something like “I’m consuming caffeine which will make me more alert,” the caffeine may not increase your alertness at all.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   }
  ],
  "plan": {
   "short": [
-   "F4",
-   "F1",
-   "F7",
-   "F5"
+   "F5",
+   "F1"
   ],
   "direct": "It depends",
   "but": [
@@ -611,10 +418,13 @@
   ],
   "how": [
    [
-    "DB",
-    "F4",
     "F5",
     "F6"
+   ],
+   [
+    "F8",
+    "F9",
+    "F10"
    ],
    [
     "DA",
@@ -622,41 +432,130 @@
     "F3"
    ],
    [
-    "F7",
-    "F8",
-    "F9"
-   ],
-   [
-    "F10",
-    "F11"
+    "DB",
+    "F4"
    ]
   ],
-  "unanswered": "exact individual dose threshold for anxiety"
+  "unanswered": "exact neurochemical mechanism (adenosine antagonism)"
  },
  "panel_gap": [],
  "own": {
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.4535,
-   "but": 0.9814,
-   "how1": 0.9641,
-   "how2": 0.9232,
-   "how3": 0.9127,
-   "how4": 0.061
+   "short": 0.415,
+   "but": 0.9842,
+   "how1": 0.4943,
+   "how2": 0.0391,
+   "how3": 0.9526,
+   "how4": 0.0421
   },
   "scores_quotes_alone": {
-   "short": 0.3853,
-   "but": 0.9615,
-   "how1": 0.9607,
-   "how2": 0.653,
-   "how3": 0.9579,
-   "how4": 0.0113
+   "short": 0.4836,
+   "but": 0.9789,
+   "how1": 0.0251,
+   "how2": 0.0149,
+   "how3": 0.9221,
+   "how4": 0.2495
   }
  },
+ "dropped": [
+  {
+   "try": 1,
+   "part": "how2",
+   "text": "Drug Science, a UK charity of scientists says individuals vary in their reaction to caffeine.",
+   "rests_on": [
+    {
+     "label": "F8",
+     "ref": "drugscience_caffeine",
+     "where": "What are the risks?",
+     "quote": "Individuals vary in their reaction to caffeine, so the half-life could be much longer or shorter than 5 hours.",
+     "sha": "bbcf06b59657663c"
+    },
+    {
+     "label": "F9",
+     "ref": "drugscience_caffeine",
+     "where": "How might the drug make you feel?",
+     "quote": "In people who are not regular users, any improvement is likely to be counteracted by anxiety and jitteriness which make it difficult to focus.",
+     "sha": "1f26b7512408c1c6"
+    },
+    {
+     "label": "F10",
+     "ref": "drugscience_caffeine",
+     "where": "How might the drug make you feel?",
+     "quote": "Some people become anxious or irritable after caffeine. Unpleasant feelings become more likely the higher the amount you consume.",
+     "sha": "9a3f51cd8b103d2d"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The passage says individuals vary in their reaction to caffeine, but does not identify Drug Science as a UK charity of scientists."
+  },
+  {
+   "try": 1,
+   "part": "how3",
+   "text": "A 2015 review of caffeine mechanisms and effects found genetic factors can make some individuals more vulnerable.",
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "cappelletti_2015",
+     "where": "Abstract",
+     "quote": "The present review summarizes the main findings concerning caffeine’s mechanisms of action (focusing on adenosine antagonism, intracellular calcium mobilization, and phosphodiesterases inhibition), use, abuse, dependence, intoxication, and lethal effects.",
+     "sha": "7335d4630aea9b8a"
+    },
+    {
+     "label": "F1",
+     "ref": "cappelletti_2015",
+     "where": "RESULTS › Pharmacokinetics and Pharmacodynamics",
+     "quote": "In conclusion, there are significant inter-individual differences in the metabolism, clearance, and elimination of caffeine and its metabolites.",
+     "sha": "630d61109bb442f6"
+    },
+    {
+     "label": "F3",
+     "ref": "cappelletti_2015",
+     "where": "RESULTS › Caffeine-containing Products",
+     "quote": "Genetic factors may also contribute to an individual’s vulnerability to caffeine‑related disorders.",
+     "sha": "860ae2e63c72a32a"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The passage says genetic factors may contribute to vulnerability to caffeine-related disorders; it does not state as strongly that they can make individuals more vulnerable generally."
+  },
+  {
+   "try": 1,
+   "part": "how4",
+   "text": "A 2018 systematic review of human genetic studies on caffeine reports regular use may make people less sensitive to anxiety.",
+   "rests_on": [
+    {
+     "label": "DB",
+     "ref": "fulton_2018",
+     "where": "Abstract",
+     "quote": "Emerging research has demonstrated that genetic variation may impact physiological responses to caffeine consumption. The purpose of the present review was to systematically recognize how select single nucleotide polymorphisms (SNPs) impact habitual use of caffeine as well as the ergogenic and anxiogenic consequences of caffeine.",
+     "sha": "c75b84aabc23c41c"
+    },
+    {
+     "label": "F4",
+     "ref": "fulton_2018",
+     "where": "4. Discussion › 4.2. Anxiogenic Consequences",
+     "quote": "Interestingly, one study demonstrated that self‑reported anxiety with caffeine was not apparent in subjects possessing ADORA2A (rs5751876) TT who habitually consume large to moderate doses.",
+     "sha": "ff48d82ec9a9b01f"
+    }
+   ],
+   "by": "our own checker",
+   "said": "our own checker does not find it in the words it rests on (0.04): say only what those words say, in their own measure"
+  }
+ ],
  "with_checked": {
   "differs": [],
-  "same": []
+  "same": [
+   {
+    "part": "short",
+    "claim": "cl_caf_withdrawal_reversal"
+   },
+   {
+    "part": "but",
+    "claim": "cl_caf_withdrawal_reversal"
+   }
+  ]
  },
  "place": {
   "home": "caffeine",
