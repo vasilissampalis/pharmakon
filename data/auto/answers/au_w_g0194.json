@@ -17,35 +17,39 @@
   "methylphenidate"
  ],
  "made": {
-  "on": "2026-11-26",
+  "on": "2026-11-27",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
-   "writer": "openrouter:meta-llama/llama-3.3-70b-instruct",
-   "checker": "openrouter:openai/gpt-oss-120b",
-   "planner": "openrouter:openai/gpt-oss-120b",
-   "team": "team R",
-   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "writer_2": "groq:qwen/qwen3.8-27b"
+   "reader": "gemini:gemini-3.1-flash-lite",
+   "writer": "groq:qwen/qwen3.8-27b",
+   "checker": "gemini:gemini-3.5-flash-lite",
+   "planner": "gemini:gemma-4-31b-it",
+   "also1": "gemini:gemini-3.6-flash",
+   "team": "team L",
+   "reader_2": "groq:openai/gpt-oss-20b",
+   "reader_3": "openrouter:openai/gpt-oss-120b",
+   "also1_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "45885068479",
-  "read_seconds": 24,
+  "run": "46045083063",
+  "read_seconds": 27,
   "from": {
    "papers": 2,
    "summaries": 0,
-   "official": 2
+   "official": 1
   },
   "neurons": 0.0,
-  "seconds": 92
+  "seconds": 182
  },
  "status": "published",
  "why": "passed every gate",
  "gates": {
-  "read": "8 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 2 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.72, but 0.94, how1 0.95, how2 0.81, how3 0.98, how4 0.98",
-  "check": "every sentence kept was accepted by the second reader (openrouter:openai/gpt-oss-120b)",
-  "rules": "broken at try 2: but: a clinical word where an everyday one exists (“pharmacological”): say it plainly; written again, then nothing against it",
-  "but": "the writer's But was not accepted (it is about something else than the short answer): the code wrote the But itself, from what this answer rests on",
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.1-flash-lite read from there",
+  "read": "6 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 1 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.65, but 0.92, how1 0.81, how2 0.43, how3 0.88",
+  "check": "every sentence kept was accepted by the second reader (gemini:gemini-3.5-flash-lite) and by gemini:gemini-3.6-flash; 1 How-do-we-know line(s) dropped",
+  "but": "the writer's But was not accepted (it is about something else than the short answer (Sentence 1 directly answers how methylphenidate works in the brain using facts from the NHS and review sources): the code wrote the But itself, from what this answer rests on",
+  "rules": "nothing against it",
   "checked": "set beside the checked claims of the same page: nothing against them"
  },
  "sources": [
@@ -87,10 +91,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-26",
+     "verified_on": "2026-11-27",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-26"
+      "checked_on": "2026-11-27"
      }
     },
     "volume": "Volume 17",
@@ -113,40 +117,40 @@
     "passage": 1,
     "where": "Abstract",
     "quote": "This exploratory review covers the uses of MP and examined the effects of MP on gene expression in the brain following exposure.",
-    "text": "an exploratory review covering the uses of methylphenidate and examining its effects on gene expression in the brain"
+    "text": "an exploratory review of research on the effects of methylphenidate on brain gene expression"
    },
    "findings": [
-    {
-     "passage": 1,
-     "where": "Abstract",
-     "quote": "Monoamine neurotransmitters and post-synaptic density protein genes generally had a potentiating effect in gene expression after exposure to MP.",
-     "text": "Monoamine neurotransmitters and post-synaptic density protein genes generally had a potentiating effect in gene expression after exposure to methylphenidate.",
-     "id": "F1",
-     "second_hand": ""
-    },
     {
      "passage": 20,
      "where": "Results › Effects of MP on Neurotransmitter Genes and Receptors",
      "quote": "MP inhibits the dopamine transport receptors, which then causes the extracellular synaptic dopamine levels to increase.",
-     "text": "Methylphenidate inhibits the dopamine transport receptors, which then causes the extracellular synaptic dopamine levels to increase.",
-     "id": "F2",
+     "text": "Methylphenidate inhibits dopamine transport receptors, which leads to an increase in extracellular synaptic dopamine levels.",
+     "id": "F1",
      "second_hand": ""
     },
     {
      "passage": 14,
      "where": "Introduction › MP Effects on Monoamine Neurotransmitters",
      "quote": "When MP inhibits the reuptake, the noradrenaline concentration in the synapse or extracellular area increases.",
-     "text": "When methylphenidate inhibits the reuptake, the noradrenaline concentration in the synapse or extracellular area increases.",
+     "text": "When methylphenidate inhibits reuptake, the concentration of noradrenaline in the synapse or extracellular area increases.",
+     "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 25,
+     "where": "Results › Dopamine",
+     "quote": "MP affects dopamine by inhibiting dopamine transporters by binding to the transporter.",
+     "text": "Methylphenidate affects dopamine by binding to and inhibiting dopamine transporters.",
      "id": "F3",
      "second_hand": ""
     }
    ],
    "limits": [
     {
-     "passage": 41,
-     "where": "Conclusion › Research Implications",
-     "quote": "Leo et al, who determined this, completed the study in-vitro; therefore, further research should be done to investigate the effects of MP on Htr7 and in ADHD patients.",
-     "text": "Leo et al completed the study in-vitro, so further research should be done to investigate the effects of methylphenidate on Htr7 and in ADHD patients.",
+     "passage": 46,
+     "where": "Conclusion › Further Investigation",
+     "quote": "This understanding leaves room for more research on the populations affected long-term, further understanding the reasons and significance for MP mis-use.",
+     "text": "More research is needed to understand the long-term effects on affected populations and the reasons for methylphenidate use.",
      "id": "L1",
      "second_hand": ""
     }
@@ -195,10 +199,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-26",
+     "verified_on": "2026-11-27",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-26"
+      "checked_on": "2026-11-27"
      }
     },
     "volume": "14",
@@ -217,39 +221,27 @@
    "money": [
     "The authors confirm that this article content has no conflict of interest."
    ],
-   "design": {
-    "passage": 2,
-    "where": "Abstract",
-    "quote": "In this review different aspects concerning the use of MPD have been approached.",
-    "text": "a review of different aspects concerning the use of methylphenidate"
-   },
+   "design": null,
    "findings": [
     {
      "passage": 12,
      "where": "PHARMACOLOGY AND AVAILABLE FORMULA-TIONS",
      "quote": "d-MPD and l-MPD have the same pharmacological profile as the parent racemate, i.e. acting as catecholamine-selective reuptake inhibitors.",
-     "text": "d-MPD and l-MPD act as catecholamine-selective reuptake inhibitors with the same pharmacological profile as the parent racemate.",
+     "text": "Methylphenidate acts as a catecholamine-selective reuptake inhibitor.",
      "id": "F4",
-     "second_hand": ""
-    },
-    {
-     "passage": 12,
-     "where": "PHARMACOLOGY AND AVAILABLE FORMULA-TIONS",
-     "quote": "d-MPD is approximately 10 times more abundant than l-MPD in this regard.",
-     "text": "d-MPD is approximately 10 times more abundant than l-MPD in this regard.",
-     "id": "F5",
-     "second_hand": ""
-    },
-    {
-     "passage": 12,
-     "where": "PHARMACOLOGY AND AVAILABLE FORMULA-TIONS",
-     "quote": "Taking into account that when the l-MPH is orally administered it is metabolized promptly via first pass through hepatic circulation, d-isomer is thought to be the main pharmacological contributor in the treatment of the disorder.",
-     "text": "The d-isomer is thought to be the main pharmacological contributor in the treatment of the disorder because l-MPH is metabolized promptly via first pass through hepatic circulation when orally administered.",
-     "id": "F6",
      "second_hand": ""
     }
    ],
-   "limits": [],
+   "limits": [
+    {
+     "passage": 11,
+     "where": "PHARMACOLOGY AND AVAILABLE FORMULA-TIONS",
+     "quote": "dl-threo-Methylphenidate undergoes enantioselective metabolism in the liver, resulting in remarkable variations in the plasma concentrations of its isomers, depending on both the formulation administered and the route of administration.",
+     "text": "The plasma concentrations of methylphenidate isomers vary significantly based on the specific formulation and the route of administration used.",
+     "id": "L2",
+     "second_hand": ""
+    }
+   ],
    "tag": "B"
   },
   {
@@ -278,14 +270,14 @@
       [
        2026,
        11,
-       26
+       27
       ]
      ]
     },
     "verification": {
      "status": "made by code",
      "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-26"
+     "verified_on": "2026-11-27"
     }
    },
    "title": "About methylphenidate for adults Brand names: Ritalin, Concerta, Delmosart, Equasym, Medikinet",
@@ -305,117 +297,63 @@
      "passage": 1,
      "where": "Top of the page",
      "quote": "They work by increasing activity in the brain, particularly in areas that help control attention and behaviour.",
-     "text": "Methylphenidate works by increasing brain activity, especially in areas that control attention and behaviour.",
-     "id": "F7",
+     "text": "Methylphenidate works by increasing brain activity, specifically in areas that help control attention and behaviour.",
+     "id": "F5",
      "second_hand": ""
     }
    ],
    "limits": [],
    "tag": "C"
-  },
-  {
-   "read": "page",
-   "ref": {
-    "id": "nhs_about-methylphenidate-for-children",
-    "type": "webpage",
-    "title": "About methylphenidate for children Brand names: Ritalin, Concerta, Medikinet, Delmosart, Equasym",
-    "author": [
-     {
-      "literal": "NHS"
-     }
-    ],
-    "issued": {
-     "date-parts": [
-      [
-       2026,
-       9,
-       15
-      ]
-     ]
-    },
-    "URL": "https://www.nhs.uk/medicines/methylphenidate-children/about-methylphenidate-for-children/",
-    "accessed": {
-     "date-parts": [
-      [
-       2026,
-       11,
-       26
-      ]
-     ]
-    },
-    "verification": {
-     "status": "made by code",
-     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-26"
-    }
-   },
-   "title": "About methylphenidate for children Brand names: Ritalin, Concerta, Medikinet, Delmosart, Equasym",
-   "year": 2026,
-   "kind": "official",
-   "people": true,
-   "near": 0.622,
-   "name": "NHS",
-   "short": "the NHS",
-   "tier": 1,
-   "address": "https://www.nhs.uk/medicines/methylphenidate-children/about-methylphenidate-for-children/",
-   "money": [],
-   "label": false,
-   "design": null,
-   "findings": [
-    {
-     "passage": 1,
-     "where": "Top of the page",
-     "quote": "They work by increasing activity in the brain, particularly in areas that help control attention and behaviour.",
-     "text": "They work by increasing activity in the brain, particularly in areas that help control attention and behaviour.",
-     "id": "F8",
-     "second_hand": ""
-    }
-   ],
-   "limits": [],
-   "tag": "D"
   }
  ],
  "parts": [
   {
    "part": "short",
-   "text": "Methylphenidate works by increasing brain activity, especially in areas that control attention and behaviour. It also increases dopamine and noradrenaline levels.",
+   "text": "The NHS says methylphenidate increases brain activity in areas that control attention and behaviour. It also raises dopamine and noradrenaline levels in the brain.",
    "uses": [
-    "F7",
+    "F5",
+    "F1",
     "F2",
-    "F3"
+    "F4"
    ],
    "rests_on": [
     {
-     "label": "F7",
+     "label": "F5",
      "ref": "nhs_about-methylphenidate-for-adults",
      "where": "Top of the page",
      "quote": "They work by increasing activity in the brain, particularly in areas that help control attention and behaviour.",
      "sha": "77d6b4a8a72d098d"
     },
     {
-     "label": "F2",
+     "label": "F1",
      "ref": "klein_2024",
      "where": "Results › Effects of MP on Neurotransmitter Genes and Receptors",
      "quote": "MP inhibits the dopamine transport receptors, which then causes the extracellular synaptic dopamine levels to increase.",
      "sha": "362b12a11be1ce96"
     },
     {
-     "label": "F3",
+     "label": "F2",
      "ref": "klein_2024",
      "where": "Introduction › MP Effects on Monoamine Neurotransmitters",
      "quote": "When MP inhibits the reuptake, the noradrenaline concentration in the synapse or extracellular area increases.",
      "sha": "1562e70e8a292abe"
+    },
+    {
+     "label": "F4",
+     "ref": "paolobusard_2016",
+     "where": "PHARMACOLOGY AND AVAILABLE FORMULA-TIONS",
+     "quote": "d-MPD and l-MPD have the same pharmacological profile as the parent racemate, i.e. acting as catecholamine-selective reuptake inhibitors.",
+     "sha": "81788cd455b8a364"
     }
    ]
   },
   {
    "part": "but",
-   "text": "This rests on 2 reviews and 2 official pages.",
+   "text": "This rests on 2 reviews and 1 official page.",
    "uses": [
     "DA",
-    "DB",
-    "F7",
-    "F8"
+    "F4",
+    "F5"
    ],
    "fixed": true,
    "rests_on": [
@@ -427,37 +365,30 @@
      "sha": "4aff2694be1c16ba"
     },
     {
-     "label": "DB",
+     "label": "F4",
      "ref": "paolobusard_2016",
-     "where": "Abstract",
-     "quote": "In this review different aspects concerning the use of MPD have been approached.",
-     "sha": "a547acd58c6b77a4"
+     "where": "PHARMACOLOGY AND AVAILABLE FORMULA-TIONS",
+     "quote": "d-MPD and l-MPD have the same pharmacological profile as the parent racemate, i.e. acting as catecholamine-selective reuptake inhibitors.",
+     "sha": "81788cd455b8a364"
     },
     {
-     "label": "F7",
+     "label": "F5",
      "ref": "nhs_about-methylphenidate-for-adults",
      "where": "Top of the page",
      "quote": "They work by increasing activity in the brain, particularly in areas that help control attention and behaviour.",
      "sha": "77d6b4a8a72d098d"
-    },
-    {
-     "label": "F8",
-     "ref": "nhs_about-methylphenidate-for-children",
-     "where": "Top of the page",
-     "quote": "They work by increasing activity in the brain, particularly in areas that help control attention and behaviour.",
-     "sha": "c533b23bed960136"
     }
    ]
   },
   {
    "part": "how1",
-   "text": "The NHS says it increases brain activity in areas that help control attention and behaviour.",
+   "text": "The NHS says methylphenidate works by increasing activity in the brain, particularly in areas that help control attention and behaviour.",
    "uses": [
-    "F7"
+    "F5"
    ],
    "rests_on": [
     {
-     "label": "F7",
+     "label": "F5",
      "ref": "nhs_about-methylphenidate-for-adults",
      "where": "Top of the page",
      "quote": "They work by increasing activity in the brain, particularly in areas that help control attention and behaviour.",
@@ -468,97 +399,21 @@
    "quote_ref": "nhs_about-methylphenidate-for-adults"
   },
   {
-   "part": "how2",
-   "text": "The NHS also says it increases activity in the brain, particularly in areas that help control attention and behaviour.",
-   "uses": [
-    "F8"
-   ],
-   "rests_on": [
-    {
-     "label": "F8",
-     "ref": "nhs_about-methylphenidate-for-children",
-     "where": "Top of the page",
-     "quote": "They work by increasing activity in the brain, particularly in areas that help control attention and behaviour.",
-     "sha": "c533b23bed960136"
-    }
-   ],
-   "quote": "increasing activity in the brain, particularly in areas that help control attention and behaviour",
-   "quote_ref": "nhs_about-methylphenidate-for-children"
-  },
-  {
    "part": "how3",
-   "text": "A review examined the effects of methylphenidate on gene expression in the brain.",
+   "text": "A 2016 review says methylphenidate acts as a catecholamine-selective reuptake inhibitor.",
    "uses": [
-    "DA",
-    "F2",
-    "F3"
+    "F4"
    ],
    "rests_on": [
-    {
-     "label": "DA",
-     "ref": "klein_2024",
-     "where": "Abstract",
-     "quote": "This exploratory review covers the uses of MP and examined the effects of MP on gene expression in the brain following exposure.",
-     "sha": "4aff2694be1c16ba"
-    },
-    {
-     "label": "F2",
-     "ref": "klein_2024",
-     "where": "Results › Effects of MP on Neurotransmitter Genes and Receptors",
-     "quote": "MP inhibits the dopamine transport receptors, which then causes the extracellular synaptic dopamine levels to increase.",
-     "sha": "362b12a11be1ce96"
-    },
-    {
-     "label": "F3",
-     "ref": "klein_2024",
-     "where": "Introduction › MP Effects on Monoamine Neurotransmitters",
-     "quote": "When MP inhibits the reuptake, the noradrenaline concentration in the synapse or extracellular area increases.",
-     "sha": "1562e70e8a292abe"
-    }
-   ],
-   "quote": "MP and examined the effects of MP on gene expression in the brain following exposure",
-   "quote_ref": "klein_2024"
-  },
-  {
-   "part": "how4",
-   "text": "A review approached different aspects concerning the use of methylphenidate.",
-   "uses": [
-    "DB",
-    "F4",
-    "F5",
-    "F6"
-   ],
-   "rests_on": [
-    {
-     "label": "DB",
-     "ref": "paolobusard_2016",
-     "where": "Abstract",
-     "quote": "In this review different aspects concerning the use of MPD have been approached.",
-     "sha": "a547acd58c6b77a4"
-    },
     {
      "label": "F4",
      "ref": "paolobusard_2016",
      "where": "PHARMACOLOGY AND AVAILABLE FORMULA-TIONS",
      "quote": "d-MPD and l-MPD have the same pharmacological profile as the parent racemate, i.e. acting as catecholamine-selective reuptake inhibitors.",
      "sha": "81788cd455b8a364"
-    },
-    {
-     "label": "F5",
-     "ref": "paolobusard_2016",
-     "where": "PHARMACOLOGY AND AVAILABLE FORMULA-TIONS",
-     "quote": "d-MPD is approximately 10 times more abundant than l-MPD in this regard.",
-     "sha": "81788cd455b8a364"
-    },
-    {
-     "label": "F6",
-     "ref": "paolobusard_2016",
-     "where": "PHARMACOLOGY AND AVAILABLE FORMULA-TIONS",
-     "quote": "Taking into account that when the l-MPH is orally administered it is metabolized promptly via first pass through hepatic circulation, d-isomer is thought to be the main pharmacological contributor in the treatment of the disorder.",
-     "sha": "81788cd455b8a364"
     }
    ],
-   "quote": "In this review different aspects concerning the use of MPD have been approached",
+   "quote": "i.e. acting as catecholamine-selective reuptake inhibitors",
    "quote_ref": "paolobusard_2016"
   }
  ],
@@ -596,6 +451,14 @@
    "why": "the answer was not accepted: our own checker does not find it in the words it rests on (0.01): say only what those words say, in their own measure",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-26",
+   "lane": 19,
+   "status": "published",
+   "why": "passed every gate",
+   "short": "Methylphenidate works by increasing brain activity, especially in areas that control attention and behaviour. It also increases dopamine and noradrenaline levels.",
+   "complete": false
   }
  ],
  "looked": [
@@ -612,8 +475,15 @@
    "read": "full",
    "kind": "review",
    "at": "10.2174/1570159x13666150407225902",
-   "kept": 3,
-   "thrown": []
+   "kept": 1,
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "A review of existing literature and research regarding the use, pharmacology, and effects of methylphenidate.",
+     "quote": "In this review different aspects concerning the use of MPD have been approached. Data showing its abuse among college students are given, when the drug is prescribed short term beneficial effects and ",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   },
   {
    "title": "About methylphenidate for adults Brand names: Ritalin, Concerta, Delmosart, Equasym, Medikinet",
@@ -634,31 +504,27 @@
  ],
  "plan": {
   "short": [
-   "F7",
+   "F5",
+   "F1",
    "F2",
-   "F3"
+   "F4"
   ],
   "direct": "",
   "but": [
-   "F6"
+   "L1"
   ],
   "how": [
    [
-    "F7"
-   ],
-   [
-    "F8"
+    "F5"
    ],
    [
     "DA",
+    "F1",
     "F2",
     "F3"
    ],
    [
-    "DB",
-    "F4",
-    "F5",
-    "F6"
+    "F4"
    ]
   ],
   "unanswered": ""
@@ -668,20 +534,18 @@
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.7217,
-   "but": 0.9383,
-   "how1": 0.9516,
-   "how2": 0.8126,
-   "how3": 0.9789,
-   "how4": 0.978
+   "short": 0.6496,
+   "but": 0.9223,
+   "how1": 0.8123,
+   "how2": 0.4263,
+   "how3": 0.878
   },
   "scores_quotes_alone": {
-   "short": 0.6259,
-   "but": 0.7129,
-   "how1": 0.764,
-   "how2": 0.5556,
-   "how3": 0.9844,
-   "how4": 0.9794
+   "short": 0.6877,
+   "but": 0.7717,
+   "how1": 0.6566,
+   "how2": 0.2317,
+   "how3": 0.5251
   }
  },
  "tries": [
@@ -691,42 +555,51 @@
    "parts": [
     {
      "part": "short",
-     "text": "Methylphenidate works by increasing brain activity and dopamine levels. It also increases noradrenaline concentration.",
+     "text": "The NHS says methylphenidate increases brain activity in areas that control attention and behaviour. It also raises dopamine and noradrenaline levels in the brain.",
      "rests_on": [
       {
-       "label": "F7",
+       "label": "F5",
        "ref": "nhs_about-methylphenidate-for-adults",
        "where": "Top of the page",
        "quote": "They work by increasing activity in the brain, particularly in areas that help control attention and behaviour.",
        "sha": "77d6b4a8a72d098d"
       },
       {
-       "label": "F2",
+       "label": "F1",
        "ref": "klein_2024",
        "where": "Results › Effects of MP on Neurotransmitter Genes and Receptors",
        "quote": "MP inhibits the dopamine transport receptors, which then causes the extracellular synaptic dopamine levels to increase.",
        "sha": "362b12a11be1ce96"
       },
       {
-       "label": "F3",
+       "label": "F2",
        "ref": "klein_2024",
        "where": "Introduction › MP Effects on Monoamine Neurotransmitters",
        "quote": "When MP inhibits the reuptake, the noradrenaline concentration in the synapse or extracellular area increases.",
        "sha": "1562e70e8a292abe"
+      },
+      {
+       "label": "F4",
+       "ref": "paolobusard_2016",
+       "where": "PHARMACOLOGY AND AVAILABLE FORMULA-TIONS",
+       "quote": "d-MPD and l-MPD have the same pharmacological profile as the parent racemate, i.e. acting as catecholamine-selective reuptake inhibitors.",
+       "sha": "81788cd455b8a364"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages state that methylphenidate increases brain activity and extracellular dopamine, and that noradrenaline increases when MP inhibits reuptake, but the specific combination of claims attributed directly to the NHS regarding noradre"
     },
     {
      "part": "but",
-     "text": "The main effect is thought to be from the d-isomer, as the l-isomer is metabolized promptly.",
+     "text": "More research is needed to understand the long-term effects on affected populations and the reasons for methylphenidate use.",
      "rests_on": [
       {
-       "label": "F6",
-       "ref": "paolobusard_2016",
-       "where": "PHARMACOLOGY AND AVAILABLE FORMULA-TIONS",
-       "quote": "Taking into account that when the l-MPH is orally administered it is metabolized promptly via first pass through hepatic circulation, d-isomer is thought to be the main pharmacological contributor in the treatment of the disorder.",
-       "sha": "81788cd455b8a364"
+       "label": "L1",
+       "ref": "klein_2024",
+       "where": "Conclusion › Further Investigation",
+       "quote": "This understanding leaves room for more research on the populations affected long-term, further understanding the reasons and significance for MP mis-use.",
+       "sha": "a8db802ac6b41837"
       }
      ],
      "ok": false,
@@ -735,10 +608,10 @@
     },
     {
      "part": "how1",
-     "text": "The NHS says it increases brain activity.",
+     "text": "The NHS says methylphenidate works by increasing activity in the brain, particularly in areas that help control attention and behaviour.",
      "rests_on": [
       {
-       "label": "F7",
+       "label": "F5",
        "ref": "nhs_about-methylphenidate-for-adults",
        "where": "Top of the page",
        "quote": "They work by increasing activity in the brain, particularly in areas that help control attention and behaviour.",
@@ -749,21 +622,7 @@
     },
     {
      "part": "how2",
-     "text": "The NHS also says it increases brain activity in children.",
-     "rests_on": [
-      {
-       "label": "F8",
-       "ref": "nhs_about-methylphenidate-for-children",
-       "where": "Top of the page",
-       "quote": "They work by increasing activity in the brain, particularly in areas that help control attention and behaviour.",
-       "sha": "c533b23bed960136"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how3",
-     "text": "A review found it inhibits dopamine transport receptors and increases noradrenaline.",
+     "text": "A 2024 review of brain gene expression research found methylphenidate inhibits dopamine transporters, increasing dopamine and noradrenaline in the synapse.",
      "rests_on": [
       {
        "label": "DA",
@@ -773,52 +632,38 @@
        "sha": "4aff2694be1c16ba"
       },
       {
-       "label": "F2",
+       "label": "F1",
        "ref": "klein_2024",
        "where": "Results › Effects of MP on Neurotransmitter Genes and Receptors",
        "quote": "MP inhibits the dopamine transport receptors, which then causes the extracellular synaptic dopamine levels to increase.",
        "sha": "362b12a11be1ce96"
       },
       {
-       "label": "F3",
+       "label": "F2",
        "ref": "klein_2024",
        "where": "Introduction › MP Effects on Monoamine Neurotransmitters",
        "quote": "When MP inhibits the reuptake, the noradrenaline concentration in the synapse or extracellular area increases.",
        "sha": "1562e70e8a292abe"
+      },
+      {
+       "label": "F3",
+       "ref": "klein_2024",
+       "where": "Results › Dopamine",
+       "quote": "MP affects dopamine by inhibiting dopamine transporters by binding to the transporter.",
+       "sha": "daeb0167d09c43ba"
       }
      ],
      "ok": true
     },
     {
-     "part": "how4",
-     "text": "Another review found it acts as a catecholamine-selective reuptake inhibitor.",
+     "part": "how3",
+     "text": "A 2016 review states methylphenidate acts as a catecholamine-selective reuptake inhibitor.",
      "rests_on": [
-      {
-       "label": "DB",
-       "ref": "paolobusard_2016",
-       "where": "Abstract",
-       "quote": "In this review different aspects concerning the use of MPD have been approached.",
-       "sha": "a547acd58c6b77a4"
-      },
       {
        "label": "F4",
        "ref": "paolobusard_2016",
        "where": "PHARMACOLOGY AND AVAILABLE FORMULA-TIONS",
        "quote": "d-MPD and l-MPD have the same pharmacological profile as the parent racemate, i.e. acting as catecholamine-selective reuptake inhibitors.",
-       "sha": "81788cd455b8a364"
-      },
-      {
-       "label": "F5",
-       "ref": "paolobusard_2016",
-       "where": "PHARMACOLOGY AND AVAILABLE FORMULA-TIONS",
-       "quote": "d-MPD is approximately 10 times more abundant than l-MPD in this regard.",
-       "sha": "81788cd455b8a364"
-      },
-      {
-       "label": "F6",
-       "ref": "paolobusard_2016",
-       "where": "PHARMACOLOGY AND AVAILABLE FORMULA-TIONS",
-       "quote": "Taking into account that when the l-MPH is orally administered it is metabolized promptly via first pass through hepatic circulation, d-isomer is thought to be the main pharmacological contributor in the treatment of the disorder.",
        "sha": "81788cd455b8a364"
       }
      ],
@@ -828,28 +673,28 @@
   },
   {
    "try": 2,
-   "why": "a rule was broken: written again",
+   "why": "the short answer or the But was not accepted: written again",
    "parts": [
     {
      "part": "short",
-     "text": "Methylphenidate works by increasing brain activity, especially in areas that control attention and behaviour. It also inhibits dopamine transport receptors and increases noradrenaline concentration.",
+     "text": "The NHS says methylphenidate increases brain activity in areas that control attention and behaviour. It also raises dopamine and noradrenaline levels in the brain.",
      "rests_on": [
       {
-       "label": "F7",
+       "label": "F5",
        "ref": "nhs_about-methylphenidate-for-adults",
        "where": "Top of the page",
        "quote": "They work by increasing activity in the brain, particularly in areas that help control attention and behaviour.",
        "sha": "77d6b4a8a72d098d"
       },
       {
-       "label": "F2",
+       "label": "F1",
        "ref": "klein_2024",
        "where": "Results › Effects of MP on Neurotransmitter Genes and Receptors",
        "quote": "MP inhibits the dopamine transport receptors, which then causes the extracellular synaptic dopamine levels to increase.",
        "sha": "362b12a11be1ce96"
       },
       {
-       "label": "F3",
+       "label": "F2",
        "ref": "klein_2024",
        "where": "Introduction › MP Effects on Monoamine Neurotransmitters",
        "quote": "When MP inhibits the reuptake, the noradrenaline concentration in the synapse or extracellular area increases.",
@@ -860,26 +705,26 @@
     },
     {
      "part": "but",
-     "text": "The main pharmacological contributor is thought to be the d-isomer, as the l-isomer is metabolized promptly.",
+     "text": "More research is needed to understand the long-term effects on affected populations and the reasons for methylphenidate use.",
      "rests_on": [
       {
-       "label": "F6",
-       "ref": "paolobusard_2016",
-       "where": "PHARMACOLOGY AND AVAILABLE FORMULA-TIONS",
-       "quote": "Taking into account that when the l-MPH is orally administered it is metabolized promptly via first pass through hepatic circulation, d-isomer is thought to be the main pharmacological contributor in the treatment of the disorder.",
-       "sha": "81788cd455b8a364"
+       "label": "L1",
+       "ref": "klein_2024",
+       "where": "Conclusion › Further Investigation",
+       "quote": "This understanding leaves room for more research on the populations affected long-term, further understanding the reasons and significance for MP mis-use.",
+       "sha": "a8db802ac6b41837"
       }
      ],
      "ok": false,
-     "by": "a rule",
-     "said": "a rule: a clinical word where an everyday one exists (“pharmacological”): say it plainly"
+     "by": "the second reader",
+     "said": "it is about something else than the short answer"
     },
     {
      "part": "how1",
-     "text": "The NHS says methylphenidate increases brain activity.",
+     "text": "The NHS says methylphenidate works by increasing activity in the brain, particularly in areas that help control attention and behaviour.",
      "rests_on": [
       {
-       "label": "F7",
+       "label": "F5",
        "ref": "nhs_about-methylphenidate-for-adults",
        "where": "Top of the page",
        "quote": "They work by increasing activity in the brain, particularly in areas that help control attention and behaviour.",
@@ -890,21 +735,7 @@
     },
     {
      "part": "how2",
-     "text": "The NHS also says it increases activity in areas that help control attention and behaviour.",
-     "rests_on": [
-      {
-       "label": "F8",
-       "ref": "nhs_about-methylphenidate-for-children",
-       "where": "Top of the page",
-       "quote": "They work by increasing activity in the brain, particularly in areas that help control attention and behaviour.",
-       "sha": "c533b23bed960136"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how3",
-     "text": "A review examined the effects of methylphenidate on gene expression in the brain.",
+     "text": "A 2024 review found methylphenidate inhibits dopamine transporters, increasing dopamine, and inhibits reuptake, increasing noradrenaline in the synapse.",
      "rests_on": [
       {
        "label": "DA",
@@ -914,52 +745,38 @@
        "sha": "4aff2694be1c16ba"
       },
       {
-       "label": "F2",
+       "label": "F1",
        "ref": "klein_2024",
        "where": "Results › Effects of MP on Neurotransmitter Genes and Receptors",
        "quote": "MP inhibits the dopamine transport receptors, which then causes the extracellular synaptic dopamine levels to increase.",
        "sha": "362b12a11be1ce96"
       },
       {
-       "label": "F3",
+       "label": "F2",
        "ref": "klein_2024",
        "where": "Introduction › MP Effects on Monoamine Neurotransmitters",
        "quote": "When MP inhibits the reuptake, the noradrenaline concentration in the synapse or extracellular area increases.",
        "sha": "1562e70e8a292abe"
+      },
+      {
+       "label": "F3",
+       "ref": "klein_2024",
+       "where": "Results › Dopamine",
+       "quote": "MP affects dopamine by inhibiting dopamine transporters by binding to the transporter.",
+       "sha": "daeb0167d09c43ba"
       }
      ],
      "ok": true
     },
     {
-     "part": "how4",
-     "text": "Another review found that methylphenidate acts as a catecholamine-selective reuptake inhibitor.",
+     "part": "how3",
+     "text": "A 2016 review states methylphenidate acts as a catecholamine-selective reuptake inhibitor.",
      "rests_on": [
-      {
-       "label": "DB",
-       "ref": "paolobusard_2016",
-       "where": "Abstract",
-       "quote": "In this review different aspects concerning the use of MPD have been approached.",
-       "sha": "a547acd58c6b77a4"
-      },
       {
        "label": "F4",
        "ref": "paolobusard_2016",
        "where": "PHARMACOLOGY AND AVAILABLE FORMULA-TIONS",
        "quote": "d-MPD and l-MPD have the same pharmacological profile as the parent racemate, i.e. acting as catecholamine-selective reuptake inhibitors.",
-       "sha": "81788cd455b8a364"
-      },
-      {
-       "label": "F5",
-       "ref": "paolobusard_2016",
-       "where": "PHARMACOLOGY AND AVAILABLE FORMULA-TIONS",
-       "quote": "d-MPD is approximately 10 times more abundant than l-MPD in this regard.",
-       "sha": "81788cd455b8a364"
-      },
-      {
-       "label": "F6",
-       "ref": "paolobusard_2016",
-       "where": "PHARMACOLOGY AND AVAILABLE FORMULA-TIONS",
-       "quote": "Taking into account that when the l-MPH is orally administered it is metabolized promptly via first pass through hepatic circulation, d-isomer is thought to be the main pharmacological contributor in the treatment of the disorder.",
        "sha": "81788cd455b8a364"
       }
      ],
@@ -972,18 +789,55 @@
   {
    "try": 3,
    "part": "but",
-   "text": "It mainly works through the d-isomer, which is thought to be the main contributor in the treatment of the disorder.",
+   "text": "More research is needed to understand the long-term effects on affected populations and the reasons for methylphenidate use.",
    "rests_on": [
     {
-     "label": "F6",
-     "ref": "paolobusard_2016",
-     "where": "PHARMACOLOGY AND AVAILABLE FORMULA-TIONS",
-     "quote": "Taking into account that when the l-MPH is orally administered it is metabolized promptly via first pass through hepatic circulation, d-isomer is thought to be the main pharmacological contributor in the treatment of the disorder.",
-     "sha": "81788cd455b8a364"
+     "label": "L1",
+     "ref": "klein_2024",
+     "where": "Conclusion › Further Investigation",
+     "quote": "This understanding leaves room for more research on the populations affected long-term, further understanding the reasons and significance for MP mis-use.",
+     "sha": "a8db802ac6b41837"
     }
    ],
    "by": "the second reader",
-   "said": "it is about something else than the short answer"
+   "said": "it is about something else than the short answer (Sentence 1 directly answers how methylphenidate works in the brain using facts from the NHS and review sources. Sentence 2 does not serve as a direct limit or doubt on sentence 1, but rather discusses a separate direction for future researc)"
+  },
+  {
+   "try": 3,
+   "part": "how2",
+   "text": "A 2024 review of brain gene expression research says methylphenidate inhibits dopamine transporters, which increases dopamine and noradrenaline in the synapse.",
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "klein_2024",
+     "where": "Abstract",
+     "quote": "This exploratory review covers the uses of MP and examined the effects of MP on gene expression in the brain following exposure.",
+     "sha": "4aff2694be1c16ba"
+    },
+    {
+     "label": "F1",
+     "ref": "klein_2024",
+     "where": "Results › Effects of MP on Neurotransmitter Genes and Receptors",
+     "quote": "MP inhibits the dopamine transport receptors, which then causes the extracellular synaptic dopamine levels to increase.",
+     "sha": "362b12a11be1ce96"
+    },
+    {
+     "label": "F2",
+     "ref": "klein_2024",
+     "where": "Introduction › MP Effects on Monoamine Neurotransmitters",
+     "quote": "When MP inhibits the reuptake, the noradrenaline concentration in the synapse or extracellular area increases.",
+     "sha": "1562e70e8a292abe"
+    },
+    {
+     "label": "F3",
+     "ref": "klein_2024",
+     "where": "Results › Dopamine",
+     "quote": "MP affects dopamine by inhibiting dopamine transporters by binding to the transporter.",
+     "sha": "daeb0167d09c43ba"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The passage states that noradrenaline increases when MP inhibits reuptake, but does not attribute the dopamine increase to dopamine transporter inhibition alongside noradrenaline in a way that matches this exact combined claim for both from"
   }
  ],
  "with_checked": {
