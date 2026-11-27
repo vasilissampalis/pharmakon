@@ -583,6 +583,9 @@ CITED = re.compile(r"\b(?:a|an|another|one|two|three|several|some|many|most|rece
                    r"|(?-i:\b[A-Z][a-z]+(?:\s+et al|\s+and\s+[A-Z][a-z]+|\s+and colleagues))\s*(?:\(\d{4}\)|\[\d+\])?,?\s+(?:found|showed|reported|observed|concluded|suggested|demonstrated|noted|described)\b"
                    r"|\b(?:reports|studies|data|evidence|findings|research)\s+(?:suggests?|shows?|indicates?|have shown|has shown|have found|found|report)\b", re.I)
 OWN_FRAME = re.compile(r"\b(?:we|our|ours)\b|\b(?:this|the present|the current|present|current)\s+(?:systematic\s+|narrative\s+|scoping\s+|literature\s+)?(?:study|review|meta-analysis|analysis|survey|trial|paper|work|report|article|investigation)\b|\bin this (?:study|review|paper|article|work)\b", re.I)
+# (27 November 2026, reader 816 for the editor) The finder named after the verb: "3-MeO-PCP's half-life in vivo (estimated at 10 and 11 hours by 2 different
+# research groups)" became "a case report and review found ... a half-life of 10 to 11 hours". Stricter, never looser: a passage more is known to report others.
+CITED_BY = re.compile(r"\b(?:found|shown|reported|observed|estimated|described|measured|calculated|proposed|suggested|demonstrated|documented)\b[^.;]{0,60}?\bby\s+(?:\d+|a|an|another|one|two|three|four|several|some|many|other|different|previous|earlier|prior)\s+(?:[\w-]+\s+){0,2}?(?:research\s+)?(?:groups?|teams?|authors?|researchers?|investigators?|stud(?:y|ies)|trials?|reviews?|meta-analys[ie]s|laborator(?:y|ies))\b", re.I)
 CONTINUES = re.compile(r"^(?:however|moreover|furthermore|in addition|additionally|also|similarly|likewise|conversely|in contrast|by contrast|they|the authors|it also|these|those|evidence|nevertheless|notably|specifically|in particular|but|and|yet)\b", re.I)
 OWN_FIND = re.compile(r"\b(?:a|the|this|one)\s+(?:\d{4}\s+)?(?:systematic\s+|literature\s+|narrative\s+|recent\s+|large\s+|small\s+|online\s+)?(?:review|meta-analysis|study|survey|trial|paper|analysis|report)\b(?:\s+of\s+[^.,;]{0,50})?\s+(?:found|finds|showed|shows|concluded|concludes|observed|observes|demonstrated|established|confirmed|proved)\b", re.I)
 SECOND_SAID = re.compile(r"\b(?:reports?|reported|notes?|noted|mentions?|mentioned|describes?|described|cit(?:es|ed|ing)|earlier|previous|prior|another|other (?:stud(?:y|ies)|analys[ie]s|reviews?|research)|in (?:one|a|an|some|several|a few|recent|earlier|other|two|three) (?:[\w-]+ )?(?:stud(?:y|ies)|analys[ie]s|reviews?|surveys?|trials?|reports?)|studies (?:in|of|that|which|it)|reports? (?:that )?(?:an?|one|some|several|earlier|other)\s+(?:[\w-]+ )?(?:stud|analys|review|survey|trial|meta))", re.I)
@@ -605,7 +608,7 @@ def second_hand(text, q):
     for _ in range(4):
         x = t[spans[k][0]:spans[k][1]].strip()
         if OWN_FRAME.search(x): return ""
-        if CITED.search(x): return x[:180]
+        if CITED.search(x) or CITED_BY.search(x): return x[:180]
         if k == 0 or not CONTINUES.match(x): return ""
         k -= 1
     return ""
@@ -3298,6 +3301,10 @@ def selftest():
     assert not repute_as_fact("Khoi and San people have traditionally used kanna to relieve pain.", ["Native Khoi and San tribes of South Africa have been traditionally using Kanna plants as a pain reliever."])
     assert repute_as_fact("A 2021 review says kanna relieves stress and improves mood. It notes traditional use as a pain reliever by Khoi and San tribes.", [rq])
     assert says_more([{"part": "short", "text": "Kanna relieves stress with calming effects.", "uses": ["F1"]}], {"F1": {"quote": rq, "passage_text": ""}})
+    # (27 November 2026) the finder named after the verb ("estimated ... by 2 different research groups"); not one's own staff or participants
+    pk = "3-MeO-PCP's half-life in vivo (estimated at 10 and 11 hours by 2 different research groups) explains the rapid clinical improvement observed."
+    assert second_hand(pk, "3-MeO-PCP's half-life in vivo (estimated at 10 and 11 hours by 2 different research groups)") and not second_hand("Blood pressure was measured by trained staff at each visit.", "Blood pressure was measured by trained staff at each visit")
+    assert not second_hand("As shown by our group, the drug lowered craving.", "the drug lowered craving") and second_hand("Craving fell after the drug, as reported by several earlier studies.", "Craving fell after the drug")
     # (27 November 2026) a study's methods: never its finding, whoever speaks there; the rule that refuses "found" for it (rules) then has its reason
     assert intro_hand(intro, {"passage": 2, "where": "MATERIALS AND METHODS › Instruments", "quote": "Stimulants improve vigilance in sleep-deprived people"}).startswith("(the paper's methods")
     assert intro_hand(intro, {"passage": 2, "where": "2. Methods", "quote": "we asked 1,105 surgeons about their use"}) and intro_hand(intro, {"passage": 2, "where": "Methodological limits of earlier work", "quote": "x"}) == ""
