@@ -17,71 +17,107 @@
   "nicotine"
  ],
  "made": {
-  "on": "2026-11-26",
+  "on": "2026-11-27",
   "models": {
    "reader": "gemini:gemini-3.5-flash-lite",
    "writer": "groq:qwen/qwen3.8-27b",
    "checker": "groq:openai/gpt-oss-120b",
-   "planner": "gemini:gemma-4-31b-it",
+   "planner": "groq:openai/gpt-oss-120b",
    "also1": "gemini:gemini-3.5-flash-lite",
-   "also2": "gemini:gemini-3-flash-preview",
-   "team": "team K",
-   "reader_2": "gemini:gemini-3.5-flash-lite",
-   "writer_2": "groq:qwen/qwen3.8-27b",
-   "also2_else": "gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
-   "reader_first": "gemini:gemma-4-31b-it",
-   "writer_first": "gemini:gemma-4-26b-a4b-it"
+   "also2": "gemini:gemini-3.6-flash",
+   "team": "team I",
+   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "reader_3": "openrouter:meta-llama/llama-3.3-70b-instruct",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "45817528123",
-  "read_seconds": 100,
+  "run": "46029881493",
+  "read_by": {
+   "gemini-3.5-flash-lite": 3,
+   "gemini-3.1-flash-lite": 1
+  },
+  "read_seconds": 32,
   "from": {
-   "papers": 1,
+   "papers": 2,
    "summaries": 0,
-   "official": 0
+   "official": 1
   },
   "neurons": 0.0,
-  "seconds": 411
+  "seconds": 280
  },
  "status": "published",
  "why": "passed every gate",
  "gates": {
-  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.5-flash-lite read from there",
-  "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "3 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
-  "rules": "1 How-do-we-know line(s) left out for a rule (how2: it says “is known to”, and the words it rests on do not: say it as the source does (“can”, “may”, “has been reported”), or rest it on the item that says so)",
-  "panel": "further readers, each of which must accept every sentence too: gemini-3.5-flash-lite accepted 4 of 4; gemini-3-flash-preview accepted 3 of 4",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.06, but 0.99, how1 0.56, how3 0.98",
-  "check": "every sentence kept was accepted by the second reader (groq:openai/gpt-oss-120b) and by gemini:gemini-3.5-flash-lite and by gemini:gemini-3-flash-preview; 1 How-do-we-know line(s) dropped; it also found that the short answer answers the question and that the But is about that answer",
-  "writer": "try 2: no JSON (how the reply ended: length; reasoned 0 characters, wrote 10292) gemma-4-26b-a4b-it gave no answer in the form asked for: qwen3.8-27b wrote from there.",
-  "checked": "set beside the checked claims of the same page: nothing against them; 2 sentence(s) say what a checked claim says"
+  "read": "11 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 1 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
+  "rules": "1 How-do-we-know line(s) left out for a rule (how3: words that are not person-first (“users”))",
+  "panel": "further readers, each of which must accept every sentence too: gemini-3.5-flash-lite accepted 3 of 5",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.14, but 0.99, how1 0.97, how2 0.98",
+  "check": "every sentence kept was accepted by the second reader (groq:openai/gpt-oss-120b) and by gemini:gemini-3.5-flash-lite and by gemini:gemini-3.6-flash",
+  "but": "the writer's But was not accepted (it is about something else than the short answer): the code wrote the But itself, from what this answer rests on",
+  "checked": "set beside the checked claims of the same page: nothing against them; 1 sentence(s) say what a checked claim says"
  },
  "sources": [
   {
    "read": "full",
    "ref": {
-    "id": "yang_2026",
+    "id": "carlsson_2026",
     "type": "article-journal",
-    "title": "Research on the safety risk of oral nicotine products and its prospects",
+    "title": "New nicotine and tobacco products and risk of major diseases: A review of the scientific evidence",
     "author": [
      {
-      "family": "Yang",
-      "given": "YanLing"
+      "family": "Carlsson",
+      "given": "Sofia"
      },
      {
-      "family": "Liang",
-      "given": "Huan"
+      "family": "Beck",
+      "given": "Miranda"
      },
      {
-      "family": "Liu",
-      "given": "Yi"
+      "family": "Bergström",
+      "given": "Anna"
      },
      {
-      "family": "Zhang",
-      "given": "Qi"
+      "family": "Dreij",
+      "given": "Kristian"
+     },
+     {
+      "family": "Ganguly",
+      "given": "Koustav"
+     },
+     {
+      "family": "Kippler",
+      "given": "Maria"
+     },
+     {
+      "family": "Laguzzi",
+      "given": "Federica"
+     },
+     {
+      "family": "Leander",
+      "given": "Karin"
+     },
+     {
+      "family": "Lu",
+      "given": "Donghau"
+     },
+     {
+      "family": "Palmberg",
+      "given": "Lena"
+     },
+     {
+      "family": "Upadhyay",
+      "given": "Swapna"
+     },
+     {
+      "family": "Zettergren",
+      "given": "Anna"
+     },
+     {
+      "family": "Pershagen",
+      "given": "Göran"
      }
     ],
-    "container-title": "Current Research in Toxicology",
+    "container-title": "Scandinavian Journal of Public Health",
     "issued": {
      "date-parts": [
       [
@@ -89,144 +125,389 @@
       ]
      ]
     },
-    "DOI": "10.1016/j.crtox.2026.100305",
+    "DOI": "10.1177/14034948251391690",
     "verification": {
      "status": "metadata-verified",
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-26",
+     "verified_on": "2026-11-27",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-26"
-     }
+      "checked_on": "2026-11-27"
+     },
+     "online_first_year": 2025
     },
-    "volume": "11",
-    "number": "100305",
-    "PMCID": "PMC13279749"
+    "volume": "54",
+    "issue": "8",
+    "page": "942-953",
+    "PMCID": "PMC13710727"
    },
-   "doi": "10.1016/j.crtox.2026.100305",
-   "pmcid": "PMC13279749",
-   "title": "Research on the safety risk of oral nicotine products and its prospects",
+   "doi": "10.1177/14034948251391690",
+   "pmcid": "PMC13710727",
+   "title": "New nicotine and tobacco products and risk of major diseases: A review of the scientific evidence",
    "year": 2026,
-   "journal": "Current research in toxicology",
+   "journal": "Scandinavian journal of public health",
    "kind": "review",
-   "people": false,
-   "near": 0.692,
+   "people": true,
+   "near": 0.694,
    "money": [
-    "The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper."
+    "The authors gratefully acknowledge the support of Sabina Gillsund, Karolinska Institutet University Library, for her expertise in developing and conducting the literature searches.",
+    "The authors declared no potential conflicts of interest with respect to the research, authorship and/or publication of this article.",
+    "Funding: The authors received no financial support for the research, authorship and/or publication of this article."
    ],
    "design": {
     "passage": 1,
     "where": "Abstract",
-    "quote": "By integrating data from chemical analyses, animal/cell studies, and human cohorts, this review first introduces the main commercially available oral nicotine products and their classifications",
-    "text": "a review integrating data from chemical analyses, animal and cell studies, and human cohorts"
+    "quote": "This review assesses current knowledge on the health risks of these products, with a focus on asthma and allergic diseases, cancer, cardiovascular disease, diabetes, lung disease and pregnancy outcomes.",
+    "text": "a review of scientific evidence on the health risks of new nicotine and tobacco products"
    },
    "findings": [
     {
-     "passage": 28,
-     "where": "Current research status on the safety risk of oral nicotine products › Safety risks of other oral nicotine products",
-     "quote": "Further safety risk assessments revealed that participants experienced adverse effects such as nausea, dizziness, and throat irritation with all three products, with potential long-term negative impacts on oral mucosa and the gastrointestinal system.",
-     "text": "Participants experienced adverse effects such as nausea, dizziness, and throat irritation with nicotine pouches, lozenges, and gum, with potential long-term negative impacts on oral mucosa and the gastrointestinal system.",
+     "passage": 20,
+     "where": "Cancer › E-cigarettes",
+     "quote": "Genotoxicity studies report DNA damage, oxidative stress and chromosomal aberrations after e-cigarette exposure in vivo and in vitro, with nicotine playing a key role.",
+     "text": "Studies in a laboratory report DNA damage, oxidative stress and chromosomal aberrations after e-cigarette exposure, with nicotine playing a key role.",
      "id": "F1",
+     "second_hand": "Genotoxicity studies report DNA damage, oxidative stress and chromosomal aberrations after e-cigarette exposure in vivo and in vitro, with nicotine playing a key role."
+    },
+    {
+     "passage": 20,
+     "where": "Cancer › E-cigarettes",
+     "quote": "nicotine-containing e-cigarettes caused significant oxidative DNA damage and increased γH2AX, a marker of DNA strand breaks, in mice.",
+     "text": "Nicotine-containing e-cigarettes caused significant oxidative DNA damage and increased γH2AX, a marker of DNA strand breaks, in mice.",
+     "id": "F2",
      "second_hand": ""
     },
     {
      "passage": 27,
-     "where": "Current research status on the safety risk of oral nicotine products › Safety risks of nicotine pouches › Cohort study for evaluating the safety risks of nicotine pouches",
-     "quote": "previous studies have demonstrated that nicotine exhibits multi-organ toxic effects (e.g., on hepatic glucose and lipid metabolism, gonadal reproductive function, adrenal steroid hormone synthesis, and renal glomerular filtration).",
-     "text": "Nicotine exhibits multi-organ toxic effects, including on hepatic glucose and lipid metabolism, gonadal reproductive function, adrenal steroid hormone synthesis, and renal glomerular filtration.",
-     "id": "F2",
-     "second_hand": "Considering the composition of nicotine pouches-including nicotine salts, microcrystalline cellulose, and various additives-previous studies have demonstrated that nicotine exhibit"
-    },
-    {
-     "passage": 29,
-     "where": "Conclusions and prospects",
-     "quote": "Additionally, nicotine is known to affect insulin sensitivity and the reproductive system (such as placental blood flow).",
-     "text": "Nicotine is known to affect insulin sensitivity and the reproductive system, such as placental blood flow.",
+     "where": "Cardiovascular diseases › E-cigarettes",
+     "quote": "Acute use was associated with increased heart rate, blood pressure, pulse–wave velocity, augmentation index (heart rate adjusted), soluble CD40 ligand and P-selectin and decreased flow-mediated dilation.",
+     "text": "Acute use of nicotine-containing e-cigarettes was associated with increased heart rate, blood pressure, pulse–wave velocity, augmentation index, soluble CD40 ligand and P-selectin and decreased flow-mediated dilation.",
      "id": "F3",
      "second_hand": ""
     }
    ],
    "limits": [
     {
-     "passage": 27,
-     "where": "Current research status on the safety risk of oral nicotine products › Safety risks of nicotine pouches › Cohort study for evaluating the safety risks of nicotine pouches",
-     "quote": "Therefore, future human studies on the safety risk evaluation of nicotine pouches should expand their scope to more systematically elucidate the health effects on consumers.",
-     "text": "Future human studies on the safety risk evaluation of nicotine pouches should expand their scope to more systematically elucidate the health effects on consumers.",
+     "passage": 2,
+     "where": "Abstract",
+     "quote": "Methodological limitations of existing epidemiological studies include reliance on self-reported data, inadequate adjustment for cigarette smoking, cross-sectional design and/or short follow up.",
+     "text": "Existing epidemiological studies are limited by reliance on self-reported data, inadequate adjustment for cigarette smoking, cross-sectional design and short follow up.",
      "id": "L1",
      "second_hand": ""
     }
    ],
    "tag": "A"
+  },
+  {
+   "read": "full",
+   "ref": {
+    "id": "almeshari_2026",
+    "type": "article-journal",
+    "title": "The effect of long-term e-cigarette use on the inflammation marker fractional exhaled nitric oxide (FeNO): A systematic review and meta-analysis",
+    "author": [
+     {
+      "family": "Almeshari",
+      "given": "Mohammed A."
+     },
+     {
+      "family": "Alrashdi",
+      "given": "Afaf M."
+     },
+     {
+      "family": "Almutairi",
+      "given": "Alhanouf G."
+     },
+     {
+      "family": "Alfaiz",
+      "given": "Lujain A."
+     },
+     {
+      "family": "Almalki",
+      "given": "Rimas M."
+     },
+     {
+      "family": "Kaabi",
+      "given": "Salma A."
+     }
+    ],
+    "container-title": "Tobacco Induced Diseases",
+    "issued": {
+     "date-parts": [
+      [
+       2026
+      ]
+     ]
+    },
+    "DOI": "10.18332/tid/224361",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-27",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-27"
+     }
+    },
+    "volume": "24",
+    "issue": "September",
+    "page": "1-12",
+    "PMCID": "PMC13629185"
+   },
+   "doi": "10.18332/tid/224361",
+   "pmcid": "PMC13629185",
+   "title": "The effect of long-term e-cigarette use on the inflammation marker fractional exhaled nitric oxide (FeNO): A systematic review and meta-analysis",
+   "year": 2026,
+   "journal": "Tobacco induced diseases",
+   "kind": "review",
+   "people": true,
+   "near": 0.693,
+   "money": [
+    "FUNDING There was no source of funding for this research.",
+    "ACKNOWLEDGEMENTSThe abstract of this study was published as a conference abstract."
+   ],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "This systematic review and meta-analysis aimed to assess the long-term effects of e-cigarettes on airway inflammation, as measured by fractional exhaled nitric oxide (FeNO).",
+    "text": "a systematic review and meta-analysis assessing the long-term effects of e-cigarettes on airway inflammation"
+   },
+   "findings": [
+    {
+     "passage": 23,
+     "where": "RESULTS › Effects of e-cigarette use on FeNO test",
+     "quote": "The study also found that e-cigarette and dual users demonstrated increased bronchial hyperresponsiveness and elevated oxidative stress markers, indicating early local and systemic inflammatory changes even after only 1–3 years of use.",
+     "text": "E-cigarette and dual users demonstrated increased bronchial hyperresponsiveness and elevated oxidative stress markers, indicating early local and systemic inflammatory changes even after only 1–3 years of use.",
+     "id": "F4",
+     "second_hand": ""
+    },
+    {
+     "passage": 19,
+     "where": "RESULTS › Effects of e-cigarette use on FeNO test",
+     "quote": "The mean FeNO reported for group 1 users was 14.5 ± 14.7 ppb, whereas for group 2 it was 9.7 ± 12.3 ppb, and for group 3 it was 16.2 ± 11.0 ppb. Group 1 demonstrated lower values than Group 3 and was statistically significant (p=0.013).",
+     "text": "Exclusive e-cigarette users demonstrated lower FeNO values than control participants, which was statistically significant.",
+     "id": "F5",
+     "second_hand": ""
+    },
+    {
+     "passage": 23,
+     "where": "RESULTS › Effects of e-cigarette use on FeNO test",
+     "quote": "The median FeNO level was significantly higher in e-cigarette users (14 ppb, p=0.04) compared to healthy non-smokers (11 ppb), while cigarette smokers exhibited significantly lower FeNO levels (9 ppb, p=0.04).",
+     "text": "The median FeNO level was significantly higher in e-cigarette users compared to healthy non-smokers.",
+     "id": "F6",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 30,
+     "where": "DISCUSSION › Limitations",
+     "quote": "First, the dose and frequency of e-cigarette use could not be calculated because of the differences in depth of inhalation and frequency.",
+     "text": "The dose and frequency of e-cigarette use could not be calculated because of the differences in depth of inhalation and frequency.",
+     "id": "L2",
+     "second_hand": ""
+    }
+   ],
+   "tag": "B"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "who_tobacco",
+    "type": "webpage",
+    "title": "Tobacco and nicotine",
+    "author": [
+     {
+      "literal": "World Health Organization"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      [
+       2026,
+       6,
+       26
+      ]
+     ]
+    },
+    "URL": "https://www.who.int/news-room/fact-sheets/detail/tobacco",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       27
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-27"
+    }
+   },
+   "title": "Tobacco and nicotine",
+   "year": 2026,
+   "kind": "official",
+   "people": true,
+   "near": 0.69,
+   "name": "World Health Organization",
+   "short": "the World Health Organization",
+   "tier": 1,
+   "address": "https://www.who.int/news-room/fact-sheets/detail/tobacco",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 1,
+     "where": "Key facts",
+     "quote": "Nicotine is highly addictive and harmful, particularly for children, adolescents and young adults whose brains are still developing.",
+     "text": "Nicotine is highly addictive and harmful, particularly for children, adolescents, and young adults with developing brains.",
+     "id": "F7",
+     "second_hand": ""
+    },
+    {
+     "passage": 3,
+     "where": "Overview",
+     "quote": "Early nicotine use can increase the likelihood of long-term dependence and future use of other nicotine and tobacco products.",
+     "text": "Early nicotine use can increase the likelihood of long-term dependence and future use of other nicotine and tobacco products.",
+     "id": "F8",
+     "second_hand": ""
+    },
+    {
+     "passage": 3,
+     "where": "Overview",
+     "quote": "Nicotine use also increases cardiovascular risk.",
+     "text": "Nicotine use also increases cardiovascular risk.",
+     "id": "F9",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "C"
   }
  ],
  "parts": [
   {
    "part": "short",
-   "text": "Nicotine can affect the liver, kidneys, and reproductive system. It may also change how the body handles sugar and fat.",
+   "text": "The World Health Organization says nicotine increases heart risk and is highly addictive. Lab studies report DNA damage and inflammation in airways after e-cigarette use.",
    "uses": [
-    "F2",
-    "F3"
+    "F9",
+    "F7",
+    "F1",
+    "F4"
    ],
    "rests_on": [
     {
-     "label": "F2",
-     "ref": "yang_2026",
-     "where": "Current research status on the safety risk of oral nicotine products › Safety risks of nicotine pouches › Cohort study for evaluating the safety risks of nicotine pouches",
-     "quote": "previous studies have demonstrated that nicotine exhibits multi-organ toxic effects (e.g., on hepatic glucose and lipid metabolism, gonadal reproductive function, adrenal steroid hormone synthesis, and renal glomerular filtration).",
-     "sha": "63314e68f8d52792"
+     "label": "F9",
+     "ref": "who_tobacco",
+     "where": "Overview",
+     "quote": "Nicotine use also increases cardiovascular risk.",
+     "sha": "11a8243245398832"
     },
     {
-     "label": "F3",
-     "ref": "yang_2026",
-     "where": "Conclusions and prospects",
-     "quote": "Additionally, nicotine is known to affect insulin sensitivity and the reproductive system (such as placental blood flow).",
-     "sha": "6a6277d775000d11"
+     "label": "F7",
+     "ref": "who_tobacco",
+     "where": "Key facts",
+     "quote": "Nicotine is highly addictive and harmful, particularly for children, adolescents and young adults whose brains are still developing.",
+     "sha": "f4f8bead500a6176"
+    },
+    {
+     "label": "F1",
+     "ref": "carlsson_2026",
+     "where": "Cancer › E-cigarettes",
+     "quote": "Genotoxicity studies report DNA damage, oxidative stress and chromosomal aberrations after e-cigarette exposure in vivo and in vitro, with nicotine playing a key role.",
+     "sha": "af0f159df7d7d64a"
+    },
+    {
+     "label": "F4",
+     "ref": "almeshari_2026",
+     "where": "RESULTS › Effects of e-cigarette use on FeNO test",
+     "quote": "The study also found that e-cigarette and dual users demonstrated increased bronchial hyperresponsiveness and elevated oxidative stress markers, indicating early local and systemic inflammatory changes even after only 1–3 years of use.",
+     "sha": "07cd019bdd49221a"
     }
    ]
   },
   {
    "part": "but",
-   "text": "The review says future human studies are needed to better understand the health effects on people who use these products.",
+   "text": "This rests on 2 reviews and 1 official page.",
    "uses": [
-    "L1"
+    "DA",
+    "DB",
+    "F7"
    ],
+   "fixed": true,
    "rests_on": [
     {
-     "label": "L1",
-     "ref": "yang_2026",
-     "where": "Current research status on the safety risk of oral nicotine products › Safety risks of nicotine pouches › Cohort study for evaluating the safety risks of nicotine pouches",
-     "quote": "Therefore, future human studies on the safety risk evaluation of nicotine pouches should expand their scope to more systematically elucidate the health effects on consumers.",
-     "sha": "63314e68f8d52792"
+     "label": "DA",
+     "ref": "carlsson_2026",
+     "where": "Abstract",
+     "quote": "This review assesses current knowledge on the health risks of these products, with a focus on asthma and allergic diseases, cancer, cardiovascular disease, diabetes, lung disease and pregnancy outcomes.",
+     "sha": "72409ede21121ad7"
+    },
+    {
+     "label": "DB",
+     "ref": "almeshari_2026",
+     "where": "Abstract",
+     "quote": "This systematic review and meta-analysis aimed to assess the long-term effects of e-cigarettes on airway inflammation, as measured by fractional exhaled nitric oxide (FeNO).",
+     "sha": "70604ce53df0d7a5"
+    },
+    {
+     "label": "F7",
+     "ref": "who_tobacco",
+     "where": "Key facts",
+     "quote": "Nicotine is highly addictive and harmful, particularly for children, adolescents and young adults whose brains are still developing.",
+     "sha": "f4f8bead500a6176"
     }
    ]
   },
   {
    "part": "how1",
-   "text": "A 2026 review of chemical, animal, cell, and human data reports that nicotine has toxic effects on several organs.",
+   "text": "The World Health Organization says nicotine is highly addictive and increases cardiovascular risk.",
    "uses": [
-    "DA",
-    "F2"
+    "F9",
+    "F7"
    ],
    "rests_on": [
     {
-     "label": "DA",
-     "ref": "yang_2026",
-     "where": "Abstract",
-     "quote": "By integrating data from chemical analyses, animal/cell studies, and human cohorts, this review first introduces the main commercially available oral nicotine products and their classifications",
-     "sha": "95f97c25b07d52ad"
+     "label": "F9",
+     "ref": "who_tobacco",
+     "where": "Overview",
+     "quote": "Nicotine use also increases cardiovascular risk.",
+     "sha": "11a8243245398832"
     },
     {
-     "label": "F2",
-     "ref": "yang_2026",
-     "where": "Current research status on the safety risk of oral nicotine products › Safety risks of nicotine pouches › Cohort study for evaluating the safety risks of nicotine pouches",
-     "quote": "previous studies have demonstrated that nicotine exhibits multi-organ toxic effects (e.g., on hepatic glucose and lipid metabolism, gonadal reproductive function, adrenal steroid hormone synthesis, and renal glomerular filtration).",
-     "sha": "63314e68f8d52792"
+     "label": "F7",
+     "ref": "who_tobacco",
+     "where": "Key facts",
+     "quote": "Nicotine is highly addictive and harmful, particularly for children, adolescents and young adults whose brains are still developing.",
+     "sha": "f4f8bead500a6176"
     }
    ],
-   "quote": "previous studies have demonstrated that nicotine exhibits multi-organ toxic effects",
-   "quote_ref": "yang_2026"
+   "quote": "Nicotine use also increases cardiovascular risk",
+   "quote_ref": "who_tobacco"
+  },
+  {
+   "part": "how2",
+   "text": "A 2026 review reports that lab studies found DNA damage and oxidative stress after e-cigarette exposure.",
+   "uses": [
+    "F1"
+   ],
+   "rests_on": [
+    {
+     "label": "F1",
+     "ref": "carlsson_2026",
+     "where": "Cancer › E-cigarettes",
+     "quote": "Genotoxicity studies report DNA damage, oxidative stress and chromosomal aberrations after e-cigarette exposure in vivo and in vitro, with nicotine playing a key role.",
+     "sha": "af0f159df7d7d64a"
+    }
+   ],
+   "quote": "Genotoxicity studies report DNA damage, oxidative stress and chromosomal aberrations after e-cigarette exposure in vivo",
+   "quote_ref": "carlsson_2026"
   }
  ],
  "complete": false,
@@ -255,14 +536,23 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-26",
+   "lane": 19,
+   "status": "published",
+   "why": "passed every gate",
+   "short": "Nicotine can affect the liver, kidneys, and reproductive system. It may also change how the body handles sugar and fat.",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "New nicotine and tobacco products and risk of major diseases: A review of the scientific evidence",
    "read": "full",
    "kind": "review",
    "at": "10.1177/14034948251391690",
-   "kept": 0,
+   "kept": 3,
    "thrown": []
   },
   {
@@ -270,24 +560,32 @@
    "read": "full",
    "kind": "review",
    "at": "10.18332/tid/224361",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 3,
+   "thrown": []
   },
   {
-   "title": "Research on the safety risk of oral nicotine products and its prospects",
-   "read": "full",
-   "kind": "review",
-   "at": "10.1016/j.crtox.2026.100305",
+   "title": "Tobacco and nicotine",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.who.int/news-room/fact-sheets/detail/tobacco",
    "kept": 3,
+   "thrown": []
+  },
+  {
+   "title": "Nicotine",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.talktofrank.com/drug/nicotine",
+   "kept": 2,
    "thrown": []
   }
  ],
  "plan": {
   "short": [
-   "F2",
-   "F3",
-   "F1"
+   "F9",
+   "F1",
+   "F4",
+   "F7"
   ],
   "direct": "",
   "but": [
@@ -295,69 +593,89 @@
   ],
   "how": [
    [
-    "DA",
-    "F2",
-    "F3",
+    "F9",
+    "F7"
+   ],
+   [
     "F1"
+   ],
+   [
+    "F4"
    ]
   ],
-  "unanswered": ""
+  "unanswered": "specific cancer and metabolic effects"
  },
  "dropped": [
   {
    "try": 1,
-   "part": "how3",
-   "text": "The review notes nicotine is known to affect insulin sensitivity and placental blood flow.",
+   "part": "how4",
+   "text": "A 2026 review found e-cigarette users had increased airway sensitivity and oxidative stress markers after 1 to 3 years of use.",
    "rests_on": [
     {
-     "label": "F3",
-     "ref": "yang_2026",
-     "where": "Conclusions and prospects",
-     "quote": "Additionally, nicotine is known to affect insulin sensitivity and the reproductive system (such as placental blood flow).",
-     "sha": "6a6277d775000d11"
+     "label": "F4",
+     "ref": "almeshari_2026",
+     "where": "RESULTS › Effects of e-cigarette use on FeNO test",
+     "quote": "The study also found that e-cigarette and dual users demonstrated increased bronchial hyperresponsiveness and elevated oxidative stress markers, indicating early local and systemic inflammatory changes even after only 1–3 years of use.",
+     "sha": "07cd019bdd49221a"
     }
    ],
    "by": "a rule",
-   "said": "a rule: it says “is known to”, and the words it rests on do not: say it as the source does (“can”, “may”, “has been reported”), or rest it on the item that says so"
+   "said": "a rule: words that are not person-first (“users”)"
   },
   {
-   "try": 3,
-   "part": "how2",
-   "text": "The review notes that nicotine is known to affect insulin sensitivity and the reproductive system, such as placental blood flow.",
+   "try": 2,
+   "part": "how4",
+   "text": "A 2026 review found e-cigarette users had increased airway sensitivity and oxidative stress markers after 1 to 3 years.",
    "rests_on": [
     {
-     "label": "F3",
-     "ref": "yang_2026",
-     "where": "Conclusions and prospects",
-     "quote": "Additionally, nicotine is known to affect insulin sensitivity and the reproductive system (such as placental blood flow).",
-     "sha": "6a6277d775000d11"
+     "label": "F4",
+     "ref": "almeshari_2026",
+     "where": "RESULTS › Effects of e-cigarette use on FeNO test",
+     "quote": "The study also found that e-cigarette and dual users demonstrated increased bronchial hyperresponsiveness and elevated oxidative stress markers, indicating early local and systemic inflammatory changes even after only 1–3 years of use.",
+     "sha": "07cd019bdd49221a"
     }
    ],
    "by": "a rule",
-   "said": "a rule: it says “is known to”, and the words it rests on do not: say it as the source does (“can”, “may”, “has been reported”), or rest it on the item that says so"
+   "said": "a rule: words that are not person-first (“users”)"
   },
   {
    "try": 3,
    "part": "how3",
-   "text": "The review found that people using nicotine pouches, lozenges, or gum reported nausea, dizziness, and throat irritation.",
+   "text": "A 2026 review found e-cigarette users had increased airway sensitivity and oxidative stress after 1 to 3 years.",
    "rests_on": [
     {
-     "label": "F1",
-     "ref": "yang_2026",
-     "where": "Current research status on the safety risk of oral nicotine products › Safety risks of other oral nicotine products",
-     "quote": "Further safety risk assessments revealed that participants experienced adverse effects such as nausea, dizziness, and throat irritation with all three products, with potential long-term negative impacts on oral mucosa and the gastrointestinal system.",
-     "sha": "409da734ccd24f56"
+     "label": "F4",
+     "ref": "almeshari_2026",
+     "where": "RESULTS › Effects of e-cigarette use on FeNO test",
+     "quote": "The study also found that e-cigarette and dual users demonstrated increased bronchial hyperresponsiveness and elevated oxidative stress markers, indicating early local and systemic inflammatory changes even after only 1–3 years of use.",
+     "sha": "07cd019bdd49221a"
     }
    ],
-   "by": "a further reader",
-   "said": "a further reader (gemini-3-flash-preview) did not accept it: The sentence turns the findings of a single study involving 10 participants into a general fact about people using these products."
+   "by": "a rule",
+   "said": "a rule: words that are not person-first (“users”)"
+  },
+  {
+   "try": 3,
+   "part": "but",
+   "text": "Epidemiological studies are limited by self-reported data, poor adjustment for smoking, and short follow-up.",
+   "rests_on": [
+    {
+     "label": "L1",
+     "ref": "carlsson_2026",
+     "where": "Abstract",
+     "quote": "Methodological limitations of existing epidemiological studies include reliance on self-reported data, inadequate adjustment for cigarette smoking, cross-sectional design and/or short follow up.",
+     "sha": "393784c51d561681"
+    }
+   ],
+   "by": "the second reader",
+   "said": "it is about something else than the short answer"
   }
  ],
  "panel": {
   "gemini:gemini-3.5-flash-lite": {
    "short": [
-    true,
-    ""
+    false,
+    "The passage from the 2026 review refers to in vivo and in vitro studies (animal and cell studies), but the sentence does not clarify that these findings come mostly from animal and cell studies."
    ],
    "but": [
     true,
@@ -367,27 +685,13 @@
     true,
     ""
    ],
-   "how3": [
-    true,
-    ""
-   ]
-  },
-  "gemini:gemini-3-flash-preview": {
-   "short": [
-    true,
-    ""
-   ],
-   "but": [
-    true,
-    ""
-   ],
-   "how1": [
+   "how2": [
     true,
     ""
    ],
    "how3": [
     false,
-    "The sentence turns the findings of a single study involving 10 participants into a general fact about people using these products."
+    "The sentence presents findings from in vivo and in vitro (animal and cell) studies without stating that these findings come mostly from animal and cell studies, as required by the editor's instructions."
    ]
   }
  },
@@ -396,16 +700,16 @@
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.0595,
-   "but": 0.9872,
-   "how1": 0.5634,
-   "how3": 0.9772
+   "short": 0.1428,
+   "but": 0.9884,
+   "how1": 0.9744,
+   "how2": 0.9751
   },
   "scores_quotes_alone": {
-   "short": 0.0451,
-   "but": 0.922,
-   "how1": 0.4737,
-   "how3": 0.2339
+   "short": 0.4016,
+   "but": 0.9086,
+   "how1": 0.8856,
+   "how2": 0.9298
   }
  },
  "tries": [
@@ -415,86 +719,180 @@
    "parts": [
     {
      "part": "short",
-     "text": "Nicotine can have toxic effects on the liver, reproductive system, and kidneys. It may also affect insulin sensitivity and the gut or mouth.",
+     "text": "The World Health Organization says nicotine increases heart risk and is highly addictive. A 2026 review reports lab studies found DNA damage and stress from nicotine.",
      "rests_on": [
       {
+       "label": "F9",
+       "ref": "who_tobacco",
+       "where": "Overview",
+       "quote": "Nicotine use also increases cardiovascular risk.",
+       "sha": "11a8243245398832"
+      },
+      {
+       "label": "F7",
+       "ref": "who_tobacco",
+       "where": "Key facts",
+       "quote": "Nicotine is highly addictive and harmful, particularly for children, adolescents and young adults whose brains are still developing.",
+       "sha": "f4f8bead500a6176"
+      },
+      {
        "label": "F1",
-       "ref": "yang_2026",
-       "where": "Current research status on the safety risk of oral nicotine products › Safety risks of other oral nicotine products",
-       "quote": "Further safety risk assessments revealed that participants experienced adverse effects such as nausea, dizziness, and throat irritation with all three products, with potential long-term negative impacts on oral mucosa and the gastrointestinal system.",
-       "sha": "409da734ccd24f56"
-      },
-      {
-       "label": "F2",
-       "ref": "yang_2026",
-       "where": "Current research status on the safety risk of oral nicotine products › Safety risks of nicotine pouches › Cohort study for evaluating the safety risks of nicotine pouches",
-       "quote": "previous studies have demonstrated that nicotine exhibits multi-organ toxic effects (e.g., on hepatic glucose and lipid metabolism, gonadal reproductive function, adrenal steroid hormone synthesis, and renal glomerular filtration).",
-       "sha": "63314e68f8d52792"
-      },
-      {
-       "label": "F3",
-       "ref": "yang_2026",
-       "where": "Conclusions and prospects",
-       "quote": "Additionally, nicotine is known to affect insulin sensitivity and the reproductive system (such as placental blood flow).",
-       "sha": "6a6277d775000d11"
+       "ref": "carlsson_2026",
+       "where": "Cancer › E-cigarettes",
+       "quote": "Genotoxicity studies report DNA damage, oxidative stress and chromosomal aberrations after e-cigarette exposure in vivo and in vitro, with nicotine playing a key role.",
+       "sha": "af0f159df7d7d64a"
       }
      ],
      "ok": false,
      "by": "a further reader",
-     "said": "a further reader (gemini-3-flash-preview) did not accept it: The passages attribute potential impacts on the oral mucosa (mouth) and gastrointestinal system (gut) to the nicotine products themselves, rather than to nicotine specifically, whereas the sentence attributes these effects to nicotine."
+     "said": "a further reader (gemini-3.5-flash-lite) did not accept it: The passage from the 2026 review refers to in vivo and in vitro studies (animal and cell studies), but the sentence does not clarify that these findings come mostly from animal and cell studies."
     },
     {
      "part": "but",
-     "text": "Future human studies are needed to more systematically explain the health effects on people who use nicotine pouches.",
+     "text": "Epidemiological studies are limited by self-reported data, poor adjustment for smoking, and short follow-up.",
      "rests_on": [
       {
        "label": "L1",
-       "ref": "yang_2026",
-       "where": "Current research status on the safety risk of oral nicotine products › Safety risks of nicotine pouches › Cohort study for evaluating the safety risks of nicotine pouches",
-       "quote": "Therefore, future human studies on the safety risk evaluation of nicotine pouches should expand their scope to more systematically elucidate the health effects on consumers.",
-       "sha": "63314e68f8d52792"
+       "ref": "carlsson_2026",
+       "where": "Abstract",
+       "quote": "Methodological limitations of existing epidemiological studies include reliance on self-reported data, inadequate adjustment for cigarette smoking, cross-sectional design and/or short follow up.",
+       "sha": "393784c51d561681"
       }
      ],
      "ok": true
     },
     {
      "part": "how1",
-     "text": "A 2026 review integrated data from chemical analyses, animal and cell studies, and human cohorts.",
+     "text": "The World Health Organization says nicotine is highly addictive and harmful, especially for young people with developing brains.",
      "rests_on": [
       {
-       "label": "DA",
-       "ref": "yang_2026",
-       "where": "Abstract",
-       "quote": "By integrating data from chemical analyses, animal/cell studies, and human cohorts, this review first introduces the main commercially available oral nicotine products and their classifications",
-       "sha": "95f97c25b07d52ad"
+       "label": "F7",
+       "ref": "who_tobacco",
+       "where": "Key facts",
+       "quote": "Nicotine is highly addictive and harmful, particularly for children, adolescents and young adults whose brains are still developing.",
+       "sha": "f4f8bead500a6176"
       }
      ],
      "ok": true
     },
     {
      "part": "how2",
-     "text": "The review cites earlier work showing nicotine can have toxic effects on the liver, reproductive system, and kidneys.",
+     "text": "The World Health Organization says nicotine use also increases cardiovascular risk.",
      "rests_on": [
       {
-       "label": "F2",
-       "ref": "yang_2026",
-       "where": "Current research status on the safety risk of oral nicotine products › Safety risks of nicotine pouches › Cohort study for evaluating the safety risks of nicotine pouches",
-       "quote": "previous studies have demonstrated that nicotine exhibits multi-organ toxic effects (e.g., on hepatic glucose and lipid metabolism, gonadal reproductive function, adrenal steroid hormone synthesis, and renal glomerular filtration).",
-       "sha": "63314e68f8d52792"
+       "label": "F9",
+       "ref": "who_tobacco",
+       "where": "Overview",
+       "quote": "Nicotine use also increases cardiovascular risk.",
+       "sha": "11a8243245398832"
       }
      ],
      "ok": true
     },
     {
-     "part": "how4",
-     "text": "Participants using nicotine pouches, lozenges, or gum experienced nausea, dizziness, and throat irritation.",
+     "part": "how3",
+     "text": "A 2026 review reports that lab studies found DNA damage and oxidative stress after e-cigarette exposure, with nicotine playing a key role.",
      "rests_on": [
       {
        "label": "F1",
-       "ref": "yang_2026",
-       "where": "Current research status on the safety risk of oral nicotine products › Safety risks of other oral nicotine products",
-       "quote": "Further safety risk assessments revealed that participants experienced adverse effects such as nausea, dizziness, and throat irritation with all three products, with potential long-term negative impacts on oral mucosa and the gastrointestinal system.",
-       "sha": "409da734ccd24f56"
+       "ref": "carlsson_2026",
+       "where": "Cancer › E-cigarettes",
+       "quote": "Genotoxicity studies report DNA damage, oxidative stress and chromosomal aberrations after e-cigarette exposure in vivo and in vitro, with nicotine playing a key role.",
+       "sha": "af0f159df7d7d64a"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.5-flash-lite) did not accept it: The sentence presents findings from in vivo and in vitro (animal and cell) studies without stating that these findings come mostly from animal and cell studies, as required by the editor's instructions."
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "The World Health Organization says nicotine increases heart risk and is highly addictive. A 2026 review reports animal and cell studies found DNA damage and stress from nicotine.",
+     "rests_on": [
+      {
+       "label": "F9",
+       "ref": "who_tobacco",
+       "where": "Overview",
+       "quote": "Nicotine use also increases cardiovascular risk.",
+       "sha": "11a8243245398832"
+      },
+      {
+       "label": "F7",
+       "ref": "who_tobacco",
+       "where": "Key facts",
+       "quote": "Nicotine is highly addictive and harmful, particularly for children, adolescents and young adults whose brains are still developing.",
+       "sha": "f4f8bead500a6176"
+      },
+      {
+       "label": "F1",
+       "ref": "carlsson_2026",
+       "where": "Cancer › E-cigarettes",
+       "quote": "Genotoxicity studies report DNA damage, oxidative stress and chromosomal aberrations after e-cigarette exposure in vivo and in vitro, with nicotine playing a key role.",
+       "sha": "af0f159df7d7d64a"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "Epidemiological studies are limited by self-reported data, poor adjustment for smoking, and short follow-up.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "carlsson_2026",
+       "where": "Abstract",
+       "quote": "Methodological limitations of existing epidemiological studies include reliance on self-reported data, inadequate adjustment for cigarette smoking, cross-sectional design and/or short follow up.",
+       "sha": "393784c51d561681"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer"
+    },
+    {
+     "part": "how1",
+     "text": "The World Health Organization says nicotine is highly addictive and harmful, especially for young people with developing brains.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "who_tobacco",
+       "where": "Key facts",
+       "quote": "Nicotine is highly addictive and harmful, particularly for children, adolescents and young adults whose brains are still developing.",
+       "sha": "f4f8bead500a6176"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "The World Health Organization says nicotine use also increases cardiovascular risk.",
+     "rests_on": [
+      {
+       "label": "F9",
+       "ref": "who_tobacco",
+       "where": "Overview",
+       "quote": "Nicotine use also increases cardiovascular risk.",
+       "sha": "11a8243245398832"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2026 review reports that animal and cell studies found DNA damage and oxidative stress after e-cigarette exposure.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "carlsson_2026",
+       "where": "Cancer › E-cigarettes",
+       "quote": "Genotoxicity studies report DNA damage, oxidative stress and chromosomal aberrations after e-cigarette exposure in vivo and in vitro, with nicotine playing a key role.",
+       "sha": "af0f159df7d7d64a"
       }
      ],
      "ok": true
@@ -508,10 +906,6 @@
    {
     "part": "how1",
     "claim": "cl_nic_smoke_or_nicotine"
-   },
-   {
-    "part": "but",
-    "claim": "cl_nic_vapes_relative_risk"
    }
   ]
  },
