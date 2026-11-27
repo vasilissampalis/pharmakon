@@ -17,38 +17,35 @@
   "pcp"
  ],
  "made": {
-  "on": "2026-11-21",
+  "on": "2026-11-27",
   "models": {
-   "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-   "checker": "@cf/openai/gpt-oss-120b",
-   "planner": "groq:openai/gpt-oss-120b",
-   "team": "team B",
-   "reader_2": "groq:openai/gpt-oss-20b"
+   "reader": "openrouter:openai/gpt-oss-120b",
+   "writer": "openrouter:meta-llama/llama-3.3-70b-instruct",
+   "checker": "openrouter:openai/gpt-6-luna",
+   "planner": "openrouter:openai/gpt-oss-120b",
+   "team": "team R",
+   "reader_2": "openrouter:openai/gpt-oss-120b",
+   "writer_2": "groq:qwen/qwen3.8-27b",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "44843559493",
-  "read_by": {
-   "gemini-3.5-flash-lite": 4,
-   "llama-4-scout-17b-16e-instruct": 3
-  },
-  "read_seconds": 44,
+  "run": "45930023854",
+  "read_seconds": 86,
   "from": {
    "papers": 1,
    "summaries": 0,
    "official": 2
   },
-  "neurons": 688.2,
-  "seconds": 88
+  "neurons": 0.0,
+  "seconds": 107
  },
- "status": "published",
- "why": "passed every gate",
+ "status": "none",
+ "why": "the second reader did not accept the answer",
  "gates": {
-  "read": "8 findings kept from 3 sources (1 papers read in full, 2 official pages, 0 papers read in summary); 10 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 2 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
-  "rules": "broken at try 1: but: words that are not person-first (“users”); written again, then nothing against it",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.92, but 0.76, how1 0.87, how2 0.06, how3 0.85",
-  "check": "every sentence kept was accepted by the second reader (@cf/openai/gpt-oss-120b); 1 How-do-we-know line(s) dropped; it also found that the short answer answers the question and that the But is about that answer",
-  "checked": "set beside the checked claims of the same page: nothing against them"
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-120b read from there",
+  "read": "6 findings kept from 3 sources (1 papers read in full, 2 official pages, 0 papers read in summary); 6 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 2 official page(s), 0 paper(s) read in summary only",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.89, but 0.94, how1 0.76, how2 0.10, how3 0.78",
+  "check": "short: accepted; but: accepted; how1: NOT accepted: The passage links high doses to feeling aggressive, but does not say violence is especially associated with high doses. It also says those most at risk for violent outbursts often have a history of psychosis or antisocial behaviour; the sen; how2: NOT accepted: The passages do not identify Drug Science as a UK charity of scientists. They say violent behaviour is a risk under PCP’s effects and that reports of it being exacerbated mean it cannot be ruled out as a possibility, but do not establish th; how3: NOT accepted: This repeats the warned-against conflation: the review passage discusses other PCP derivatives and novel dissociative compounds, not PCP itself, and its introduction summarizes earlier reports rather than reporting what the paper’s case fou"
  },
  "sources": [
   {
@@ -101,10 +98,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-21",
+     "verified_on": "2026-11-27",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-21"
+      "checked_on": "2026-11-27"
      }
     },
     "volume": "17",
@@ -127,24 +124,16 @@
    "design": {
     "passage": 1,
     "where": "Abstract",
-    "quote": "This literature review aimed to summarize available evidence about 3-MeO-PCP mechanisms of action and physical and psychotropic effects and to spread preliminary findings about persistent psychotic symptoms and impaired cognitive functioning.",
-    "text": "Literature review and case report on 3-MeO-PCP"
+    "quote": "Additionally, the case of an SIP is reported in a 29-year-old man with small oral intakes of 3-MeO-PCP over two weeks until a high dose ingestion.",
+    "text": "Literature review and case report of a 29-year-old man"
    },
    "findings": [
     {
      "passage": 17,
      "where": "1. Introduction › 1.2. About 3-Methoxy-Phencyclidine › 1.2.3. The Effects of Other PCP-Derivatives and Novel Dissociative Compounds",
-     "quote": "acute psychopathological symptoms included memory impairments, altered perception of time, slowness, anxiety, apathy, irritability, psychotic symptoms, violent behaviors, and states of stupor until coma.",
-     "text": "Acute psychopathological symptoms of other PCP-derivatives and novel dissociative compounds include violent behaviors.",
+     "quote": "the acute psychopathological symptoms included memory impairments, altered perception of time, slowness, anxiety, apathy, irritability, psychotic symptoms, violent behaviors, and states of stupor until coma.",
+     "text": "PCP-like compounds can produce violent behaviors as an acute psychopathological symptom.",
      "id": "F1",
-     "second_hand": ""
-    },
-    {
-     "passage": 14,
-     "where": "1. Introduction › 1.2. About 3-Methoxy-Phencyclidine › 1.2.2. Intoxication and Clinical Manifestations",
-     "quote": "behavioral alterations with psychomotor agitation, confusion, cognitive impairment, and severe psychotic symptoms can occur.",
-     "text": "Behavioral alterations with psychomotor agitation can occur as psychoactive consequences of prolonged 3-MeO-PCP use.",
-     "id": "F2",
      "second_hand": ""
     }
    ],
@@ -177,14 +166,14 @@
       [
        2026,
        11,
-       21
+       27
       ]
      ]
     },
     "verification": {
      "status": "made by code",
      "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-21"
+     "verified_on": "2026-11-27"
     },
     "publisher": "Government of Canada"
    },
@@ -205,7 +194,15 @@
      "passage": 6,
      "where": "Short-term effects of PCP / Mental effects",
      "quote": "You can become violent and a danger to yourself and others.",
-     "text": "People who use PCP can become violent and a danger to themselves and others.",
+     "text": "PCP can make people become violent and a danger to themselves and others.",
+     "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 6,
+     "where": "Short-term effects of PCP / Mental effects",
+     "quote": "If you take high doses of PCP you may also feel: aggressive; depressed; disoriented",
+     "text": "High doses of PCP may cause people to feel aggressive.",
      "id": "F3",
      "second_hand": ""
     },
@@ -213,29 +210,12 @@
      "passage": 6,
      "where": "Short-term effects of PCP / Mental effects",
      "quote": "Those who are most at risk for violent outbursts under the influence of PCP often have a history of: psychosis; antisocial behaviour",
-     "text": "People who use PCP and have a history of psychosis or antisocial behaviour are most at risk for violent outbursts.",
+     "text": "People who are most at risk for violent outbursts under the influence of PCP often have a history of psychosis or antisocial behaviour.",
      "id": "F4",
      "second_hand": ""
-    },
-    {
-     "passage": 6,
-     "where": "Short-term effects of PCP / Mental effects",
-     "quote": "PCP can cause these individuals to: mutilate themselves; kill others (homicide); kill themselves (suicide);",
-     "text": "PCP can cause some individuals to mutilate themselves, kill others, or kill themselves.",
-     "id": "F5",
-     "second_hand": ""
     }
    ],
-   "limits": [
-    {
-     "passage": 8,
-     "where": "Long-term effects of PCP",
-     "quote": "There is currently no available information about the long-term physical effects of PCP.",
-     "text": "There is no available information about the long-term physical effects of PCP.",
-     "id": "L1",
-     "second_hand": ""
-    }
-   ],
+   "limits": [],
    "tag": "B"
   },
   {
@@ -260,14 +240,14 @@
       [
        2026,
        11,
-       21
+       27
       ]
      ]
     },
     "verification": {
      "status": "made by code",
      "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-21"
+     "verified_on": "2026-11-27"
     }
    },
    "title": "PCP",
@@ -284,27 +264,19 @@
    "design": null,
    "findings": [
     {
-     "passage": 11,
-     "where": "Myths and Misconceptions",
-     "quote": "Violent behaviour is often associated with PCP use, however the actual prevalence of PCP-induced violence is debated.",
-     "text": "Violent behaviour is often associated with PCP use.",
-     "id": "F6",
-     "second_hand": ""
-    },
-    {
-     "passage": 11,
-     "where": "Myths and Misconceptions",
-     "quote": "Nevertheless, there are many reports of violent behaviour being exacerbated with PCP use, and so it cannot be ruled out that it is a real possibility.",
-     "text": "There are reports of violent behaviour being exacerbated with PCP use.",
-     "id": "F7",
-     "second_hand": ""
-    },
-    {
      "passage": 4,
      "where": "What are the risks?",
      "quote": "Due to the acute state of psychosis it induces, there are many risks to yourself and others whilst you are under the influence such as violent and unpredictable behaviour.",
-     "text": "PCP can cause violent and unpredictable behaviour.",
-     "id": "F8",
+     "text": "PCP can cause violent and unpredictable behaviour due to the acute psychosis it induces.",
+     "id": "F5",
+     "second_hand": ""
+    },
+    {
+     "passage": 11,
+     "where": "Myths and Misconceptions",
+     "quote": "Violent behaviour is often associated with PCP use, however the actual prevalence of PCP‑induced violence is debated.",
+     "text": "Violent behaviour is often associated with PCP use, but the prevalence of PCP‑induced violence is debated.",
+     "id": "F6",
      "second_hand": ""
     }
    ],
@@ -313,118 +285,17 @@
      "passage": 11,
      "where": "Myths and Misconceptions",
      "quote": "when PCP users in the general population are studied, many authors agree that violence in PCP users is much less common than is portrayed in the media.",
-     "text": "Violence may be less common in PCP users in the general population than in those studied in other contexts.",
-     "id": "L2",
+     "text": "When PCP users in the general population are studied, violence appears much less common than media portrayals.",
+     "id": "L1",
      "second_hand": ""
     }
    ],
    "tag": "C"
   }
  ],
- "parts": [
-  {
-   "part": "short",
-   "text": "Yes, PCP can be associated with violent behavior. People who use PCP can become violent.",
-   "uses": [
-    "F3",
-    "F6"
-   ],
-   "rests_on": [
-    {
-     "label": "F3",
-     "ref": "healthcanada_pcp",
-     "where": "Short-term effects of PCP / Mental effects",
-     "quote": "You can become violent and a danger to yourself and others.",
-     "sha": "6bbffa652fe8f250"
-    },
-    {
-     "label": "F6",
-     "ref": "drugscience_pcp",
-     "where": "Myths and Misconceptions",
-     "quote": "Violent behaviour is often associated with PCP use, however the actual prevalence of PCP-induced violence is debated.",
-     "sha": "f4facdf1a5e2af4b"
-    }
-   ]
-  },
-  {
-   "part": "but",
-   "text": "Violence may be less common in people who use PCP in the general population.",
-   "uses": [
-    "L2"
-   ],
-   "rests_on": [
-    {
-     "label": "L2",
-     "ref": "drugscience_pcp",
-     "where": "Myths and Misconceptions",
-     "quote": "when PCP users in the general population are studied, many authors agree that violence in PCP users is much less common than is portrayed in the media.",
-     "sha": "f4facdf1a5e2af4b"
-    }
-   ]
-  },
-  {
-   "part": "how1",
-   "text": "Health Canada says people who use PCP can become violent and a danger to themselves and others.",
-   "uses": [
-    "F3",
-    "F4",
-    "F5"
-   ],
-   "rests_on": [
-    {
-     "label": "F3",
-     "ref": "healthcanada_pcp",
-     "where": "Short-term effects of PCP / Mental effects",
-     "quote": "You can become violent and a danger to yourself and others.",
-     "sha": "6bbffa652fe8f250"
-    },
-    {
-     "label": "F4",
-     "ref": "healthcanada_pcp",
-     "where": "Short-term effects of PCP / Mental effects",
-     "quote": "Those who are most at risk for violent outbursts under the influence of PCP often have a history of: psychosis; antisocial behaviour",
-     "sha": "6bbffa652fe8f250"
-    },
-    {
-     "label": "F5",
-     "ref": "healthcanada_pcp",
-     "where": "Short-term effects of PCP / Mental effects",
-     "quote": "PCP can cause these individuals to: mutilate themselves; kill others (homicide); kill themselves (suicide);",
-     "sha": "6bbffa652fe8f250"
-    }
-   ],
-   "quote": "You can become violent and a danger to yourself and others",
-   "quote_ref": "healthcanada_pcp"
-  },
-  {
-   "part": "how3",
-   "text": "A literature review and case report on 3-MeO-PCP found acute psychopathological symptoms including violent behaviors.",
-   "uses": [
-    "DA",
-    "F1"
-   ],
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "pepe_2024",
-     "where": "Abstract",
-     "quote": "This literature review aimed to summarize available evidence about 3-MeO-PCP mechanisms of action and physical and psychotropic effects and to spread preliminary findings about persistent psychotic symptoms and impaired cognitive functioning.",
-     "sha": "d568d6e66f46757d"
-    },
-    {
-     "label": "F1",
-     "ref": "pepe_2024",
-     "where": "1. Introduction › 1.2. About 3-Methoxy-Phencyclidine › 1.2.3. The Effects of Other PCP-Derivatives and Novel Dissociative Compounds",
-     "quote": "acute psychopathological symptoms included memory impairments, altered perception of time, slowness, anxiety, apathy, irritability, psychotic symptoms, violent behaviors, and states of stupor until coma.",
-     "sha": "358f263fc64c88de"
-    }
-   ],
-   "quote": "slowness, anxiety, apathy, irritability, psychotic symptoms, violent behaviors, and states of stupor until coma",
-   "quote_ref": "pepe_2024"
-  }
- ],
+ "parts": [],
  "complete": false,
- "missing": "whether PCP causes violent behavior",
+ "missing": "",
  "wanted": [
   {
    "doi": "10.1016/j.addbeh.2003.08.033",
@@ -481,6 +352,14 @@
    "why": "passed every gate",
    "short": "Yes, PCP can cause violent behavior. It includes violent behaviors and aggression.",
    "complete": true
+  },
+  {
+   "on": "2026-11-21",
+   "lane": 19,
+   "status": "published",
+   "why": "passed every gate",
+   "short": "Yes, PCP can be associated with violent behavior. People who use PCP can become violent.",
+   "complete": false
   }
  ],
  "looked": [
@@ -497,25 +376,25 @@
    "read": "full",
    "kind": "review",
    "at": "10.3390/ph17040452",
-   "kept": 2,
+   "kept": 1,
    "thrown": [
     {
      "kind": "finding",
-     "text": "Aggressiveness seems to be prominent among the clinical consequences of substances primarily acting on glutamatergic pathways, such as 3-MeO-PCP and other PCP-like compounds.",
-     "quote": "dissociation, bodily and kinesthetic hallucinations, near-death experiences, and detachment from the environment, along with somatic delusions, negative affective symptoms, irritability and, sometimes",
+     "text": "PCP-like compounds may cause aggressiveness.",
+     "quote": "negative affective symptoms, irritability and, sometimes, aggressiveness, seem to be prominent.",
      "why": "the sentence is not carried by its quote and passage"
     },
     {
      "kind": "limit",
-     "text": "",
-     "quote": "data on the toxicity profile of chronic consumption are still inconsistent",
-     "why": "no sentence"
+     "text": "Concurrent use of other substances makes it difficult to attribute violent behavior specifically to PCP.",
+     "quote": "the concurrent intake of several substances (primarily alcohol and stimulants like amphetamines and cocaine, followed by sedative‑hypnotics/anxiolytics) may modify the clinical presentation, increase ",
+     "why": "the sentence is not carried by its quote and passage"
     },
     {
      "kind": "limit",
-     "text": "",
-     "quote": "The psychoactive consequences of 3-MeO-PCP, both in the short and long term, have only been partially understood, possibly because of some limitations of the available evidence.",
-     "why": "no sentence"
+     "text": "There is a lack of follow‑up information on long‑term outcomes after PCP intoxication.",
+     "quote": "information on what happens afterward is missing.",
+     "why": "the sentence is not carried by its quote and passage"
     }
    ]
   },
@@ -528,26 +407,14 @@
    "thrown": [
     {
      "kind": "finding",
-     "text": "PCP is associated with aggressive behavior in people.",
-     "quote": "aggressiveness and agitation",
-     "why": "the sentence is not carried by its quote and passage"
-    },
-    {
-     "kind": "finding",
-     "text": "PCP is associated with aggressive behavior in people.",
-     "quote": "sedation and loss of inhibition along with various other manifestations such as ... aggressive behavior",
+     "text": "PCP intoxication can be associated with aggressive behavior.",
+     "quote": "He presented with a 3-day history of headache, generalized ill health, and aggressive behavior.",
      "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
     },
     {
      "kind": "finding",
-     "text": "PCP is associated with aggressive behavior in people.",
-     "quote": "aggressive behavior",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
-    },
-    {
-     "kind": "limit",
-     "text": "The findings may not be representative of Sri Lanka, as there is only one documented report.",
-     "quote": "our report is the first case of PCP intoxication in Sri Lanka",
+     "text": "PCP intoxication may cause aggressive behavior as part of its clinical manifestations.",
+     "quote": "sedation and loss of inhibition along with various other manifestations such as dysarthria, aggressive behavior, staring episodes, nystagmus, ataxia, hyperthermia rhabdomyolysis, and seizures tend to ",
      "why": "the sentence is not carried by its quote and passage"
     }
    ]
@@ -574,56 +441,42 @@
    "kind": "official",
    "at": "https://www.canada.ca/en/health-canada/services/substance-use/controlled-illegal-drugs/pcp.html",
    "kept": 3,
-   "thrown": [
-    {
-     "kind": "finding",
-     "text": "Taking high doses of PCP may make people feel aggressive.",
-     "quote": "If you take high doses of PCP you may also feel: aggressive;",
-     "why": "the sentence is not carried by its quote and passage"
-    },
-    {
-     "kind": "limit",
-     "text": "The page does not provide information on the full range of risks or predictors of toxic psychosis caused by high doses of PCP.",
-     "quote": "High doses of PCP may cause toxic psychosis, even if you do not have a previous history of mental illness.",
-     "why": "the sentence is not carried by its quote and passage"
-    }
-   ]
+   "thrown": []
   },
   {
    "title": "PCP",
    "read": "page",
    "kind": "official",
    "at": "https://www.drugscience.org.uk/drugs/pcp",
-   "kept": 3,
+   "kept": 2,
    "thrown": [
     {
      "kind": "finding",
-     "text": "PCP can cause rage.",
-     "quote": "side effects include: ... rage, ...",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+     "text": "PCP side effects include rage, indicating a potential for violent behaviour.",
+     "quote": "However, side effects include: numbness, amnesia, rage, slurred speech, muscle dysfunction, impaired speech, skin dryness, tachycardia, sweating, rapid involuntary eye movements (nystagmus), a blank s",
+     "why": "the sentence is not carried by its quote and passage"
     }
    ]
   }
  ],
  "plan": {
   "short": [
-   "F3",
-   "F6"
+   "F2",
+   "F1"
   ],
   "direct": "Yes",
   "but": [
-   "L2"
+   "L1"
   ],
   "how": [
    [
+    "F2",
     "F3",
-    "F4",
-    "F5"
+    "F4"
    ],
    [
-    "F6",
-    "F7",
-    "F8"
+    "F5",
+    "F6"
    ],
    [
     "DA",
@@ -632,57 +485,159 @@
   ],
   "unanswered": ""
  },
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.8886,
+   "but": 0.9408,
+   "how1": 0.763,
+   "how2": 0.0963,
+   "how3": 0.783
+  },
+  "scores_quotes_alone": {
+   "short": 0.8892,
+   "but": 0.8737,
+   "how1": 0.7419,
+   "how2": 0.0747,
+   "how3": 0.851
+  }
+ },
+ "dropped": [
+  {
+   "try": 1,
+   "part": "how1",
+   "text": "Health Canada says PCP can make people violent and aggressive, especially at high doses.",
+   "rests_on": [
+    {
+     "label": "F2",
+     "ref": "healthcanada_pcp",
+     "where": "Short-term effects of PCP / Mental effects",
+     "quote": "You can become violent and a danger to yourself and others.",
+     "sha": "6bbffa652fe8f250"
+    },
+    {
+     "label": "F3",
+     "ref": "healthcanada_pcp",
+     "where": "Short-term effects of PCP / Mental effects",
+     "quote": "If you take high doses of PCP you may also feel: aggressive; depressed; disoriented",
+     "sha": "6bbffa652fe8f250"
+    },
+    {
+     "label": "F4",
+     "ref": "healthcanada_pcp",
+     "where": "Short-term effects of PCP / Mental effects",
+     "quote": "Those who are most at risk for violent outbursts under the influence of PCP often have a history of: psychosis; antisocial behaviour",
+     "sha": "6bbffa652fe8f250"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The passage links high doses to feeling aggressive, but does not say violence is especially associated with high doses. It also says those most at risk for violent outbursts often have a history of psychosis or antisocial behaviour; the sen"
+  },
+  {
+   "try": 1,
+   "part": "how2",
+   "text": "Drug Science, a UK charity of scientists says PCP can cause violent behavior, often associated with its use.",
+   "rests_on": [
+    {
+     "label": "F5",
+     "ref": "drugscience_pcp",
+     "where": "What are the risks?",
+     "quote": "Due to the acute state of psychosis it induces, there are many risks to yourself and others whilst you are under the influence such as violent and unpredictable behaviour.",
+     "sha": "8c03c50f913eb7f7"
+    },
+    {
+     "label": "F6",
+     "ref": "drugscience_pcp",
+     "where": "Myths and Misconceptions",
+     "quote": "Violent behaviour is often associated with PCP use, however the actual prevalence of PCP‑induced violence is debated.",
+     "sha": "f4facdf1a5e2af4b"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The passages do not identify Drug Science as a UK charity of scientists. They say violent behaviour is a risk under PCP’s effects and that reports of it being exacerbated mean it cannot be ruled out as a possibility, but do not establish th"
+  },
+  {
+   "try": 1,
+   "part": "how3",
+   "text": "A 2024 review of a PCP-like compound case reports violent behaviors as an acute symptom.",
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "pepe_2024",
+     "where": "Abstract",
+     "quote": "Additionally, the case of an SIP is reported in a 29-year-old man with small oral intakes of 3-MeO-PCP over two weeks until a high dose ingestion.",
+     "sha": "d568d6e66f46757d"
+    },
+    {
+     "label": "F1",
+     "ref": "pepe_2024",
+     "where": "1. Introduction › 1.2. About 3-Methoxy-Phencyclidine › 1.2.3. The Effects of Other PCP-Derivatives and Novel Dissociative Compounds",
+     "quote": "the acute psychopathological symptoms included memory impairments, altered perception of time, slowness, anxiety, apathy, irritability, psychotic symptoms, violent behaviors, and states of stupor until coma.",
+     "sha": "358f263fc64c88de"
+    }
+   ],
+   "by": "the second reader",
+   "said": "This repeats the warned-against conflation: the review passage discusses other PCP derivatives and novel dissociative compounds, not PCP itself, and its introduction summarizes earlier reports rather than reporting what the paper’s case fou"
+  }
+ ],
  "tries": [
   {
    "try": 1,
-   "why": "a rule was broken: written again",
+   "why": "the last draft: no answer",
    "parts": [
     {
      "part": "short",
-     "text": "Yes, PCP can cause violent behavior. People who use PCP can become violent and a danger to themselves and others.",
+     "text": "Yes, PCP can make people violent. PCP can cause violent behavior.",
      "rests_on": [
       {
-       "label": "F3",
+       "label": "F2",
        "ref": "healthcanada_pcp",
        "where": "Short-term effects of PCP / Mental effects",
        "quote": "You can become violent and a danger to yourself and others.",
        "sha": "6bbffa652fe8f250"
       },
       {
-       "label": "F6",
-       "ref": "drugscience_pcp",
-       "where": "Myths and Misconceptions",
-       "quote": "Violent behaviour is often associated with PCP use, however the actual prevalence of PCP-induced violence is debated.",
-       "sha": "f4facdf1a5e2af4b"
+       "label": "F1",
+       "ref": "pepe_2024",
+       "where": "1. Introduction › 1.2. About 3-Methoxy-Phencyclidine › 1.2.3. The Effects of Other PCP-Derivatives and Novel Dissociative Compounds",
+       "quote": "the acute psychopathological symptoms included memory impairments, altered perception of time, slowness, anxiety, apathy, irritability, psychotic symptoms, violent behaviors, and states of stupor until coma.",
+       "sha": "358f263fc64c88de"
       }
      ],
      "ok": true
     },
     {
      "part": "but",
-     "text": "Violence may be less common in PCP users in the general population than in those studied in other contexts.",
+     "text": "Violence appears less common in the general population than media portrayals.",
      "rests_on": [
       {
-       "label": "L2",
+       "label": "L1",
        "ref": "drugscience_pcp",
        "where": "Myths and Misconceptions",
        "quote": "when PCP users in the general population are studied, many authors agree that violence in PCP users is much less common than is portrayed in the media.",
        "sha": "f4facdf1a5e2af4b"
       }
      ],
-     "ok": false,
-     "by": "a rule",
-     "said": "a rule: words that are not person-first (“users”)"
+     "ok": true
     },
     {
      "part": "how1",
-     "text": "Health Canada says people who use PCP can become violent, especially those with a history of psychosis or antisocial behaviour.",
+     "text": "Health Canada says PCP can make people violent and aggressive, especially at high doses.",
      "rests_on": [
+      {
+       "label": "F2",
+       "ref": "healthcanada_pcp",
+       "where": "Short-term effects of PCP / Mental effects",
+       "quote": "You can become violent and a danger to yourself and others.",
+       "sha": "6bbffa652fe8f250"
+      },
       {
        "label": "F3",
        "ref": "healthcanada_pcp",
        "where": "Short-term effects of PCP / Mental effects",
-       "quote": "You can become violent and a danger to yourself and others.",
+       "quote": "If you take high doses of PCP you may also feel: aggressive; depressed; disoriented",
        "sha": "6bbffa652fe8f250"
       },
       {
@@ -691,124 +646,61 @@
        "where": "Short-term effects of PCP / Mental effects",
        "quote": "Those who are most at risk for violent outbursts under the influence of PCP often have a history of: psychosis; antisocial behaviour",
        "sha": "6bbffa652fe8f250"
-      },
-      {
-       "label": "F5",
-       "ref": "healthcanada_pcp",
-       "where": "Short-term effects of PCP / Mental effects",
-       "quote": "PCP can cause these individuals to: mutilate themselves; kill others (homicide); kill themselves (suicide);",
-       "sha": "6bbffa652fe8f250"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage links high doses to feeling aggressive, but does not say violence is especially associated with high doses. It also says those most at risk for violent outbursts often have a history of psychosis or antisocial behaviour; the sen"
     },
     {
      "part": "how2",
-     "text": "Drug Science, a UK charity of scientists says violent behaviour is often associated with PCP use.",
+     "text": "Drug Science, a UK charity of scientists says PCP can cause violent behavior, often associated with its use.",
      "rests_on": [
       {
-       "label": "F6",
-       "ref": "drugscience_pcp",
-       "where": "Myths and Misconceptions",
-       "quote": "Violent behaviour is often associated with PCP use, however the actual prevalence of PCP-induced violence is debated.",
-       "sha": "f4facdf1a5e2af4b"
-      },
-      {
-       "label": "F7",
-       "ref": "drugscience_pcp",
-       "where": "Myths and Misconceptions",
-       "quote": "Nevertheless, there are many reports of violent behaviour being exacerbated with PCP use, and so it cannot be ruled out that it is a real possibility.",
-       "sha": "f4facdf1a5e2af4b"
-      },
-      {
-       "label": "F8",
+       "label": "F5",
        "ref": "drugscience_pcp",
        "where": "What are the risks?",
        "quote": "Due to the acute state of psychosis it induces, there are many risks to yourself and others whilst you are under the influence such as violent and unpredictable behaviour.",
        "sha": "8c03c50f913eb7f7"
+      },
+      {
+       "label": "F6",
+       "ref": "drugscience_pcp",
+       "where": "Myths and Misconceptions",
+       "quote": "Violent behaviour is often associated with PCP use, however the actual prevalence of PCP‑induced violence is debated.",
+       "sha": "f4facdf1a5e2af4b"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages do not identify Drug Science as a UK charity of scientists. They say violent behaviour is a risk under PCP’s effects and that reports of it being exacerbated mean it cannot be ruled out as a possibility, but do not establish th"
     },
     {
      "part": "how3",
-     "text": "A review of 3-MeO-PCP, a PCP derivative, found acute psychopathological symptoms include violent behaviors.",
+     "text": "A 2024 review of a PCP-like compound case reports violent behaviors as an acute symptom.",
      "rests_on": [
       {
        "label": "DA",
        "ref": "pepe_2024",
        "where": "Abstract",
-       "quote": "This literature review aimed to summarize available evidence about 3-MeO-PCP mechanisms of action and physical and psychotropic effects and to spread preliminary findings about persistent psychotic symptoms and impaired cognitive functioning.",
+       "quote": "Additionally, the case of an SIP is reported in a 29-year-old man with small oral intakes of 3-MeO-PCP over two weeks until a high dose ingestion.",
        "sha": "d568d6e66f46757d"
       },
       {
        "label": "F1",
        "ref": "pepe_2024",
        "where": "1. Introduction › 1.2. About 3-Methoxy-Phencyclidine › 1.2.3. The Effects of Other PCP-Derivatives and Novel Dissociative Compounds",
-       "quote": "acute psychopathological symptoms included memory impairments, altered perception of time, slowness, anxiety, apathy, irritability, psychotic symptoms, violent behaviors, and states of stupor until coma.",
+       "quote": "the acute psychopathological symptoms included memory impairments, altered perception of time, slowness, anxiety, apathy, irritability, psychotic symptoms, violent behaviors, and states of stupor until coma.",
        "sha": "358f263fc64c88de"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "the second reader",
+     "said": "This repeats the warned-against conflation: the review passage discusses other PCP derivatives and novel dissociative compounds, not PCP itself, and its introduction summarizes earlier reports rather than reporting what the paper’s case fou"
     }
    ]
   }
  ],
- "panel_gap": [],
- "own": {
-  "model": "pharmakon-check-0",
-  "threshold": 0.05,
-  "scores": {
-   "short": 0.9162,
-   "but": 0.7598,
-   "how1": 0.8677,
-   "how2": 0.0586,
-   "how3": 0.8494
-  },
-  "scores_quotes_alone": {
-   "short": 0.7943,
-   "but": 0.7137,
-   "how1": 0.8528,
-   "how2": 0.0322,
-   "how3": 0.7432
-  }
- },
- "dropped": [
-  {
-   "try": 2,
-   "part": "how2",
-   "text": "Drug Science, a UK charity of scientists says violent behaviour is often associated with PCP use.",
-   "rests_on": [
-    {
-     "label": "F6",
-     "ref": "drugscience_pcp",
-     "where": "Myths and Misconceptions",
-     "quote": "Violent behaviour is often associated with PCP use, however the actual prevalence of PCP-induced violence is debated.",
-     "sha": "f4facdf1a5e2af4b"
-    },
-    {
-     "label": "F7",
-     "ref": "drugscience_pcp",
-     "where": "Myths and Misconceptions",
-     "quote": "Nevertheless, there are many reports of violent behaviour being exacerbated with PCP use, and so it cannot be ruled out that it is a real possibility.",
-     "sha": "f4facdf1a5e2af4b"
-    },
-    {
-     "label": "F8",
-     "ref": "drugscience_pcp",
-     "where": "What are the risks?",
-     "quote": "Due to the acute state of psychosis it induces, there are many risks to yourself and others whilst you are under the influence such as violent and unpredictable behaviour.",
-     "sha": "8c03c50f913eb7f7"
-    }
-   ],
-   "by": "the second reader",
-   "said": "The passage does not state that Drug Science is a UK charity of scientists."
-  }
- ],
- "with_checked": {
-  "differs": [],
-  "same": []
- },
  "place": {
   "home": "pcp",
   "also": [],
