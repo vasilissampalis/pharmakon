@@ -20,36 +20,332 @@
  "made": {
   "on": "2026-11-27",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
-   "writer": "groq:qwen/qwen3.8-27b",
+   "reader": "openrouter:openai/gpt-oss-120b",
+   "writer": "openrouter:meta-llama/llama-3.3-70b-instruct",
    "checker": "openrouter:openai/gpt-6-luna",
-   "planner": "groq:openai/gpt-oss-120b",
-   "also1": "gemini:gemini-3-flash-preview",
-   "team": "team G",
-   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "reader_3": "openrouter:openai/gpt-oss-120b",
-   "also1_else": "gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
+   "planner": "openrouter:openai/gpt-oss-120b",
+   "team": "team R",
+   "reader_2": "openrouter:openai/gpt-oss-120b",
+   "writer_2": "groq:qwen/qwen3.8-27b",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "45940205545",
+  "run": "45941693144",
   "read_seconds": 100,
   "from": {
-   "papers": 0,
+   "papers": 2,
    "summaries": 0,
-   "official": 0
+   "official": 1
   },
   "neurons": 0.0,
-  "seconds": 100
+  "seconds": 280
  },
  "status": "none",
- "why": "no source that can be read gave a finding for this question (3 source(s) could not be fetched just now, 3 of them for want of time: tried again in the next run)",
+ "why": "the second reader did not accept the answer",
  "gates": {
-  "time": "3 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)"
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-120b read from there",
+  "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
+  "read": "6 findings kept from 3 sources (2 papers read in full, 1 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 1 other paper(s), 1 official page(s), 0 paper(s) read in summary only",
+  "rules": "1 How-do-we-know line(s) left out for a rule (how3: words that are not person-first (“microdosers”))",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.64, but 0.97, how1 0.95, how2 0.58",
+  "check": "short: NOT accepted: The reports of improved creativity are specifically about microdosing users, not people who use psychedelics generally. The passages also do not provide a separate finding about full-dose psychedelics, as the editor’s note requires for an a; but: NOT accepted: it is about something else than the short answer (“Unclear” would be fair: users report creativity improvements, but the passages say no placebo-controlled study had shown statistically significant effects of microdosing on creativity. They do not establish that the answer depends on parti); how1: accepted; how2: NOT accepted: The reports of improved creativity are specifically about microdosing users, not people who use psychedelics generally. Also, the absence of statistically significant effects is stated for placebo-controlled circumstances, a qualification t"
  },
- "sources": [],
+ "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "kuypers_2019",
+    "type": "article-journal",
+    "title": "Microdosing psychedelics: More questions than answers? An overview and suggestions for future research",
+    "author": [
+     {
+      "family": "Kuypers",
+      "given": "Kim PC"
+     },
+     {
+      "family": "Ng",
+      "given": "Livia"
+     },
+     {
+      "family": "Erritzoe",
+      "given": "David"
+     },
+     {
+      "family": "Knudsen",
+      "given": "Gitte M"
+     },
+     {
+      "family": "Nichols",
+      "given": "Charles D"
+     },
+     {
+      "family": "Nichols",
+      "given": "David E"
+     },
+     {
+      "family": "Pani",
+      "given": "Luca"
+     },
+     {
+      "family": "Soula",
+      "given": "Anaïs"
+     },
+     {
+      "family": "Nutt",
+      "given": "David"
+     }
+    ],
+    "container-title": "Journal of Psychopharmacology",
+    "issued": {
+     "date-parts": [
+      [
+       2019
+      ]
+     ]
+    },
+    "DOI": "10.1177/0269881119857204",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-27",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-27"
+     }
+    },
+    "volume": "33",
+    "issue": "9",
+    "page": "1039-1057",
+    "PMCID": "PMC6732823"
+   },
+   "doi": "10.1177/0269881119857204",
+   "pmcid": "PMC6732823",
+   "title": "Microdosing psychedelics: More questions than answers? An overview and suggestions for future research",
+   "year": 2019,
+   "journal": "Journal of psychopharmacology (Oxford, England)",
+   "kind": "review",
+   "people": false,
+   "near": 0.754,
+   "money": [
+    "Livia Ng was a paid intern and Anaïs Soula an employee for COMPASS Pathways.",
+    "Declaration of conflicting interest: The author(s) declared the following potential conflicts of interest with respect to the research, authorship, and/or publication of this article: David Nutt is a scientific adviser and Luca Pani is a consultant for COMPASSPathways. The other authors declare that there is no conflict of interest.",
+    "Funding: The author(s) received no financial support for the research, authorship, and/or publication of this article."
+   ],
+   "design": null,
+   "findings": [
+    {
+     "passage": 8,
+     "where": "Background",
+     "quote": "no study to date has revealed statistically significant effects of microdosing on creativity under placebo-controlled circumstances.",
+     "text": "Microdosing has not shown statistically significant effects on creativity in placebo-controlled studies.",
+     "id": "F1",
+     "second_hand": ""
+    },
+    {
+     "passage": 19,
+     "where": "Question 3: What controlled studies have been done so far?",
+     "quote": "users report improvements in energy, mood, cognition, concentration, management of stress, creativity, spiritual awareness, productivity",
+     "text": "People who use psychedelics report improvements in creativity.",
+     "id": "F2",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 46,
+     "where": "Question 11: What are the future research needs?",
+     "quote": "the true amount of active substance in these is unknown as are the peak plasma psilocin concentrations achieved during ‘intoxication’",
+     "text": "The actual amount of active substance and peak plasma concentrations are unknown.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "A"
+  },
+  {
+   "read": "full",
+   "ref": {
+    "id": "anderson_2019",
+    "type": "article-journal",
+    "title": "Psychedelic microdosing benefits and challenges: An empirical codebook",
+    "author": [
+     {
+      "family": "Anderson",
+      "given": "Thomas"
+     },
+     {
+      "family": "Petranker",
+      "given": "Rotem"
+     },
+     {
+      "family": "Christopher",
+      "given": "Adam"
+     },
+     {
+      "family": "Rosenbaum",
+      "given": "Daniel"
+     },
+     {
+      "family": "Weissman",
+      "given": "Cory"
+     },
+     {
+      "family": "Dinh-Williams",
+      "given": "Le-Anh"
+     },
+     {
+      "family": "Hui",
+      "given": "Katrina"
+     },
+     {
+      "family": "Hapke",
+      "given": "Emma"
+     }
+    ],
+    "container-title": "Harm Reduction Journal",
+    "issued": {
+     "date-parts": [
+      [
+       2019
+      ]
+     ]
+    },
+    "DOI": "10.1186/s12954-019-0308-4",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-27",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-27"
+     }
+    },
+    "volume": "16",
+    "issue": "1",
+    "number": "43",
+    "PMCID": "PMC6617883"
+   },
+   "doi": "10.1186/s12954-019-0308-4",
+   "pmcid": "PMC6617883",
+   "title": "Psychedelic microdosing benefits and challenges: an empirical codebook",
+   "year": 2019,
+   "journal": "Harm reduction journal",
+   "kind": "other",
+   "people": true,
+   "near": 0.763,
+   "money": [
+    "Not applicable (this work involved no specific funding.)",
+    "The authors declare that they have no competing interests."
+   ],
+   "design": {
+    "passage": 2,
+    "where": "Abstract",
+    "quote": "In the present study, we develop a codebook of microdosing benefits and challenges (MDBC) based on the qualitative reports of a real‑world sample of 278 microdosers.",
+    "text": "Qualitative codebook study of 278 microdosers"
+   },
+   "findings": [
+    {
+     "passage": 56,
+     "where": "Discussion › Unique outcomes",
+     "quote": "Microdosers report enhanced creativity and meta‑creative processes, such as perspective‑shifting/divergent thinking and openness/curiosity.",
+     "text": "Microdosers report enhanced creativity and meta‑creative processes.",
+     "id": "F3",
+     "second_hand": ""
+    },
+    {
+     "passage": 51,
+     "where": "Discussion › Emergent parallelism",
+     "quote": "Specifically, each category of outcome is seen as both a benefit and a challenge, other than creativity and illegality (Table).",
+     "text": "Creativity was reported only as a benefit and not as a challenge.",
+     "id": "F4",
+     "second_hand": ""
+    },
+    {
+     "passage": 56,
+     "where": "Discussion › Unique outcomes",
+     "quote": "These findings accord with other findings that microdosers have higher creativity than non‑microdosers.",
+     "text": "Microdosers have higher creativity than non‑microdosers according to other reported findings.",
+     "id": "F5",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 60,
+     "where": "Limitations and future directions",
+     "quote": "We employed no experimental manipulation or longitudinal component, could not control for substance purity, schedule, or dose, nor for prior experience with full‑dose psychedelics, and we cannot account for recall bias or placebo effects.",
+     "text": "The study cannot make causal claims because it lacked experimental manipulation, longitudinal data, control over substance purity, dose, prior experience, and cannot account for recall bias or placebo effects.",
+     "id": "L2",
+     "second_hand": ""
+    }
+   ],
+   "tag": "B"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "frank_lsd",
+    "type": "webpage",
+    "title": "LSD",
+    "author": [
+     {
+      "literal": "FRANK"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      []
+     ]
+    },
+    "URL": "https://www.talktofrank.com/drug/lsd",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       27
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-27"
+    }
+   },
+   "title": "LSD",
+   "year": null,
+   "kind": "official",
+   "people": true,
+   "near": 0.689,
+   "name": "FRANK",
+   "short": "FRANK",
+   "tier": 1,
+   "address": "https://www.talktofrank.com/drug/lsd",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 6,
+     "where": "Mixing LSD with other drugs / How does it make you feel?",
+     "quote": "LSD feeds off your imagination so every person’s experience is unique.",
+     "text": "LSD feeds off imagination, making each person's experience unique.",
+     "id": "F6",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "C"
+  }
+ ],
  "parts": [],
  "complete": false,
- "missing": "",
+ "missing": "full‑dose effects",
  "wanted": [
   {
    "doi": "10.1016/j.neubiorev.2020.09.035",
@@ -82,6 +378,14 @@
    "why": "passed every gate",
    "short": "Research does not show a clear, proven boost in creativity from microdosing, though people often report feeling more creative and brain studies suggest possible mechanisms.",
    "complete": true
+  },
+  {
+   "on": "2026-11-27",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question (3 source(s) could not be fetched just now, 3 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -90,30 +394,461 @@
    "read": "full",
    "kind": "review",
    "at": "10.1177/0269881119857204",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 2,
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "critique paper reviewing microdosing psychedelics and proposing future research",
+     "quote": "This critique paper is designed to address questions that need to be answered by future scientific studies and to offer guidelines for these studies.",
+     "why": "the sentence is not carried by its quote and passage"
+    },
+    {
+     "kind": "limit",
+     "text": "The reports are limited by uncertain dosing, unknown substance provenance, and lack of placebo controls.",
+     "quote": "All of these reports are confounded by the lack of certainty relating to the actual dose used, or indeed the provenance of the active ingredient, and the absence of placebo conditions.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   },
   {
    "title": "Psychedelic microdosing benefits and challenges: an empirical codebook",
    "read": "full",
    "kind": "other",
    "at": "10.1186/s12954-019-0308-4",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 3,
+   "thrown": []
   },
   {
-   "title": "Motives and Side-Effects of Microdosing With Psychedelics Among Users",
-   "read": "full",
-   "kind": "other",
-   "at": "10.1093/ijnp/pyz029",
+   "title": "LSD",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.talktofrank.com/drug/lsd",
+   "kept": 1,
+   "thrown": []
+  },
+  {
+   "title": "LSD",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.canada.ca/en/health-canada/services/substance-use/controlled-illegal-drugs/lsd.html",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Psilocybin for Mental Health and Addiction: What You Need To Know",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.nccih.nih.gov/health/psilocybin-for-mental-health-and-addiction-what-you-need-to-know",
    "kept": 0,
    "thrown": [],
    "fault": "it was not read: the time this run has for reading was over"
   }
  ],
- "soft": "a source could not be fetched",
+ "plan": {
+  "short": [
+   "F2",
+   "F1"
+  ],
+  "direct": "It depends",
+  "but": [
+   "L2"
+  ],
+  "how": [
+   [
+    "F6"
+   ],
+   [
+    "F2",
+    "F1"
+   ],
+   [
+    "DB",
+    "F3",
+    "F5"
+   ]
+  ],
+  "unanswered": "full‑dose effects"
+ },
+ "dropped": [
+  {
+   "try": 1,
+   "part": "how2",
+   "text": "A 2019 review found no statistically significant effects of microdosing on creativity, but users report improvements.",
+   "rests_on": [
+    {
+     "label": "F2",
+     "ref": "kuypers_2019",
+     "where": "Question 3: What controlled studies have been done so far?",
+     "quote": "users report improvements in energy, mood, cognition, concentration, management of stress, creativity, spiritual awareness, productivity",
+     "sha": "a30c4be277465984"
+    },
+    {
+     "label": "F1",
+     "ref": "kuypers_2019",
+     "where": "Background",
+     "quote": "no study to date has revealed statistically significant effects of microdosing on creativity under placebo-controlled circumstances.",
+     "sha": "c149aaa3a87e43ba"
+    }
+   ],
+   "by": "a rule",
+   "said": "a rule: words that are not person-first (“users”)"
+  },
+  {
+   "try": 1,
+   "part": "how3",
+   "text": "A qualitative codebook study of 278 microdosers found reports of enhanced creativity and meta-creative processes.",
+   "rests_on": [
+    {
+     "label": "DB",
+     "ref": "anderson_2019",
+     "where": "Abstract",
+     "quote": "In the present study, we develop a codebook of microdosing benefits and challenges (MDBC) based on the qualitative reports of a real‑world sample of 278 microdosers.",
+     "sha": "9b4bb40ada38ab32"
+    },
+    {
+     "label": "F3",
+     "ref": "anderson_2019",
+     "where": "Discussion › Unique outcomes",
+     "quote": "Microdosers report enhanced creativity and meta‑creative processes, such as perspective‑shifting/divergent thinking and openness/curiosity.",
+     "sha": "e6ba18f18f9dd433"
+    },
+    {
+     "label": "F5",
+     "ref": "anderson_2019",
+     "where": "Discussion › Unique outcomes",
+     "quote": "These findings accord with other findings that microdosers have higher creativity than non‑microdosers.",
+     "sha": "e6ba18f18f9dd433"
+    }
+   ],
+   "by": "a rule",
+   "said": "a rule: words that are not person-first (“microdosers”)"
+  },
+  {
+   "try": 2,
+   "part": "how3",
+   "text": "A qualitative codebook study of 278 microdosers found they report enhanced creativity and meta-creative processes.",
+   "rests_on": [
+    {
+     "label": "DB",
+     "ref": "anderson_2019",
+     "where": "Abstract",
+     "quote": "In the present study, we develop a codebook of microdosing benefits and challenges (MDBC) based on the qualitative reports of a real‑world sample of 278 microdosers.",
+     "sha": "9b4bb40ada38ab32"
+    },
+    {
+     "label": "F3",
+     "ref": "anderson_2019",
+     "where": "Discussion › Unique outcomes",
+     "quote": "Microdosers report enhanced creativity and meta‑creative processes, such as perspective‑shifting/divergent thinking and openness/curiosity.",
+     "sha": "e6ba18f18f9dd433"
+    },
+    {
+     "label": "F5",
+     "ref": "anderson_2019",
+     "where": "Discussion › Unique outcomes",
+     "quote": "These findings accord with other findings that microdosers have higher creativity than non‑microdosers.",
+     "sha": "e6ba18f18f9dd433"
+    }
+   ],
+   "by": "a rule",
+   "said": "a rule: words that are not person-first (“microdosers”)"
+  },
+  {
+   "try": 3,
+   "part": "how3",
+   "text": "A qualitative codebook study of 278 microdosers found they report enhanced creativity and meta-creative processes.",
+   "rests_on": [
+    {
+     "label": "DB",
+     "ref": "anderson_2019",
+     "where": "Abstract",
+     "quote": "In the present study, we develop a codebook of microdosing benefits and challenges (MDBC) based on the qualitative reports of a real‑world sample of 278 microdosers.",
+     "sha": "9b4bb40ada38ab32"
+    },
+    {
+     "label": "F3",
+     "ref": "anderson_2019",
+     "where": "Discussion › Unique outcomes",
+     "quote": "Microdosers report enhanced creativity and meta‑creative processes, such as perspective‑shifting/divergent thinking and openness/curiosity.",
+     "sha": "e6ba18f18f9dd433"
+    },
+    {
+     "label": "F5",
+     "ref": "anderson_2019",
+     "where": "Discussion › Unique outcomes",
+     "quote": "These findings accord with other findings that microdosers have higher creativity than non‑microdosers.",
+     "sha": "e6ba18f18f9dd433"
+    }
+   ],
+   "by": "a rule",
+   "said": "a rule: words that are not person-first (“microdosers”)"
+  },
+  {
+   "try": 3,
+   "part": "how2",
+   "text": "A 2019 review found people who use psychedelics report improvements in creativity, but microdosing has not shown statistically significant effects.",
+   "rests_on": [
+    {
+     "label": "F2",
+     "ref": "kuypers_2019",
+     "where": "Question 3: What controlled studies have been done so far?",
+     "quote": "users report improvements in energy, mood, cognition, concentration, management of stress, creativity, spiritual awareness, productivity",
+     "sha": "a30c4be277465984"
+    },
+    {
+     "label": "F1",
+     "ref": "kuypers_2019",
+     "where": "Background",
+     "quote": "no study to date has revealed statistically significant effects of microdosing on creativity under placebo-controlled circumstances.",
+     "sha": "c149aaa3a87e43ba"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The reports of improved creativity are specifically about microdosing users, not people who use psychedelics generally. Also, the absence of statistically significant effects is stated for placebo-controlled circumstances, a qualification t"
+  }
+ ],
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.6386,
+   "but": 0.9679,
+   "how1": 0.9535,
+   "how2": 0.58
+  },
+  "scores_quotes_alone": {
+   "short": 0.3065,
+   "but": 0.134,
+   "how1": 0.8147,
+   "how2": 0.188
+  }
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "It depends. People who use psychedelics report improvements in creativity, but microdosing has not shown statistically significant effects on creativity in placebo-controlled studies.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "kuypers_2019",
+       "where": "Question 3: What controlled studies have been done so far?",
+       "quote": "users report improvements in energy, mood, cognition, concentration, management of stress, creativity, spiritual awareness, productivity",
+       "sha": "a30c4be277465984"
+      },
+      {
+       "label": "F1",
+       "ref": "kuypers_2019",
+       "where": "Background",
+       "quote": "no study to date has revealed statistically significant effects of microdosing on creativity under placebo-controlled circumstances.",
+       "sha": "c149aaa3a87e43ba"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The reported creativity improvements are attributed to microdosing users, not psychedelic users generally. The sentence also does not give a specific full-dose finding, as required by the editor's note."
+    },
+    {
+     "part": "but",
+     "text": "The study cannot make causal claims due to lack of experimental manipulation and control.",
+     "rests_on": [
+      {
+       "label": "L2",
+       "ref": "anderson_2019",
+       "where": "Limitations and future directions",
+       "quote": "We employed no experimental manipulation or longitudinal component, could not control for substance purity, schedule, or dose, nor for prior experience with full‑dose psychedelics, and we cannot account for recall bias or placebo effects.",
+       "sha": "ff5e4af1faf6c811"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer (“Unclear” would be fairer than “It depends”: the passages report user impressions but say microdosing had not shown a statistically significant creativity effect in placebo-controlled studies; they do not establish that the answer depends o)"
+    },
+    {
+     "part": "how1",
+     "text": "FRANK says LSD feeds off imagination, making each person's experience unique.",
+     "rests_on": [
+      {
+       "label": "F6",
+       "ref": "frank_lsd",
+       "where": "Mixing LSD with other drugs / How does it make you feel?",
+       "quote": "LSD feeds off your imagination so every person’s experience is unique.",
+       "sha": "44b71b1b4d565ad0"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "It depends. People who use psychedelics report improvements in creativity, but microdosing has not shown statistically significant effects on creativity in placebo-controlled studies.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "kuypers_2019",
+       "where": "Question 3: What controlled studies have been done so far?",
+       "quote": "users report improvements in energy, mood, cognition, concentration, management of stress, creativity, spiritual awareness, productivity",
+       "sha": "a30c4be277465984"
+      },
+      {
+       "label": "F1",
+       "ref": "kuypers_2019",
+       "where": "Background",
+       "quote": "no study to date has revealed statistically significant effects of microdosing on creativity under placebo-controlled circumstances.",
+       "sha": "c149aaa3a87e43ba"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The creativity reports are specifically from accounts and surveys of microdosing users, not people who use psychedelics generally. It also does not provide the full-dose source the editor’s note requires."
+    },
+    {
+     "part": "but",
+     "text": "The study cannot make causal claims due to lack of experimental manipulation and control.",
+     "rests_on": [
+      {
+       "label": "L2",
+       "ref": "anderson_2019",
+       "where": "Limitations and future directions",
+       "quote": "We employed no experimental manipulation or longitudinal component, could not control for substance purity, schedule, or dose, nor for prior experience with full‑dose psychedelics, and we cannot account for recall bias or placebo effects.",
+       "sha": "ff5e4af1faf6c811"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer (“It depends” is fair: users report creative improvements, while the passage says placebo-controlled studies had not shown statistically significant effects of microdosing on creativity. Sentence 2 discusses limitations of its own study of m)"
+    },
+    {
+     "part": "how1",
+     "text": "FRANK says LSD feeds off imagination, making each person's experience unique.",
+     "rests_on": [
+      {
+       "label": "F6",
+       "ref": "frank_lsd",
+       "where": "Mixing LSD with other drugs / How does it make you feel?",
+       "quote": "LSD feeds off your imagination so every person’s experience is unique.",
+       "sha": "44b71b1b4d565ad0"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A 2019 review found people who use psychedelics report improvements in creativity, but microdosing has not shown statistically significant effects.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "kuypers_2019",
+       "where": "Question 3: What controlled studies have been done so far?",
+       "quote": "users report improvements in energy, mood, cognition, concentration, management of stress, creativity, spiritual awareness, productivity",
+       "sha": "a30c4be277465984"
+      },
+      {
+       "label": "F1",
+       "ref": "kuypers_2019",
+       "where": "Background",
+       "quote": "no study to date has revealed statistically significant effects of microdosing on creativity under placebo-controlled circumstances.",
+       "sha": "c149aaa3a87e43ba"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage describes reports from microdosing users, not psychedelic users generally, and limits the lack of statistically significant effects to creativity under placebo-controlled circumstances. It also does not provide the full-dose sou"
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "It depends. People who use psychedelics report improvements in creativity, but microdosing has not shown statistically significant effects on creativity in placebo-controlled studies.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "kuypers_2019",
+       "where": "Question 3: What controlled studies have been done so far?",
+       "quote": "users report improvements in energy, mood, cognition, concentration, management of stress, creativity, spiritual awareness, productivity",
+       "sha": "a30c4be277465984"
+      },
+      {
+       "label": "F1",
+       "ref": "kuypers_2019",
+       "where": "Background",
+       "quote": "no study to date has revealed statistically significant effects of microdosing on creativity under placebo-controlled circumstances.",
+       "sha": "c149aaa3a87e43ba"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The reports of improved creativity are specifically about microdosing users, not people who use psychedelics generally. The passages also do not provide a separate finding about full-dose psychedelics, as the editor’s note requires for an a"
+    },
+    {
+     "part": "but",
+     "text": "The study cannot make causal claims due to lack of experimental manipulation and control.",
+     "rests_on": [
+      {
+       "label": "L2",
+       "ref": "anderson_2019",
+       "where": "Limitations and future directions",
+       "quote": "We employed no experimental manipulation or longitudinal component, could not control for substance purity, schedule, or dose, nor for prior experience with full‑dose psychedelics, and we cannot account for recall bias or placebo effects.",
+       "sha": "ff5e4af1faf6c811"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer (“Unclear” would be fair: users report creativity improvements, but the passages say no placebo-controlled study had shown statistically significant effects of microdosing on creativity. They do not establish that the answer depends on parti)"
+    },
+    {
+     "part": "how1",
+     "text": "FRANK says LSD feeds off imagination, making each person's experience unique.",
+     "rests_on": [
+      {
+       "label": "F6",
+       "ref": "frank_lsd",
+       "where": "Mixing LSD with other drugs / How does it make you feel?",
+       "quote": "LSD feeds off your imagination so every person’s experience is unique.",
+       "sha": "44b71b1b4d565ad0"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A 2019 review found people who use psychedelics report improvements in creativity, but microdosing has not shown statistically significant effects.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "kuypers_2019",
+       "where": "Question 3: What controlled studies have been done so far?",
+       "quote": "users report improvements in energy, mood, cognition, concentration, management of stress, creativity, spiritual awareness, productivity",
+       "sha": "a30c4be277465984"
+      },
+      {
+       "label": "F1",
+       "ref": "kuypers_2019",
+       "where": "Background",
+       "quote": "no study to date has revealed statistically significant effects of microdosing on creativity under placebo-controlled circumstances.",
+       "sha": "c149aaa3a87e43ba"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The reports of improved creativity are specifically about microdosing users, not people who use psychedelics generally. Also, the absence of statistically significant effects is stated for placebo-controlled circumstances, a qualification t"
+    }
+   ]
+  }
+ ],
  "place": {
   "home": "lsd",
   "also": [
