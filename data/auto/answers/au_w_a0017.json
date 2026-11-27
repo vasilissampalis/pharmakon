@@ -19,31 +19,37 @@
  "made": {
   "on": "2026-11-27",
   "models": {
-   "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+   "reader": "openrouter:openai/gpt-oss-120b",
+   "writer": "openrouter:meta-llama/llama-3.3-70b-instruct",
    "checker": "openrouter:openai/gpt-6-luna",
-   "planner": "groq:openai/gpt-oss-120b",
-   "team": "team B",
-   "reader_2": "groq:openai/gpt-oss-20b"
+   "planner": "openrouter:openai/gpt-oss-120b",
+   "team": "team R",
+   "reader_2": "openrouter:openai/gpt-oss-120b",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "45925293209",
-  "read_seconds": 30,
+  "run": "45931359023",
+  "read_by": {
+   "gpt-oss-120b": 5,
+   "gemma-4-31b-it": 1
+  },
+  "read_seconds": 72,
   "from": {
    "papers": 2,
    "summaries": 0,
    "official": 2
   },
-  "neurons": 925.1,
-  "seconds": 91
+  "neurons": 0.0,
+  "seconds": 245
  },
  "status": "none",
  "why": "the second reader did not accept the answer",
  "gates": {
-  "read": "11 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 5 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-120b read from there",
+  "read": "7 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 4 thrown away (the quote was not in the passage, or a number was not in the quote)",
   "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 2 official page(s), 0 paper(s) read in summary only",
-  "rules": "1 How-do-we-know line(s) left out for a rule (how3: words that are not person-first (“abuse”))",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.54, but 0.76, how1 0.32, how2 0.36",
-  "check": "short: accepted; but: NOT accepted: The passage says various factors can modify methamphetamine toxicity risk, but it does not say that some risk factors are unknown.; how1: NOT accepted: The passages say the US label warns of overdose, death, and possible serotonin syndrome with certain drugs, but they do not show that a review warns of those outcomes.; how2: NOT accepted: FRANK explicitly links increased risk of harm or death to mixing methamphetamine with alcohol. It lists new synthetic opioids and heroin as dangerous combinations but does not say those combinations increase harm or death risk."
+  "told": "the writer was told what the readers said of the last draft that was not accepted: the But “The risk can be modified by various factors, not all of which are known.”: The passage says various factors can modify methamphetamine toxicity risk, but it does not say that some risk factors are unknown.",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.36, but 0.43, how1 0.78, how2 0.51, how3 0.65",
+  "check": "short: NOT accepted: The passages discuss mixing methamphetamine with alcohol and name new synthetic opioids and heroin as dangerous combinations; they do not say methamphetamine is laced with hidden substances. The claim that lacing introduces impurities misre; but: accepted; how1: NOT accepted: FRANK says mixing methamphetamine with alcohol can increase the risk of harm or death, and separately lists new synthetic opioids and heroin as dangerous combinations. It does not say those latter combinations increase the risk of harm or d; how2: accepted; how3: accepted"
  },
  "sources": [
   {
@@ -108,106 +114,46 @@
    "people": false,
    "near": 0.857,
    "money": [],
-   "design": null,
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "This review revisits the pharmacological profiles of methamphetamine and its effects on the brai",
+    "text": "Mechanistic review of methamphetamine toxicity"
+   },
    "findings": [
     {
      "passage": 4,
      "where": "Introduction",
-     "quote": "Persistent methamphetamine use, however, leads to many deleterious effects on many organs, including the brain, heart, liver, kidneys and eyes.",
-     "text": "Methamphetamine use leads to deleterious effects on many organs.",
+     "quote": "Various factors, including route of administration, dose, genetic polymorphism related to drug metabolism and polysubstance abuse, can modify the risk of methamphetamine toxicity.",
+     "text": "The risk of methamphetamine toxicity is modified by the presence of other substances.",
      "id": "F1",
      "second_hand": ""
-    },
-    {
-     "passage": 4,
-     "where": "Introduction",
-     "quote": "Various factors, including route of administration, dose, genetic polymorphism related to drug metabolism and polysubstance abuse, can modify the risk of methamphetamine toxicity.",
-     "text": "The risk of methamphetamine toxicity can be modified by various factors including polysubstance abuse.",
-     "id": "F2",
-     "second_hand": ""
-    },
-    {
-     "passage": 70,
-     "where": "Conclusion",
-     "quote": "Methamphetamine is a toxic psychostimulant with various detrimental effects on the brain, heart, liver, kidneys and eyes.",
-     "text": "Methamphetamine has detrimental effects on the brain, heart, liver, kidneys and eyes.",
-     "id": "F3",
-     "second_hand": ""
     }
    ],
-   "limits": [
-    {
-     "passage": 4,
-     "where": "Introduction",
-     "quote": "Various factors, including route of administration, dose, genetic polymorphism related to drug metabolism and polysubstance abuse, can modify the risk of methamphetamine toxicity.",
-     "text": "The risk of methamphetamine toxicity can be modified by various factors, not all of which are known.",
-     "id": "L1",
-     "second_hand": ""
-    }
-   ],
+   "limits": [],
    "tag": "A"
   },
   {
    "read": "full",
    "ref": {
-    "id": "yang_2018",
+    "id": "yates_2024",
     "type": "article-journal",
-    "title": "The main molecular mechanisms underlying methamphetamine- induced neurotoxicity and implications for pharmacological treatment",
+    "title": "Pharmacological treatments for methamphetamine use disorder: Current status and future targets",
     "author": [
      {
-      "family": "Yang",
-      "given": "Xue"
-     },
-     {
-      "family": "Wang",
-      "given": "Yong"
-     },
-     {
-      "family": "Li",
-      "given": "Qiyan"
-     },
-     {
-      "family": "Zhong",
-      "given": "Yaxian"
-     },
-     {
-      "family": "Chen",
-      "given": "Liangpei"
-     },
-     {
-      "family": "Du",
-      "given": "Yajun"
-     },
-     {
-      "family": "He",
-      "given": "Jing"
-     },
-     {
-      "family": "Liao",
-      "given": "Lvshuang"
-     },
-     {
-      "family": "Xiong",
-      "given": "Kun"
-     },
-     {
-      "family": "Yi",
-      "given": "Chun-xia"
-     },
-     {
-      "family": "Yan",
-      "given": "Jie"
+      "family": "Yates",
+      "given": "Justin"
      }
     ],
-    "container-title": "Frontiers in Molecular Neuroscience",
+    "container-title": "Substance Abuse and Rehabilitation",
     "issued": {
      "date-parts": [
       [
-       2018
+       2024
       ]
      ]
     },
-    "DOI": "10.3389/fnmol.2018.00186",
+    "DOI": "10.2147/sar.s431273",
     "verification": {
      "status": "metadata-verified",
      "metadata_source": "crossref",
@@ -219,58 +165,38 @@
       "checked_on": "2026-11-27"
      }
     },
-    "volume": "11",
-    "number": "186",
-    "PMCID": "PMC5994595"
+    "volume": "Volume 15",
+    "page": "125-161",
+    "PMCID": "PMC11370775"
    },
-   "doi": "10.3389/fnmol.2018.00186",
-   "pmcid": "PMC5994595",
-   "title": "The Main Molecular Mechanisms Underlying Methamphetamine- Induced Neurotoxicity and Implications for Pharmacological Treatment",
-   "year": 2018,
-   "journal": "Frontiers in molecular neuroscience",
+   "doi": "10.2147/sar.s431273",
+   "pmcid": "PMC11370775",
+   "title": "Pharmacological Treatments for Methamphetamine Use Disorder: Current Status and Future Targets",
+   "year": 2024,
+   "journal": "Substance abuse and rehabilitation",
    "kind": "review",
-   "people": false,
-   "near": 0.781,
+   "people": true,
+   "near": 0.787,
    "money": [
-    "The authors declare that the research was conducted in the absence of any commercial or financial relationships that could be construed as a potential conflict of interest."
+    "The authors report no conflicts of interest in this work."
    ],
-   "design": null,
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "The purpose of the current review is to discuss the molecular targets that have been tested in assays measuring the physiological, the cognitive, and the reinforcing effects of METH in both animals and humans.",
+    "text": "review of pharmacological treatments for methamphetamine use disorder"
+   },
    "findings": [
     {
-     "passage": 4,
+     "passage": 3,
      "where": "Introduction",
-     "quote": "Long-term abuse of METH causes serious physical and mental damage.",
-     "text": "Long-term abuse of METH causes serious physical and mental damage.",
-     "id": "F4",
-     "second_hand": ""
-    },
-    {
-     "passage": 20,
-     "where": "Mechanisms Underlying METH-Induced Neurotoxicity › Long-Term Neurotoxicity",
-     "quote": "The effects of long-term exposure to METH are different from those of acute injury.",
-     "text": "The effects of long-term exposure to METH are different from those of acute injury.",
-     "id": "F5",
-     "second_hand": ""
-    },
-    {
-     "passage": 21,
-     "where": "Mechanisms Underlying METH-Induced Neurotoxicity › Long-Term Neurotoxicity",
-     "quote": "METH preconditioning protects against DA depletion caused by binge METH challenge in the brain",
-     "text": "In rats, METH preconditioning protects against DA depletion caused by binge METH challenge in the brain.",
-     "id": "F6",
+     "quote": "Some clandestine labs now synthesize ephedrine and P2P using commercially available materials, which introduces additional impurities, thus increasing the risk of adverse health effects.",
+     "text": "Methamphetamine that is laced with other substances contains additional impurities, which increases the risk of adverse health effects.",
+     "id": "F2",
      "second_hand": ""
     }
    ],
-   "limits": [
-    {
-     "passage": 6,
-     "where": "Introduction",
-     "quote": "Poor outcomes of psychosocial interventions may be related to METH-produced neurotoxicity.",
-     "text": "The effectiveness of psychosocial interventions for METH use may be limited by METH-produced neurotoxicity.",
-     "id": "L2",
-     "second_hand": ""
-    }
-   ],
+   "limits": [],
    "tag": "B"
   },
   {
@@ -321,17 +247,25 @@
     {
      "passage": 5,
      "where": "Mixing methamphetamine with other drugs / Is it dangerous to mix with other drugs?",
-     "quote": "Mixing methamphetamine with alcohol can have serious consequences – as the stimulant effects of methamphetamine and the depressant effects of alcohol interact unpredictably, which can increase the risk of harm or even death.",
-     "text": "Mixing methamphetamine with alcohol can increase the risk of harm or even death.",
-     "id": "F7",
+     "quote": "Mixing methamphetamine with alcohol can have serious consequences – as the stimulant effects of methamphetamine and the depressant effects of alcohol interact unpredictably, which can increase the risk of harm or even death. Dangerous combinations: + New Synthetic opioids; + Heroin",
+     "text": "Mixing methamphetamine with alcohol or with new synthetic opioids or heroin can increase the risk of harm or even death.",
+     "id": "F3",
      "second_hand": ""
     },
     {
-     "passage": 5,
-     "where": "Mixing methamphetamine with other drugs / Is it dangerous to mix with other drugs?",
-     "quote": "Dangerous combinations: + New Synthetic opioids; + Heroin",
-     "text": "New Synthetic opioids and heroin are dangerous combinations with methamphetamine.",
-     "id": "F8",
+     "passage": 11,
+     "where": "Mixing methamphetamine with other drugs / What is methamphetamine cut with?",
+     "quote": "They can be cut with other amphetamines (like speed, caffeine, ephedrine, sugars (like glucose), starch powder, laxatives, talcum powder, paracetamol and other drugs with some similar effects.",
+     "text": "Methamphetamine is often cut with other amphetamines, caffeine, ephedrine, sugars, starch powder, laxatives, talcum powder, paracetamol and similar drugs.",
+     "id": "F4",
+     "second_hand": ""
+    },
+    {
+     "passage": 9,
+     "where": "Mixing methamphetamine with other drugs / Physical health risks",
+     "quote": "In cases of overdose: stroke, lung, kidney and gastrointestinal damage can develop, and coma and death can occur.",
+     "text": "Overdose of methamphetamine can cause stroke, lung, kidney and gastrointestinal damage, coma and death.",
+     "id": "F5",
      "second_hand": ""
     }
    ],
@@ -390,27 +324,19 @@
    "design": null,
    "findings": [
     {
-     "passage": 9,
+     "passage": 14,
      "where": "Warnings and precautions",
-     "quote": "Misuse and abuse of CNS stimulants, including methamphetamine, can result in overdose and death [see Overdosage ( 10 )], and this risk is increased with higher doses or unapproved methods of administration, such as snorting or injection.",
-     "text": "Misuse and abuse of CNS stimulants, including methamphetamine, can result in overdose and death, and this risk is increased with higher doses or unapproved methods of administration.",
-     "id": "F9",
-     "second_hand": ""
-    },
-    {
-     "passage": 18,
-     "where": "Drug abuse and dependence",
-     "quote": "Misuse and abuse of methamphetamine may cause increased heart rate, respiratory rate, or blood pressure; sweating; dilated pupils; hyperactivity; restlessness; insomnia; decreased appetite; loss of coordination; tremors; flushed skin; vomiting; and/or abdominal pain.",
-     "text": "Misuse and abuse of methamphetamine may cause increased heart rate, respiratory rate, or blood pressure; sweating; dilated pupils; hyperactivity; restlessness; insomnia; decreased appetite; loss of coordination; tremors; flushed skin; vomiting; and/or abdominal pain.",
-     "id": "F10",
+     "quote": "Serotonin syndrome, a potentially life‑threatening reaction, may occur when amphetamines are used in combination with other drugs that affect the serotonergic neurotransmitter systems.",
+     "text": "When methamphetamine is taken together with serotonergic drugs, serotonin syndrome, a potentially life‑threatening reaction, may occur.",
+     "id": "F6",
      "second_hand": ""
     },
     {
      "passage": 14,
      "where": "Warnings and precautions",
-     "quote": "Serotonin syndrome, a potentially life-threatening reaction, may occur when amphetamines are used in combination with other drugs that affect the serotonergic neurotransmitter systems such as monoamine oxidase inhibitors (MAOIs), selective serotonin reuptake inhibitors (SSRIs), serotonin norepinephrine reuptake inhibitors (SNRIs), triptans, tricyclic antidepressants, fentanyl, lithium, tramadol, tryptophan, buspirone, and St. John’s Wort [see Drug Interactions (7.1)].",
-     "text": "Serotonin syndrome, a potentially life-threatening reaction, may occur when amphetamines are used in combination with other drugs that affect the serotonergic neurotransmitter systems.",
-     "id": "F11",
+     "quote": "The coadministration with cytochrome P450 2D6 (CYP2D6) inhibitors may also increase the risk with increased exposure to methamphetamine.",
+     "text": "When methamphetamine is taken together with CYP2D6 inhibitors, the risk may increase because exposure to methamphetamine is increased.",
+     "id": "F7",
      "second_hand": ""
     }
    ],
@@ -420,7 +346,7 @@
  ],
  "parts": [],
  "complete": false,
- "missing": "specific safe dose or threshold",
+ "missing": "which specific lacing substances might be safe",
  "wanted": [
   {
    "doi": "10.1111/j.1360-0443.2009.02564.x",
@@ -446,14 +372,6 @@
  ],
  "person": null,
  "history": [
-  {
-   "on": "2026-11-19",
-   "lane": 19,
-   "status": "none",
-   "why": "about dying: written, but it does not meet the stricter bar for such an answer (no further reader read it): no answer yet",
-   "short": "No. FRANK says mixing methamphetamine with alcohol can increase the risk of harm or death. The US label says serotonin syndrome may occur with other drugs.",
-   "complete": true
-  },
   {
    "on": "2026-11-19",
    "lane": 19,
@@ -493,6 +411,14 @@
    "why": "passed every gate",
    "short": "No, methamphetamine can increase the risk of harm when laced with other substances.",
    "complete": false
+  },
+  {
+   "on": "2026-11-27",
+   "lane": 19,
+   "status": "none",
+   "why": "the second reader did not accept the answer",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -501,13 +427,19 @@
    "read": "full",
    "kind": "review",
    "at": "10.7150/ijms.99159",
-   "kept": 3,
+   "kept": 1,
    "thrown": [
     {
-     "kind": "text",
-     "text": "A Mechanistic Review on Toxicity Effects of Methamphetamine",
-     "quote": "This review revisits the pharmacological profiles of methamphetamine and its effects on the brain",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+     "kind": "finding",
+     "text": "The toxicity of methamphetamine increases when it is used together with other substances.",
+     "quote": "The extent of its toxicity depends on numerous pharmacological factors, including route of administration, dose, genetic polymorphism related to drug metabolism and polysubstance abuse.",
+     "why": "the sentence is not carried by its quote and passage"
+    },
+    {
+     "kind": "finding",
+     "text": "Methamphetamine itself is toxic to multiple organs, indicating it is not safe even without additional substances.",
+     "quote": "Methamphetamine is a toxic psychostimulant with various detrimental effects on the brain, heart, liver, kidneys and eyes.",
+     "why": "the sentence is not carried by its quote and passage"
     }
    ]
   },
@@ -516,28 +448,31 @@
    "read": "full",
    "kind": "review",
    "at": "10.3389/fnmol.2018.00186",
-   "kept": 3,
-   "thrown": [
-    {
-     "kind": "text",
-     "text": "A research paper on methamphetamine",
-     "quote": "Methamphetamine (METH) is a popular new-type psychostimulant drug with complicated neurotoxicity.",
-     "why": "the sentence is not carried by its quote and passage"
-    },
-    {
-     "kind": "limit",
-     "text": "The potential of antiparkinsonian drugs and therapies for METH-induced neurotoxicity is uncertain without further safety and patient selection studies.",
-     "quote": "if safety and patient selection could be resolved",
-     "why": "the sentence is not carried by its quote and passage"
-    }
-   ]
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "TBHQ-Overview of Multiple Mechanisms against Oxidative Stress for Attenuating Methamphetamine-Induced Neurotoxicity",
+   "read": "full",
+   "kind": "review",
+   "at": "10.1155/2020/8874304",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Pharmacological Treatments for Methamphetamine Use Disorder: Current Status and Future Targets",
+   "read": "full",
+   "kind": "review",
+   "at": "10.2147/sar.s431273",
+   "kept": 1,
+   "thrown": []
   },
   {
    "title": "Methamphetamine",
    "read": "page",
    "kind": "official",
    "at": "https://www.talktofrank.com/drug/methamphetamine",
-   "kept": 2,
+   "kept": 3,
    "thrown": []
   },
   {
@@ -545,18 +480,18 @@
    "read": "page",
    "kind": "official",
    "at": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=d0905e2c-a02f-ec4f-59a3-6f7ad0acbbf6",
-   "kept": 3,
+   "kept": 2,
    "thrown": [
     {
      "kind": "limit",
-     "text": "The page does not provide information on the safety of methamphetamine when laced with other substances for people who were not assessed for risk of abuse, misuse, and addiction.",
-     "quote": "Before prescribing METHAMPHETAMINE, assess each patient’s risk for abuse, misuse, and addiction.",
+     "text": "The passage indicates that serotonin syndrome may occur, showing uncertainty about whether it will happen in every case.",
+     "quote": "Serotonin syndrome, a potentially life‑threatening reaction, may occur when amphetamines are used in combination with other drugs that affect the serotonergic neurotransmitter systems.",
      "why": "the sentence is not carried by its quote and passage"
     },
     {
      "kind": "limit",
-     "text": "The page does not provide information on the safety of methamphetamine when laced with other substances for people who were not assessed for risk of abuse, misuse, and addiction.",
-     "quote": "Before prescribing METHAMPHETAMINE, assess each patient’s risk for abuse, misuse, and addiction.",
+     "text": "The passage indicates that the risk may increase, showing uncertainty about the magnitude of the increase.",
+     "quote": "The coadministration with cytochrome P450 2D6 (CYP2D6) inhibitors may also increase the risk with increased exposure to methamphetamine.",
      "why": "the sentence is not carried by its quote and passage"
     }
    ]
@@ -564,209 +499,46 @@
  ],
  "plan": {
   "short": [
-   "F9",
-   "F7",
-   "F8",
-   "F11"
+   "F3",
+   "F2"
   ],
   "direct": "No",
   "but": [
-   "L1"
+   "F1"
   ],
   "how": [
    [
-    "F9",
-    "F11"
+    "F3",
+    "F5"
    ],
    [
-    "F7",
-    "F8"
+    "F6",
+    "F7"
    ],
    [
-    "F2",
+    "DA",
     "F1"
    ]
   ],
-  "unanswered": "specific safe dose or threshold"
+  "unanswered": "which specific lacing substances might be safe"
  },
- "dropped": [
-  {
-   "try": 1,
-   "part": "how1",
-   "text": "The US label for methamphetamine says misuse can result in overdose and death, and serotonin syndrome may occur with other drugs.",
-   "rests_on": [
-    {
-     "label": "F9",
-     "ref": "label_methamphetamine-hydrochloride",
-     "where": "Warnings and precautions",
-     "quote": "Misuse and abuse of CNS stimulants, including methamphetamine, can result in overdose and death [see Overdosage ( 10 )], and this risk is increased with higher doses or unapproved methods of administration, such as snorting or injection.",
-     "sha": "ede44e9c4a940a83"
-    },
-    {
-     "label": "F11",
-     "ref": "label_methamphetamine-hydrochloride",
-     "where": "Warnings and precautions",
-     "quote": "Serotonin syndrome, a potentially life-threatening reaction, may occur when amphetamines are used in combination with other drugs that affect the serotonergic neurotransmitter systems such as monoamine oxidase inhibitors (MAOIs), selective serotonin reuptake inhibitors (SSRIs), serotonin norepinephrine reuptake inhibitors (SNRIs), triptans, tricyclic antidepressants, fentanyl, lithium, tramadol, tryptophan, buspirone, and St. John’s Wort [see Drug Interactions (7.1)].",
-     "sha": "7dc7b2b59a688173"
-    }
-   ],
-   "by": "a rule",
-   "said": "a rule: words that are not person-first (“misuse”)"
-  },
-  {
-   "try": 1,
-   "part": "how3",
-   "text": "A review found methamphetamine use leads to deleterious effects on many organs, and the risk of toxicity can be modified by polysubstance abuse.",
-   "rests_on": [
-    {
-     "label": "F2",
-     "ref": "ramli_2025",
-     "where": "Introduction",
-     "quote": "Various factors, including route of administration, dose, genetic polymorphism related to drug metabolism and polysubstance abuse, can modify the risk of methamphetamine toxicity.",
-     "sha": "1201e7e17351d730"
-    },
-    {
-     "label": "F1",
-     "ref": "ramli_2025",
-     "where": "Introduction",
-     "quote": "Persistent methamphetamine use, however, leads to many deleterious effects on many organs, including the brain, heart, liver, kidneys and eyes.",
-     "sha": "1201e7e17351d730"
-    }
-   ],
-   "by": "a rule",
-   "said": "a rule: words that are not person-first (“abuse”)"
-  },
-  {
-   "try": 2,
-   "part": "how1",
-   "text": "The US label for methamphetamine says misuse can result in overdose and death, and serotonin syndrome may occur with other drugs.",
-   "rests_on": [
-    {
-     "label": "F9",
-     "ref": "label_methamphetamine-hydrochloride",
-     "where": "Warnings and precautions",
-     "quote": "Misuse and abuse of CNS stimulants, including methamphetamine, can result in overdose and death [see Overdosage ( 10 )], and this risk is increased with higher doses or unapproved methods of administration, such as snorting or injection.",
-     "sha": "ede44e9c4a940a83"
-    },
-    {
-     "label": "F11",
-     "ref": "label_methamphetamine-hydrochloride",
-     "where": "Warnings and precautions",
-     "quote": "Serotonin syndrome, a potentially life-threatening reaction, may occur when amphetamines are used in combination with other drugs that affect the serotonergic neurotransmitter systems such as monoamine oxidase inhibitors (MAOIs), selective serotonin reuptake inhibitors (SSRIs), serotonin norepinephrine reuptake inhibitors (SNRIs), triptans, tricyclic antidepressants, fentanyl, lithium, tramadol, tryptophan, buspirone, and St. John’s Wort [see Drug Interactions (7.1)].",
-     "sha": "7dc7b2b59a688173"
-    }
-   ],
-   "by": "a rule",
-   "said": "a rule: words that are not person-first (“misuse”)"
-  },
-  {
-   "try": 2,
-   "part": "how3",
-   "text": "A review found methamphetamine use leads to deleterious effects on many organs, and polysubstance abuse can modify toxicity risk.",
-   "rests_on": [
-    {
-     "label": "F2",
-     "ref": "ramli_2025",
-     "where": "Introduction",
-     "quote": "Various factors, including route of administration, dose, genetic polymorphism related to drug metabolism and polysubstance abuse, can modify the risk of methamphetamine toxicity.",
-     "sha": "1201e7e17351d730"
-    },
-    {
-     "label": "F1",
-     "ref": "ramli_2025",
-     "where": "Introduction",
-     "quote": "Persistent methamphetamine use, however, leads to many deleterious effects on many organs, including the brain, heart, liver, kidneys and eyes.",
-     "sha": "1201e7e17351d730"
-    }
-   ],
-   "by": "a rule",
-   "said": "a rule: words that are not person-first (“abuse”)"
-  },
-  {
-   "try": 3,
-   "part": "how3",
-   "text": "A review found methamphetamine use leads to deleterious effects on many organs, and its toxicity risk can be modified by polysubstance abuse.",
-   "rests_on": [
-    {
-     "label": "F2",
-     "ref": "ramli_2025",
-     "where": "Introduction",
-     "quote": "Various factors, including route of administration, dose, genetic polymorphism related to drug metabolism and polysubstance abuse, can modify the risk of methamphetamine toxicity.",
-     "sha": "1201e7e17351d730"
-    },
-    {
-     "label": "F1",
-     "ref": "ramli_2025",
-     "where": "Introduction",
-     "quote": "Persistent methamphetamine use, however, leads to many deleterious effects on many organs, including the brain, heart, liver, kidneys and eyes.",
-     "sha": "1201e7e17351d730"
-    }
-   ],
-   "by": "a rule",
-   "said": "a rule: words that are not person-first (“abuse”)"
-  },
-  {
-   "try": 3,
-   "part": "how1",
-   "text": "The US label for methamphetamine and a review warn of overdose, death, and serotonin syndrome with other drugs.",
-   "rests_on": [
-    {
-     "label": "F9",
-     "ref": "label_methamphetamine-hydrochloride",
-     "where": "Warnings and precautions",
-     "quote": "Misuse and abuse of CNS stimulants, including methamphetamine, can result in overdose and death [see Overdosage ( 10 )], and this risk is increased with higher doses or unapproved methods of administration, such as snorting or injection.",
-     "sha": "ede44e9c4a940a83"
-    },
-    {
-     "label": "F11",
-     "ref": "label_methamphetamine-hydrochloride",
-     "where": "Warnings and precautions",
-     "quote": "Serotonin syndrome, a potentially life-threatening reaction, may occur when amphetamines are used in combination with other drugs that affect the serotonergic neurotransmitter systems such as monoamine oxidase inhibitors (MAOIs), selective serotonin reuptake inhibitors (SSRIs), serotonin norepinephrine reuptake inhibitors (SNRIs), triptans, tricyclic antidepressants, fentanyl, lithium, tramadol, tryptophan, buspirone, and St. John’s Wort [see Drug Interactions (7.1)].",
-     "sha": "7dc7b2b59a688173"
-    }
-   ],
-   "by": "the second reader",
-   "said": "The passages say the US label warns of overdose, death, and possible serotonin syndrome with certain drugs, but they do not show that a review warns of those outcomes."
-  },
-  {
-   "try": 3,
-   "part": "how2",
-   "text": "FRANK says mixing meth with alcohol, new synthetic opioids, and heroin can increase harm or death risk.",
-   "rests_on": [
-    {
-     "label": "F7",
-     "ref": "frank_methamphetamine",
-     "where": "Mixing methamphetamine with other drugs / Is it dangerous to mix with other drugs?",
-     "quote": "Mixing methamphetamine with alcohol can have serious consequences – as the stimulant effects of methamphetamine and the depressant effects of alcohol interact unpredictably, which can increase the risk of harm or even death.",
-     "sha": "910aa7002e05b72a"
-    },
-    {
-     "label": "F8",
-     "ref": "frank_methamphetamine",
-     "where": "Mixing methamphetamine with other drugs / Is it dangerous to mix with other drugs?",
-     "quote": "Dangerous combinations: + New Synthetic opioids; + Heroin",
-     "sha": "910aa7002e05b72a"
-    }
-   ],
-   "by": "the second reader",
-   "said": "FRANK explicitly links increased risk of harm or death to mixing methamphetamine with alcohol. It lists new synthetic opioids and heroin as dangerous combinations but does not say those combinations increase harm or death risk."
-  }
- ],
  "panel_gap": [],
  "own": {
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.5424,
-   "but": 0.7598,
-   "how1": 0.3157,
-   "how2": 0.3629
+   "short": 0.3596,
+   "but": 0.4267,
+   "how1": 0.7772,
+   "how2": 0.513,
+   "how3": 0.6468
   },
   "scores_quotes_alone": {
-   "short": 0.7498,
-   "but": 0.2347,
-   "how1": 0.1916,
-   "how2": 0.3006
+   "short": 0.3638,
+   "but": 0.6365,
+   "how1": 0.3562,
+   "how2": 0.5295,
+   "how3": 0.4244
   }
  },
  "tries": [
@@ -776,45 +548,33 @@
    "parts": [
     {
      "part": "short",
-     "text": "No, methamphetamine can be harmful when mixed with other substances. FRANK says mixing meth with alcohol can raise the risk of harm or even death and names new synthetic opioids and heroin as dangerous combinations.",
+     "text": "No, methamphetamine can increase the risk of harm when taken with other substances. Methamphetamine laced with other substances can contain impurities, increasing the risk of adverse health effects.",
      "rests_on": [
       {
-       "label": "F9",
-       "ref": "label_methamphetamine-hydrochloride",
-       "where": "Warnings and precautions",
-       "quote": "Misuse and abuse of CNS stimulants, including methamphetamine, can result in overdose and death [see Overdosage ( 10 )], and this risk is increased with higher doses or unapproved methods of administration, such as snorting or injection.",
-       "sha": "ede44e9c4a940a83"
-      },
-      {
-       "label": "F7",
+       "label": "F3",
        "ref": "frank_methamphetamine",
        "where": "Mixing methamphetamine with other drugs / Is it dangerous to mix with other drugs?",
-       "quote": "Mixing methamphetamine with alcohol can have serious consequences – as the stimulant effects of methamphetamine and the depressant effects of alcohol interact unpredictably, which can increase the risk of harm or even death.",
+       "quote": "Mixing methamphetamine with alcohol can have serious consequences – as the stimulant effects of methamphetamine and the depressant effects of alcohol interact unpredictably, which can increase the risk of harm or even death. Dangerous combinations: + New Synthetic opioids; + Heroin",
        "sha": "910aa7002e05b72a"
       },
       {
-       "label": "F8",
-       "ref": "frank_methamphetamine",
-       "where": "Mixing methamphetamine with other drugs / Is it dangerous to mix with other drugs?",
-       "quote": "Dangerous combinations: + New Synthetic opioids; + Heroin",
-       "sha": "910aa7002e05b72a"
-      },
-      {
-       "label": "F11",
-       "ref": "label_methamphetamine-hydrochloride",
-       "where": "Warnings and precautions",
-       "quote": "Serotonin syndrome, a potentially life-threatening reaction, may occur when amphetamines are used in combination with other drugs that affect the serotonergic neurotransmitter systems such as monoamine oxidase inhibitors (MAOIs), selective serotonin reuptake inhibitors (SSRIs), serotonin norepinephrine reuptake inhibitors (SNRIs), triptans, tricyclic antidepressants, fentanyl, lithium, tramadol, tryptophan, buspirone, and St. John’s Wort [see Drug Interactions (7.1)].",
-       "sha": "7dc7b2b59a688173"
+       "label": "F2",
+       "ref": "yates_2024",
+       "where": "Introduction",
+       "quote": "Some clandestine labs now synthesize ephedrine and P2P using commercially available materials, which introduces additional impurities, thus increasing the risk of adverse health effects.",
+       "sha": "46391daaf02f7a87"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "the second reader",
+     "said": "It frames the sources as discussing methamphetamine “laced” with hidden substances, which the editor’s note specifically says not to do. The passages discuss taking methamphetamine with other drugs and impurities arising from its manufactur"
     },
     {
      "part": "but",
-     "text": "The risk of methamphetamine toxicity can be modified by various factors, not all of which are known.",
+     "text": "The risk of methamphetamine toxicity is modified by the presence of other substances.",
      "rests_on": [
       {
-       "label": "L1",
+       "label": "F1",
        "ref": "ramli_2025",
        "where": "Introduction",
        "quote": "Various factors, including route of administration, dose, genetic polymorphism related to drug metabolism and polysubstance abuse, can modify the risk of methamphetamine toxicity.",
@@ -823,30 +583,74 @@
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "The passage says various factors can modify toxicity risk, but does not say that some of those factors are unknown."
+     "said": "The passage says polysubstance abuse can modify toxicity risk; it does not establish that the mere presence of other substances does so."
     },
     {
-     "part": "how2",
-     "text": "FRANK says mixing meth with alcohol, new synthetic opioids, and heroin can increase the risk of harm or even death.",
+     "part": "how1",
+     "text": "FRANK says mixing methamphetamine with alcohol or new synthetic opioids or heroin can increase the risk of harm or even death, and overdose can cause stroke, lung, kidney and gastrointestinal damage.",
      "rests_on": [
       {
-       "label": "F7",
+       "label": "F3",
        "ref": "frank_methamphetamine",
        "where": "Mixing methamphetamine with other drugs / Is it dangerous to mix with other drugs?",
-       "quote": "Mixing methamphetamine with alcohol can have serious consequences – as the stimulant effects of methamphetamine and the depressant effects of alcohol interact unpredictably, which can increase the risk of harm or even death.",
+       "quote": "Mixing methamphetamine with alcohol can have serious consequences – as the stimulant effects of methamphetamine and the depressant effects of alcohol interact unpredictably, which can increase the risk of harm or even death. Dangerous combinations: + New Synthetic opioids; + Heroin",
        "sha": "910aa7002e05b72a"
       },
       {
-       "label": "F8",
+       "label": "F5",
        "ref": "frank_methamphetamine",
-       "where": "Mixing methamphetamine with other drugs / Is it dangerous to mix with other drugs?",
-       "quote": "Dangerous combinations: + New Synthetic opioids; + Heroin",
-       "sha": "910aa7002e05b72a"
+       "where": "Mixing methamphetamine with other drugs / Physical health risks",
+       "quote": "In cases of overdose: stroke, lung, kidney and gastrointestinal damage can develop, and coma and death can occur.",
+       "sha": "56d64158d1cdd7b9"
       }
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "The passage says alcohol can increase the risk of harm or death; it names new synthetic opioids and heroin as dangerous combinations but does not say they increase that risk."
+     "said": "The passage explicitly links mixing with alcohol to increased risk of harm or death. It lists new synthetic opioids and heroin as dangerous combinations but does not explicitly say those combinations increase the risk of harm or death."
+    },
+    {
+     "part": "how2",
+     "text": "The US label for methamphetamine says taking it with serotonergic drugs or CYP2D6 inhibitors may increase the risk of serotonin syndrome or increased exposure to methamphetamine.",
+     "rests_on": [
+      {
+       "label": "F6",
+       "ref": "label_methamphetamine-hydrochloride",
+       "where": "Warnings and precautions",
+       "quote": "Serotonin syndrome, a potentially life‑threatening reaction, may occur when amphetamines are used in combination with other drugs that affect the serotonergic neurotransmitter systems.",
+       "sha": "7dc7b2b59a688173"
+      },
+      {
+       "label": "F7",
+       "ref": "label_methamphetamine-hydrochloride",
+       "where": "Warnings and precautions",
+       "quote": "The coadministration with cytochrome P450 2D6 (CYP2D6) inhibitors may also increase the risk with increased exposure to methamphetamine.",
+       "sha": "7dc7b2b59a688173"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A mechanistic review of methamphetamine toxicity found the risk is modified by the presence of other substances.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "ramli_2025",
+       "where": "Abstract",
+       "quote": "This review revisits the pharmacological profiles of methamphetamine and its effects on the brai",
+       "sha": "6bcbd2764ac3c987"
+      },
+      {
+       "label": "F1",
+       "ref": "ramli_2025",
+       "where": "Introduction",
+       "quote": "Various factors, including route of administration, dose, genetic polymorphism related to drug metabolism and polysubstance abuse, can modify the risk of methamphetamine toxicity.",
+       "sha": "1201e7e17351d730"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The review says toxicity depends on polysubstance abuse, not simply on the presence of other substances."
     }
    ]
   },
@@ -856,45 +660,33 @@
    "parts": [
     {
      "part": "short",
-     "text": "No, methamphetamine can be harmful when mixed with other substances, increasing the risk of harm or death.",
+     "text": "No, mixing methamphetamine with other substances can increase the risk of harm or even death. Methamphetamine with other substances contains additional impurities, which increases the risk of adverse health effects.",
      "rests_on": [
       {
-       "label": "F9",
-       "ref": "label_methamphetamine-hydrochloride",
-       "where": "Warnings and precautions",
-       "quote": "Misuse and abuse of CNS stimulants, including methamphetamine, can result in overdose and death [see Overdosage ( 10 )], and this risk is increased with higher doses or unapproved methods of administration, such as snorting or injection.",
-       "sha": "ede44e9c4a940a83"
-      },
-      {
-       "label": "F7",
+       "label": "F3",
        "ref": "frank_methamphetamine",
        "where": "Mixing methamphetamine with other drugs / Is it dangerous to mix with other drugs?",
-       "quote": "Mixing methamphetamine with alcohol can have serious consequences – as the stimulant effects of methamphetamine and the depressant effects of alcohol interact unpredictably, which can increase the risk of harm or even death.",
+       "quote": "Mixing methamphetamine with alcohol can have serious consequences – as the stimulant effects of methamphetamine and the depressant effects of alcohol interact unpredictably, which can increase the risk of harm or even death. Dangerous combinations: + New Synthetic opioids; + Heroin",
        "sha": "910aa7002e05b72a"
       },
       {
-       "label": "F8",
-       "ref": "frank_methamphetamine",
-       "where": "Mixing methamphetamine with other drugs / Is it dangerous to mix with other drugs?",
-       "quote": "Dangerous combinations: + New Synthetic opioids; + Heroin",
-       "sha": "910aa7002e05b72a"
-      },
-      {
-       "label": "F11",
-       "ref": "label_methamphetamine-hydrochloride",
-       "where": "Warnings and precautions",
-       "quote": "Serotonin syndrome, a potentially life-threatening reaction, may occur when amphetamines are used in combination with other drugs that affect the serotonergic neurotransmitter systems such as monoamine oxidase inhibitors (MAOIs), selective serotonin reuptake inhibitors (SSRIs), serotonin norepinephrine reuptake inhibitors (SNRIs), triptans, tricyclic antidepressants, fentanyl, lithium, tramadol, tryptophan, buspirone, and St. John’s Wort [see Drug Interactions (7.1)].",
-       "sha": "7dc7b2b59a688173"
+       "label": "F2",
+       "ref": "yates_2024",
+       "where": "Introduction",
+       "quote": "Some clandestine labs now synthesize ephedrine and P2P using commercially available materials, which introduces additional impurities, thus increasing the risk of adverse health effects.",
+       "sha": "46391daaf02f7a87"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "the second reader",
+     "said": "The first clause generalizes the risk stated specifically for mixing methamphetamine with alcohol; the passage only lists new synthetic opioids and heroin as dangerous combinations. The second clause wrongly attributes impurities to mixing "
     },
     {
      "part": "but",
-     "text": "The risk of methamphetamine toxicity can be modified by various factors, not all of which are known.",
+     "text": "The risk of methamphetamine toxicity is modified by the presence of other substances.",
      "rests_on": [
       {
-       "label": "L1",
+       "label": "F1",
        "ref": "ramli_2025",
        "where": "Introduction",
        "quote": "Various factors, including route of administration, dose, genetic polymorphism related to drug metabolism and polysubstance abuse, can modify the risk of methamphetamine toxicity.",
@@ -903,30 +695,72 @@
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "The passage says various factors can modify methamphetamine toxicity risk, but it does not say that some of those factors are unknown."
+     "said": "it is about something else than the short answer (The passages support concern about methamphetamine taken with particular other drugs, but do not establish a categorical answer about methamphetamine laced with a hidden substance. “Potentially” would be fairer than “No.” Sentence 2 says th)"
     },
     {
-     "part": "how2",
-     "text": "FRANK says mixing methamphetamine with alcohol, new synthetic opioids, and heroin can increase the risk of harm or death.",
+     "part": "how1",
+     "text": "FRANK says mixing methamphetamine with alcohol or with new synthetic opioids or heroin can increase the risk of harm or even death, and overdose can cause stroke, lung, kidney and gastrointestinal damage, coma and death.",
      "rests_on": [
       {
-       "label": "F7",
+       "label": "F3",
        "ref": "frank_methamphetamine",
        "where": "Mixing methamphetamine with other drugs / Is it dangerous to mix with other drugs?",
-       "quote": "Mixing methamphetamine with alcohol can have serious consequences – as the stimulant effects of methamphetamine and the depressant effects of alcohol interact unpredictably, which can increase the risk of harm or even death.",
+       "quote": "Mixing methamphetamine with alcohol can have serious consequences – as the stimulant effects of methamphetamine and the depressant effects of alcohol interact unpredictably, which can increase the risk of harm or even death. Dangerous combinations: + New Synthetic opioids; + Heroin",
        "sha": "910aa7002e05b72a"
       },
       {
-       "label": "F8",
+       "label": "F5",
        "ref": "frank_methamphetamine",
-       "where": "Mixing methamphetamine with other drugs / Is it dangerous to mix with other drugs?",
-       "quote": "Dangerous combinations: + New Synthetic opioids; + Heroin",
-       "sha": "910aa7002e05b72a"
+       "where": "Mixing methamphetamine with other drugs / Physical health risks",
+       "quote": "In cases of overdose: stroke, lung, kidney and gastrointestinal damage can develop, and coma and death can occur.",
+       "sha": "56d64158d1cdd7b9"
       }
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "FRANK explicitly says mixing with alcohol can increase the risk of harm or death. It labels new synthetic opioids and heroin as dangerous combinations, but does not state that those combinations increase the risk of harm or death."
+     "said": "FRANK says mixing methamphetamine with alcohol can increase the risk of harm or death, but only lists new synthetic opioids and heroin as dangerous combinations; it does not say those combinations can increase the risk of harm or death. The"
+    },
+    {
+     "part": "how2",
+     "text": "The US label for methamphetamine says taking it with serotonergic drugs or CYP2D6 inhibitors may increase the risk of adverse effects.",
+     "rests_on": [
+      {
+       "label": "F6",
+       "ref": "label_methamphetamine-hydrochloride",
+       "where": "Warnings and precautions",
+       "quote": "Serotonin syndrome, a potentially life‑threatening reaction, may occur when amphetamines are used in combination with other drugs that affect the serotonergic neurotransmitter systems.",
+       "sha": "7dc7b2b59a688173"
+      },
+      {
+       "label": "F7",
+       "ref": "label_methamphetamine-hydrochloride",
+       "where": "Warnings and precautions",
+       "quote": "The coadministration with cytochrome P450 2D6 (CYP2D6) inhibitors may also increase the risk with increased exposure to methamphetamine.",
+       "sha": "7dc7b2b59a688173"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A mechanistic review of methamphetamine toxicity found that the risk is modified by the presence of other substances.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "ramli_2025",
+       "where": "Abstract",
+       "quote": "This review revisits the pharmacological profiles of methamphetamine and its effects on the brai",
+       "sha": "6bcbd2764ac3c987"
+      },
+      {
+       "label": "F1",
+       "ref": "ramli_2025",
+       "where": "Introduction",
+       "quote": "Various factors, including route of administration, dose, genetic polymorphism related to drug metabolism and polysubstance abuse, can modify the risk of methamphetamine toxicity.",
+       "sha": "1201e7e17351d730"
+      }
+     ],
+     "ok": true
     }
    ]
   },
@@ -936,102 +770,132 @@
    "parts": [
     {
      "part": "short",
-     "text": "No, methamphetamine can be harmful when mixed with other substances, increasing the risk of harm or death.",
+     "text": "No, mixing methamphetamine with other substances can increase the risk of harm or even death. Methamphetamine laced with other substances can contain additional impurities, increasing the risk of adverse health effects.",
      "rests_on": [
       {
-       "label": "F9",
-       "ref": "label_methamphetamine-hydrochloride",
-       "where": "Warnings and precautions",
-       "quote": "Misuse and abuse of CNS stimulants, including methamphetamine, can result in overdose and death [see Overdosage ( 10 )], and this risk is increased with higher doses or unapproved methods of administration, such as snorting or injection.",
-       "sha": "ede44e9c4a940a83"
-      },
-      {
-       "label": "F7",
+       "label": "F3",
        "ref": "frank_methamphetamine",
        "where": "Mixing methamphetamine with other drugs / Is it dangerous to mix with other drugs?",
-       "quote": "Mixing methamphetamine with alcohol can have serious consequences – as the stimulant effects of methamphetamine and the depressant effects of alcohol interact unpredictably, which can increase the risk of harm or even death.",
+       "quote": "Mixing methamphetamine with alcohol can have serious consequences – as the stimulant effects of methamphetamine and the depressant effects of alcohol interact unpredictably, which can increase the risk of harm or even death. Dangerous combinations: + New Synthetic opioids; + Heroin",
        "sha": "910aa7002e05b72a"
       },
       {
-       "label": "F8",
-       "ref": "frank_methamphetamine",
-       "where": "Mixing methamphetamine with other drugs / Is it dangerous to mix with other drugs?",
-       "quote": "Dangerous combinations: + New Synthetic opioids; + Heroin",
-       "sha": "910aa7002e05b72a"
-      },
-      {
-       "label": "F11",
-       "ref": "label_methamphetamine-hydrochloride",
-       "where": "Warnings and precautions",
-       "quote": "Serotonin syndrome, a potentially life-threatening reaction, may occur when amphetamines are used in combination with other drugs that affect the serotonergic neurotransmitter systems such as monoamine oxidase inhibitors (MAOIs), selective serotonin reuptake inhibitors (SSRIs), serotonin norepinephrine reuptake inhibitors (SNRIs), triptans, tricyclic antidepressants, fentanyl, lithium, tramadol, tryptophan, buspirone, and St. John’s Wort [see Drug Interactions (7.1)].",
-       "sha": "7dc7b2b59a688173"
+       "label": "F2",
+       "ref": "yates_2024",
+       "where": "Introduction",
+       "quote": "Some clandestine labs now synthesize ephedrine and P2P using commercially available materials, which introduces additional impurities, thus increasing the risk of adverse health effects.",
+       "sha": "46391daaf02f7a87"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages discuss mixing methamphetamine with alcohol and name new synthetic opioids and heroin as dangerous combinations; they do not say methamphetamine is laced with hidden substances. The claim that lacing introduces impurities misre"
     },
     {
      "part": "but",
-     "text": "The risk can be modified by various factors, not all of which are known.",
+     "text": "The risk of methamphetamine toxicity is modified by the presence of other substances.",
      "rests_on": [
       {
-       "label": "L1",
+       "label": "F1",
        "ref": "ramli_2025",
        "where": "Introduction",
        "quote": "Various factors, including route of administration, dose, genetic polymorphism related to drug metabolism and polysubstance abuse, can modify the risk of methamphetamine toxicity.",
        "sha": "1201e7e17351d730"
       }
      ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passage says various factors can modify methamphetamine toxicity risk, but it does not say that some risk factors are unknown."
+     "ok": true
     },
     {
      "part": "how1",
-     "text": "The US label for methamphetamine and a review warn of overdose, death, and serotonin syndrome with other drugs.",
+     "text": "FRANK says mixing methamphetamine with alcohol, new synthetic opioids, or heroin can increase the risk of harm or even death, and overdose can cause serious health problems.",
      "rests_on": [
       {
-       "label": "F9",
-       "ref": "label_methamphetamine-hydrochloride",
-       "where": "Warnings and precautions",
-       "quote": "Misuse and abuse of CNS stimulants, including methamphetamine, can result in overdose and death [see Overdosage ( 10 )], and this risk is increased with higher doses or unapproved methods of administration, such as snorting or injection.",
-       "sha": "ede44e9c4a940a83"
+       "label": "F3",
+       "ref": "frank_methamphetamine",
+       "where": "Mixing methamphetamine with other drugs / Is it dangerous to mix with other drugs?",
+       "quote": "Mixing methamphetamine with alcohol can have serious consequences – as the stimulant effects of methamphetamine and the depressant effects of alcohol interact unpredictably, which can increase the risk of harm or even death. Dangerous combinations: + New Synthetic opioids; + Heroin",
+       "sha": "910aa7002e05b72a"
       },
       {
-       "label": "F11",
-       "ref": "label_methamphetamine-hydrochloride",
-       "where": "Warnings and precautions",
-       "quote": "Serotonin syndrome, a potentially life-threatening reaction, may occur when amphetamines are used in combination with other drugs that affect the serotonergic neurotransmitter systems such as monoamine oxidase inhibitors (MAOIs), selective serotonin reuptake inhibitors (SSRIs), serotonin norepinephrine reuptake inhibitors (SNRIs), triptans, tricyclic antidepressants, fentanyl, lithium, tramadol, tryptophan, buspirone, and St. John’s Wort [see Drug Interactions (7.1)].",
-       "sha": "7dc7b2b59a688173"
+       "label": "F5",
+       "ref": "frank_methamphetamine",
+       "where": "Mixing methamphetamine with other drugs / Physical health risks",
+       "quote": "In cases of overdose: stroke, lung, kidney and gastrointestinal damage can develop, and coma and death can occur.",
+       "sha": "56d64158d1cdd7b9"
       }
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "The passages say the US label warns of overdose, death, and possible serotonin syndrome with certain drugs, but they do not show that a review warns of those outcomes."
+     "said": "FRANK says mixing methamphetamine with alcohol can increase the risk of harm or death, and separately lists new synthetic opioids and heroin as dangerous combinations. It does not say those latter combinations increase the risk of harm or d"
     },
     {
      "part": "how2",
-     "text": "FRANK says mixing meth with alcohol, new synthetic opioids, and heroin can increase harm or death risk.",
+     "text": "The US label for methamphetamine warns of serotonin syndrome when taken with serotonergic drugs, and increased risk with CYP2D6 inhibitors.",
      "rests_on": [
       {
-       "label": "F7",
-       "ref": "frank_methamphetamine",
-       "where": "Mixing methamphetamine with other drugs / Is it dangerous to mix with other drugs?",
-       "quote": "Mixing methamphetamine with alcohol can have serious consequences – as the stimulant effects of methamphetamine and the depressant effects of alcohol interact unpredictably, which can increase the risk of harm or even death.",
-       "sha": "910aa7002e05b72a"
+       "label": "F6",
+       "ref": "label_methamphetamine-hydrochloride",
+       "where": "Warnings and precautions",
+       "quote": "Serotonin syndrome, a potentially life‑threatening reaction, may occur when amphetamines are used in combination with other drugs that affect the serotonergic neurotransmitter systems.",
+       "sha": "7dc7b2b59a688173"
       },
       {
-       "label": "F8",
-       "ref": "frank_methamphetamine",
-       "where": "Mixing methamphetamine with other drugs / Is it dangerous to mix with other drugs?",
-       "quote": "Dangerous combinations: + New Synthetic opioids; + Heroin",
-       "sha": "910aa7002e05b72a"
+       "label": "F7",
+       "ref": "label_methamphetamine-hydrochloride",
+       "where": "Warnings and precautions",
+       "quote": "The coadministration with cytochrome P450 2D6 (CYP2D6) inhibitors may also increase the risk with increased exposure to methamphetamine.",
+       "sha": "7dc7b2b59a688173"
       }
      ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "FRANK explicitly links increased risk of harm or death to mixing methamphetamine with alcohol. It lists new synthetic opioids and heroin as dangerous combinations but does not say those combinations increase harm or death risk."
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A mechanistic review of methamphetamine toxicity found that the risk is modified by the presence of other substances.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "ramli_2025",
+       "where": "Abstract",
+       "quote": "This review revisits the pharmacological profiles of methamphetamine and its effects on the brai",
+       "sha": "6bcbd2764ac3c987"
+      },
+      {
+       "label": "F1",
+       "ref": "ramli_2025",
+       "where": "Introduction",
+       "quote": "Various factors, including route of administration, dose, genetic polymorphism related to drug metabolism and polysubstance abuse, can modify the risk of methamphetamine toxicity.",
+       "sha": "1201e7e17351d730"
+      }
+     ],
+     "ok": true
     }
    ]
+  }
+ ],
+ "dropped": [
+  {
+   "try": 3,
+   "part": "how1",
+   "text": "FRANK says mixing methamphetamine with alcohol, new synthetic opioids, or heroin can increase the risk of harm or even death, and overdose can cause serious health problems.",
+   "rests_on": [
+    {
+     "label": "F3",
+     "ref": "frank_methamphetamine",
+     "where": "Mixing methamphetamine with other drugs / Is it dangerous to mix with other drugs?",
+     "quote": "Mixing methamphetamine with alcohol can have serious consequences – as the stimulant effects of methamphetamine and the depressant effects of alcohol interact unpredictably, which can increase the risk of harm or even death. Dangerous combinations: + New Synthetic opioids; + Heroin",
+     "sha": "910aa7002e05b72a"
+    },
+    {
+     "label": "F5",
+     "ref": "frank_methamphetamine",
+     "where": "Mixing methamphetamine with other drugs / Physical health risks",
+     "quote": "In cases of overdose: stroke, lung, kidney and gastrointestinal damage can develop, and coma and death can occur.",
+     "sha": "56d64158d1cdd7b9"
+    }
+   ],
+   "by": "the second reader",
+   "said": "FRANK says mixing methamphetamine with alcohol can increase the risk of harm or death, and separately lists new synthetic opioids and heroin as dangerous combinations. It does not say those latter combinations increase the risk of harm or d"
   }
  ],
  "place": {

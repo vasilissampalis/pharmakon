@@ -15,14 +15,20 @@
   "on": "2026-11-27",
   "models": {
    "reader": "openrouter:openai/gpt-oss-120b",
-   "writer": "openrouter:meta-llama/llama-3.3-70b-instruct",
+   "writer": "gemini:gemma-4-26b-a4b-it",
    "checker": "openrouter:openai/gpt-6-luna",
-   "planner": "openrouter:openai/gpt-oss-120b",
-   "team": "team R",
-   "reader_2": "openrouter:openai/gpt-oss-120b",
+   "planner": "gemini:gemma-4-31b-it",
+   "also1": "gemini:gemma-4-31b-it",
+   "team": "team Z",
+   "reader_2": "gemini:gemini-3.1-flash-lite",
+   "reader_3": "openrouter:openai/gpt-oss-120b",
    "reader_first": "gemini:gemma-4-31b-it"
   },
   "run": "45931359023",
+  "read_by": {
+   "gpt-oss-120b": 4,
+   "gpt-oss-20b": 3
+  },
   "read_seconds": 150,
   "from": {
    "papers": 0,
@@ -37,7 +43,7 @@
  "gates": {
   "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-120b read from there",
   "time": "3 source(s) were not read: the time this run has for reading one question (150 seconds) was over",
-  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)"
+  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 7 thrown away (the quote was not in the passage, or a number was not in the quote)"
  },
  "sources": [],
  "parts": [],
@@ -83,6 +89,14 @@
    "why": "no draft passed: not accepted at try 2: a second reader did not accept short (the word it opens with (“Yes”) is not the answer the passages bear out: The passage says parents may feel worried, so “Maybe” would be better calibrated than “Yes.” Sentence 1 speaks about parents and a loved one generally, not specifically); but (The passage identifies an NHS advice page, but does not say it is not a study measuring how often mothers worry.). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-27",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question (4 source(s) could not be fetched just now, 3 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -100,7 +114,14 @@
    "kind": "other",
    "at": "10.1097/ms9.0000000000001387",
    "kept": 0,
-   "thrown": []
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "Scoping review of parenting styles and family-based interventions on adolescent substance use",
+     "quote": "The challenge of substance use among youth continues to be a highly concerning public health issue across the globe.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   },
   {
    "title": "Family Structure, Unstructured Socializing, and Heavy Substance Use among Adolescents",
@@ -108,7 +129,14 @@
    "kind": "other",
    "at": "10.3390/ijerph19148818",
    "kept": 0,
-   "thrown": []
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "Observational study of adolescent substance use across 30 nations",
+     "quote": "Data from 30 nations (n = 65,737) were used to test the hypothesis using a generalized structural equation model and tests of mediation.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   },
   {
    "title": "Developmental Cascade Effects of Maternal Depression on Offspring Substance Use Across Adolescence: Pathway Through Mother-Child Relationship Quality and Peer Deviancy",
@@ -117,7 +145,7 @@
    "at": "10.1007/s10802-021-00893-y",
    "kept": 0,
    "thrown": [],
-   "fault": "its full text could not be fetched (OSError)"
+   "fault": "its full text could not be fetched (HTTPError)"
   },
   {
    "title": "Perinatal Insights Into Parenting, Pathways, and Addiction (PIPPA): Protocol for a Longitudinal, Strengths-Based Study in Flanders, Belgium",
@@ -125,8 +153,7 @@
    "kind": "other",
    "at": "10.2196/88030",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
   },
   {
    "title": "Adolescents' experiences with substance use: risks, protective factors and interventions",
@@ -134,8 +161,32 @@
    "kind": "other",
    "at": "10.1186/s40359-025-03125-w",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "Some mothers (parents) do not realize their child's suffering and therefore may not worry about the child's drug use.",
+     "quote": "My parents didn’t care about me, they didn’t realize that I was suffering’’ (P10).",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    },
+    {
+     "kind": "finding",
+     "text": "Parents often lack awareness of their child's substance use, providing little support and experiencing psychological distress.",
+     "quote": "their parents was not aware of the situation, lacked parental support, had suicidal thoughts, and were psychologically negatively affected.",
+     "why": "the sentence is not carried by its quote and passage"
+    },
+    {
+     "kind": "finding",
+     "text": "Family support, which requires parental (including mothers) education, is considered essential for adolescents to stop using substances.",
+     "quote": "In order to quit, first of all you need the support of the family, and of course the family needs to be educated on this issue.",
+     "why": "the sentence is not carried by its quote and passage"
+    },
+    {
+     "kind": "finding",
+     "text": "Adolescents may perceive that their mothers approve of substance use, which can influence their drug‑taking behavior.",
+     "quote": "the child’s perception that their parents approve of substance use disorder.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   },
   {
    "title": "What is positive youth development and how might it reduce substance use and violence? A systematic review and synthesis of theoretical literature",
@@ -143,8 +194,49 @@
    "kind": "review",
    "at": "10.1186/s12889-016-2817-3",
    "kept": 0,
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "Systematic review of theoretical literature on positive youth development interventions for youth aged 11–18",
+     "quote": "focused on youth age 11–18 years; focused on PYD as defined in our introduction; and focused on prevention of smoking, alcohol consumption, drug use or violence in out-of-school settings.",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
+  },
+  {
+   "title": "Linked patterns of biological and environmental covariation with brain structure in adolescence: a population-based longitudinal study",
+   "read": "full",
+   "kind": "other",
+   "at": "10.1038/s41380-020-0757-x",
+   "kept": 0,
    "thrown": [],
    "fault": "it was not read: the time this run has for reading was over"
+  },
+  {
+   "title": "Substance Use Among Youth During the COVID-19 Pandemic: a Systematic Review",
+   "read": "full",
+   "kind": "review",
+   "at": "10.1007/s11920-022-01338-z",
+   "kept": 0,
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
+  },
+  {
+   "title": "Ethnic Discrimination's Role on Increased Substance Susceptibility and Use Among U.S. Youth",
+   "read": "full",
+   "kind": "other",
+   "at": "10.1016/j.amepre.2025.107956",
+   "kept": 0,
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
+  },
+  {
+   "title": "A meta-analysis of sexual orientation inequities in substance use among youth",
+   "read": "full",
+   "kind": "review",
+   "at": "10.1111/add.70301",
+   "kept": 0,
+   "thrown": []
   }
  ],
  "soft": "a source could not be fetched",
