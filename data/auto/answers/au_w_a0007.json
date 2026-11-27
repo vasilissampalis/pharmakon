@@ -15,36 +15,38 @@
  ],
  "drugs": [],
  "made": {
-  "on": "2026-11-26",
+  "on": "2026-11-27",
   "models": {
-   "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-   "checker": "@cf/openai/gpt-oss-120b",
+   "reader": "gemini:gemini-3.5-flash-lite",
+   "writer": "groq:qwen/qwen3.8-27b",
+   "checker": "openrouter:openai/gpt-6-luna",
    "planner": "groq:openai/gpt-oss-120b",
-   "team": "team B",
-   "reader_2": "groq:openai/gpt-oss-20b"
+   "also1": "gemini:gemini-3.5-flash-lite",
+   "also2": "gemini:gemini-3-flash-preview",
+   "team": "team I",
+   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+   "also2_else": "gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "45732936451",
+  "run": "45914912479",
   "read_by": {
-   "gemini-3.5-flash-lite": 4,
-   "llama-4-scout-17b-16e-instruct": 2
+   "gemini-3.5-flash-lite": 5,
+   "gpt-oss-20b": 1
   },
-  "read_seconds": 26,
+  "read_seconds": 20,
   "from": {
    "papers": 1,
    "summaries": 0,
-   "official": 1
+   "official": 0
   },
-  "neurons": 787.7,
-  "seconds": 91
+  "neurons": 0.0,
+  "seconds": 20
  },
  "status": "none",
- "why": "the second reader did not accept the answer",
+ "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service",
  "gates": {
-  "read": "6 findings kept from 2 sources (1 papers read in full, 1 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "0 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 1 official page(s), 0 paper(s) read in summary only",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.89, but 0.90, how1 0.91, how2 0.95, how3 0.99",
-  "check": "short: NOT accepted: it does not answer the question itself (All five sentences are directly supported by the cited passages; no claim exceeds what the passages state. Sentence 1 lists factors people consider before joining drug studies, which does not answer the question “How can someone participate); but: accepted; how1: accepted; how2: accepted; how3: accepted"
+  "read": "3 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 3 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "0 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only"
  },
  "sources": [
   {
@@ -105,10 +107,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-26",
+     "verified_on": "2026-11-27",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-26"
+      "checked_on": "2026-11-27"
      }
     },
     "volume": "9",
@@ -128,146 +130,47 @@
     "AcknowledgmentsThe authors thank the Expert Diversity Advisory Board for guiding the development of this project, the focus group participants for their critical perspectives, and Hayley Aramburu for administrative assistance."
    ],
    "design": {
-    "passage": 1,
+    "passage": 2,
     "where": "Abstract",
-    "quote": "The participation of Black individuals in clinical trials remains lower than that of other racial and ethnic groups.",
-    "text": "A research paper on strategies to enhance recruitment and retention of Black individuals in clinical trials for substance use disorders"
+    "quote": "Phase 1 involved a literature review and the establishment of an Expert Diversity Advisory Board, which identified barriers to Black individual participation in substance use disorder (SUD) research.",
+    "text": "Phase 1 study of a manual to increase Black participation in substance use disorder trials"
    },
    "findings": [
     {
-     "passage": 28,
-     "where": "Results",
-     "quote": "Most focus group participants agreed that Black individuals are underrepresented in research studies.",
-     "text": "Most participants agreed that Black individuals are underrepresented in research studies.",
+     "passage": 18,
+     "where": "Methods › Participants › Focus groups",
+     "quote": "All participants provided written informed consent before completing any study procedures.",
+     "text": "Participation requires written informed consent before any study procedures.",
      "id": "F1",
      "second_hand": ""
     },
     {
-     "passage": 28,
-     "where": "Results",
-     "quote": "The focus groups considered compensation, research benefits, study duration, privacy, safety, and side effects, equally important information to know before participation.",
-     "text": "Participants considered several factors as equally important information to know before participation.",
+     "passage": 18,
+     "where": "Methods › Participants › Focus groups",
+     "quote": "Participants were recruited via flyers distributed in the Dallas/Fort Worth region, direct referrals from current research participants, referrals from the EDAB, and referrals from regional non-profit organizations.",
+     "text": "Recruitment occurs through flyers, referrals from current participants, the Expert Diversity Advisory Board, and regional non-profit organizations.",
      "id": "F2",
      "second_hand": ""
     },
     {
-     "passage": 32,
-     "where": "Conclusion",
-     "quote": "I-DREM will outline concrete steps to aid researchers in the research planning stages.",
-     "text": "I-DREM aims to provide concrete steps for researchers to enhance recruitment and retention of Black individuals.",
+     "passage": 21,
+     "where": "Methods › Study procedures › Focus group methods",
+     "quote": "Focus groups were led by UT Southwestern facilitators using a topic-guided focus group interview guide that contained semi-structured questions based on previously identified barriers.",
+     "text": "Participation involves attending focus groups led by facilitators using a guided interview guide.",
      "id": "F3",
      "second_hand": ""
     }
    ],
-   "limits": [
-    {
-     "passage": 18,
-     "where": "Methods › Participants › Focus groups",
-     "quote": "Incarcerated persons were excluded from the study.",
-     "text": "Incarcerated persons were not studied.",
-     "id": "L1",
-     "second_hand": ""
-    }
-   ],
+   "limits": [],
    "tag": "A"
-  },
-  {
-   "read": "page",
-   "ref": {
-    "id": "hse_mixing-alcohol-with-medicines-or-drugs",
-    "type": "webpage",
-    "title": "Mixing alcohol with medicines or drugs",
-    "author": [
-     {
-      "literal": "Health Service Executive"
-     }
-    ],
-    "issued": {
-     "date-parts": [
-      []
-     ]
-    },
-    "URL": "https://www2.hse.ie/living-well/alcohol/health/how-alcohol-can-affect-everyday-life/mixing-alcohol-with-medicines-or-drugs/",
-    "accessed": {
-     "date-parts": [
-      [
-       2026,
-       11,
-       26
-      ]
-     ]
-    },
-    "verification": {
-     "status": "made by code",
-     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-26"
-    }
-   },
-   "title": "Mixing alcohol with medicines or drugs",
-   "year": null,
-   "kind": "official",
-   "people": true,
-   "near": 0.415,
-   "name": "Health Service Executive",
-   "short": "Ireland's health service (HSE)",
-   "tier": 1,
-   "address": "https://www2.hse.ie/living-well/alcohol/health/how-alcohol-can-affect-everyday-life/mixing-alcohol-with-medicines-or-drugs/",
-   "money": [],
-   "label": false,
-   "design": null,
-   "findings": [
-    {
-     "passage": 7,
-     "where": "Mixing alcohol with illegal drugs",
-     "quote": "But the risks are often higher if you take drugs along with alcohol.",
-     "text": "The risks are often higher if people take drugs along with alcohol.",
-     "id": "F4",
-     "second_hand": ""
-    },
-    {
-     "passage": 7,
-     "where": "Mixing alcohol with illegal drugs",
-     "quote": "Mixing drugs with alcohol can also make the comedown worse.",
-     "text": "Mixing drugs with alcohol can make the comedown worse.",
-     "id": "F5",
-     "second_hand": ""
-    },
-    {
-     "passage": 1,
-     "where": "Top of the page",
-     "quote": "Always check with your GP or pharmacist about your specific medicine.",
-     "text": "People should check with their GP or pharmacist about their specific medicine.",
-     "id": "F6",
-     "second_hand": ""
-    }
-   ],
-   "limits": [
-    {
-     "passage": 7,
-     "where": "Mixing alcohol with illegal drugs",
-     "quote": "Interactions between cannabis and alcohol are unpredictable.",
-     "text": "The interactions between cannabis and alcohol are unpredictable.",
-     "id": "L2",
-     "second_hand": ""
-    }
-   ],
-   "tag": "B"
   }
  ],
  "parts": [],
  "complete": false,
- "missing": "specific enrollment procedures and study listings",
+ "missing": "",
  "wanted": [],
  "person": null,
  "history": [
-  {
-   "on": "2026-11-19",
-   "lane": 19,
-   "status": "none",
-   "why": "the second reader did not accept the answer",
-   "short": "",
-   "complete": false
-  },
   {
    "on": "2026-11-19",
    "lane": 19,
@@ -307,6 +210,14 @@
    "why": "after the second reader's check the answer rests on too few sources",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-26",
+   "lane": 19,
+   "status": "none",
+   "why": "the second reader did not accept the answer",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -316,7 +227,26 @@
    "kind": "other",
    "at": "10.1177/24731242251362181",
    "kept": 3,
-   "thrown": []
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "To participate, a person must be Black, 18–90 years old, have a history of a substance use disorder, be willing to attend two virtual sessions, have a device for virtual meetings, provide informed con",
+     "quote": "Participants were required to self-report Black race, be age 18–90 years old, have a history of a SUD, be willing to participate in two virtual sessions, have access to a device for virtual meetings, ",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    },
+    {
+     "kind": "limit",
+     "text": "Incarcerated individuals cannot participate in this study.",
+     "quote": "Incarcerated persons were excluded from the study.",
+     "why": "the sentence is not carried by its quote and passage"
+    },
+    {
+     "kind": "limit",
+     "text": "The study was limited to about 60 participants, so findings may not generalize to larger populations.",
+     "quote": "The planned sample size was approximately 60 participants.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   },
   {
    "title": "Canadian Drugs and Substances Strategy: Overview",
@@ -355,302 +285,8 @@
    "read": "page",
    "kind": "official",
    "at": "https://www2.hse.ie/living-well/alcohol/health/how-alcohol-can-affect-everyday-life/mixing-alcohol-with-medicines-or-drugs/",
-   "kept": 3,
+   "kept": 0,
    "thrown": []
-  }
- ],
- "plan": {
-  "short": [
-   "F2",
-   "F3"
-  ],
-  "direct": "",
-  "but": [
-   "L1"
-  ],
-  "how": [
-   [
-    "DA",
-    "F2",
-    "F3"
-   ]
-  ],
-  "unanswered": "specific enrollment procedures and study listings"
- },
- "panel_gap": [],
- "own": {
-  "model": "pharmakon-check-0",
-  "threshold": 0.05,
-  "scores": {
-   "short": 0.8883,
-   "but": 0.8997,
-   "how1": 0.9115,
-   "how2": 0.9529,
-   "how3": 0.9852
-  },
-  "scores_quotes_alone": {
-   "short": 0.9588,
-   "but": 0.9276,
-   "how1": 0.6062,
-   "how2": 0.9592,
-   "how3": 0.9719
-  }
- },
- "tries": [
-  {
-   "try": 1,
-   "why": "the short answer or the But was not accepted: written again",
-   "parts": [
-    {
-     "part": "short",
-     "text": "People consider compensation, research benefits, and safety before participating in drug studies. I-DREM provides steps to enhance recruitment.",
-     "rests_on": [
-      {
-       "label": "F2",
-       "ref": "obel_2025",
-       "where": "Results",
-       "quote": "The focus groups considered compensation, research benefits, study duration, privacy, safety, and side effects, equally important information to know before participation.",
-       "sha": "85923e4ea1a5e4bb"
-      },
-      {
-       "label": "F3",
-       "ref": "obel_2025",
-       "where": "Conclusion",
-       "quote": "I-DREM will outline concrete steps to aid researchers in the research planning stages.",
-       "sha": "8c7d4eed73b2cf87"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "but",
-     "text": "Incarcerated persons were not studied.",
-     "rests_on": [
-      {
-       "label": "L1",
-       "ref": "obel_2025",
-       "where": "Methods › Participants › Focus groups",
-       "quote": "Incarcerated persons were excluded from the study.",
-       "sha": "82aa73ac7618a914"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "it is about something else than the short answer"
-    },
-    {
-     "part": "how1",
-     "text": "A research paper studied strategies to enhance recruitment of Black individuals in clinical trials.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "obel_2025",
-       "where": "Abstract",
-       "quote": "The participation of Black individuals in clinical trials remains lower than that of other racial and ethnic groups.",
-       "sha": "a8e8968c3101ee81"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "Participants considered several factors important before participation.",
-     "rests_on": [
-      {
-       "label": "F2",
-       "ref": "obel_2025",
-       "where": "Results",
-       "quote": "The focus groups considered compensation, research benefits, study duration, privacy, safety, and side effects, equally important information to know before participation.",
-       "sha": "85923e4ea1a5e4bb"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how3",
-     "text": "I-DREM aims to provide concrete steps for researchers.",
-     "rests_on": [
-      {
-       "label": "F3",
-       "ref": "obel_2025",
-       "where": "Conclusion",
-       "quote": "I-DREM will outline concrete steps to aid researchers in the research planning stages.",
-       "sha": "8c7d4eed73b2cf87"
-      }
-     ],
-     "ok": true
-    }
-   ]
-  },
-  {
-   "try": 2,
-   "why": "the short answer or the But was not accepted: written again",
-   "parts": [
-    {
-     "part": "short",
-     "text": "People consider compensation, research benefits, and safety before participating in drug studies. I-DREM provides steps to enhance recruitment.",
-     "rests_on": [
-      {
-       "label": "F2",
-       "ref": "obel_2025",
-       "where": "Results",
-       "quote": "The focus groups considered compensation, research benefits, study duration, privacy, safety, and side effects, equally important information to know before participation.",
-       "sha": "85923e4ea1a5e4bb"
-      },
-      {
-       "label": "F3",
-       "ref": "obel_2025",
-       "where": "Conclusion",
-       "quote": "I-DREM will outline concrete steps to aid researchers in the research planning stages.",
-       "sha": "8c7d4eed73b2cf87"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "it does not answer the question itself"
-    },
-    {
-     "part": "but",
-     "text": "Incarcerated persons were not studied.",
-     "rests_on": [
-      {
-       "label": "L1",
-       "ref": "obel_2025",
-       "where": "Methods › Participants › Focus groups",
-       "quote": "Incarcerated persons were excluded from the study.",
-       "sha": "82aa73ac7618a914"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how1",
-     "text": "A research paper studied strategies to enhance recruitment of Black individuals in clinical trials.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "obel_2025",
-       "where": "Abstract",
-       "quote": "The participation of Black individuals in clinical trials remains lower than that of other racial and ethnic groups.",
-       "sha": "a8e8968c3101ee81"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "Participants considered several factors important to know before participation.",
-     "rests_on": [
-      {
-       "label": "F2",
-       "ref": "obel_2025",
-       "where": "Results",
-       "quote": "The focus groups considered compensation, research benefits, study duration, privacy, safety, and side effects, equally important information to know before participation.",
-       "sha": "85923e4ea1a5e4bb"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how3",
-     "text": "I-DREM aims to provide concrete steps for researchers.",
-     "rests_on": [
-      {
-       "label": "F3",
-       "ref": "obel_2025",
-       "where": "Conclusion",
-       "quote": "I-DREM will outline concrete steps to aid researchers in the research planning stages.",
-       "sha": "8c7d4eed73b2cf87"
-      }
-     ],
-     "ok": true
-    }
-   ]
-  },
-  {
-   "try": 3,
-   "why": "the last draft: no answer",
-   "parts": [
-    {
-     "part": "short",
-     "text": "People consider compensation, research benefits, and safety before participating in drug studies.",
-     "rests_on": [
-      {
-       "label": "F2",
-       "ref": "obel_2025",
-       "where": "Results",
-       "quote": "The focus groups considered compensation, research benefits, study duration, privacy, safety, and side effects, equally important information to know before participation.",
-       "sha": "85923e4ea1a5e4bb"
-      },
-      {
-       "label": "F3",
-       "ref": "obel_2025",
-       "where": "Conclusion",
-       "quote": "I-DREM will outline concrete steps to aid researchers in the research planning stages.",
-       "sha": "8c7d4eed73b2cf87"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "it does not answer the question itself (All five sentences are directly supported by the cited passages; no claim exceeds what the passages state. Sentence 1 lists factors people consider before joining drug studies, which does not answer the question “How can someone participate)"
-    },
-    {
-     "part": "but",
-     "text": "Incarcerated persons were not studied.",
-     "rests_on": [
-      {
-       "label": "L1",
-       "ref": "obel_2025",
-       "where": "Methods › Participants › Focus groups",
-       "quote": "Incarcerated persons were excluded from the study.",
-       "sha": "82aa73ac7618a914"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how1",
-     "text": "A research paper studied strategies to enhance recruitment of Black individuals in clinical trials.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "obel_2025",
-       "where": "Abstract",
-       "quote": "The participation of Black individuals in clinical trials remains lower than that of other racial and ethnic groups.",
-       "sha": "a8e8968c3101ee81"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "Participants considered several factors important to know before participation.",
-     "rests_on": [
-      {
-       "label": "F2",
-       "ref": "obel_2025",
-       "where": "Results",
-       "quote": "The focus groups considered compensation, research benefits, study duration, privacy, safety, and side effects, equally important information to know before participation.",
-       "sha": "85923e4ea1a5e4bb"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how3",
-     "text": "I-DREM aims to provide steps for researchers to enhance recruitment and retention.",
-     "rests_on": [
-      {
-       "label": "F3",
-       "ref": "obel_2025",
-       "where": "Conclusion",
-       "quote": "I-DREM will outline concrete steps to aid researchers in the research planning stages.",
-       "sha": "8c7d4eed73b2cf87"
-      }
-     ],
-     "ok": true
-    }
-   ]
   }
  ],
  "place": {
