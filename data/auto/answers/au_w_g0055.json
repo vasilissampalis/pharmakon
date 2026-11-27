@@ -15,40 +15,37 @@
  ],
  "drugs": [],
  "made": {
-  "on": "2026-11-22",
+  "on": "2026-11-27",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
+   "reader": "openrouter:openai/gpt-oss-120b",
    "writer": "groq:qwen/qwen3.8-27b",
-   "checker": "gemini:gemini-3.5-flash-lite",
-   "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3.6-flash",
-   "team": "team L",
-   "reader_2": "groq:openai/gpt-oss-20b",
-   "also1_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
+   "checker": "openrouter:openai/gpt-6-luna",
+   "planner": "groq:openai/gpt-oss-120b",
+   "also1": "gemini:gemini-3-flash-preview",
+   "team": "team G",
+   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "reader_3": "openrouter:openai/gpt-oss-120b",
+   "also1_else": "gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "45046780895",
-  "read_seconds": 31,
+  "run": "45953541811",
+  "read_seconds": 100,
   "from": {
    "papers": 2,
    "summaries": 0,
-   "official": 1
+   "official": 2
   },
   "neurons": 0.0,
-  "seconds": 280
+  "seconds": 166
  },
- "status": "published",
- "why": "passed every gate, and the stricter bar for an answer about dying",
+ "status": "none",
+ "why": "no draft passed: broken at try 3: short: words that are not person-first (“abuse”); how1: words that are not person-first (“abuse”)",
  "gates": {
-  "read": "9 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 4 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 1 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
-  "told": "the writer was told what the readers said of the last draft that was not accepted: the short answer “It can. Children and teenagers may intentionally overdose on diphenhydramine to record altered behavior. Taking more than the recommended dose can lead to serious heart problems, seizures, coma, or death.”: the word it opens with (“It can”) is not the answer the passages bear out: ",
-  "panel": "further readers, each of which must accept every sentence too: gemini-3.6-flash accepted 3 of 5",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.83, but 0.09, how1 0.50, how2 0.96, how3 0.53",
-  "check": "every sentence kept was accepted by the second reader (gemini:gemini-3.5-flash-lite) and by gemini:gemini-3.6-flash",
-  "but": "the writer's But was not accepted (The passages do not state that the sources are reviews of case reports and clinical data, not studies of how the drug works in the body.): the code wrote the But itself, from what this answer rests on",
-  "rules": "nothing against it",
-  "checked": "set beside the checked claims of the same page: nothing against them",
-  "stakes": "about dying: the stricter bar for such an answer: met (an official page or a review read in full under the short answer; a further reader read it; no word that plays a danger down, by code and by every reader)"
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-120b read from there",
+  "read": "11 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 3 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 2 official page(s), 0 paper(s) read in summary only",
+  "writer": "try 1: no JSON (how the reply ended: length; reasoned 9313 characters, wrote 643)",
+  "rules": "broken at try 3: short: words that are not person-first (“abuse”); how1: words that are not person-first (“abuse”)"
  },
  "sources": [
   {
@@ -81,10 +78,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-22",
+     "verified_on": "2026-11-27",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-22"
+      "checked_on": "2026-11-27"
      }
     },
     "volume": "12",
@@ -106,20 +103,37 @@
    "design": {
     "passage": 1,
     "where": "Abstract",
-    "quote": "This review summarizes the adverse health effects and current emergency medicine treatments for diphenhydramine. Several emergency medicine case reports are reviewed, and the efficacy and outcomes of a variety of treatments are compared.",
-    "text": "a literature review of emergency medicine treatments for diphenhydramine overdose"
+    "quote": "This review summarizes the adverse health effects and current emergency medicine treatments for diphenhydramine.",
+    "text": "Literature review of diphenhydramine overdose treatments"
    },
    "findings": [
     {
      "passage": 7,
      "where": "1. Background › 1.3. Diphenhydramine Overdoses",
      "quote": "the popular Tik Tok “Benadryl Challenge”, where children and teenagers intentionally overdose on OTC Benadryl and record and post their altered behavior.",
-     "text": "Children and teenagers participate in the Benadryl Challenge by intentionally overdosing on over-the-counter Benadryl to record and post their altered behavior.",
+     "text": "Some people intentionally overdose on diphenhydramine to achieve altered behavior.",
      "id": "F1",
+     "second_hand": ""
+    },
+    {
+     "passage": 5,
+     "where": "1. Background › 1.2. Diphenhydramine Risks",
+     "quote": "This can cause adverse cardiac effects such as QRS widening and lengthening of the QT interval.",
+     "text": "Diphenhydramine can cause cardiac toxicity, including QRS widening and QT interval prolongation.",
+     "id": "F2",
      "second_hand": ""
     }
    ],
-   "limits": [],
+   "limits": [
+    {
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "Currently, there is no antidote for diphenhydramine overdose.",
+     "text": "There is currently no antidote for diphenhydramine overdose.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
    "tag": "A"
   },
   {
@@ -156,10 +170,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-22",
+     "verified_on": "2026-11-27",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-22"
+      "checked_on": "2026-11-27"
      }
     },
     "volume": "18",
@@ -182,24 +196,32 @@
    "design": {
     "passage": 2,
     "where": "Abstract",
-    "quote": "Based on a comprehensive evaluation of practice patterns and the prevalence and incidence of adverse clinical events, we believe that diphenhydramine has reached the end of its life cycle",
-    "text": "A review of the clinical profile and public health impact of diphenhydramine."
+    "quote": "Based on a comprehensive evaluation of practice patterns and the prevalence and incidence of adverse clinical events, we believe that diphenhydramine has reached the end of its life cycle, and in its class of therapies it is a relatively greater public health hazard.",
+    "text": "Review article evaluating diphenhydramine's safety and public health impact"
    },
    "findings": [
     {
-     "passage": 16,
+     "passage": 8,
      "where": "Adverse effects, abuse potential, and safer alternatives to diphenhydramine",
-     "quote": "As people seek legal alternative medications for abuse, which have ease of obtaining information via online forums, there has been an increase in the number of cases involving excessive use of diphenhydramine.",
-     "text": "There has been an increase in cases involving excessive use of diphenhydramine as people seek legal alternative medications for use.",
-     "id": "F2",
+     "quote": "there is increasing awareness of the magnitude of diphenhydramine's adverse effects, abuse potential, and the presence of safer alternatives.",
+     "text": "Diphenhydramine has abuse potential.",
+     "id": "F3",
      "second_hand": ""
     },
     {
      "passage": 16,
      "where": "Adverse effects, abuse potential, and safer alternatives to diphenhydramine",
-     "quote": "the FDA has issued warnings that taking higher than recommended doses of the antihistamine diphenhydramine can lead to serious heart problems, seizures, coma, or even death.",
-     "text": "The FDA warns that taking higher than recommended doses of diphenhydramine can lead to serious heart problems, seizures, coma, or death.",
-     "id": "F3",
+     "quote": "taking higher than recommended doses of the antihistamine diphenhydramine can lead to serious heart problems, seizures, coma, or even death.",
+     "text": "Taking higher than recommended doses of diphenhydramine can lead to serious heart problems, seizures, coma, or death.",
+     "id": "F4",
+     "second_hand": ""
+    },
+    {
+     "passage": 8,
+     "where": "Adverse effects, abuse potential, and safer alternatives to diphenhydramine",
+     "quote": "sedation and anticholinergic adverse effects have become apparent.",
+     "text": "Diphenhydramine causes sedation and anticholinergic adverse effects.",
+     "id": "F5",
      "second_hand": ""
     }
    ],
@@ -208,8 +230,8 @@
      "passage": 5,
      "where": "Prevalence and use of diphenhydramine",
      "quote": "It is difficult to find precise data on diphenhydramine prescriptions and over-the-counter purchases.",
-     "text": "It is difficult to find precise data regarding the number of prescriptions and over-the-counter purchases of diphenhydramine.",
-     "id": "L1",
+     "text": "Precise data on diphenhydramine prescriptions and over-the-counter purchases is difficult to obtain.",
+     "id": "L2",
      "second_hand": ""
     }
    ],
@@ -218,9 +240,9 @@
   {
    "read": "page",
    "ref": {
-    "id": "nhs_how-and-when-to-take-or-use-diphenhydram",
+    "id": "nhs_who-can-and-cannot-take-diphenhydramine",
     "type": "webpage",
-    "title": "How and when to take or use diphenhydramine Brand names: Nytol Original, Boots Sleepeaze, Histergan",
+    "title": "Who can and cannot take diphenhydramine Brand names: Nytol Original, Boots Sleepeaze, Histergan",
     "author": [
      {
       "literal": "NHS"
@@ -229,63 +251,140 @@
     "issued": {
      "date-parts": [
       [
-       2025,
-       5,
-       22
+       2026,
+       11,
+       9
       ]
      ]
     },
-    "URL": "https://www.nhs.uk/medicines/diphenhydramine/how-and-when-to-take-or-use-diphenhydramine/",
+    "URL": "https://www.nhs.uk/medicines/diphenhydramine/who-can-and-cannot-take-diphenhydramine/",
     "accessed": {
      "date-parts": [
       [
        2026,
        11,
-       22
+       27
       ]
      ]
     },
     "verification": {
      "status": "made by code",
      "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-22"
+     "verified_on": "2026-11-27"
     }
    },
-   "title": "How and when to take or use diphenhydramine Brand names: Nytol Original, Boots Sleepeaze, Histergan",
-   "year": 2025,
+   "title": "Who can and cannot take diphenhydramine Brand names: Nytol Original, Boots Sleepeaze, Histergan",
+   "year": 2026,
    "kind": "official",
    "people": true,
-   "near": 0.547,
+   "near": 0.626,
    "name": "NHS",
    "short": "the NHS",
    "tier": 1,
-   "address": "https://www.nhs.uk/medicines/diphenhydramine/how-and-when-to-take-or-use-diphenhydramine/",
+   "address": "https://www.nhs.uk/medicines/diphenhydramine/who-can-and-cannot-take-diphenhydramine/",
    "money": [],
    "label": false,
    "design": null,
    "findings": [
     {
-     "passage": 13,
-     "where": "If you take or use too much",
-     "quote": "Taking too much diphenhydramine can be dangerous. It's important to get medical advice if you take more than the recommended dose.",
-     "text": "Taking more than the recommended dose of diphenhydramine is dangerous and requires medical advice.",
+     "passage": 4,
+     "where": "Who may not be able to take diphenhydramine",
+     "quote": "Diphenhydramine is not suitable for some people. To make sure it's safe for you, tell your doctor or pharmacist if you: have ever had an allergic reaction to diphenhydramine or any other medicine;",
+     "text": "People who have an allergic reaction to diphenhydramine or any other medicine should not take diphenhydramine.",
+     "id": "F6",
+     "second_hand": ""
+    },
+    {
+     "passage": 5,
+     "where": "Who may not be able to take diphenhydramine",
+     "quote": "are unable to have any alcohol – some liquid diphenhydramine products contain a small amount of alcohol, so check the ingredients and the packaging carefully",
+     "text": "People who cannot have any alcohol should avoid liquid diphenhydramine because some products contain a small amount of alcohol.",
      "id": "F7",
      "second_hand": ""
     },
     {
-     "passage": 14,
-     "where": "If you take or use too much / Call 999 or go to A&E now if:",
-     "quote": "You or your child take more than the recommended dose of diphenhydramine and: have a very fast, irregular or pounding heartbeat; have a seizure or fit; become unconscious",
-     "text": "Taking more than the recommended dose of diphenhydramine can lead to a very fast, irregular or pounding heartbeat, seizures, or becoming unconscious.",
+     "passage": 1,
+     "where": "Who can take diphenhydramine",
+     "quote": "Most adults and young people aged 16 years old and above can take diphenhydramine.",
+     "text": "People aged 16 years and above can generally take diphenhydramine.",
      "id": "F8",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "C"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "nhs_about-diphenhydramine",
+    "type": "webpage",
+    "title": "About diphenhydramine Brand names: Nytol Original, Boots Sleepeaze, Histergan",
+    "author": [
+     {
+      "literal": "NHS"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      [
+       2026,
+       7,
+       13
+      ]
+     ]
+    },
+    "URL": "https://www.nhs.uk/medicines/diphenhydramine/about-diphenhydramine/",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       27
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-27"
+    }
+   },
+   "title": "About diphenhydramine Brand names: Nytol Original, Boots Sleepeaze, Histergan",
+   "year": 2026,
+   "kind": "official",
+   "people": true,
+   "near": 0.596,
+   "name": "NHS",
+   "short": "the NHS",
+   "tier": 1,
+   "address": "https://www.nhs.uk/medicines/diphenhydramine/about-diphenhydramine/",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 2,
+     "where": "Key facts",
+     "quote": "Common side effects include feeling sleepy, dizzy or unsteady on your feet. You may also have difficulty concentrating and have a dry mouth.",
+     "text": "Diphenhydramine can cause sleepiness, dizziness, unsteadiness, difficulty concentrating and dry mouth.",
+     "id": "F9",
      "second_hand": ""
     },
     {
-     "passage": 11,
-     "where": "Dosage and how to take or use diphenhydramine / How long to take it for",
-     "quote": "You can become dependent on diphenhydramine if you take it without a break for too long.",
-     "text": "Taking diphenhydramine without a break for too long can lead to dependency.",
-     "id": "F9",
+     "passage": 2,
+     "where": "Key facts",
+     "quote": "Do not drink alcohol while taking diphenhydramine. Alcohol increases the risk of side effects.",
+     "text": "Alcohol increases the risk of side effects when taken with diphenhydramine.",
+     "id": "F10",
+     "second_hand": ""
+    },
+    {
+     "passage": 1,
+     "where": "Top of the page",
+     "quote": "It's known as a drowsy (sedating) antihistamine and is more likely to make you feel sleepy than other antihistamines.",
+     "text": "Diphenhydramine is more likely to make people who use it feel sleepy than other antihistamines.",
+     "id": "F11",
      "second_hand": ""
     }
    ],
@@ -293,161 +392,9 @@
    "tag": "D"
   }
  ],
- "parts": [
-  {
-   "part": "short",
-   "text": "It can. Children and teenagers may intentionally overdose to record altered behavior. Higher doses can lead to serious heart problems, seizures, coma, or death.",
-   "uses": [
-    "F1",
-    "F3",
-    "F8"
-   ],
-   "rests_on": [
-    {
-     "label": "F1",
-     "ref": "patel_2024",
-     "where": "1. Background › 1.3. Diphenhydramine Overdoses",
-     "quote": "the popular Tik Tok “Benadryl Challenge”, where children and teenagers intentionally overdose on OTC Benadryl and record and post their altered behavior.",
-     "sha": "d0311096bed6b787"
-    },
-    {
-     "label": "F3",
-     "ref": "clark_2025",
-     "where": "Adverse effects, abuse potential, and safer alternatives to diphenhydramine",
-     "quote": "the FDA has issued warnings that taking higher than recommended doses of the antihistamine diphenhydramine can lead to serious heart problems, seizures, coma, or even death.",
-     "sha": "bbc555abf30049fe"
-    },
-    {
-     "label": "F8",
-     "ref": "nhs_how-and-when-to-take-or-use-diphenhydram",
-     "where": "If you take or use too much / Call 999 or go to A&E now if:",
-     "quote": "You or your child take more than the recommended dose of diphenhydramine and: have a very fast, irregular or pounding heartbeat; have a seizure or fit; become unconscious",
-     "sha": "bf54ad27a302eb38"
-    }
-   ]
-  },
-  {
-   "part": "but",
-   "text": "This rests on 2 reviews and 1 official page.",
-   "uses": [
-    "DA",
-    "DB",
-    "F7"
-   ],
-   "fixed": true,
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "patel_2024",
-     "where": "Abstract",
-     "quote": "This review summarizes the adverse health effects and current emergency medicine treatments for diphenhydramine. Several emergency medicine case reports are reviewed, and the efficacy and outcomes of a variety of treatments are compared.",
-     "sha": "adf313035af05d17"
-    },
-    {
-     "label": "DB",
-     "ref": "clark_2025",
-     "where": "Abstract",
-     "quote": "Based on a comprehensive evaluation of practice patterns and the prevalence and incidence of adverse clinical events, we believe that diphenhydramine has reached the end of its life cycle",
-     "sha": "23e5354a2abae208"
-    },
-    {
-     "label": "F7",
-     "ref": "nhs_how-and-when-to-take-or-use-diphenhydram",
-     "where": "If you take or use too much",
-     "quote": "Taking too much diphenhydramine can be dangerous. It's important to get medical advice if you take more than the recommended dose.",
-     "sha": "4fbddb0093dcde0e"
-    }
-   ]
-  },
-  {
-   "part": "how1",
-   "text": "A 2025 review of clinical profiles says cases of excessive use are rising as people seek legal alternatives.",
-   "uses": [
-    "DB",
-    "F2",
-    "F3"
-   ],
-   "rests_on": [
-    {
-     "label": "DB",
-     "ref": "clark_2025",
-     "where": "Abstract",
-     "quote": "Based on a comprehensive evaluation of practice patterns and the prevalence and incidence of adverse clinical events, we believe that diphenhydramine has reached the end of its life cycle",
-     "sha": "23e5354a2abae208"
-    },
-    {
-     "label": "F2",
-     "ref": "clark_2025",
-     "where": "Adverse effects, abuse potential, and safer alternatives to diphenhydramine",
-     "quote": "As people seek legal alternative medications for abuse, which have ease of obtaining information via online forums, there has been an increase in the number of cases involving excessive use of diphenhydramine.",
-     "sha": "bbc555abf30049fe"
-    },
-    {
-     "label": "F3",
-     "ref": "clark_2025",
-     "where": "Adverse effects, abuse potential, and safer alternatives to diphenhydramine",
-     "quote": "the FDA has issued warnings that taking higher than recommended doses of the antihistamine diphenhydramine can lead to serious heart problems, seizures, coma, or even death.",
-     "sha": "bbc555abf30049fe"
-    }
-   ],
-   "quote": "there has been an increase in the number of cases involving excessive use of diphenhydramine",
-   "quote_ref": "clark_2025"
-  },
-  {
-   "part": "how2",
-   "text": "The NHS says taking more than the recommended dose is dangerous and can cause a fast heartbeat, seizures, or unconsciousness.",
-   "uses": [
-    "F7",
-    "F8"
-   ],
-   "rests_on": [
-    {
-     "label": "F7",
-     "ref": "nhs_how-and-when-to-take-or-use-diphenhydram",
-     "where": "If you take or use too much",
-     "quote": "Taking too much diphenhydramine can be dangerous. It's important to get medical advice if you take more than the recommended dose.",
-     "sha": "4fbddb0093dcde0e"
-    },
-    {
-     "label": "F8",
-     "ref": "nhs_how-and-when-to-take-or-use-diphenhydram",
-     "where": "If you take or use too much / Call 999 or go to A&E now if:",
-     "quote": "You or your child take more than the recommended dose of diphenhydramine and: have a very fast, irregular or pounding heartbeat; have a seizure or fit; become unconscious",
-     "sha": "bf54ad27a302eb38"
-    }
-   ],
-   "quote": "It's important to get medical advice if you take more than the recommended dose",
-   "quote_ref": "nhs_how-and-when-to-take-or-use-diphenhydram"
-  },
-  {
-   "part": "how3",
-   "text": "A 2024 review of emergency treatments notes children and teenagers intentionally overdose to record and post their altered behavior.",
-   "uses": [
-    "DA",
-    "F1"
-   ],
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "patel_2024",
-     "where": "Abstract",
-     "quote": "This review summarizes the adverse health effects and current emergency medicine treatments for diphenhydramine. Several emergency medicine case reports are reviewed, and the efficacy and outcomes of a variety of treatments are compared.",
-     "sha": "adf313035af05d17"
-    },
-    {
-     "label": "F1",
-     "ref": "patel_2024",
-     "where": "1. Background › 1.3. Diphenhydramine Overdoses",
-     "quote": "the popular Tik Tok “Benadryl Challenge”, where children and teenagers intentionally overdose on OTC Benadryl and record and post their altered behavior.",
-     "sha": "d0311096bed6b787"
-    }
-   ],
-   "quote": "children and teenagers intentionally overdose on OTC Benadryl and record and post their altered behavior",
-   "quote_ref": "patel_2024"
-  }
- ],
- "complete": true,
- "missing": "",
+ "parts": [],
+ "complete": false,
+ "missing": "how common the high is",
  "wanted": [
   {
    "doi": "10.1097/mjt.0000000000001057",
@@ -488,6 +435,14 @@
    "why": "no draft passed: not accepted at try 1: a second reader did not accept short (the word it opens with (“It can”) is not the answer the passages bear out: The opening phrase “It can” asserts that diphenhydramine can get you high, but the provided passages only describe intentional overdose for altered behavior and do n); but (the passages do not mention a review of clinical profiles). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-22",
+   "lane": 19,
+   "status": "published",
+   "why": "passed every gate, and the stricter bar for an answer about dying",
+   "short": "It can. Children and teenagers may intentionally overdose to record altered behavior. Higher doses can lead to serious heart problems, seizures, coma, or death.",
+   "complete": true
   }
  ],
  "looked": [
@@ -496,17 +451,23 @@
    "read": "full",
    "kind": "review",
    "at": "10.3390/toxics12060376",
-   "kept": 1,
+   "kept": 2,
    "thrown": [
     {
      "kind": "finding",
-     "text": "Higher doses of diphenhydramine can cause agitation and hallucinations, while doses greater than 1 g can cause seizures, delirium, psychosis, rhabdomyolysis, coma, and death.",
-     "quote": "Higher doses can also result in agitation and hallucinations. In doses greater than 1 g, symptoms may also include seizures, delirium, psychosis, rhabdomyolysis, coma, and death.",
+     "text": "Overdoses of more than 1 g of diphenhydramine can cause seizures, delirium, psychosis, rhabdomyolysis, coma, and death.",
+     "quote": "In doses greater than 1 g, symptoms may also include seizures, delirium, psychosis, rhabdomyolysis, coma, and death.",
+     "why": "it holds an amount or a time between uses"
+    },
+    {
+     "kind": "finding",
+     "text": "Mild diphenhydramine overdoses (<300 mg) can cause tachycardia, dry mouth, dilated pupils, reduced bowel sounds, and urinary retention.",
+     "quote": "In mild oral overdoses of less than 300 mg, the patient usually presents with symptoms including tachycardia, dry mucous membranes, dilated pupils, hypoactive bowel sounds, and urinary retention.",
      "why": "it holds an amount or a time between uses"
     },
     {
      "kind": "limit",
-     "text": "More research is required to establish the best way to treat antihistamine overdoses.",
+     "text": "More research is needed to identify the optimal treatment for antihistamine overdoses.",
      "quote": "We conclude that more study is needed to determine the ideal therapeutic approach to treating antihistamine overdoses.",
      "why": "the sentence is not carried by its quote and passage"
     }
@@ -517,22 +478,15 @@
    "read": "full",
    "kind": "review",
    "at": "10.1016/j.waojou.2025.101027",
-   "kept": 2,
-   "thrown": [
-    {
-     "kind": "finding",
-     "text": "The paper concludes that diphenhydramine has a demonstrated potential for use in ways that are not intended.",
-     "quote": "The presence of effective and safer second-generation antihistamines, frequent and sometimes severe adverse reactions to first-generation agents, as well as its demonstrated abuse potential, strongly ",
-     "why": "the sentence is not carried by its quote and passage"
-    }
-   ]
+   "kept": 3,
+   "thrown": []
   },
   {
    "title": "Who can and cannot take diphenhydramine Brand names: Nytol Original, Boots Sleepeaze, Histergan",
    "read": "page",
    "kind": "official",
    "at": "https://www.nhs.uk/medicines/diphenhydramine/who-can-and-cannot-take-diphenhydramine/",
-   "kept": 0,
+   "kept": 3,
    "thrown": []
   },
   {
@@ -542,99 +496,126 @@
    "at": "https://www.nhs.uk/medicines/diphenhydramine/about-diphenhydramine/",
    "kept": 3,
    "thrown": []
-  },
-  {
-   "title": "How and when to take or use diphenhydramine Brand names: Nytol Original, Boots Sleepeaze, Histergan",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.nhs.uk/medicines/diphenhydramine/how-and-when-to-take-or-use-diphenhydramine/",
-   "kept": 3,
-   "thrown": [
-    {
-     "kind": "finding",
-     "text": "Taking more than the recommended dose of diphenhydramine can cause people to feel confused, agitated, have difficulty speaking, or experience hallucinations.",
-     "quote": "You or your child take more than the recommended dose of diphenhydramine and: ... feel confused or agitated, or have difficulty speaking; see or hear things that are not there (hallucinations)",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
-    }
-   ]
   }
  ],
  "plan": {
   "short": [
-   "F1",
    "F3",
-   "F8"
+   "F1",
+   "F4",
+   "F5"
   ],
-  "direct": "It can",
-  "but": [],
+  "direct": "Yes",
+  "but": [
+   "L2"
+  ],
   "how": [
    [
-    "DB",
-    "F2",
-    "F3"
+    "F3",
+    "F4",
+    "F5"
    ],
    [
-    "F7",
-    "F8"
+    "F1",
+    "F2"
    ],
    [
-    "DA",
-    "F1"
+    "F9",
+    "F10",
+    "F11"
    ]
   ],
-  "unanswered": ""
- },
- "panel": {
-  "gemini:gemini-3.6-flash": {
-   "short": [
-    true,
-    ""
-   ],
-   "but": [
-    false,
-    "The passages do not state that the first source is not a study of how the drug works in the body."
-   ],
-   "how1": [
-    true,
-    ""
-   ],
-   "how2": [
-    false,
-    "The passages say taking too much diphenhydramine \"can be dangerous\" (rather than taking more than the recommended dose \"is dangerous\") and list when to call 999 or go to A&E rather than stating taking more than the recommended dose causes t"
-   ],
-   "how3": [
-    true,
-    ""
-   ]
-  }
- },
- "panel_gap": [],
- "own": {
-  "model": "pharmakon-check-0",
-  "threshold": 0.05,
-  "scores": {
-   "short": 0.8335,
-   "but": 0.0878,
-   "how1": 0.5041,
-   "how2": 0.9602,
-   "how3": 0.5301
-  },
-  "scores_quotes_alone": {
-   "short": 0.5014,
-   "but": 0.0937,
-   "how1": 0.4945,
-   "how2": 0.6228,
-   "how3": 0.2075
-  }
+  "unanswered": "how common the high is"
  },
  "tries": [
   {
-   "try": 1,
-   "why": "the short answer or the But was not accepted: written again",
+   "try": 2,
+   "why": "a rule was broken: written again",
    "parts": [
     {
      "part": "short",
-     "text": "It can. Children and teenagers may intentionally overdose to record altered behavior. Higher doses can lead to serious heart problems, seizures, coma, or death.",
+     "text": "Yes, diphenhydramine has abuse potential. People intentionally overdose to change behavior, which can lead to serious heart problems, seizures, coma, or death.",
+     "rests_on": [
+      {
+       "label": "F3",
+       "ref": "clark_2025",
+       "where": "Adverse effects, abuse potential, and safer alternatives to diphenhydramine",
+       "quote": "there is increasing awareness of the magnitude of diphenhydramine's adverse effects, abuse potential, and the presence of safer alternatives.",
+       "sha": "b0fcc4c0b1d059e6"
+      },
+      {
+       "label": "F1",
+       "ref": "patel_2024",
+       "where": "1. Background › 1.3. Diphenhydramine Overdoses",
+       "quote": "the popular Tik Tok “Benadryl Challenge”, where children and teenagers intentionally overdose on OTC Benadryl and record and post their altered behavior.",
+       "sha": "d0311096bed6b787"
+      },
+      {
+       "label": "F4",
+       "ref": "clark_2025",
+       "where": "Adverse effects, abuse potential, and safer alternatives to diphenhydramine",
+       "quote": "taking higher than recommended doses of the antihistamine diphenhydramine can lead to serious heart problems, seizures, coma, or even death.",
+       "sha": "bbc555abf30049fe"
+      },
+      {
+       "label": "F5",
+       "ref": "clark_2025",
+       "where": "Adverse effects, abuse potential, and safer alternatives to diphenhydramine",
+       "quote": "sedation and anticholinergic adverse effects have become apparent.",
+       "sha": "b0fcc4c0b1d059e6"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: words that are not person-first (“abuse”)"
+    },
+    {
+     "part": "but",
+     "text": "It is difficult to find precise data on diphenhydramine prescriptions and over-the-counter purchases.",
+     "rests_on": [
+      {
+       "label": "L2",
+       "ref": "clark_2025",
+       "where": "Prevalence and use of diphenhydramine",
+       "quote": "It is difficult to find precise data on diphenhydramine prescriptions and over-the-counter purchases.",
+       "sha": "27a2220844a04b52"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "A 2025 review says diphenhydramine has abuse potential and higher doses can cause heart problems, seizures, coma, or death.",
+     "rests_on": [
+      {
+       "label": "F3",
+       "ref": "clark_2025",
+       "where": "Adverse effects, abuse potential, and safer alternatives to diphenhydramine",
+       "quote": "there is increasing awareness of the magnitude of diphenhydramine's adverse effects, abuse potential, and the presence of safer alternatives.",
+       "sha": "b0fcc4c0b1d059e6"
+      },
+      {
+       "label": "F4",
+       "ref": "clark_2025",
+       "where": "Adverse effects, abuse potential, and safer alternatives to diphenhydramine",
+       "quote": "taking higher than recommended doses of the antihistamine diphenhydramine can lead to serious heart problems, seizures, coma, or even death.",
+       "sha": "bbc555abf30049fe"
+      },
+      {
+       "label": "F5",
+       "ref": "clark_2025",
+       "where": "Adverse effects, abuse potential, and safer alternatives to diphenhydramine",
+       "quote": "sedation and anticholinergic adverse effects have become apparent.",
+       "sha": "b0fcc4c0b1d059e6"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: words that are not person-first (“abuse”)"
+    },
+    {
+     "part": "how2",
+     "text": "A 2024 review notes children and teenagers intentionally overdose to record altered behavior, which can cause cardiac toxicity.",
      "rests_on": [
       {
        "label": "F1",
@@ -644,117 +625,39 @@
        "sha": "d0311096bed6b787"
       },
       {
-       "label": "F3",
-       "ref": "clark_2025",
-       "where": "Adverse effects, abuse potential, and safer alternatives to diphenhydramine",
-       "quote": "the FDA has issued warnings that taking higher than recommended doses of the antihistamine diphenhydramine can lead to serious heart problems, seizures, coma, or even death.",
-       "sha": "bbc555abf30049fe"
-      },
-      {
-       "label": "F8",
-       "ref": "nhs_how-and-when-to-take-or-use-diphenhydram",
-       "where": "If you take or use too much / Call 999 or go to A&E now if:",
-       "quote": "You or your child take more than the recommended dose of diphenhydramine and: have a very fast, irregular or pounding heartbeat; have a seizure or fit; become unconscious",
-       "sha": "bf54ad27a302eb38"
-      }
-     ],
-     "ok": false,
-     "by": "a further reader",
-     "said": "a further reader (gemini-3.6-flash) did not accept it: The passage specifies 'higher than recommended doses', not simply 'higher doses'."
-    },
-    {
-     "part": "but",
-     "text": "The information comes from a literature review of emergency medicine treatments for diphenhydramine overdose.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "patel_2024",
-       "where": "Abstract",
-       "quote": "This review summarizes the adverse health effects and current emergency medicine treatments for diphenhydramine. Several emergency medicine case reports are reviewed, and the efficacy and outcomes of a variety of treatments are compared.",
-       "sha": "adf313035af05d17"
-      }
-     ],
-     "ok": false,
-     "by": "a further reader",
-     "said": "a further reader (gemini-3.6-flash) did not accept it: The passage does not state that 'the information comes from' this source."
-    },
-    {
-     "part": "how1",
-     "text": "A review of clinical profiles says cases of excessive use are increasing as people seek legal alternatives.",
-     "rests_on": [
-      {
-       "label": "DB",
-       "ref": "clark_2025",
-       "where": "Abstract",
-       "quote": "Based on a comprehensive evaluation of practice patterns and the prevalence and incidence of adverse clinical events, we believe that diphenhydramine has reached the end of its life cycle",
-       "sha": "23e5354a2abae208"
-      },
-      {
        "label": "F2",
-       "ref": "clark_2025",
-       "where": "Adverse effects, abuse potential, and safer alternatives to diphenhydramine",
-       "quote": "As people seek legal alternative medications for abuse, which have ease of obtaining information via online forums, there has been an increase in the number of cases involving excessive use of diphenhydramine.",
-       "sha": "bbc555abf30049fe"
-      }
-     ],
-     "ok": false,
-     "by": "a further reader",
-     "said": "a further reader (gemini-3.6-flash) did not accept it:  The passage does not state that it is 'a review of clinical profiles'."
-    },
-    {
-     "part": "how2",
-     "text": "The FDA warns that higher than recommended doses can lead to serious heart problems, seizures, coma, or death.",
-     "rests_on": [
-      {
-       "label": "F3",
-       "ref": "clark_2025",
-       "where": "Adverse effects, abuse potential, and safer alternatives to diphenhydramine",
-       "quote": "the FDA has issued warnings that taking higher than recommended doses of the antihistamine diphenhydramine can lead to serious heart problems, seizures, coma, or even death.",
-       "sha": "bbc555abf30049fe"
+       "ref": "patel_2024",
+       "where": "1. Background › 1.2. Diphenhydramine Risks",
+       "quote": "This can cause adverse cardiac effects such as QRS widening and lengthening of the QT interval.",
+       "sha": "45b54c3a104a3161"
       }
      ],
      "ok": true
     },
     {
      "part": "how3",
-     "text": "The NHS says taking more than the recommended dose can cause a fast, irregular heartbeat, seizures, or unconsciousness.",
+     "text": "The NHS says it causes sleepiness, dizziness, and dry mouth, is more sedating than other antihistamines, and alcohol increases side effects.",
      "rests_on": [
       {
-       "label": "F7",
-       "ref": "nhs_how-and-when-to-take-or-use-diphenhydram",
-       "where": "If you take or use too much",
-       "quote": "Taking too much diphenhydramine can be dangerous. It's important to get medical advice if you take more than the recommended dose.",
-       "sha": "4fbddb0093dcde0e"
+       "label": "F9",
+       "ref": "nhs_about-diphenhydramine",
+       "where": "Key facts",
+       "quote": "Common side effects include feeling sleepy, dizzy or unsteady on your feet. You may also have difficulty concentrating and have a dry mouth.",
+       "sha": "1d792fc43c347b25"
       },
       {
-       "label": "F8",
-       "ref": "nhs_how-and-when-to-take-or-use-diphenhydram",
-       "where": "If you take or use too much / Call 999 or go to A&E now if:",
-       "quote": "You or your child take more than the recommended dose of diphenhydramine and: have a very fast, irregular or pounding heartbeat; have a seizure or fit; become unconscious",
-       "sha": "bf54ad27a302eb38"
-      }
-     ],
-     "ok": false,
-     "by": "a further reader",
-     "said": "a further reader (gemini-3.6-flash) did not accept it: The passage lists symptoms under which to call 999 or go to A&E after taking more than the recommended dose, but does not state that taking more than the recommended dose can cause those symptoms."
-    },
-    {
-     "part": "how4",
-     "text": "A literature review of emergency medicine treatments notes children and teenagers intentionally overdose to record altered behavior.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "patel_2024",
-       "where": "Abstract",
-       "quote": "This review summarizes the adverse health effects and current emergency medicine treatments for diphenhydramine. Several emergency medicine case reports are reviewed, and the efficacy and outcomes of a variety of treatments are compared.",
-       "sha": "adf313035af05d17"
+       "label": "F10",
+       "ref": "nhs_about-diphenhydramine",
+       "where": "Key facts",
+       "quote": "Do not drink alcohol while taking diphenhydramine. Alcohol increases the risk of side effects.",
+       "sha": "1d792fc43c347b25"
       },
       {
-       "label": "F1",
-       "ref": "patel_2024",
-       "where": "1. Background › 1.3. Diphenhydramine Overdoses",
-       "quote": "the popular Tik Tok “Benadryl Challenge”, where children and teenagers intentionally overdose on OTC Benadryl and record and post their altered behavior.",
-       "sha": "d0311096bed6b787"
+       "label": "F11",
+       "ref": "nhs_about-diphenhydramine",
+       "where": "Top of the page",
+       "quote": "It's known as a drowsy (sedating) antihistamine and is more likely to make you feel sleepy than other antihistamines.",
+       "sha": "c41f6e4353edbd2f"
       }
      ],
      "ok": true
@@ -762,13 +665,20 @@
    ]
   },
   {
-   "try": 2,
-   "why": "the short answer or the But was not accepted: written again",
+   "try": 3,
+   "why": "a rule was broken: written again",
    "parts": [
     {
      "part": "short",
-     "text": "It can. Children and teenagers may intentionally overdose to record altered behavior. Higher than recommended doses can lead to serious heart problems, seizures, coma, or death.",
+     "text": "Yes, diphenhydramine has abuse potential. People who use it in high doses can have serious heart problems, seizures, coma, or death.",
      "rests_on": [
+      {
+       "label": "F3",
+       "ref": "clark_2025",
+       "where": "Adverse effects, abuse potential, and safer alternatives to diphenhydramine",
+       "quote": "there is increasing awareness of the magnitude of diphenhydramine's adverse effects, abuse potential, and the presence of safer alternatives.",
+       "sha": "b0fcc4c0b1d059e6"
+      },
       {
        "label": "F1",
        "ref": "patel_2024",
@@ -777,106 +687,113 @@
        "sha": "d0311096bed6b787"
       },
       {
-       "label": "F3",
+       "label": "F4",
        "ref": "clark_2025",
        "where": "Adverse effects, abuse potential, and safer alternatives to diphenhydramine",
-       "quote": "the FDA has issued warnings that taking higher than recommended doses of the antihistamine diphenhydramine can lead to serious heart problems, seizures, coma, or even death.",
+       "quote": "taking higher than recommended doses of the antihistamine diphenhydramine can lead to serious heart problems, seizures, coma, or even death.",
        "sha": "bbc555abf30049fe"
       },
       {
-       "label": "F8",
-       "ref": "nhs_how-and-when-to-take-or-use-diphenhydram",
-       "where": "If you take or use too much / Call 999 or go to A&E now if:",
-       "quote": "You or your child take more than the recommended dose of diphenhydramine and: have a very fast, irregular or pounding heartbeat; have a seizure or fit; become unconscious",
-       "sha": "bf54ad27a302eb38"
+       "label": "F5",
+       "ref": "clark_2025",
+       "where": "Adverse effects, abuse potential, and safer alternatives to diphenhydramine",
+       "quote": "sedation and anticholinergic adverse effects have become apparent.",
+       "sha": "b0fcc4c0b1d059e6"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: words that are not person-first (“abuse”)"
     },
     {
      "part": "but",
-     "text": "The first source is a literature review of emergency medicine treatments, not a study of how the drug works in the body.",
+     "text": "It is difficult to find precise data on diphenhydramine prescriptions and over-the-counter purchases.",
      "rests_on": [
       {
-       "label": "DA",
-       "ref": "patel_2024",
-       "where": "Abstract",
-       "quote": "This review summarizes the adverse health effects and current emergency medicine treatments for diphenhydramine. Several emergency medicine case reports are reviewed, and the efficacy and outcomes of a variety of treatments are compared.",
-       "sha": "adf313035af05d17"
-      }
-     ],
-     "ok": false,
-     "by": "a further reader",
-     "said": "a further reader (gemini-3.6-flash) did not accept it: The passages do not state that the first source is not a study of how the drug works in the body."
-    },
-    {
-     "part": "how1",
-     "text": "A 2025 review says cases of excessive use are rising as people seek legal alternatives. The FDA warns higher than recommended doses can cause heart problems, seizures, coma, or death.",
-     "rests_on": [
-      {
-       "label": "DB",
+       "label": "L2",
        "ref": "clark_2025",
-       "where": "Abstract",
-       "quote": "Based on a comprehensive evaluation of practice patterns and the prevalence and incidence of adverse clinical events, we believe that diphenhydramine has reached the end of its life cycle",
-       "sha": "23e5354a2abae208"
-      },
-      {
-       "label": "F2",
-       "ref": "clark_2025",
-       "where": "Adverse effects, abuse potential, and safer alternatives to diphenhydramine",
-       "quote": "As people seek legal alternative medications for abuse, which have ease of obtaining information via online forums, there has been an increase in the number of cases involving excessive use of diphenhydramine.",
-       "sha": "bbc555abf30049fe"
-      },
-      {
-       "label": "F3",
-       "ref": "clark_2025",
-       "where": "Adverse effects, abuse potential, and safer alternatives to diphenhydramine",
-       "quote": "the FDA has issued warnings that taking higher than recommended doses of the antihistamine diphenhydramine can lead to serious heart problems, seizures, coma, or even death.",
-       "sha": "bbc555abf30049fe"
+       "where": "Prevalence and use of diphenhydramine",
+       "quote": "It is difficult to find precise data on diphenhydramine prescriptions and over-the-counter purchases.",
+       "sha": "27a2220844a04b52"
       }
      ],
      "ok": true
     },
     {
-     "part": "how2",
-     "text": "The NHS says taking more than the recommended dose is dangerous. It can cause a very fast, irregular or pounding heartbeat, seizures, or becoming unconscious.",
+     "part": "how1",
+     "text": "A 2025 review says diphenhydramine has abuse potential and high doses can cause heart problems, seizures, coma, or death.",
      "rests_on": [
       {
-       "label": "F7",
-       "ref": "nhs_how-and-when-to-take-or-use-diphenhydram",
-       "where": "If you take or use too much",
-       "quote": "Taking too much diphenhydramine can be dangerous. It's important to get medical advice if you take more than the recommended dose.",
-       "sha": "4fbddb0093dcde0e"
+       "label": "F3",
+       "ref": "clark_2025",
+       "where": "Adverse effects, abuse potential, and safer alternatives to diphenhydramine",
+       "quote": "there is increasing awareness of the magnitude of diphenhydramine's adverse effects, abuse potential, and the presence of safer alternatives.",
+       "sha": "b0fcc4c0b1d059e6"
       },
       {
-       "label": "F8",
-       "ref": "nhs_how-and-when-to-take-or-use-diphenhydram",
-       "where": "If you take or use too much / Call 999 or go to A&E now if:",
-       "quote": "You or your child take more than the recommended dose of diphenhydramine and: have a very fast, irregular or pounding heartbeat; have a seizure or fit; become unconscious",
-       "sha": "bf54ad27a302eb38"
+       "label": "F4",
+       "ref": "clark_2025",
+       "where": "Adverse effects, abuse potential, and safer alternatives to diphenhydramine",
+       "quote": "taking higher than recommended doses of the antihistamine diphenhydramine can lead to serious heart problems, seizures, coma, or even death.",
+       "sha": "bbc555abf30049fe"
+      },
+      {
+       "label": "F5",
+       "ref": "clark_2025",
+       "where": "Adverse effects, abuse potential, and safer alternatives to diphenhydramine",
+       "quote": "sedation and anticholinergic adverse effects have become apparent.",
+       "sha": "b0fcc4c0b1d059e6"
       }
      ],
      "ok": false,
-     "by": "a further reader",
-     "said": "a further reader (gemini-3.6-flash) did not accept it: The passages say taking too much diphenhydramine \"can be dangerous\" (rather than taking more than the recommended dose \"is dangerous\") and list when to call 999 or go to A&E rather than stating taking more than the recommended dose causes t"
+     "by": "a rule",
+     "said": "a rule: words that are not person-first (“abuse”)"
     },
     {
-     "part": "how3",
-     "text": "A 2024 literature review of emergency medicine treatments notes children and teenagers participate in the Benadryl Challenge by intentionally overdosing to record altered behavior.",
+     "part": "how2",
+     "text": "A 2024 review notes some people intentionally overdose to change behavior, which can cause heart issues like QRS widening.",
      "rests_on": [
-      {
-       "label": "DA",
-       "ref": "patel_2024",
-       "where": "Abstract",
-       "quote": "This review summarizes the adverse health effects and current emergency medicine treatments for diphenhydramine. Several emergency medicine case reports are reviewed, and the efficacy and outcomes of a variety of treatments are compared.",
-       "sha": "adf313035af05d17"
-      },
       {
        "label": "F1",
        "ref": "patel_2024",
        "where": "1. Background › 1.3. Diphenhydramine Overdoses",
        "quote": "the popular Tik Tok “Benadryl Challenge”, where children and teenagers intentionally overdose on OTC Benadryl and record and post their altered behavior.",
        "sha": "d0311096bed6b787"
+      },
+      {
+       "label": "F2",
+       "ref": "patel_2024",
+       "where": "1. Background › 1.2. Diphenhydramine Risks",
+       "quote": "This can cause adverse cardiac effects such as QRS widening and lengthening of the QT interval.",
+       "sha": "45b54c3a104a3161"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "The NHS says diphenhydramine causes sleepiness and dizziness, is more sedating than other antihistamines, and alcohol increases side effects.",
+     "rests_on": [
+      {
+       "label": "F9",
+       "ref": "nhs_about-diphenhydramine",
+       "where": "Key facts",
+       "quote": "Common side effects include feeling sleepy, dizzy or unsteady on your feet. You may also have difficulty concentrating and have a dry mouth.",
+       "sha": "1d792fc43c347b25"
+      },
+      {
+       "label": "F10",
+       "ref": "nhs_about-diphenhydramine",
+       "where": "Key facts",
+       "quote": "Do not drink alcohol while taking diphenhydramine. Alcohol increases the risk of side effects.",
+       "sha": "1d792fc43c347b25"
+      },
+      {
+       "label": "F11",
+       "ref": "nhs_about-diphenhydramine",
+       "where": "Top of the page",
+       "quote": "It's known as a drowsy (sedating) antihistamine and is more likely to make you feel sleepy than other antihistamines.",
+       "sha": "c41f6e4353edbd2f"
       }
      ],
      "ok": true
@@ -884,36 +801,6 @@
    ]
   }
  ],
- "dropped": [
-  {
-   "try": 3,
-   "part": "but",
-   "text": "The sources are reviews of case reports and clinical data, not studies of how the drug works in the body.",
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "patel_2024",
-     "where": "Abstract",
-     "quote": "This review summarizes the adverse health effects and current emergency medicine treatments for diphenhydramine. Several emergency medicine case reports are reviewed, and the efficacy and outcomes of a variety of treatments are compared.",
-     "sha": "adf313035af05d17"
-    },
-    {
-     "label": "DB",
-     "ref": "clark_2025",
-     "where": "Abstract",
-     "quote": "Based on a comprehensive evaluation of practice patterns and the prevalence and incidence of adverse clinical events, we believe that diphenhydramine has reached the end of its life cycle",
-     "sha": "23e5354a2abae208"
-    }
-   ],
-   "by": "the second reader",
-   "said": "The passages do not state that the sources are reviews of case reports and clinical data, not studies of how the drug works in the body."
-  }
- ],
- "stakes": "dying",
- "with_checked": {
-  "differs": [],
-  "same": []
- },
  "place": {
   "home": "new:Diphenhydramine and similar antihistamines",
   "also": [],
