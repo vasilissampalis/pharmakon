@@ -1346,6 +1346,29 @@ def hedge_dropped(ours, quotes):
     return None
 
 
+# (27 November 2026) A reputation said as a fact. A review's line "the plant has gained ... reputation due to its capabilities to promote a sense of well-being
+# by relieving stress" became "kanna relieves stress" (held on 20 November) and, after the editor's note, "kanna promotes a sense of well-being and relieving
+# stress" (held on 27 November; the second reader accepted both). Where a quote gives a thing as a reputation, a traditional use, a belief or a claim, and our
+# sentence says the same thing (two of the words that follow it) with no word of its own that it is a reputation, a use or a belief, the sentence is written
+# again, sentence by sentence. Measured on the exam of the lane's own sentences (287, 60 not good): it stops none of the 227 good ones and catches one of the
+# 60 (the line of 20 November, which GPT-6 Luna and Claude Haiku 5.5 both let through in the exam of 27 November); it catches the sentence of 27 November.
+REPUTE_Q = re.compile(r"\b(?:reputation|reputed|traditionally used|traditional(?:ly)? (?:use|uses|medicine|remedy)|(?:has|have) been used (?:traditionally |for centuries |historically )?(?:as|for|to)|folk (?:medicine|remedy|use)|popularly (?:believed|used)|is believed by (?:users|people)|anecdotal(?:ly)?|claimed to|purported(?:ly)?|said to)\b", re.I)
+REPUTE_S = re.compile(r"\b(?:reputation|reputed|traditional\w*|(?:is|are|was|were|has been|have been) used|use[sd]? (?:as|for|to)|folk|believed|belief|anecdot\w*|claim\w*|purport\w*|said to|known for|popular\w*)\b", re.I)
+_REPUTE_STOP = {"with", "that", "this", "from", "have", "been", "their", "which", "these", "those", "into", "about", "also", "more", "most", "such", "they", "them", "than", "were", "being", "its", "capabilities", "capability", "due"}
+
+
+def repute_as_fact(ours, quotes):
+    """The words of a quote that give a thing as a reputation or a belief, where a sentence of ours says that thing as a fact; else None. Sentence by sentence:
+    "A 2021 review says kanna relieves stress. It notes traditional use as a pain reliever." says the first as a fact, whatever the second says."""
+    for sent in re.split(r"(?<=[.!?])\s+", ours or ""):
+        if REPUTE_S.search(sent): continue
+        for q in quotes:
+            for m in REPUTE_Q.finditer(q or ""):
+                tail = {w.lower()[:6] for w in re.findall(r"[A-Za-z][A-Za-z-]{3,}", q[m.end():m.end() + 160]) if w.lower() not in _REPUTE_STOP}
+                if sum(1 for w in tail if re.search(r"\b" + re.escape(w), sent, re.I)) >= 2: return m.group(0)
+    return None
+
+
 def says_more(parts, labels):
     """What a draft says that its sources do not carry (the kinds in MORE, what people say of themselves said as what is, a result for one sex said of people): [(part, what)]."""
     bad = []
@@ -1357,7 +1380,9 @@ def says_more(parts, labels):
         w = as_was(p["text"], " ".join(labels[u]["quote"] for u in p["uses"]))
         if w: bad.append((p["part"], f"its source says “{w}”: that is what people perceived or said of themselves, not what was measured. Keep the word (“perceived”), or say that people said so")); continue
         h = hedge_dropped(p["text"], " ".join(labels[u]["quote"] for u in p["uses"]))
-        if h: bad.append((p["part"], h))
+        if h: bad.append((p["part"], h)); continue
+        r = repute_as_fact(p["text"], [labels[u]["quote"] for u in p["uses"]])
+        if r: bad.append((p["part"], f"its source gives this as a reputation or a belief (“{r}”), and the sentence says it as what the drug does: say that it is a reputation, a traditional use or a belief, as the source does, or leave it out"))
     return bad
 
 
@@ -3266,6 +3291,13 @@ def selftest():
     assert hedge_dropped("2C-B can be found in saliva for up to 24 hours.", "could be detected in oral fluid up to 24 h in half of the volunteers.") and not hedge_dropped("In half of 16 volunteers, 2C-B was found in saliva up to 24 hours.", "could be detected in oral fluid up to 24 h in half of the volunteers.")
     assert not hedge_dropped("Higher doses can cause death.", "misuse can result in severe toxicity and even death in some cases.") and not hedge_dropped("It is dangerous.", "It can be dangerous, and in large amounts it is dangerous.")
     assert says_more([{"part": "how2", "text": "The NHS says taking more than the recommended dose is dangerous.", "uses": ["F1"]}], {"F1": {"quote": "Taking too much diphenhydramine can be dangerous.", "passage_text": ""}})
+    # (27 November 2026) a reputation said as a fact
+    rq = "Today, the plant has gained strong global attraction and reputation due to its capabilities to promote a sense of well‑being by relieving stress with calming effects."
+    assert repute_as_fact("Yes, kanna promotes a sense of well-being and relieving stress with calming effects.", [rq]) and repute_as_fact("A 2021 review says kanna relieves stress and improves mood.", [rq])
+    assert not repute_as_fact("A 2021 review says kanna has a reputation for relieving stress.", [rq]) and not repute_as_fact("Kanna contains mesembrine, which acts on serotonin.", [rq])
+    assert not repute_as_fact("Khoi and San people have traditionally used kanna to relieve pain.", ["Native Khoi and San tribes of South Africa have been traditionally using Kanna plants as a pain reliever."])
+    assert repute_as_fact("A 2021 review says kanna relieves stress and improves mood. It notes traditional use as a pain reliever by Khoi and San tribes.", [rq])
+    assert says_more([{"part": "short", "text": "Kanna relieves stress with calming effects.", "uses": ["F1"]}], {"F1": {"quote": rq, "passage_text": ""}})
     # (27 November 2026) a study's methods: never its finding, whoever speaks there; the rule that refuses "found" for it (rules) then has its reason
     assert intro_hand(intro, {"passage": 2, "where": "MATERIALS AND METHODS › Instruments", "quote": "Stimulants improve vigilance in sleep-deprived people"}).startswith("(the paper's methods")
     assert intro_hand(intro, {"passage": 2, "where": "2. Methods", "quote": "we asked 1,105 surgeons about their use"}) and intro_hand(intro, {"passage": 2, "where": "Methodological limits of earlier work", "quote": "x"}) == ""

@@ -121,3 +121,8 @@ the gates catch these by themselves.
   they were spent by 00:55 UTC, and the lane stopped for the day to keep the rest for questions people send. Of the OpenRouter
   money, $0.43 had been spent in November (most of it on exams). A plan that spends to the month's end has room to read with
   paid models once the free ones are spent.
+- The second readers on the grown exam (287 sentences, 60 not good; exam-0027): GPT-6 Luna catches 47 and stops 58 of 227
+  good ones; Claude Haiku 5.5 catches 38 and stops 39; both together would catch 51 and stop 72. Even Luna lets through 10
+  of the 25 faults the readers found tonight. A plan that writes more answers should count on a strong reader after
+  publishing (as tonight: an AI reader with the eight rules of `data/verification/auto-read-2026-11-27/BRIEF.md` held
+  35 of 54 answers) or on two second readers together, and should budget the drafts that a strict reader sends back.
