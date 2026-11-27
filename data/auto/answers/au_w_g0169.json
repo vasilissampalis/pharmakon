@@ -20,39 +20,37 @@
   "on": "2026-11-27",
   "models": {
    "reader": "gemini:gemini-3.5-flash-lite",
-   "writer": "gemini:gemma-4-26b-a4b-it",
+   "writer": "groq:qwen/qwen3.8-27b",
    "checker": "groq:openai/gpt-oss-120b",
-   "planner": "gemini:gemma-4-31b-it",
+   "planner": "groq:openai/gpt-oss-120b",
    "also1": "gemini:gemini-3.5-flash-lite",
    "also2": "gemini:gemini-3.6-flash",
-   "team": "team K",
-   "reader_2": "gemini:gemini-3.5-flash-lite",
+   "team": "team I",
+   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
    "reader_3": "openrouter:meta-llama/llama-3.3-70b-instruct",
-   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
-   "reader_first": "gemini:gemma-4-31b-it"
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "45996372954",
+  "run": "46004406822",
   "read_by": {
-   "gemini-3.5-flash-lite": 5,
-   "gemini-3.1-flash-lite": 3
+   "gemini-3.5-flash-lite": 8,
+   "gemini-3.1-flash-lite": 4,
+   "gpt-oss-20b": 1
   },
-  "read_seconds": 100,
+  "read_seconds": 35,
   "from": {
    "papers": 1,
    "summaries": 0,
-   "official": 0
+   "official": 2
   },
   "neurons": 0.0,
-  "seconds": 333
+  "seconds": 100
  },
  "status": "none",
- "why": "no draft passed: the form was wrong: no JSON",
+ "why": "no draft passed: broken at try 3: short: its source gives this as a reputation or a belief (“anecdotal”), and the sentence says it as what the drug does: say that it is a reputation, a traditional use or a belief, as the source does, or leave it out; how1: its source gives this as a reputation or a belief (“anecdotal”), and the sentence says it as what the drug does: say that it is a reputation, a traditional use or a belief, as the source does, or leave it out",
  "gates": {
-  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.5-flash-lite read from there",
-  "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "2 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 0 official page(s), 0 paper(s) read in summary only",
-  "writer": "try 1: no JSON (how the reply ended: length; reasoned 0 characters, wrote 9144) try 2: no JSON (how the reply ended: length; reasoned 0 characters, wrote 8891)"
+  "read": "5 findings kept from 3 sources (1 papers read in full, 2 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 2 official page(s), 0 paper(s) read in summary only",
+  "rules": "broken at try 3: short: its source gives this as a reputation or a belief (“anecdotal”), and the sentence says it as what the drug does: say that it is a reputation, a traditional use or a belief, as the source does, or leave it out; how1: its source gives this as a reputation or a belief (“anecdotal”), and the sentence says it as what the drug does: say that it is a reputation, a traditional use or a belief, as the source does, or leave it out"
  },
  "sources": [
   {
@@ -124,33 +122,182 @@
     "passage": 1,
     "where": "Abstract",
     "quote": "The aim of this work is to comprehensively review and discuss the toxicokinetics and toxicodynamics of S. divinorum and salvinorin A, highlighting their psychological, physiological, and toxic effects.",
-    "text": "a comprehensive review of toxicokinetics, toxicodynamics, psychological, physiological, and toxic effects of S. divinorum and salvinorin A, along with therapeutic and forensic aspects"
+    "text": "a comprehensive review of the toxicokinetics and toxicodynamics of S. divinorum and salvinorin A"
    },
    "findings": [
     {
      "passage": 95,
      "where": "12. Abuse Potential, Dependence, and Tolerance › 12.1. Effects in Humans",
      "quote": "Additionally, individuals stated they required increasing amounts of S. divinorum to achieve the desired effects, this being suggestive of the development of tachyphylaxis.",
-     "text": "Individuals stated they required increasing amounts of S. divinorum to achieve the desired effects, which suggests the development of tachyphylaxis.",
+     "text": "In one survey, individuals reported needing to use increasing amounts of S. divinorum to achieve the desired effects, which suggests the development of tachyphylaxis.",
      "id": "F1",
      "second_hand": ""
-    },
+    }
+   ],
+   "limits": [
     {
      "passage": 95,
      "where": "12. Abuse Potential, Dependence, and Tolerance › 12.1. Effects in Humans",
-     "quote": "Little evidence of dependence on S. divinorum was disclosed in one anonymous web-based survey, but withdrawal symptoms (e.g., anxiety, irritability, uneasiness, nausea, and vomiting) and strong craving for S. divinorum were reported after discontinuation of chronic consumption of Salvia",
-     "text": "Little evidence of dependence on S. divinorum was disclosed in one anonymous web-based survey, but withdrawal symptoms and strong craving were reported after discontinuation of chronic consumption.",
+     "quote": "Little evidence of dependence on S. divinorum was disclosed in one anonymous web-based survey",
+     "text": "The information regarding dependence was based on a single anonymous web-based survey.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "A"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "adf_salvia",
+    "type": "webpage",
+    "title": "Salvia",
+    "author": [
+     {
+      "literal": "Alcohol and Drug Foundation"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      [
+       2025,
+       3,
+       6
+      ]
+     ]
+    },
+    "URL": "https://adf.org.au/drug-facts/salvia/",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       27
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-27"
+    }
+   },
+   "title": "Salvia",
+   "year": 2025,
+   "kind": "official",
+   "people": true,
+   "near": 0.719,
+   "name": "Alcohol and Drug Foundation",
+   "short": "Australia's Alcohol and Drug Foundation",
+   "tier": 2,
+   "address": "https://adf.org.au/drug-facts/salvia/",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 19,
+     "where": "Long-term effects / Tolerance",
+     "quote": "Salvia is not known to cause tolerance.",
+     "text": "Salvia is not known to cause tolerance.",
      "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 19,
+     "where": "Long-term effects / Tolerance",
+     "quote": "There have been anecdotal reports of salvia causing ‘reverse tolerance’ (also known as sensitisation).",
+     "text": "There have been anecdotal reports of salvia causing reverse tolerance, which is also known as sensitisation.",
+     "id": "F3",
+     "second_hand": ""
+    },
+    {
+     "passage": 19,
+     "where": "Long-term effects / Tolerance",
+     "quote": "This may be because people become more familiar with salvia after using it, making its effects easier to recognise rather than stronger.",
+     "text": "The reverse tolerance effect may be because people become more familiar with salvia after using it, which makes its effects easier to recognise rather than stronger.",
+     "id": "F4",
      "second_hand": ""
     }
    ],
    "limits": [],
-   "tag": "A"
+   "tag": "B"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "healthcanada_salvia",
+    "type": "webpage",
+    "title": "Salvia",
+    "author": [
+     {
+      "literal": "Health Canada"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      [
+       2023,
+       2,
+       8
+      ]
+     ]
+    },
+    "URL": "https://www.canada.ca/en/health-canada/services/substance-use/controlled-illegal-drugs/salvia.html",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       27
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-27"
+    },
+    "publisher": "Government of Canada"
+   },
+   "title": "Salvia",
+   "year": 2023,
+   "kind": "official",
+   "people": true,
+   "near": 0.635,
+   "name": "Health Canada",
+   "short": "Health Canada",
+   "tier": 1,
+   "address": "https://www.canada.ca/en/health-canada/services/substance-use/controlled-illegal-drugs/salvia.html",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 10,
+     "where": "Substance use disorder and withdrawal",
+     "quote": "There are, however, isolated cases of tolerance, addiction and withdrawal symptoms in individuals who used salvia regularly in increasing doses.",
+     "text": "There are isolated cases of tolerance in individuals who used salvia regularly in increasing doses.",
+     "id": "F5",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 10,
+     "where": "Substance use disorder and withdrawal",
+     "quote": "As with its long-term effects, we do not know much about salvia: tolerance; physical dependence; withdrawal symptoms; interactions with other substances, including alcohol or other drugs",
+     "text": "We do not know much about tolerance to salvia.",
+     "id": "L2",
+     "second_hand": ""
+    }
+   ],
+   "tag": "C"
   }
  ],
  "parts": [],
  "complete": false,
- "missing": "",
+ "missing": "prevalence of tolerance",
  "wanted": [
   {
    "doi": "10.1021/jm400388u",
@@ -169,6 +316,14 @@
    "why": "passed every gate",
    "short": "Yes. In one anonymous web-based survey, people who use S. divinorum stated they required increasing amounts to achieve the desired effects.",
    "complete": true
+  },
+  {
+   "on": "2026-11-27",
+   "lane": 19,
+   "status": "none",
+   "why": "no draft passed: the form was wrong: no JSON",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -193,7 +348,7 @@
    "read": "full",
    "kind": "review",
    "at": "10.3390/ph14020116",
-   "kept": 2,
+   "kept": 1,
    "thrown": []
   },
   {
@@ -242,25 +397,378 @@
    "kind": "review",
    "at": "10.3390/biomedicines14020476",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
+  },
+  {
+   "title": "Salvia",
+   "read": "page",
+   "kind": "official",
+   "at": "https://adf.org.au/drug-facts/salvia/",
+   "kept": 3,
+   "thrown": [
+    {
+     "kind": "limit",
+     "text": "",
+     "quote": "However, as the effects of saliva can be very intense, most people choose not to use it regularly.",
+     "why": "no sentence"
+    }
+   ]
+  },
+  {
+   "title": "Salvia",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.talktofrank.com/drug/salvia",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Salvia",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.drugscience.org.uk/drugs/salvia",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Salvia",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.canada.ca/en/health-canada/services/substance-use/controlled-illegal-drugs/salvia.html",
+   "kept": 1,
+   "thrown": []
   }
  ],
  "plan": {
   "short": [
+   "F2",
+   "F5",
    "F1"
   ],
-  "direct": "Yes",
-  "but": [],
+  "direct": "Not known",
+  "but": [
+   "L2"
+  ],
   "how": [
+   [
+    "F2"
+   ],
+   [
+    "F5",
+    "L2"
+   ],
    [
     "DA",
     "F1"
    ]
   ],
-  "unanswered": ""
+  "unanswered": "prevalence of tolerance"
  },
- "soft": "the writer's reply was not in the form asked for",
+ "tries": [
+  {
+   "try": 1,
+   "why": "a rule was broken: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Not known. Australia's Alcohol and Drug Foundation says salvia is not known to cause tolerance. Health Canada notes isolated cases in people who used it regularly in increasing doses.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "adf_salvia",
+       "where": "Long-term effects / Tolerance",
+       "quote": "Salvia is not known to cause tolerance.",
+       "sha": "4353541cd8bb5934"
+      },
+      {
+       "label": "F5",
+       "ref": "healthcanada_salvia",
+       "where": "Substance use disorder and withdrawal",
+       "quote": "There are, however, isolated cases of tolerance, addiction and withdrawal symptoms in individuals who used salvia regularly in increasing doses.",
+       "sha": "f10c49295e6e6d40"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: its source gives this as a reputation or a belief (“anecdotal”), and the sentence says it as what the drug does: say that it is a reputation, a traditional use or a belief, as the source does, or leave it out"
+    },
+    {
+     "part": "but",
+     "text": "Health Canada says we do not know much about tolerance to salvia, including physical dependence and withdrawal symptoms.",
+     "rests_on": [
+      {
+       "label": "L2",
+       "ref": "healthcanada_salvia",
+       "where": "Substance use disorder and withdrawal",
+       "quote": "As with its long-term effects, we do not know much about salvia: tolerance; physical dependence; withdrawal symptoms; interactions with other substances, including alcohol or other drugs",
+       "sha": "f10c49295e6e6d40"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "Australia's Alcohol and Drug Foundation says salvia is not known to cause tolerance.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "adf_salvia",
+       "where": "Long-term effects / Tolerance",
+       "quote": "Salvia is not known to cause tolerance.",
+       "sha": "4353541cd8bb5934"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: its source gives this as a reputation or a belief (“anecdotal”), and the sentence says it as what the drug does: say that it is a reputation, a traditional use or a belief, as the source does, or leave it out"
+    },
+    {
+     "part": "how2",
+     "text": "Health Canada says there are isolated cases of tolerance in people who used salvia regularly in increasing doses, but notes we do not know much about it.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "healthcanada_salvia",
+       "where": "Substance use disorder and withdrawal",
+       "quote": "There are, however, isolated cases of tolerance, addiction and withdrawal symptoms in individuals who used salvia regularly in increasing doses.",
+       "sha": "f10c49295e6e6d40"
+      },
+      {
+       "label": "L2",
+       "ref": "healthcanada_salvia",
+       "where": "Substance use disorder and withdrawal",
+       "quote": "As with its long-term effects, we do not know much about salvia: tolerance; physical dependence; withdrawal symptoms; interactions with other substances, including alcohol or other drugs",
+       "sha": "f10c49295e6e6d40"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2021 review of salvia research cites a survey where people reported needing increasing amounts to achieve desired effects, suggesting tachyphylaxis.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "britodacosta_2021",
+       "where": "Abstract",
+       "quote": "The aim of this work is to comprehensively review and discuss the toxicokinetics and toxicodynamics of S. divinorum and salvinorin A, highlighting their psychological, physiological, and toxic effects.",
+       "sha": "f182fc653166ccff"
+      },
+      {
+       "label": "F1",
+       "ref": "britodacosta_2021",
+       "where": "12. Abuse Potential, Dependence, and Tolerance › 12.1. Effects in Humans",
+       "quote": "Additionally, individuals stated they required increasing amounts of S. divinorum to achieve the desired effects, this being suggestive of the development of tachyphylaxis.",
+       "sha": "a2ef022d550f3761"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "a rule was broken: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Not known. Australia's Alcohol and Drug Foundation says salvia is not known to cause tolerance. Health Canada notes isolated cases in people who used it regularly.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "adf_salvia",
+       "where": "Long-term effects / Tolerance",
+       "quote": "Salvia is not known to cause tolerance.",
+       "sha": "4353541cd8bb5934"
+      },
+      {
+       "label": "F5",
+       "ref": "healthcanada_salvia",
+       "where": "Substance use disorder and withdrawal",
+       "quote": "There are, however, isolated cases of tolerance, addiction and withdrawal symptoms in individuals who used salvia regularly in increasing doses.",
+       "sha": "f10c49295e6e6d40"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: its source gives this as a reputation or a belief (“anecdotal”), and the sentence says it as what the drug does: say that it is a reputation, a traditional use or a belief, as the source does, or leave it out"
+    },
+    {
+     "part": "but",
+     "text": "Health Canada says we do not know much about tolerance to salvia, including physical dependence and withdrawal symptoms.",
+     "rests_on": [
+      {
+       "label": "L2",
+       "ref": "healthcanada_salvia",
+       "where": "Substance use disorder and withdrawal",
+       "quote": "As with its long-term effects, we do not know much about salvia: tolerance; physical dependence; withdrawal symptoms; interactions with other substances, including alcohol or other drugs",
+       "sha": "f10c49295e6e6d40"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "Australia's Alcohol and Drug Foundation says salvia is not known to cause tolerance.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "adf_salvia",
+       "where": "Long-term effects / Tolerance",
+       "quote": "Salvia is not known to cause tolerance.",
+       "sha": "4353541cd8bb5934"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: its source gives this as a reputation or a belief (“anecdotal”), and the sentence says it as what the drug does: say that it is a reputation, a traditional use or a belief, as the source does, or leave it out"
+    },
+    {
+     "part": "how2",
+     "text": "Health Canada says there are isolated cases of tolerance in people who used salvia regularly in increasing doses.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "healthcanada_salvia",
+       "where": "Substance use disorder and withdrawal",
+       "quote": "There are, however, isolated cases of tolerance, addiction and withdrawal symptoms in individuals who used salvia regularly in increasing doses.",
+       "sha": "f10c49295e6e6d40"
+      },
+      {
+       "label": "L2",
+       "ref": "healthcanada_salvia",
+       "where": "Substance use disorder and withdrawal",
+       "quote": "As with its long-term effects, we do not know much about salvia: tolerance; physical dependence; withdrawal symptoms; interactions with other substances, including alcohol or other drugs",
+       "sha": "f10c49295e6e6d40"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2021 review notes that in one survey, people reported needing more salvia to get the desired effects.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "britodacosta_2021",
+       "where": "Abstract",
+       "quote": "The aim of this work is to comprehensively review and discuss the toxicokinetics and toxicodynamics of S. divinorum and salvinorin A, highlighting their psychological, physiological, and toxic effects.",
+       "sha": "f182fc653166ccff"
+      },
+      {
+       "label": "F1",
+       "ref": "britodacosta_2021",
+       "where": "12. Abuse Potential, Dependence, and Tolerance › 12.1. Effects in Humans",
+       "quote": "Additionally, individuals stated they required increasing amounts of S. divinorum to achieve the desired effects, this being suggestive of the development of tachyphylaxis.",
+       "sha": "a2ef022d550f3761"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "a rule was broken: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Not known. Australia's Alcohol and Drug Foundation says salvia is not known to cause tolerance. Health Canada says there are isolated cases of tolerance in people who used it regularly.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "adf_salvia",
+       "where": "Long-term effects / Tolerance",
+       "quote": "Salvia is not known to cause tolerance.",
+       "sha": "4353541cd8bb5934"
+      },
+      {
+       "label": "F5",
+       "ref": "healthcanada_salvia",
+       "where": "Substance use disorder and withdrawal",
+       "quote": "There are, however, isolated cases of tolerance, addiction and withdrawal symptoms in individuals who used salvia regularly in increasing doses.",
+       "sha": "f10c49295e6e6d40"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: its source gives this as a reputation or a belief (“anecdotal”), and the sentence says it as what the drug does: say that it is a reputation, a traditional use or a belief, as the source does, or leave it out"
+    },
+    {
+     "part": "but",
+     "text": "Health Canada says we do not know much about tolerance to salvia, including physical dependence and withdrawal symptoms.",
+     "rests_on": [
+      {
+       "label": "L2",
+       "ref": "healthcanada_salvia",
+       "where": "Substance use disorder and withdrawal",
+       "quote": "As with its long-term effects, we do not know much about salvia: tolerance; physical dependence; withdrawal symptoms; interactions with other substances, including alcohol or other drugs",
+       "sha": "f10c49295e6e6d40"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "Australia's Alcohol and Drug Foundation says salvia is not known to cause tolerance.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "adf_salvia",
+       "where": "Long-term effects / Tolerance",
+       "quote": "Salvia is not known to cause tolerance.",
+       "sha": "4353541cd8bb5934"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: its source gives this as a reputation or a belief (“anecdotal”), and the sentence says it as what the drug does: say that it is a reputation, a traditional use or a belief, as the source does, or leave it out"
+    },
+    {
+     "part": "how2",
+     "text": "Health Canada says there are isolated cases of tolerance in people who used salvia regularly in increasing doses, but notes we do not know much about it.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "healthcanada_salvia",
+       "where": "Substance use disorder and withdrawal",
+       "quote": "There are, however, isolated cases of tolerance, addiction and withdrawal symptoms in individuals who used salvia regularly in increasing doses.",
+       "sha": "f10c49295e6e6d40"
+      },
+      {
+       "label": "L2",
+       "ref": "healthcanada_salvia",
+       "where": "Substance use disorder and withdrawal",
+       "quote": "As with its long-term effects, we do not know much about salvia: tolerance; physical dependence; withdrawal symptoms; interactions with other substances, including alcohol or other drugs",
+       "sha": "f10c49295e6e6d40"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2021 review notes that in one survey, individuals reported needing increasing amounts of salvia to achieve desired effects, suggesting tachyphylaxis.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "britodacosta_2021",
+       "where": "Abstract",
+       "quote": "The aim of this work is to comprehensively review and discuss the toxicokinetics and toxicodynamics of S. divinorum and salvinorin A, highlighting their psychological, physiological, and toxic effects.",
+       "sha": "f182fc653166ccff"
+      },
+      {
+       "label": "F1",
+       "ref": "britodacosta_2021",
+       "where": "12. Abuse Potential, Dependence, and Tolerance › 12.1. Effects in Humans",
+       "quote": "Additionally, individuals stated they required increasing amounts of S. divinorum to achieve the desired effects, this being suggestive of the development of tachyphylaxis.",
+       "sha": "a2ef022d550f3761"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  }
+ ],
  "place": {
   "home": "salvia-divinorum",
   "also": [],
