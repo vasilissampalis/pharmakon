@@ -18,33 +18,31 @@
   "on": "2026-11-27",
   "models": {
    "reader": "openrouter:openai/gpt-oss-120b",
-   "writer": "gemini:gemma-4-26b-a4b-it",
+   "writer": "openrouter:meta-llama/llama-3.3-70b-instruct",
    "checker": "openrouter:openai/gpt-6-luna",
-   "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemma-4-31b-it",
-   "team": "team Z",
-   "reader_2": "gemini:gemini-3.1-flash-lite",
-   "reader_3": "openrouter:openai/gpt-oss-120b",
+   "planner": "openrouter:openai/gpt-oss-120b",
+   "team": "team R",
+   "reader_2": "openrouter:openai/gpt-oss-120b",
    "reader_first": "gemini:gemma-4-31b-it"
   },
   "run": "45936769853",
-  "read_seconds": 150,
+  "read_seconds": 11,
   "from": {
    "papers": 2,
    "summaries": 0,
-   "official": 0
+   "official": 1
   },
   "neurons": 0.0,
-  "seconds": 347
+  "seconds": 184
  },
  "status": "none",
- "why": "no draft passed: the form was wrong: no JSON",
+ "why": "the second reader did not accept the answer",
  "gates": {
   "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-120b read from there",
-  "time": "1 source(s) were not read: the time this run has for reading one question (150 seconds) was over",
-  "read": "4 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 6 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 0 official page(s), 0 paper(s) read in summary only",
-  "writer": "try 1: no JSON (how the reply ended: length; reasoned 0 characters, wrote 9346) try 2: no JSON (how the reply ended: length; reasoned 0 characters, wrote 9318)"
+  "read": "6 findings kept from 3 sources (2 papers read in full, 1 official pages, 0 papers read in summary); 6 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 1 official page(s), 0 paper(s) read in summary only",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.63, but 0.11, how1 0.08, how2 0.96, how3 0.96",
+  "check": "short: NOT accepted: The passages recommend medical observation and avoiding other drugs, but do not say that avoiding other drugs reduces complications. The sentence also omits the 2015 review’s recommendation for monitoring over an extended time period.; but: NOT accepted: The 2023 review discusses ibogaine’s safety, cardiotoxicity and mortality, but does not identify heart-attack risk specifically.; how1: NOT accepted: The passage says a safe environment with trusted people can alleviate stress or discomfort and ensure support; it does not say this reduces risk. It also does not identify Drug Science as a UK charity of scientists.; how2: accepted; how3: accepted"
  },
  "sources": [
   {
@@ -110,24 +108,16 @@
      "passage": 32,
      "where": "3. Effects on the Cardiovascular System › 3.2. Clinical Evidence of Cardiotoxicity › 3.2.2. Risk Factors",
      "quote": "First, application of ibogaine, by trained medical personnel only, should be permitted merely under strict medical observation and continuous electrocardiographic monitoring for an extended time period, which carefully takes noribogaine’s longevity in human plasma into account.",
-     "text": "Risk can be reduced by having ibogaine administered only by trained medical personnel under strict medical observation with continuous ECG monitoring for an extended period, accounting for noribogaine’s long presence.",
+     "text": "Ibogaine should be administered only by trained medical personnel with strict medical observation and continuous ECG monitoring for an extended period.",
      "id": "F1",
      "second_hand": ""
     },
     {
      "passage": 33,
      "where": "3. Effects on the Cardiovascular System › 3.2. Clinical Evidence of Cardiotoxicity › 3.2.2. Risk Factors",
-     "quote": "For anti‑addiction treatment with ibogaine, two among the named risk factors deserve special attention: bradycardia and hypokalemia.",
-     "text": "Risk can be reduced by evaluating and managing patient bradycardia and hypokalemia before ibogaine treatment.",
+     "quote": "Cardiac monitoring demonstrated that no electrocardiographic abnormalities were produced or exaggerated following ibogaine administration",
+     "text": "In controlled studies with baseline screening, ibogaine did not produce ECG abnormalities, indicating risk can be minimized with proper monitoring.",
      "id": "F2",
-     "second_hand": ""
-    },
-    {
-     "passage": 33,
-     "where": "3. Effects on the Cardiovascular System › 3.2. Clinical Evidence of Cardiotoxicity › 3.2.2. Risk Factors",
-     "quote": "drug safety studies on human addicts performed under well‑controlled conditions revealed no significant adverse effects.",
-     "text": "Under well‑controlled conditions with proper monitoring, ibogaine did not cause significant adverse cardiac effects, indicating that controlled settings reduce risk.",
-     "id": "F3",
      "second_hand": ""
     }
    ],
@@ -222,14 +212,19 @@
    "money": [
     "ACKNOWLEDGEMENTSDeclared none."
    ],
-   "design": null,
+   "design": {
+    "passage": 2,
+    "where": "Abstract",
+    "quote": "This review aims to assess the anti‑addictive role of ibogaine and evaluate its side effects.",
+    "text": "systematic review of ibogaine and noribogaine literature"
+   },
    "findings": [
     {
      "passage": 19,
      "where": "CONCLUSION",
-     "quote": "drawing up protocols for observation and administration of ibogaine and inclusion and exclusion criteria to define with certainty its level of efficacy and toxicity",
-     "text": "Protocols for observation and administration of ibogaine and inclusion and exclusion criteria should be drawn up to define its toxicity.",
-     "id": "F4",
+     "quote": "drawing up protocols for observation and administration of ibogaine and inclusion and exclusion criteria to define with certainty its level of efficacy and toxicity and to assess its risk/benefit ratio.",
+     "text": "The authors recommend creating observation and administration protocols together with inclusion and exclusion criteria to better assess ibogaine’s toxicity and reduce heart attack risk.",
+     "id": "F3",
      "second_hand": ""
     }
    ],
@@ -238,28 +233,93 @@
      "passage": 19,
      "where": "CONCLUSION",
      "quote": "The lack of adequate controlled clinical trials does not allow a definitive answer about the therapeutic efficacy of ibogaine and its safety.",
-     "text": "Because there are not enough controlled clinical trials, a definitive answer about ibogaine’s safety cannot be given.",
+     "text": "The absence of adequate controlled clinical trials prevents a definitive assessment of ibogaine’s safety, including its heart‑attack risk.",
      "id": "L1",
      "second_hand": ""
     }
    ],
    "tag": "B"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "drugscience_ibogaine",
+    "type": "webpage",
+    "title": "Ibogaine",
+    "author": [
+     {
+      "literal": "Drug Science"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      []
+     ]
+    },
+    "URL": "https://www.drugscience.org.uk/drugs/ibogaine",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       27
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-27"
+    }
+   },
+   "title": "Ibogaine",
+   "year": null,
+   "kind": "official",
+   "people": true,
+   "near": 0.735,
+   "name": "Drug Science",
+   "short": "Drug Science, a UK charity of scientists",
+   "tier": 2,
+   "address": "https://www.drugscience.org.uk/drugs/ibogaine",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 5,
+     "where": "What are the risks?",
+     "quote": "Ibogaine should be taken in a safe and comfortable environment with trusted people present.",
+     "text": "Taking ibogaine in a safe and comfortable environment with trusted people present can reduce risk.",
+     "id": "F4",
+     "second_hand": ""
+    },
+    {
+     "passage": 9,
+     "where": "Harm Reduction and Drug-Drug Interactions",
+     "quote": "It is vital not to take ibogaine alongside any other drugs. Doing so greatly increases the risks and can lead to fatalities.",
+     "text": "Not taking ibogaine alongside any other drugs reduces the risk of serious complications.",
+     "id": "F5",
+     "second_hand": ""
+    },
+    {
+     "passage": 9,
+     "where": "Harm Reduction and Drug-Drug Interactions",
+     "quote": "After undergoing an ibogaine experience, users should abstain from taking any other drugs for at least 90 days.",
+     "text": "Abstaining from any other drugs for at least 90 days after ibogaine use decreases the chance of dangerous interactions.",
+     "id": "F6",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "C"
   }
  ],
  "parts": [],
  "complete": false,
- "missing": "",
+ "missing": "optimal dosing guidelines",
  "wanted": [],
  "person": null,
  "history": [
-  {
-   "on": "2026-11-19",
-   "lane": 19,
-   "status": "none",
-   "why": "the answer was not accepted: our own checker does not find it in the words it rests on (0.03): say only what those words say, in their own measure",
-   "short": "",
-   "complete": false
-  },
   {
    "on": "2026-11-20",
    "lane": 19,
@@ -299,6 +359,14 @@
    "why": "no draft passed: not accepted at try 2: a second reader did not accept short (The passages do not show that supervision, controlled settings, or heart monitoring reduce the chance of cardiac events; monitoring is described as detecting and managing complications. The analogue passage concerns preclinical models and f); but (The passage says a specific dose reduced tenfold from the studied treatment dose might have no therapeutic effects. The sentence generalizes this to reducing the dose in general.). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-27",
+   "lane": 19,
+   "status": "none",
+   "why": "no draft passed: the form was wrong: no JSON",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -307,24 +375,24 @@
    "read": "full",
    "kind": "review",
    "at": "10.3390/molecules20022208",
-   "kept": 3,
+   "kept": 2,
    "thrown": [
     {
      "kind": "finding",
-     "text": "Risk can be reduced by performing comprehensive baseline screening (medical exam, ECG, labs) to exclude subjects with cardiac risk factors.",
-     "quote": "baseline screening included a medical evaluation, physical examination, ECG recording, blood chemistries, and haematological workup, as well as psychiatric and chemical dependency evaluations.",
+     "text": "Before ibogaine use, clinicians should assess and address bradycardia and hypokalemia to reduce cardiac risk.",
+     "quote": "For anti‑addiction treatment with ibogaine, two among the named risk factors deserve special attention: bradycardia and hypokalemia.",
      "why": "the sentence is not carried by its quote and passage"
     },
     {
      "kind": "limit",
-     "text": "The specific mechanisms underlying ibogaine‑induced bradycardia are unknown.",
+     "text": "The exact mechanism of ibogaine‑induced bradycardia is unknown.",
      "quote": "At the moment it is completely unclear which mechanism or which combination of mechanisms essentially contribute.",
      "why": "the sentence is not carried by its quote and passage"
     },
     {
      "kind": "limit",
-     "text": "Because noribogaine persists, adverse cardiac events can appear days to weeks later, making extended monitoring necessary.",
-     "quote": "Due to the longevity of noribogaine—ibogaine’s active metabolite—in human plasma, cardiac adverse events may also occur several days, in some cases weeks after intake of a single dose of ibogaine.",
+     "text": "The relative contributions of ibogaine versus its metabolite noribogaine to cardiac events are not fully determined.",
+     "quote": "Considering that ibogaine has a half‑life of only 4–7 h in human plasma the appearance of fatalities 24–76 h after drug ingestion can hardly be attributed to the sole action of the alkaloid.",
      "why": "the sentence is not carried by its quote and passage"
     }
    ]
@@ -337,22 +405,22 @@
    "kept": 1,
    "thrown": [
     {
-     "kind": "text",
-     "text": "Systematic review of literature on ibogaine and noribogaine",
-     "quote": "Ibogaine/Noribogaine in the Treatment of Substance Use Disorders: A Systematic Review of the Current Literature (2023)",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+     "kind": "finding",
+     "text": "In a double‑blind, placebo‑controlled study of 20 male subjects given 1800 mg ibogaine under medical supervision, no cardiovascular events were reported.",
+     "quote": "Side effects were visual hallucinations without cardiovascular events.",
+     "why": "a number of the sentence is not in its quote"
     },
     {
      "kind": "finding",
-     "text": "Establishing shared guidelines and consistent administration protocols could help reduce ibogaine‑related cardiotoxicity risk.",
+     "text": "Establishing shared guidelines and consistent administration protocols is suggested to help manage ibogaine‑related cardiotoxicity.",
      "quote": "there are no shared guidelines and/or consistent administration protocols, making a comparison between studies difficult.",
      "why": "the sentence is not carried by its quote and passage"
     },
     {
      "kind": "limit",
-     "text": "Most studies were case reports or observational, not controlled trials.",
-     "quote": "Most of the selected articles were case reports/case series or observational studies.",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+     "text": "Only two double‑blind studies exist, limiting the ability to determine ibogaine’s efficacy and safety, including heart‑attack risk.",
+     "quote": "Only two double‑blind studies emerged, a limitation in determining the therapeutic efficacy of ibogaine and the meta‑analysis results",
+     "why": "the sentence is not carried by its quote and passage"
     }
    ]
   },
@@ -361,17 +429,15 @@
    "read": "page",
    "kind": "official",
    "at": "https://www.drugscience.org.uk/drugs/ibogaine",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 3,
+   "thrown": []
   }
  ],
  "plan": {
   "short": [
    "F1",
-   "F2",
    "F3",
-   "F4"
+   "F5"
   ],
   "direct": "",
   "but": [
@@ -379,18 +445,395 @@
   ],
   "how": [
    [
-    "DA",
-    "F1",
-    "F2",
-    "F3"
+    "F5",
+    "F4"
    ],
    [
-    "F4"
+    "DA",
+    "F1",
+    "F2"
+   ],
+   [
+    "DB",
+    "F3"
    ]
   ],
-  "unanswered": ""
+  "unanswered": "optimal dosing guidelines"
  },
- "soft": "the writer's reply was not in the form asked for",
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.6309,
+   "but": 0.1116,
+   "how1": 0.0805,
+   "how2": 0.9573,
+   "how3": 0.9645
+  },
+  "scores_quotes_alone": {
+   "short": 0.1181,
+   "but": 0.0112,
+   "how1": 0.1988,
+   "how2": 0.8701,
+   "how3": 0.8865
+  }
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Ibogaine should be given by trained medical personnel with strict medical observation and continuous ECG monitoring, and not taken with other drugs.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "koenig_2015",
+       "where": "3. Effects on the Cardiovascular System › 3.2. Clinical Evidence of Cardiotoxicity › 3.2.2. Risk Factors",
+       "quote": "First, application of ibogaine, by trained medical personnel only, should be permitted merely under strict medical observation and continuous electrocardiographic monitoring for an extended time period, which carefully takes noribogaine’s longevity in human plasma into account.",
+       "sha": "36d88339971b361f"
+      },
+      {
+       "label": "F3",
+       "ref": "mosca_2023",
+       "where": "CONCLUSION",
+       "quote": "drawing up protocols for observation and administration of ibogaine and inclusion and exclusion criteria to define with certainty its level of efficacy and toxicity and to assess its risk/benefit ratio.",
+       "sha": "e9b85ed2c93382a2"
+      },
+      {
+       "label": "F5",
+       "ref": "drugscience_ibogaine",
+       "where": "Harm Reduction and Drug-Drug Interactions",
+       "quote": "It is vital not to take ibogaine alongside any other drugs. Doing so greatly increases the risks and can lead to fatalities.",
+       "sha": "1abbc733189b1fe5"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "It presents the 2015 review’s recommendation as an unqualified instruction rather than attributing it to the review, contrary to the editor’s note."
+    },
+    {
+     "part": "but",
+     "text": "The absence of controlled clinical trials prevents a definitive assessment of ibogaine's safety.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "mosca_2023",
+       "where": "CONCLUSION",
+       "quote": "The lack of adequate controlled clinical trials does not allow a definitive answer about the therapeutic efficacy of ibogaine and its safety.",
+       "sha": "e9b85ed2c93382a2"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage says there is a lack of adequate controlled clinical trials, not an absence of controlled clinical trials; it notes that two double-blind placebo-controlled studies emerged."
+    },
+    {
+     "part": "how1",
+     "text": "Drug Science says taking ibogaine in a safe environment and not with other drugs is important.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "drugscience_ibogaine",
+       "where": "What are the risks?",
+       "quote": "Ibogaine should be taken in a safe and comfortable environment with trusted people present.",
+       "sha": "cd30b5abc72862c3"
+      },
+      {
+       "label": "F5",
+       "ref": "drugscience_ibogaine",
+       "where": "Harm Reduction and Drug-Drug Interactions",
+       "quote": "It is vital not to take ibogaine alongside any other drugs. Doing so greatly increases the risks and can lead to fatalities.",
+       "sha": "1abbc733189b1fe5"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A 2015 review says ibogaine should be given only by trained medical staff with constant heart monitoring.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "koenig_2015",
+       "where": "Abstract",
+       "quote": "The aim of this review is to recapitulate the current knowledge about ibogaine’s effects on the heart and the cardiovascular system",
+       "sha": "793bcfb8d083556f"
+      },
+      {
+       "label": "F1",
+       "ref": "koenig_2015",
+       "where": "3. Effects on the Cardiovascular System › 3.2. Clinical Evidence of Cardiotoxicity › 3.2.2. Risk Factors",
+       "quote": "First, application of ibogaine, by trained medical personnel only, should be permitted merely under strict medical observation and continuous electrocardiographic monitoring for an extended time period, which carefully takes noribogaine’s longevity in human plasma into account.",
+       "sha": "36d88339971b361f"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2023 review recommends creating protocols to assess ibogaine's toxicity.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "mosca_2023",
+       "where": "Abstract",
+       "quote": "This review aims to assess the anti‑addictive role of ibogaine and evaluate its side effects.",
+       "sha": "1b98077b40c9634a"
+      },
+      {
+       "label": "F3",
+       "ref": "mosca_2023",
+       "where": "CONCLUSION",
+       "quote": "drawing up protocols for observation and administration of ibogaine and inclusion and exclusion criteria to define with certainty its level of efficacy and toxicity and to assess its risk/benefit ratio.",
+       "sha": "e9b85ed2c93382a2"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Ibogaine should be given by trained medical personnel with strict medical observation and continuous ECG monitoring, and not taken with other drugs. A 2023 review recommends creating protocols to assess ibogaine’s toxicity.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "koenig_2015",
+       "where": "3. Effects on the Cardiovascular System › 3.2. Clinical Evidence of Cardiotoxicity › 3.2.2. Risk Factors",
+       "quote": "First, application of ibogaine, by trained medical personnel only, should be permitted merely under strict medical observation and continuous electrocardiographic monitoring for an extended time period, which carefully takes noribogaine’s longevity in human plasma into account.",
+       "sha": "36d88339971b361f"
+      },
+      {
+       "label": "F3",
+       "ref": "mosca_2023",
+       "where": "CONCLUSION",
+       "quote": "drawing up protocols for observation and administration of ibogaine and inclusion and exclusion criteria to define with certainty its level of efficacy and toxicity and to assess its risk/benefit ratio.",
+       "sha": "e9b85ed2c93382a2"
+      },
+      {
+       "label": "F5",
+       "ref": "drugscience_ibogaine",
+       "where": "Harm Reduction and Drug-Drug Interactions",
+       "quote": "It is vital not to take ibogaine alongside any other drugs. Doing so greatly increases the risks and can lead to fatalities.",
+       "sha": "1abbc733189b1fe5"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The 2015 recommendation is presented as a direct instruction rather than attributed to the review, and the passages do not show that medical observation or ECG monitoring reduces heart-attack risk. The 2023 passage recommends observation an"
+    },
+    {
+     "part": "but",
+     "text": "The absence of adequate controlled clinical trials prevents a definitive assessment of ibogaine’s safety.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "mosca_2023",
+       "where": "CONCLUSION",
+       "quote": "The lack of adequate controlled clinical trials does not allow a definitive answer about the therapeutic efficacy of ibogaine and its safety.",
+       "sha": "e9b85ed2c93382a2"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "Drug Science, a UK charity of scientists says taking ibogaine in a safe environment and not with other drugs can reduce risk.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "drugscience_ibogaine",
+       "where": "What are the risks?",
+       "quote": "Ibogaine should be taken in a safe and comfortable environment with trusted people present.",
+       "sha": "cd30b5abc72862c3"
+      },
+      {
+       "label": "F5",
+       "ref": "drugscience_ibogaine",
+       "where": "Harm Reduction and Drug-Drug Interactions",
+       "quote": "It is vital not to take ibogaine alongside any other drugs. Doing so greatly increases the risks and can lead to fatalities.",
+       "sha": "1abbc733189b1fe5"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages do not identify Drug Science as a UK charity of scientists, and they do not say that a safe environment reduces risk; they say it can alleviate stress or discomfort and ensure support. The drug-interaction passage says taking i"
+    },
+    {
+     "part": "how2",
+     "text": "A 2015 review says ibogaine should be given only by trained medical personnel with strict medical observation and continuous ECG monitoring.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "koenig_2015",
+       "where": "Abstract",
+       "quote": "The aim of this review is to recapitulate the current knowledge about ibogaine’s effects on the heart and the cardiovascular system",
+       "sha": "793bcfb8d083556f"
+      },
+      {
+       "label": "F1",
+       "ref": "koenig_2015",
+       "where": "3. Effects on the Cardiovascular System › 3.2. Clinical Evidence of Cardiotoxicity › 3.2.2. Risk Factors",
+       "quote": "First, application of ibogaine, by trained medical personnel only, should be permitted merely under strict medical observation and continuous electrocardiographic monitoring for an extended time period, which carefully takes noribogaine’s longevity in human plasma into account.",
+       "sha": "36d88339971b361f"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2023 review recommends creating observation and administration protocols to assess ibogaine’s toxicity.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "mosca_2023",
+       "where": "Abstract",
+       "quote": "This review aims to assess the anti‑addictive role of ibogaine and evaluate its side effects.",
+       "sha": "1b98077b40c9634a"
+      },
+      {
+       "label": "F3",
+       "ref": "mosca_2023",
+       "where": "CONCLUSION",
+       "quote": "drawing up protocols for observation and administration of ibogaine and inclusion and exclusion criteria to define with certainty its level of efficacy and toxicity and to assess its risk/benefit ratio.",
+       "sha": "e9b85ed2c93382a2"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The review recommends protocols for observation and administration, and separately recommends inclusion and exclusion criteria to define toxicity. It does not specifically say the protocols are for assessing toxicity."
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Ibogaine should be given by trained medical personnel with strict medical observation and continuous ECG monitoring, a 2015 review says. Not taking ibogaine with other drugs reduces complications, Drug Science says.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "koenig_2015",
+       "where": "3. Effects on the Cardiovascular System › 3.2. Clinical Evidence of Cardiotoxicity › 3.2.2. Risk Factors",
+       "quote": "First, application of ibogaine, by trained medical personnel only, should be permitted merely under strict medical observation and continuous electrocardiographic monitoring for an extended time period, which carefully takes noribogaine’s longevity in human plasma into account.",
+       "sha": "36d88339971b361f"
+      },
+      {
+       "label": "F5",
+       "ref": "drugscience_ibogaine",
+       "where": "Harm Reduction and Drug-Drug Interactions",
+       "quote": "It is vital not to take ibogaine alongside any other drugs. Doing so greatly increases the risks and can lead to fatalities.",
+       "sha": "1abbc733189b1fe5"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages recommend medical observation and avoiding other drugs, but do not say that avoiding other drugs reduces complications. The sentence also omits the 2015 review’s recommendation for monitoring over an extended time period."
+    },
+    {
+     "part": "but",
+     "text": "The absence of adequate controlled clinical trials prevents a definitive assessment of ibogaine's safety, including its heart-attack risk.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "mosca_2023",
+       "where": "CONCLUSION",
+       "quote": "The lack of adequate controlled clinical trials does not allow a definitive answer about the therapeutic efficacy of ibogaine and its safety.",
+       "sha": "e9b85ed2c93382a2"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The 2023 review discusses ibogaine’s safety, cardiotoxicity and mortality, but does not identify heart-attack risk specifically."
+    },
+    {
+     "part": "how1",
+     "text": "Drug Science, a UK charity of scientists says taking ibogaine in a safe environment with trusted people present can reduce risk.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "drugscience_ibogaine",
+       "where": "What are the risks?",
+       "quote": "Ibogaine should be taken in a safe and comfortable environment with trusted people present.",
+       "sha": "cd30b5abc72862c3"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage says a safe environment with trusted people can alleviate stress or discomfort and ensure support; it does not say this reduces risk. It also does not identify Drug Science as a UK charity of scientists."
+    },
+    {
+     "part": "how2",
+     "text": "A 2015 review says ibogaine should be given only by trained medical personnel with strict medical observation and continuous ECG monitoring.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "koenig_2015",
+       "where": "Abstract",
+       "quote": "The aim of this review is to recapitulate the current knowledge about ibogaine’s effects on the heart and the cardiovascular system",
+       "sha": "793bcfb8d083556f"
+      },
+      {
+       "label": "F1",
+       "ref": "koenig_2015",
+       "where": "3. Effects on the Cardiovascular System › 3.2. Clinical Evidence of Cardiotoxicity › 3.2.2. Risk Factors",
+       "quote": "First, application of ibogaine, by trained medical personnel only, should be permitted merely under strict medical observation and continuous electrocardiographic monitoring for an extended time period, which carefully takes noribogaine’s longevity in human plasma into account.",
+       "sha": "36d88339971b361f"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2023 review recommends creating observation and administration protocols to assess ibogaine's toxicity.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "mosca_2023",
+       "where": "Abstract",
+       "quote": "This review aims to assess the anti‑addictive role of ibogaine and evaluate its side effects.",
+       "sha": "1b98077b40c9634a"
+      },
+      {
+       "label": "F3",
+       "ref": "mosca_2023",
+       "where": "CONCLUSION",
+       "quote": "drawing up protocols for observation and administration of ibogaine and inclusion and exclusion criteria to define with certainty its level of efficacy and toxicity and to assess its risk/benefit ratio.",
+       "sha": "e9b85ed2c93382a2"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  }
+ ],
+ "dropped": [
+  {
+   "try": 3,
+   "part": "how1",
+   "text": "Drug Science, a UK charity of scientists says taking ibogaine in a safe environment with trusted people present can reduce risk.",
+   "rests_on": [
+    {
+     "label": "F4",
+     "ref": "drugscience_ibogaine",
+     "where": "What are the risks?",
+     "quote": "Ibogaine should be taken in a safe and comfortable environment with trusted people present.",
+     "sha": "cd30b5abc72862c3"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The passage says a safe environment with trusted people can alleviate stress or discomfort and ensure support; it does not say this reduces risk. It also does not identify Drug Science as a UK charity of scientists."
+  }
+ ],
  "place": {
   "home": "new:Ibogaine",
   "also": [],
