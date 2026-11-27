@@ -126,3 +126,20 @@ the gates catch these by themselves.
   of the 25 faults the readers found tonight. A plan that writes more answers should count on a strong reader after
   publishing (as tonight: an AI reader with the eight rules of `data/verification/auto-read-2026-11-27/BRIEF.md` held
   35 of 54 answers) or on two second readers together, and should budget the drafts that a strict reader sends back.
+
+## What is built already (for the plan to build on, not to design again)
+
+- New pages: `scripts/auto/place.py --pages` lists the drugs and medicines people ask about that have no page
+  (`data/auto/pages.json`: 57 now; `data/auto/filing.json` says which names belong to which page); `data/auto/topics.json`
+  holds the editor's word on where an answer stands on its page (the senior author, 20 November: "it should categorize the
+  answers to sections of the menu or create new sections").
+- Pictures: `scripts/auto/pictures.py` finds pictures with an open licence for those pages (GBIF's records for plants and
+  fungi, Wikimedia Commons' categories and files), 35 pages and 13 forms in `data/auto/pictures.json`; the licence rules are
+  `docs/WRITING-RULES.md` (public domain, CC0, CC BY; CC BY-SA only where nothing more open exists, marked).
+- Demand: `data/site/demand.json` and `data/verification/demand-themes.md` (themes from the Reddit pages he pasted and seven
+  forums, ranked); `data/auto/demand-wiki.json` (`scripts/auto/wiki_views.py`: Wikipedia page views, CC0, for 54 pages);
+  `data/site/wanted.json` (52 questions the site does not answer yet, our words) with a visitor's device counting a listed
+  question by its number; `data/auto/wanted-auto.json` (272 questions made from what visitors sent, our words only);
+  `data/auto/grow.py`'s themes (the system asks the most-asked themes about every drug by itself).
+- Myth-or-fact: 531 checked items (`data/site/simple.json`, "tf"), installed with the plain lines; the rules for them are in
+  CLAUDE.md (useful surprising facts; never amounts, doses, timing, routes compared, or strengthening; mixing only as risk).
