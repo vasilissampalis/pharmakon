@@ -84,3 +84,13 @@ the gates catch these by themselves.
 - The papers people would most need for the checked lane are listed for him on his to-do page (41, from the questions asked
   most); his computer was off overnight, so papers already in his folder could not be read (three section 7 answers wait
   for five of them: `data/verification/s7-restore/PLAN.md`).
+
+## Seen after midnight (27 November, 02:00 to 03:00 Athens), with GPT-6 Luna asked first
+
+- The lane, started after midnight UTC, found 199 listed questions due and chained its runs by itself (`tick.py again`).
+  Of its first 14 tries, 2 were published (mescaline and tolerance: stands; barbiturates and tolerance: held), the rest
+  gave no answer (sources, mostly).
+- A pattern the gates do not catch: a writer says a review "found" something that the review says in passing, as
+  background (the barbiturates answer rested on one background sentence in the abstract of a review of natural sleep
+  aids). Luna accepted it. A gate could tell background from findings by where the passage stands (an abstract's opening,
+  an introduction) and refuse "found" for those.
