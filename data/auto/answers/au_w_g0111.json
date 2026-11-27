@@ -15,23 +15,17 @@
  ],
  "drugs": [],
  "made": {
-  "on": "2026-11-24",
+  "on": "2026-11-27",
   "models": {
-   "reader": "gemini:gemini-3.1-flash-lite",
-   "writer": "groq:qwen/qwen3.8-27b",
-   "checker": "gemini:gemini-3.5-flash-lite",
-   "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3.6-flash",
-   "team": "team L",
-   "reader_2": "groq:openai/gpt-oss-20b",
-   "also1_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "reader": "openrouter:openai/gpt-oss-120b",
+   "writer": "openrouter:meta-llama/llama-3.3-70b-instruct",
+   "checker": "openrouter:openai/gpt-6-luna",
+   "planner": "openrouter:openai/gpt-oss-120b",
+   "team": "team R",
+   "reader_2": "openrouter:openai/gpt-oss-120b",
    "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "45387248595",
-  "read_by": {
-   "gemini-3.1-flash-lite": 1,
-   "gpt-oss-20b": 1
-  },
+  "run": "45960257877",
   "read_seconds": 100,
   "from": {
    "papers": 2,
@@ -39,18 +33,18 @@
    "official": 0
   },
   "neurons": 0.0,
-  "seconds": 268
+  "seconds": 181
  },
  "status": "published",
  "why": "passed every gate",
  "gates": {
-  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.1-flash-lite read from there",
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-120b read from there",
+  "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
   "read": "4 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 4 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.66, but 0.07, how1 0.55, how2 0.25",
-  "check": "every sentence kept was accepted by the second reader (gemini:gemini-3.5-flash-lite) and by gemini:gemini-3.6-flash; 1 How-do-we-know line(s) dropped; it also found that the short answer answers the question and that the But is about that answer",
-  "panel": "further readers, each of which must accept every sentence too: gemini-3.6-flash accepted 2 of 4",
-  "but": "the writer's But was not accepted (a further reader (gemini-3.6-flash) did not accept it: the passage reports what authors suspected in a single case report, not a general rule about urine detect): the code wrote the But itself, from what this answer rests on",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 0 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.93, but 0.98, how1 0.19, how2 0.28",
+  "check": "every sentence kept was accepted by the second reader (openrouter:openai/gpt-6-luna); 1 How-do-we-know line(s) dropped; it also found that the short answer answers the question and that the But is about that answer",
+  "but": "the writer's But was not accepted (The passage supports a longer half-life in elderly patients and those with kidney disease, but the sentence keeps the term “half-life” without explaining it pla): the code wrote the But itself, from what this answer rests on",
   "rules": "nothing against it",
   "checked": "set beside the checked claims of the same page: nothing against them"
  },
@@ -97,10 +91,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-24",
+     "verified_on": "2026-11-27",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-24"
+      "checked_on": "2026-11-27"
      }
     },
     "PMCID": "PMC10359047"
@@ -116,48 +110,34 @@
    "money": [
     "The authors have declared that no competing interests exist."
    ],
-   "design": {
-    "passage": 1,
-    "where": "Abstract",
-    "quote": "Tianeptine is often incorrectly described as a selective serotonin reuptake inhibitor, but it actually is a µ-opioid receptor agonist with anxiolytic effects.",
-    "text": "a narrative review of tianeptine as a drug of abuse"
-   },
+   "design": null,
    "findings": [
     {
-     "passage": 18,
+     "passage": 9,
      "where": "Review",
-     "quote": "While it is possible to test for tianeptine in a urine assay, few drug tests include tianeptine, mainly because it is not a prescription drug and its status as a potential drug of abuse is not well known.",
-     "text": "While it is possible to test for tianeptine in a urine assay, few drug tests include it because it is not a prescription drug and its status as a potential drug of abuse is not well known.",
+     "quote": "Tianeptine is characterized by high bioavailability, limited distribution in the body, and rapid elimination.",
+     "text": "Tianeptine is rapidly eliminated from the body.",
      "id": "F1",
      "second_hand": ""
     },
     {
      "passage": 18,
      "where": "Review",
-     "quote": "In fact, some recreational drug users tout the lack of testing for tianeptine as an advantage for taking this drug, which can go undetected at routine drug testing.",
-     "text": "Some people who use tianeptine consider the lack of testing for it an advantage because it can go undetected at routine drug testing.",
+     "quote": "While it is possible to test for tianeptine in a urine assay, few drug tests include tianeptine, mainly because it is not a prescription drug and its status as a potential drug of abuse is not well known.",
+     "text": "It is possible to test for tianeptine in urine, but most drug tests do not include it.",
      "id": "F2",
      "second_hand": ""
     },
     {
-     "passage": 9,
-     "where": "Review",
-     "quote": "Tianeptine is characterized by high bioavailability, limited distribution in the body, and rapid elimination.",
-     "text": "Tianeptine is characterized by high bioavailability, limited distribution in the body, and rapid elimination.",
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "Few clinicians are aware of tianeptine and most urine assays do not screen for it.",
+     "text": "Most urine assays do not screen for tianeptine.",
      "id": "F3",
      "second_hand": ""
     }
    ],
-   "limits": [
-    {
-     "passage": 14,
-     "where": "Review",
-     "quote": "Reports of tianeptine toxicity made from 2000 to 2017 to poison control centers often involve polysubstance abuse, so it is challenging to determine the specific effects of tianeptine versus the other substances and their potential interactions.",
-     "text": "It is challenging to determine the specific effects of tianeptine versus other substances because reports of toxicity often involve polysubstance use.",
-     "id": "L1",
-     "second_hand": ""
-    }
-   ],
+   "limits": [],
    "tag": "A"
   },
   {
@@ -226,10 +206,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-24",
+     "verified_on": "2026-11-27",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-24"
+      "checked_on": "2026-11-27"
      }
     },
     "volume": "12",
@@ -246,24 +226,29 @@
    "people": true,
    "near": 0.64,
    "money": [],
-   "design": null,
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "This manuscript is a narrative review, highlighting the dangers of tianeptine and other gas station drug",
+    "text": "narrative review of tianeptine"
+   },
    "findings": [
     {
-     "passage": 13,
-     "where": "Tianeptine › Pharmacokinetics and Pharmacodynamics",
-     "quote": "With a half-life of only 2.5 h, tianeptine is quickly absorbed in the gastrointestinal tract.",
-     "text": "Tianeptine has a half‑life of 2.5 hours.",
+     "passage": 30,
+     "where": "Tianeptine › Adverse Effects in Case Reports",
+     "quote": "Urine analysis revealed a creatinine of 0.11 mg/dl and a 2 ng/ml tianeptine concentration. The authors suspected the lower urine level of tianeptine may be explained by the high rate of drug metabolism, low excretion in the urine.",
+     "text": "Urine drug screens can detect tianeptine at low concentrations (2 ng/ml), but levels may be low because the drug is rapidly metabolized and poorly excreted in urine.",
      "id": "F4",
      "second_hand": ""
     }
    ],
    "limits": [
     {
-     "passage": 30,
-     "where": "Tianeptine › Adverse Effects in Case Reports",
-     "quote": "The authors suspected the lower urine level of tianeptine may be explained by the high rate of drug metabolism, low excretion in the urine, low urine creatinine, and a short time between exposure and specimen collection.",
-     "text": "Urine detection may be limited by rapid metabolism, low urinary excretion, low creatinine, and short sampling time.",
-     "id": "L2",
+     "passage": 13,
+     "where": "Tianeptine › Pharmacokinetics and Pharmacodynamics",
+     "quote": "Since tianeptine is really cleared, its half-life is markedly increased in elderly patients and those with kidney disease.",
+     "text": "The half‑life may be longer in elderly people or patients with kidney disease.",
+     "id": "L1",
      "second_hand": ""
     }
    ],
@@ -273,15 +258,22 @@
  "parts": [
   {
    "part": "short",
-   "text": "It can be found in urine, but few tests check for it. Tianeptine leaves the body quickly, with a half-life of 2.5 hours.",
+   "text": "Tianeptine is rapidly eliminated from the body. It can be found by a drug test, but most tests do not include it.",
    "uses": [
     "F1",
-    "F4",
-    "F3"
+    "F2",
+    "F4"
    ],
    "rests_on": [
     {
      "label": "F1",
+     "ref": "wagner_2023",
+     "where": "Review",
+     "quote": "Tianeptine is characterized by high bioavailability, limited distribution in the body, and rapid elimination.",
+     "sha": "7b2f1543b66d6926"
+    },
+    {
+     "label": "F2",
      "ref": "wagner_2023",
      "where": "Review",
      "quote": "While it is possible to test for tianeptine in a urine assay, few drug tests include tianeptine, mainly because it is not a prescription drug and its status as a potential drug of abuse is not well known.",
@@ -290,16 +282,9 @@
     {
      "label": "F4",
      "ref": "edinoff_2023",
-     "where": "Tianeptine › Pharmacokinetics and Pharmacodynamics",
-     "quote": "With a half-life of only 2.5 h, tianeptine is quickly absorbed in the gastrointestinal tract.",
-     "sha": "677ac9d36c0e8998"
-    },
-    {
-     "label": "F3",
-     "ref": "wagner_2023",
-     "where": "Review",
-     "quote": "Tianeptine is characterized by high bioavailability, limited distribution in the body, and rapid elimination.",
-     "sha": "7b2f1543b66d6926"
+     "where": "Tianeptine › Adverse Effects in Case Reports",
+     "quote": "Urine analysis revealed a creatinine of 0.11 mg/dl and a 2 ng/ml tianeptine concentration. The authors suspected the lower urine level of tianeptine may be explained by the high rate of drug metabolism, low excretion in the urine.",
+     "sha": "172d86782199a528"
     }
    ]
   },
@@ -307,44 +292,60 @@
    "part": "but",
    "text": "This rests on 2 reviews.",
    "uses": [
-    "DA",
-    "F4"
+    "F1",
+    "DB"
    ],
    "fixed": true,
    "rests_on": [
     {
-     "label": "DA",
+     "label": "F1",
      "ref": "wagner_2023",
-     "where": "Abstract",
-     "quote": "Tianeptine is often incorrectly described as a selective serotonin reuptake inhibitor, but it actually is a µ-opioid receptor agonist with anxiolytic effects.",
-     "sha": "b57d62463a499aa4"
+     "where": "Review",
+     "quote": "Tianeptine is characterized by high bioavailability, limited distribution in the body, and rapid elimination.",
+     "sha": "7b2f1543b66d6926"
     },
     {
-     "label": "F4",
+     "label": "DB",
      "ref": "edinoff_2023",
-     "where": "Tianeptine › Pharmacokinetics and Pharmacodynamics",
-     "quote": "With a half-life of only 2.5 h, tianeptine is quickly absorbed in the gastrointestinal tract.",
-     "sha": "677ac9d36c0e8998"
+     "where": "Abstract",
+     "quote": "This manuscript is a narrative review, highlighting the dangers of tianeptine and other gas station drug",
+     "sha": "ea271947b5629e54"
     }
    ]
   },
   {
    "part": "how1",
-   "text": "A 2023 narrative review says tianeptine has a half-life of 2.5 hours and is quickly absorbed in the gut.",
+   "text": "A 2023 review found tianeptine is rapidly eliminated and most urine assays do not screen for it.",
    "uses": [
-    "F4"
+    "F1",
+    "F2",
+    "F3"
    ],
    "rests_on": [
     {
-     "label": "F4",
-     "ref": "edinoff_2023",
-     "where": "Tianeptine › Pharmacokinetics and Pharmacodynamics",
-     "quote": "With a half-life of only 2.5 h, tianeptine is quickly absorbed in the gastrointestinal tract.",
-     "sha": "677ac9d36c0e8998"
+     "label": "F1",
+     "ref": "wagner_2023",
+     "where": "Review",
+     "quote": "Tianeptine is characterized by high bioavailability, limited distribution in the body, and rapid elimination.",
+     "sha": "7b2f1543b66d6926"
+    },
+    {
+     "label": "F2",
+     "ref": "wagner_2023",
+     "where": "Review",
+     "quote": "While it is possible to test for tianeptine in a urine assay, few drug tests include tianeptine, mainly because it is not a prescription drug and its status as a potential drug of abuse is not well known.",
+     "sha": "29f482fbdf75bc23"
+    },
+    {
+     "label": "F3",
+     "ref": "wagner_2023",
+     "where": "Abstract",
+     "quote": "Few clinicians are aware of tianeptine and most urine assays do not screen for it.",
+     "sha": "b57d62463a499aa4"
     }
    ],
-   "quote": "With a half-life of only 2.5 h, tianeptine is quickly absorbed in the gastrointestinal tract",
-   "quote_ref": "edinoff_2023"
+   "quote": "While it is possible to test for tianeptine in a urine assay",
+   "quote_ref": "wagner_2023"
   }
  ],
  "complete": true,
@@ -373,7 +374,16 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-24",
+   "lane": 19,
+   "status": "published",
+   "why": "passed every gate",
+   "short": "It can be found in urine, but few tests check for it. Tianeptine leaves the body quickly, with a half-life of 2.5 hours.",
+   "complete": true
+  }
+ ],
  "looked": [
   {
    "title": "From Antidepressant Tianeptine to Street Drug ZaZa: A Narrative Review",
@@ -381,7 +391,14 @@
    "kind": "review",
    "at": "10.7759/cureus.40688",
    "kept": 3,
-   "thrown": []
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "Narrative review of tianeptine literature",
+     "quote": "(Review) The therapeutic dose range of tianeptine is 25 to 50 mg/day, but doses as low as 12.5 mg/day may be effective for some patients. Tianeptine is characterized by high bioavailability, limited d",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
   },
   {
    "title": "Tianeptine, an Antidepressant with Opioid Agonist Effects: Pharmacology and Abuse Potential, a Narrative Review",
@@ -391,50 +408,54 @@
    "kept": 1,
    "thrown": [
     {
-     "kind": "text",
-     "text": "Narrative review of tianeptine pharmacology and abuse potential",
-     "quote": "Tianeptine is an antidepressant drug approved for the treatment of major depressive disorder in countries other than the US.",
+     "kind": "finding",
+     "text": "Tianeptine stays in the body for about 2.5 hours half‑life.",
+     "quote": "With a half-life of only 2.5 h, tianeptine is quickly absorbed in the gastrointestinal tract.",
      "why": "the sentence is not carried by its quote and passage"
     },
     {
      "kind": "finding",
-     "text": "Tianeptine can be detected in biological samples using LC‑DAD‑MS.",
-     "quote": "Liquid chromatography with photodiode array and mass spectrometry (LC-DAD-MS) was used to quantify tianeptine levels in the post‑mortem samples.",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+     "text": "A drug test using LC‑DAD‑MS can detect tianeptine in biological samples such as blood and urine.",
+     "quote": "liquid chromatography with photodiode array and mass spectrometry (LC-DAD-MS) was used to quantify tianeptine levels in the post-mortem samples.",
+     "why": "the sentence is not carried by its quote and passage"
     },
     {
-     "kind": "finding",
-     "text": "Post‑mortem blood concentrations of tianeptine can reach 5.1 mg/ml and urine concentrations 2.0 mg/ml.",
-     "quote": "Analysis revealed tianeptine concentrations in the blood at 5.1 mg/ml, urine at 2.0 mg/ml, liver at 23 mg/g, and 22 mg in 200 ml of stomach contents.",
-     "why": "it holds an amount or a time between uses"
-    },
-    {
-     "kind": "finding",
-     "text": "Urine concentrations of 2 ng/ml can be detected approximately 2 hours after exposure.",
-     "quote": "Serum and urine samples were reportedly collected around 2 h after admission. ... Urine analysis revealed a creatinine of 0.11 mg/dl and a 2 ng/ml tianeptine concentration.",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+     "kind": "limit",
+     "text": "Urine detection can be unreliable due to rapid metabolism, low urinary excretion, low creatinine, and timing of sample collection.",
+     "quote": "The authors suspected the lower urine level of tianeptine may be explained by the high rate of drug metabolism, low excretion in the urine, low urine creatinine, and a short time between exposure and ",
+     "why": "the sentence is not carried by its quote and passage"
     }
    ]
+  },
+  {
+   "title": "Tianeptine Products Linked to Serious Harm, Overdoses, Death",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.fda.gov/consumers/consumer-updates/tianeptine-products-linked-serious-harm-overdoses-death",
+   "kept": 0,
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
   }
  ],
  "plan": {
   "short": [
-   "F4",
    "F1",
-   "F3"
+   "F2",
+   "F4"
   ],
-  "direct": "It can",
+  "direct": "",
   "but": [
-   "L2"
+   "L1"
   ],
   "how": [
    [
-    "F4"
+    "F1",
+    "F2",
+    "F3"
    ],
    [
-    "DA",
-    "F1",
-    "F3"
+    "F4",
+    "L1"
    ]
   ],
   "unanswered": ""
@@ -444,16 +465,16 @@
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.6638,
-   "but": 0.0665,
-   "how1": 0.5514,
-   "how2": 0.2481
+   "short": 0.9321,
+   "but": 0.9811,
+   "how1": 0.1853,
+   "how2": 0.2822
   },
   "scores_quotes_alone": {
-   "short": 0.6272,
-   "but": 0.1505,
-   "how1": 0.4636,
-   "how2": 0.2701
+   "short": 0.6917,
+   "but": 0.7481,
+   "how1": 0.5359,
+   "how2": 0.1378
   }
  },
  "tries": [
@@ -463,75 +484,61 @@
    "parts": [
     {
      "part": "short",
-     "text": "It can be found in urine, but few tests look for it. Tianeptine leaves the body quickly, with a half-life of 2.5 hours.",
+     "text": "Tianeptine is rapidly eliminated from the body. It can be found in urine tests, but most tests do not include it.",
      "rests_on": [
       {
-       "label": "F4",
-       "ref": "edinoff_2023",
-       "where": "Tianeptine › Pharmacokinetics and Pharmacodynamics",
-       "quote": "With a half-life of only 2.5 h, tianeptine is quickly absorbed in the gastrointestinal tract.",
-       "sha": "677ac9d36c0e8998"
+       "label": "F1",
+       "ref": "wagner_2023",
+       "where": "Review",
+       "quote": "Tianeptine is characterized by high bioavailability, limited distribution in the body, and rapid elimination.",
+       "sha": "7b2f1543b66d6926"
       },
       {
-       "label": "F1",
+       "label": "F2",
        "ref": "wagner_2023",
        "where": "Review",
        "quote": "While it is possible to test for tianeptine in a urine assay, few drug tests include tianeptine, mainly because it is not a prescription drug and its status as a potential drug of abuse is not well known.",
        "sha": "29f482fbdf75bc23"
       },
       {
-       "label": "F3",
-       "ref": "wagner_2023",
-       "where": "Review",
-       "quote": "Tianeptine is characterized by high bioavailability, limited distribution in the body, and rapid elimination.",
-       "sha": "7b2f1543b66d6926"
+       "label": "F4",
+       "ref": "edinoff_2023",
+       "where": "Tianeptine › Adverse Effects in Case Reports",
+       "quote": "Urine analysis revealed a creatinine of 0.11 mg/dl and a 2 ng/ml tianeptine concentration. The authors suspected the lower urine level of tianeptine may be explained by the high rate of drug metabolism, low excretion in the urine.",
+       "sha": "172d86782199a528"
       }
      ],
      "ok": true
     },
     {
      "part": "but",
-     "text": "Urine detection may be limited by rapid metabolism, low urinary excretion, low creatinine, and short sampling time.",
+     "text": "The half-life may be longer in elderly people or those with kidney disease.",
      "rests_on": [
       {
-       "label": "L2",
+       "label": "L1",
        "ref": "edinoff_2023",
-       "where": "Tianeptine › Adverse Effects in Case Reports",
-       "quote": "The authors suspected the lower urine level of tianeptine may be explained by the high rate of drug metabolism, low excretion in the urine, low urine creatinine, and a short time between exposure and specimen collection.",
-       "sha": "172d86782199a528"
+       "where": "Tianeptine › Pharmacokinetics and Pharmacodynamics",
+       "quote": "Since tianeptine is really cleared, its half-life is markedly increased in elderly patients and those with kidney disease.",
+       "sha": "677ac9d36c0e8998"
       }
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "it is about something else than the short answer"
+     "said": "The passage supports a longer half-life in elderly patients and those with kidney disease, but this sentence does not explain half-life plainly as the time for half of the drug to leave the blood, as the editor requires."
     },
     {
      "part": "how1",
-     "text": "A 2023 narrative review says tianeptine has a half-life of 2.5 hours and is quickly absorbed in the gut.",
+     "text": "A 2023 review found tianeptine is rapidly eliminated and most urine tests do not include it.",
      "rests_on": [
-      {
-       "label": "F4",
-       "ref": "edinoff_2023",
-       "where": "Tianeptine › Pharmacokinetics and Pharmacodynamics",
-       "quote": "With a half-life of only 2.5 h, tianeptine is quickly absorbed in the gastrointestinal tract.",
-       "sha": "677ac9d36c0e8998"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "A 2023 narrative review notes tianeptine has high bioavailability, limited body distribution, and rapid elimination. It says few drug tests include it.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "wagner_2023",
-       "where": "Abstract",
-       "quote": "Tianeptine is often incorrectly described as a selective serotonin reuptake inhibitor, but it actually is a µ-opioid receptor agonist with anxiolytic effects.",
-       "sha": "b57d62463a499aa4"
-      },
       {
        "label": "F1",
+       "ref": "wagner_2023",
+       "where": "Review",
+       "quote": "Tianeptine is characterized by high bioavailability, limited distribution in the body, and rapid elimination.",
+       "sha": "7b2f1543b66d6926"
+      },
+      {
+       "label": "F2",
        "ref": "wagner_2023",
        "where": "Review",
        "quote": "While it is possible to test for tianeptine in a urine assay, few drug tests include tianeptine, mainly because it is not a prescription drug and its status as a potential drug of abuse is not well known.",
@@ -540,12 +547,35 @@
       {
        "label": "F3",
        "ref": "wagner_2023",
-       "where": "Review",
-       "quote": "Tianeptine is characterized by high bioavailability, limited distribution in the body, and rapid elimination.",
-       "sha": "7b2f1543b66d6926"
+       "where": "Abstract",
+       "quote": "Few clinicians are aware of tianeptine and most urine assays do not screen for it.",
+       "sha": "b57d62463a499aa4"
       }
      ],
      "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "Another 2023 review found urine tests can detect tianeptine at low concentrations.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "edinoff_2023",
+       "where": "Tianeptine › Adverse Effects in Case Reports",
+       "quote": "Urine analysis revealed a creatinine of 0.11 mg/dl and a 2 ng/ml tianeptine concentration. The authors suspected the lower urine level of tianeptine may be explained by the high rate of drug metabolism, low excretion in the urine.",
+       "sha": "172d86782199a528"
+      },
+      {
+       "label": "L1",
+       "ref": "edinoff_2023",
+       "where": "Tianeptine › Pharmacokinetics and Pharmacodynamics",
+       "quote": "Since tianeptine is really cleared, its half-life is markedly increased in elderly patients and those with kidney disease.",
+       "sha": "677ac9d36c0e8998"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage reports one case in which a urine analysis found a tianeptine concentration of 2 ng/ml; it does not establish generally that urine tests can detect tianeptine at low concentrations."
     }
    ]
   },
@@ -555,10 +585,17 @@
    "parts": [
     {
      "part": "short",
-     "text": "It can be found in urine, but few tests check for it. Tianeptine leaves the body quickly, with a half-life of 2.5 hours.",
+     "text": "Tianeptine is rapidly eliminated from the body. It can be found in urine tests, but most tests do not include it.",
      "rests_on": [
       {
        "label": "F1",
+       "ref": "wagner_2023",
+       "where": "Review",
+       "quote": "Tianeptine is characterized by high bioavailability, limited distribution in the body, and rapid elimination.",
+       "sha": "7b2f1543b66d6926"
+      },
+      {
+       "label": "F2",
        "ref": "wagner_2023",
        "where": "Review",
        "quote": "While it is possible to test for tianeptine in a urine assay, few drug tests include tianeptine, mainly because it is not a prescription drug and its status as a potential drug of abuse is not well known.",
@@ -567,63 +604,42 @@
       {
        "label": "F4",
        "ref": "edinoff_2023",
-       "where": "Tianeptine › Pharmacokinetics and Pharmacodynamics",
-       "quote": "With a half-life of only 2.5 h, tianeptine is quickly absorbed in the gastrointestinal tract.",
-       "sha": "677ac9d36c0e8998"
-      },
-      {
-       "label": "F3",
-       "ref": "wagner_2023",
-       "where": "Review",
-       "quote": "Tianeptine is characterized by high bioavailability, limited distribution in the body, and rapid elimination.",
-       "sha": "7b2f1543b66d6926"
+       "where": "Tianeptine › Adverse Effects in Case Reports",
+       "quote": "Urine analysis revealed a creatinine of 0.11 mg/dl and a 2 ng/ml tianeptine concentration. The authors suspected the lower urine level of tianeptine may be explained by the high rate of drug metabolism, low excretion in the urine.",
+       "sha": "172d86782199a528"
       }
      ],
      "ok": true
     },
     {
      "part": "but",
-     "text": "Urine detection may be limited by rapid metabolism, low urinary excretion, low creatinine, and short sampling time.",
+     "text": "The half-life may be longer in elderly people or those with kidney disease.",
      "rests_on": [
       {
-       "label": "L2",
+       "label": "L1",
        "ref": "edinoff_2023",
-       "where": "Tianeptine › Adverse Effects in Case Reports",
-       "quote": "The authors suspected the lower urine level of tianeptine may be explained by the high rate of drug metabolism, low excretion in the urine, low urine creatinine, and a short time between exposure and specimen collection.",
-       "sha": "172d86782199a528"
+       "where": "Tianeptine › Pharmacokinetics and Pharmacodynamics",
+       "quote": "Since tianeptine is really cleared, its half-life is markedly increased in elderly patients and those with kidney disease.",
+       "sha": "677ac9d36c0e8998"
       }
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "it is about something else than the short answer"
+     "said": "The passage supports a longer half-life in elderly patients and those with kidney disease, but the sentence uses “half-life” without explaining it as the time for half the drug to leave the blood, as the editor’s note requires."
     },
     {
      "part": "how1",
-     "text": "A 2023 narrative review says tianeptine has a half-life of 2.5 hours and is quickly absorbed in the gut.",
+     "text": "A 2023 review found tianeptine is rapidly eliminated and most urine tests do not screen for it.",
      "rests_on": [
-      {
-       "label": "F4",
-       "ref": "edinoff_2023",
-       "where": "Tianeptine › Pharmacokinetics and Pharmacodynamics",
-       "quote": "With a half-life of only 2.5 h, tianeptine is quickly absorbed in the gastrointestinal tract.",
-       "sha": "677ac9d36c0e8998"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "A 2023 narrative review notes tianeptine is a µ-opioid receptor agonist. It says urine tests exist but are rare because it is not a prescription drug.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "wagner_2023",
-       "where": "Abstract",
-       "quote": "Tianeptine is often incorrectly described as a selective serotonin reuptake inhibitor, but it actually is a µ-opioid receptor agonist with anxiolytic effects.",
-       "sha": "b57d62463a499aa4"
-      },
       {
        "label": "F1",
+       "ref": "wagner_2023",
+       "where": "Review",
+       "quote": "Tianeptine is characterized by high bioavailability, limited distribution in the body, and rapid elimination.",
+       "sha": "7b2f1543b66d6926"
+      },
+      {
+       "label": "F2",
        "ref": "wagner_2023",
        "where": "Review",
        "quote": "While it is possible to test for tianeptine in a urine assay, few drug tests include tianeptine, mainly because it is not a prescription drug and its status as a potential drug of abuse is not well known.",
@@ -632,84 +648,62 @@
       {
        "label": "F3",
        "ref": "wagner_2023",
-       "where": "Review",
-       "quote": "Tianeptine is characterized by high bioavailability, limited distribution in the body, and rapid elimination.",
-       "sha": "7b2f1543b66d6926"
+       "where": "Abstract",
+       "quote": "Few clinicians are aware of tianeptine and most urine assays do not screen for it.",
+       "sha": "b57d62463a499aa4"
       }
      ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passage says it is not a prescription drug in the United States, but it is approved as a prescription drug in many other nations, whereas the sentence says it is rare because it is not a prescription drug generally."
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "Another 2023 review found urine tests can detect tianeptine at low concentrations.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "edinoff_2023",
+       "where": "Tianeptine › Adverse Effects in Case Reports",
+       "quote": "Urine analysis revealed a creatinine of 0.11 mg/dl and a 2 ng/ml tianeptine concentration. The authors suspected the lower urine level of tianeptine may be explained by the high rate of drug metabolism, low excretion in the urine.",
+       "sha": "172d86782199a528"
+      }
+     ],
+     "ok": true
     }
    ]
   }
  ],
- "panel": {
-  "gemini:gemini-3.6-flash": {
-   "short": [
-    true,
-    ""
-   ],
-   "but": [
-    false,
-    "the passage reports what authors suspected in a single case report, not a general rule about urine detection"
-   ],
-   "how1": [
-    true,
-    ""
-   ],
-   "how2": [
-    false,
-    "the passage says tianeptine is incorrectly described as a selective serotonin reuptake inhibitor and is approved to treat depression, not that it is not an antidepressant"
-   ]
-  }
- },
  "dropped": [
   {
    "try": 3,
    "part": "but",
-   "text": "Urine detection may be limited by rapid metabolism, low urinary excretion, low creatinine, and short sampling time.",
+   "text": "The half-life may be longer in elderly people or those with kidney disease.",
    "rests_on": [
     {
-     "label": "L2",
+     "label": "L1",
      "ref": "edinoff_2023",
-     "where": "Tianeptine › Adverse Effects in Case Reports",
-     "quote": "The authors suspected the lower urine level of tianeptine may be explained by the high rate of drug metabolism, low excretion in the urine, low urine creatinine, and a short time between exposure and specimen collection.",
-     "sha": "172d86782199a528"
+     "where": "Tianeptine › Pharmacokinetics and Pharmacodynamics",
+     "quote": "Since tianeptine is really cleared, its half-life is markedly increased in elderly patients and those with kidney disease.",
+     "sha": "677ac9d36c0e8998"
     }
    ],
-   "by": "a further reader",
-   "said": "a further reader (gemini-3.6-flash) did not accept it: the passage reports what authors suspected in a single case report, not a general rule about urine detection"
+   "by": "the second reader",
+   "said": "The passage supports a longer half-life in elderly patients and those with kidney disease, but the sentence keeps the term “half-life” without explaining it plainly as the time for half of the drug to leave the blood, as required by the edi"
   },
   {
    "try": 3,
    "part": "how2",
-   "text": "A 2023 narrative review notes tianeptine is a opioid agonist, not an antidepressant, and is rarely tested for in urine.",
+   "text": "Another 2023 review found urine drug screens can detect tianeptine at low concentrations.",
    "rests_on": [
     {
-     "label": "DA",
-     "ref": "wagner_2023",
-     "where": "Abstract",
-     "quote": "Tianeptine is often incorrectly described as a selective serotonin reuptake inhibitor, but it actually is a µ-opioid receptor agonist with anxiolytic effects.",
-     "sha": "b57d62463a499aa4"
-    },
-    {
-     "label": "F1",
-     "ref": "wagner_2023",
-     "where": "Review",
-     "quote": "While it is possible to test for tianeptine in a urine assay, few drug tests include tianeptine, mainly because it is not a prescription drug and its status as a potential drug of abuse is not well known.",
-     "sha": "29f482fbdf75bc23"
-    },
-    {
-     "label": "F3",
-     "ref": "wagner_2023",
-     "where": "Review",
-     "quote": "Tianeptine is characterized by high bioavailability, limited distribution in the body, and rapid elimination.",
-     "sha": "7b2f1543b66d6926"
+     "label": "F4",
+     "ref": "edinoff_2023",
+     "where": "Tianeptine › Adverse Effects in Case Reports",
+     "quote": "Urine analysis revealed a creatinine of 0.11 mg/dl and a 2 ng/ml tianeptine concentration. The authors suspected the lower urine level of tianeptine may be explained by the high rate of drug metabolism, low excretion in the urine.",
+     "sha": "172d86782199a528"
     }
    ],
    "by": "the second reader",
-   "said": "The passages state that tianeptine is indicated and approved to treat depression, and describe it as an antidepressant in the title, making the claim that it is 'not an antidepressant' unsupported."
+   "said": "The passage reports a urine analysis finding 2 ng/ml in one case; it does not say that urine drug screens can detect tianeptine at low concentrations."
   }
  ],
  "with_checked": {
