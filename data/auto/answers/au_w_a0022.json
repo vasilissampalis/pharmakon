@@ -15,119 +15,151 @@
  ],
  "drugs": [],
  "made": {
-  "on": "2026-11-21",
+  "on": "2026-11-27",
   "models": {
-   "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-   "checker": "@cf/openai/gpt-oss-120b",
-   "planner": "groq:openai/gpt-oss-120b",
-   "team": "team B",
-   "reader_2": "groq:openai/gpt-oss-20b"
+   "reader": "openrouter:openai/gpt-oss-120b",
+   "writer": "openrouter:meta-llama/llama-3.3-70b-instruct",
+   "checker": "openrouter:openai/gpt-6-luna",
+   "planner": "openrouter:openai/gpt-oss-120b",
+   "team": "team R",
+   "reader_2": "openrouter:openai/gpt-oss-120b",
+   "writer_2": "groq:qwen/qwen3.8-27b",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "44841499696",
-  "read_seconds": 49,
+  "run": "45930023854",
+  "read_seconds": 90,
   "from": {
    "papers": 2,
    "summaries": 0,
-   "official": 0
+   "official": 1
   },
-  "neurons": 709.2,
-  "seconds": 121
+  "neurons": 0.0,
+  "seconds": 146
  },
- "status": "published",
- "why": "passed every gate",
+ "status": "none",
+ "why": "no draft passed: not accepted at try 2: a second reader did not accept short (The passages do not show that supervision, controlled settings, or heart monitoring reduce the chance of cardiac events; monitoring is described as detecting and managing complications. The analogue passage concerns preclinical models and f); but (The passage says a specific dose reduced tenfold from the studied treatment dose might have no therapeutic effects. The sentence generalizes this to reducing the dose in general.). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
  "gates": {
-  "read": "5 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
-  "rules": "broken at try 1: short: a clinical word where an everyday one exists (“cardiovascular”): say it plainly; written again, then nothing against it",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.71, but 0.97, how1 0.98, how2 0.87",
-  "check": "every sentence kept was accepted by the second reader (@cf/openai/gpt-oss-120b)",
-  "but": "the writer's But was not accepted (it is about something else than the short answer (Sentence 1 directly answers the question about reducing ibogaine‑related heart‑attack risk by recommending adm): the code wrote the But itself, from what this answer rests on",
-  "checked": "set beside the checked claims of the same page: nothing against them"
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-120b read from there",
+  "read": "8 findings kept from 3 sources (2 papers read in full, 1 official pages, 0 papers read in summary); 3 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 1 official page(s), 0 paper(s) read in summary only",
+  "rules": "broken at try 3: but: a number that is not in the paper's words it rests on (10)",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.16, but 0.14, how1 0.63, how2 0.06, how3 0.84",
+  "check": "not accepted at try 2: a second reader did not accept short (The passages do not show that supervision, controlled settings, or heart monitoring reduce the chance of cardiac events; monitoring is described as detecting and managing complications. The analogue passage concerns preclinical models and f); but (The passage says a specific dose reduced tenfold from the studied treatment dose might have no therapeutic effects. The sentence generalizes this to reducing the dose in general.). Say only what the items say, answer the question itself, and let the But be a limit of that answer."
  },
  "sources": [
   {
    "read": "full",
    "ref": {
-    "id": "koenig_2015",
+    "id": "mosca_2023",
     "type": "article-journal",
-    "title": "The anti-addiction drug ibogaine and the heart: A delicate relation",
+    "title": "Ibogaine/noribogaine in the treatment of substance use disorders: A systematic review of the current literature",
     "author": [
      {
-      "family": "Koenig",
-      "given": "Xaver"
+      "family": "Mosca",
+      "given": "Alessio"
      },
      {
-      "family": "Hilber",
-      "given": "Karlheinz"
+      "family": "Chiappini",
+      "given": "Stefania"
+     },
+     {
+      "family": "Miuli",
+      "given": "Andrea"
+     },
+     {
+      "family": "Mancusi",
+      "given": "Gianluca"
+     },
+     {
+      "family": "Santovito",
+      "given": "Maria Chiara"
+     },
+     {
+      "family": "Di Carlo",
+      "given": "Francesco"
+     },
+     {
+      "family": "Pettorruso",
+      "given": "Mauro"
+     },
+     {
+      "family": "Corkery",
+      "given": "John M."
+     },
+     {
+      "family": "Canessa",
+      "given": "Carlos"
+     },
+     {
+      "family": "Martinotti",
+      "given": "Giovanni"
+     },
+     {
+      "family": "Di Giannantonio",
+      "given": "Massimo"
      }
     ],
-    "container-title": "Molecules",
+    "container-title": "Current Neuropharmacology",
     "issued": {
      "date-parts": [
       [
-       2015
+       2023
       ]
      ]
     },
-    "DOI": "10.3390/molecules20022208",
+    "DOI": "10.2174/1570159x21666221017085612",
     "verification": {
      "status": "metadata-verified",
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-21",
+     "verified_on": "2026-11-27",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-21"
+      "checked_on": "2026-11-27"
      }
     },
-    "volume": "20",
-    "issue": "2",
-    "page": "2208-2228",
-    "PMCID": "PMC4382526"
+    "volume": "21",
+    "issue": "11",
+    "page": "2178-2194",
+    "PMCID": "PMC10556383"
    },
-   "doi": "10.3390/molecules20022208",
-   "pmcid": "PMC4382526",
-   "title": "The anti-addiction drug ibogaine and the heart: a delicate relation",
-   "year": 2015,
-   "journal": "Molecules (Basel, Switzerland)",
+   "doi": "10.2174/1570159x21666221017085612",
+   "pmcid": "PMC10556383",
+   "title": "Ibogaine/Noribogaine in the Treatment of Substance Use Disorders: A Systematic Review of the Current Literature",
+   "year": 2023,
+   "journal": "Current neuropharmacology",
    "kind": "review",
-   "people": false,
-   "near": 0.822,
+   "people": true,
+   "near": 0.805,
    "money": [
-    "The authors declare no conflict of interest. The founding sponsors had no role in the design of the study; in the collection, analyses, or interpretation of data; in the writing of the manuscript, and in the decision to publish the results."
+    "ACKNOWLEDGEMENTSDeclared none."
    ],
-   "design": {
-    "passage": 5,
-    "where": "1. Introduction",
-    "quote": "The aim of this review is to summarize and discuss the current knowledge about ibogaine’s effects on the heart and the cardiovascular system.",
-    "text": "a review of the current knowledge about ibogaine's effects on the heart and cardiovascular system"
-   },
+   "design": null,
    "findings": [
     {
-     "passage": 32,
-     "where": "3. Effects on the Cardiovascular System › 3.2. Clinical Evidence of Cardiotoxicity › 3.2.2. Risk Factors",
-     "quote": "First, application of ibogaine, by trained medical personnel only, should be permitted merely under strict medical observation and continuous electrocardiographic monitoring for an extended time period, which carefully takes noribogaine’s longevity in human plasma into account.",
-     "text": "Application of ibogaine by trained medical personnel only should be permitted merely under strict medical observation and continuous electrocardiographic monitoring for an extended time period, which carefully takes noribogaine's longevity in human plasma into account.",
+     "passage": 19,
+     "where": "CONCLUSION",
+     "quote": "drawing up protocols for observation and administration of ibogaine and inclusion and exclusion criteria to define with certainty its level of efficacy and toxicity",
+     "text": "Protocols for observation and administration of ibogaine, together with inclusion and exclusion criteria, should be drawn up to define its efficacy and toxicity.",
      "id": "F1",
      "second_hand": ""
     },
     {
-     "passage": 33,
-     "where": "3. Effects on the Cardiovascular System › 3.2. Clinical Evidence of Cardiotoxicity › 3.2.2. Risk Factors",
-     "quote": "Secondly, prior to ibogaine application one should carefully consider additional risk factors for drug-induced TdP arrhythmias in a patient including female gender, a prolonged baseline QT interval, bradycardia, abnormal electrolyte levels, preexisting cardiovascular disease, ion channel (e.g., hERG) mutations, drug-drug interactions, and genetic variants influencing drug metabolism.",
-     "text": "Prior to ibogaine application one should carefully consider additional risk factors for drug-induced TdP arrhythmias in a patient including female gender, a prolonged baseline QT interval, bradycardia, abnormal electrolyte levels, preexisting cardiovascular disease, ion channel mutations, drug-drug interactions, and genetic variants influencing drug metabolism.",
+     "passage": 19,
+     "where": "CONCLUSION",
+     "quote": "metabolism screening are needed together with drawing up protocols for observation and administration of ibogaine",
+     "text": "Metabolism screening should be performed to assess ibogaine’s risk/benefit ratio.",
      "id": "F2",
      "second_hand": ""
     }
    ],
    "limits": [
     {
-     "passage": 17,
-     "where": "3. Effects on the Cardiovascular System › 3.1. Cardiac Electrophysiology › 3.1.1. Ibogaine Effects on the Heart Rate",
-     "quote": "At the moment it is completely unclear which mechanism or which combination of mechanisms essentially contribute.",
-     "text": "At the moment it is completely unclear which mechanism or which combination of mechanisms essentially contribute to ibogaine's bradycardic effect.",
+     "passage": 19,
+     "where": "CONCLUSION",
+     "quote": "Unfortunately, only two Double-Blind Placebo-Controlled Studies emerged from our investigation.",
+     "text": "Only two double‑blind placebo‑controlled studies on ibogaine were identified.",
      "id": "L1",
      "second_hand": ""
     }
@@ -160,10 +192,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-21",
+     "verified_on": "2026-11-27",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-21"
+      "checked_on": "2026-11-27"
      }
     },
     "volume": "121",
@@ -182,173 +214,126 @@
    "money": [
     "None."
    ],
-   "design": null,
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "Evidence from observational, open‑label, and limited randomized placebo‑controlled trials indicates that ibogaine and its metabolite noribogaine reduce craving and withdrawal symptoms in opioid and cocaine‑dependent individuals, primarily through multiple pharmacological mechanisms; however, ibogaine presents a rare yet clinically significant cardiotoxic risk: QTc prolongation and potentially fatal ventricular arrhythmias such as Torsades des Pointes.",
+    "text": "Review article summarizing ibogaine cardiovascular risks and safety strategies"
+   },
    "findings": [
     {
      "passage": 1,
      "where": "Abstract",
-     "quote": "Recent efforts to improve safety of ibogaine include different dosing strategies, cardiovascular monitoring and the development of ibogaine analogues",
-     "text": "Recent efforts to improve safety of ibogaine include different dosing strategies, cardiovascular monitoring, and the development of ibogaine analogues.",
+     "quote": "Future ibogaine‑assisted treatment should be conducted exclusively under controlled medical supervision, with CYP2D6 genotyping and rigorous monitoring of cardiovascular functioning.",
+     "text": "Risk can be reduced by providing ibogaine treatment only under controlled medical supervision, using CYP2D6 genotyping and rigorous cardiovascular monitoring.",
      "id": "F3",
      "second_hand": ""
     },
     {
      "passage": 1,
      "where": "Abstract",
-     "quote": "Future ibogaine‐assisted treatment should be conducted exclusively under controlled medical supervision, with CYP2D6 genotyping and rigorous monitoring of cardiovascular functioning.",
-     "text": "Future ibogaine-assisted treatment should be conducted exclusively under controlled medical supervision, with CYP2D6 genotyping and rigorous monitoring of cardiovascular functioning.",
+     "quote": "the development of ibogaine analogues, which retain anti‑addictive efficacy while lacking cardiotoxicity in preclinical models.",
+     "text": "Risk can be reduced by using ibogaine analogues that keep anti‑addictive effects but lack cardiotoxicity.",
      "id": "F4",
      "second_hand": ""
     },
     {
      "passage": 11,
      "where": "EFFECTS ON THE CARDIOVASCULAR SYSTEM",
-     "quote": "clinical management of ibogaine administration mainly relies on stringent monitoring, administration in controlled settings with comprehensive medical, psychiatric and cardiac monitoring, including continuous ECG surveillance, to detect and manage these life‐threatening complications",
-     "text": "Clinical management of ibogaine administration mainly relies on stringent monitoring and administration in controlled settings with comprehensive monitoring, including continuous ECG surveillance.",
+     "quote": "clinical management of ibogaine administration mainly relies on stringent monitoring, administration in controlled settings with comprehensive medical, psychiatric and cardiac monitoring, including continuous ECG surveillance.",
+     "text": "Risk can be reduced by administering ibogaine in controlled settings with continuous ECG surveillance and comprehensive cardiac monitoring.",
      "id": "F5",
      "second_hand": ""
     }
    ],
-   "limits": [],
+   "limits": [
+    {
+     "passage": 10,
+     "where": "EFFECTS ON THE CARDIOVASCULAR SYSTEM",
+     "quote": "However, such a dose might not have any therapeutic effects.",
+     "text": "Reducing the dose ten‑fold may eliminate therapeutic effects.",
+     "id": "L2",
+     "second_hand": "33 μM/L) were more than 10-fold higher than the EC50, so Knuijver et al concluded that the treatment dose should be 10-fold reduced to be on the safe side."
+    }
+   ],
    "tag": "B"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "drugscience_ibogaine",
+    "type": "webpage",
+    "title": "Ibogaine",
+    "author": [
+     {
+      "literal": "Drug Science"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      []
+     ]
+    },
+    "URL": "https://www.drugscience.org.uk/drugs/ibogaine",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       27
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-27"
+    }
+   },
+   "title": "Ibogaine",
+   "year": null,
+   "kind": "official",
+   "people": true,
+   "near": 0.735,
+   "name": "Drug Science",
+   "short": "Drug Science, a UK charity of scientists",
+   "tier": 2,
+   "address": "https://www.drugscience.org.uk/drugs/ibogaine",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 5,
+     "where": "What are the risks?",
+     "quote": "Starting with a low dose can also help to reduce the risk of side effects and unpleasant experiences.",
+     "text": "Starting with a low dose can help reduce the risk of side effects.",
+     "id": "F6",
+     "second_hand": ""
+    },
+    {
+     "passage": 9,
+     "where": "Harm Reduction and Drug-Drug Interactions",
+     "quote": "Ibogaine should be taken in a safe and controlled environment, with a trusted person present.",
+     "text": "Taking ibogaine in a safe and controlled environment with a trusted person present is recommended.",
+     "id": "F7",
+     "second_hand": ""
+    },
+    {
+     "passage": 9,
+     "where": "Harm Reduction and Drug-Drug Interactions",
+     "quote": "It is vital not to take ibogaine alongside any other drugs. Doing so greatly increases the risks and can lead to fatalities.",
+     "text": "It is vital not to take ibogaine alongside any other drugs because doing so greatly increases the risks.",
+     "id": "F8",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "C"
   }
  ],
- "parts": [
-  {
-   "part": "short",
-   "text": "Ibogaine should be given by trained staff under heart monitoring, considering risk factors like female gender and heart disease.",
-   "uses": [
-    "F1",
-    "F2",
-    "F4",
-    "F5"
-   ],
-   "rests_on": [
-    {
-     "label": "F1",
-     "ref": "koenig_2015",
-     "where": "3. Effects on the Cardiovascular System › 3.2. Clinical Evidence of Cardiotoxicity › 3.2.2. Risk Factors",
-     "quote": "First, application of ibogaine, by trained medical personnel only, should be permitted merely under strict medical observation and continuous electrocardiographic monitoring for an extended time period, which carefully takes noribogaine’s longevity in human plasma into account.",
-     "sha": "36d88339971b361f"
-    },
-    {
-     "label": "F2",
-     "ref": "koenig_2015",
-     "where": "3. Effects on the Cardiovascular System › 3.2. Clinical Evidence of Cardiotoxicity › 3.2.2. Risk Factors",
-     "quote": "Secondly, prior to ibogaine application one should carefully consider additional risk factors for drug-induced TdP arrhythmias in a patient including female gender, a prolonged baseline QT interval, bradycardia, abnormal electrolyte levels, preexisting cardiovascular disease, ion channel (e.g., hERG) mutations, drug-drug interactions, and genetic variants influencing drug metabolism.",
-     "sha": "8322136500c5d142"
-    },
-    {
-     "label": "F4",
-     "ref": "brunt_2026",
-     "where": "Abstract",
-     "quote": "Future ibogaine‐assisted treatment should be conducted exclusively under controlled medical supervision, with CYP2D6 genotyping and rigorous monitoring of cardiovascular functioning.",
-     "sha": "fe42210921266e8c"
-    },
-    {
-     "label": "F5",
-     "ref": "brunt_2026",
-     "where": "EFFECTS ON THE CARDIOVASCULAR SYSTEM",
-     "quote": "clinical management of ibogaine administration mainly relies on stringent monitoring, administration in controlled settings with comprehensive medical, psychiatric and cardiac monitoring, including continuous ECG surveillance, to detect and manage these life‐threatening complications",
-     "sha": "1122b5e36debc63f"
-    }
-   ]
-  },
-  {
-   "part": "but",
-   "text": "This rests on 2 reviews.",
-   "uses": [
-    "DA",
-    "F3"
-   ],
-   "fixed": true,
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "koenig_2015",
-     "where": "1. Introduction",
-     "quote": "The aim of this review is to summarize and discuss the current knowledge about ibogaine’s effects on the heart and the cardiovascular system.",
-     "sha": "d15ed137bd8aa811"
-    },
-    {
-     "label": "F3",
-     "ref": "brunt_2026",
-     "where": "Abstract",
-     "quote": "Recent efforts to improve safety of ibogaine include different dosing strategies, cardiovascular monitoring and the development of ibogaine analogues",
-     "sha": "fe42210921266e8c"
-    }
-   ]
-  },
-  {
-   "part": "how1",
-   "text": "A 2015 review recommends ibogaine use under strict medical observation.",
-   "uses": [
-    "DA",
-    "F1",
-    "F2"
-   ],
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "koenig_2015",
-     "where": "1. Introduction",
-     "quote": "The aim of this review is to summarize and discuss the current knowledge about ibogaine’s effects on the heart and the cardiovascular system.",
-     "sha": "d15ed137bd8aa811"
-    },
-    {
-     "label": "F1",
-     "ref": "koenig_2015",
-     "where": "3. Effects on the Cardiovascular System › 3.2. Clinical Evidence of Cardiotoxicity › 3.2.2. Risk Factors",
-     "quote": "First, application of ibogaine, by trained medical personnel only, should be permitted merely under strict medical observation and continuous electrocardiographic monitoring for an extended time period, which carefully takes noribogaine’s longevity in human plasma into account.",
-     "sha": "36d88339971b361f"
-    },
-    {
-     "label": "F2",
-     "ref": "koenig_2015",
-     "where": "3. Effects on the Cardiovascular System › 3.2. Clinical Evidence of Cardiotoxicity › 3.2.2. Risk Factors",
-     "quote": "Secondly, prior to ibogaine application one should carefully consider additional risk factors for drug-induced TdP arrhythmias in a patient including female gender, a prolonged baseline QT interval, bradycardia, abnormal electrolyte levels, preexisting cardiovascular disease, ion channel (e.g., hERG) mutations, drug-drug interactions, and genetic variants influencing drug metabolism.",
-     "sha": "8322136500c5d142"
-    }
-   ],
-   "quote": "by trained medical personnel only, should be permitted merely under strict medical observation and continuous",
-   "quote_ref": "koenig_2015"
-  },
-  {
-   "part": "how2",
-   "text": "A 2026 review suggests future treatment under controlled medical supervision.",
-   "uses": [
-    "F3",
-    "F4",
-    "F5"
-   ],
-   "rests_on": [
-    {
-     "label": "F3",
-     "ref": "brunt_2026",
-     "where": "Abstract",
-     "quote": "Recent efforts to improve safety of ibogaine include different dosing strategies, cardiovascular monitoring and the development of ibogaine analogues",
-     "sha": "fe42210921266e8c"
-    },
-    {
-     "label": "F4",
-     "ref": "brunt_2026",
-     "where": "Abstract",
-     "quote": "Future ibogaine‐assisted treatment should be conducted exclusively under controlled medical supervision, with CYP2D6 genotyping and rigorous monitoring of cardiovascular functioning.",
-     "sha": "fe42210921266e8c"
-    },
-    {
-     "label": "F5",
-     "ref": "brunt_2026",
-     "where": "EFFECTS ON THE CARDIOVASCULAR SYSTEM",
-     "quote": "clinical management of ibogaine administration mainly relies on stringent monitoring, administration in controlled settings with comprehensive medical, psychiatric and cardiac monitoring, including continuous ECG surveillance, to detect and manage these life‐threatening complications",
-     "sha": "1122b5e36debc63f"
-    }
-   ],
-   "quote": "Future ibogaine-assisted treatment should be conducted exclusively under controlled medical supervision",
-   "quote_ref": "brunt_2026"
-  }
- ],
- "complete": true,
+ "parts": [],
+ "complete": false,
  "missing": "",
  "wanted": [],
  "person": null,
@@ -392,6 +377,14 @@
    "why": "passed every gate",
    "short": "It can be reduced with strict medical observation and assessment of risk factors.",
    "complete": true
+  },
+  {
+   "on": "2026-11-21",
+   "lane": 19,
+   "status": "published",
+   "why": "passed every gate",
+   "short": "Ibogaine should be given by trained staff under heart monitoring, considering risk factors like female gender and heart disease.",
+   "complete": true
   }
  ],
  "looked": [
@@ -400,16 +393,33 @@
    "read": "full",
    "kind": "review",
    "at": "10.3390/molecules20022208",
-   "kept": 2,
-   "thrown": []
+   "kept": 0,
+   "thrown": [
+    {
+     "why": "the reader gave no JSON"
+    }
+   ]
   },
   {
    "title": "Ibogaine/Noribogaine in the Treatment of Substance Use Disorders: A Systematic Review of the Current Literature",
    "read": "full",
    "kind": "review",
    "at": "10.2174/1570159x21666221017085612",
-   "kept": 0,
-   "thrown": []
+   "kept": 2,
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "Systematic review of literature on ibogaine for substance use disorders",
+     "quote": "This review aims to assess the anti-addictive role of ibogaine and evaluate its side effects.",
+     "why": "the sentence is not carried by its quote and passage"
+    },
+    {
+     "kind": "finding",
+     "text": "Shared guidelines and consistent administration protocols are needed to reduce variability and improve safety.",
+     "quote": "there are no shared guidelines and/or consistent administration protocols, making a comparison between studies difficult",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   },
   {
    "title": "Rare but relevant: Ibogaine and cardiovascular complications-prolonged QT interval and ventricular arrhythmias",
@@ -417,48 +427,44 @@
    "kind": "review",
    "at": "10.1111/add.70319",
    "kept": 3,
-   "thrown": [
-    {
-     "kind": "text",
-     "text": "a research paper reviewing literature on ibogaine and cardiovascular complications",
-     "quote": "A review in 2022 by Ona et al. divided adverse events into acute and prolonged.",
-     "why": "the sentence is not carried by its quote and passage"
-    }
-   ]
+   "thrown": []
   },
   {
    "title": "Ibogaine",
    "read": "page",
    "kind": "official",
    "at": "https://www.drugscience.org.uk/drugs/ibogaine",
-   "kept": 0,
+   "kept": 3,
    "thrown": []
   }
  ],
  "plan": {
   "short": [
    "F5",
-   "F1",
-   "F2",
-   "F4"
+   "F3",
+   "F4",
+   "F6"
   ],
   "direct": "",
   "but": [
-   "L1"
+   "L2"
   ],
   "how": [
-   [
-    "DA",
-    "F1",
-    "F2"
-   ],
    [
     "F5",
     "F3",
     "F4"
+   ],
+   [
+    "F6",
+    "F7"
+   ],
+   [
+    "F1",
+    "F2"
    ]
   ],
-  "unanswered": "specific proven interventions that directly prevent ibogaine‑induced myocardial infarction"
+  "unanswered": ""
  },
  "tries": [
   {
@@ -467,35 +473,35 @@
    "parts": [
     {
      "part": "short",
-     "text": "Ibogaine should be given by trained medical staff under close heart monitoring, considering risk factors like female gender and preexisting cardiovascular disease.",
+     "text": "Ibogaine-related heart risk can be reduced by controlled medical supervision, using CYP2D6 genotyping, rigorous cardiovascular monitoring, and administering in controlled settings with continuous ECG surveillance. Starting with a low dose and taking in a safe environment also helps.",
      "rests_on": [
       {
-       "label": "F1",
-       "ref": "koenig_2015",
-       "where": "3. Effects on the Cardiovascular System › 3.2. Clinical Evidence of Cardiotoxicity › 3.2.2. Risk Factors",
-       "quote": "First, application of ibogaine, by trained medical personnel only, should be permitted merely under strict medical observation and continuous electrocardiographic monitoring for an extended time period, which carefully takes noribogaine’s longevity in human plasma into account.",
-       "sha": "36d88339971b361f"
+       "label": "F5",
+       "ref": "brunt_2026",
+       "where": "EFFECTS ON THE CARDIOVASCULAR SYSTEM",
+       "quote": "clinical management of ibogaine administration mainly relies on stringent monitoring, administration in controlled settings with comprehensive medical, psychiatric and cardiac monitoring, including continuous ECG surveillance.",
+       "sha": "1122b5e36debc63f"
       },
       {
-       "label": "F2",
-       "ref": "koenig_2015",
-       "where": "3. Effects on the Cardiovascular System › 3.2. Clinical Evidence of Cardiotoxicity › 3.2.2. Risk Factors",
-       "quote": "Secondly, prior to ibogaine application one should carefully consider additional risk factors for drug-induced TdP arrhythmias in a patient including female gender, a prolonged baseline QT interval, bradycardia, abnormal electrolyte levels, preexisting cardiovascular disease, ion channel (e.g., hERG) mutations, drug-drug interactions, and genetic variants influencing drug metabolism.",
-       "sha": "8322136500c5d142"
+       "label": "F3",
+       "ref": "brunt_2026",
+       "where": "Abstract",
+       "quote": "Future ibogaine‑assisted treatment should be conducted exclusively under controlled medical supervision, with CYP2D6 genotyping and rigorous monitoring of cardiovascular functioning.",
+       "sha": "fe42210921266e8c"
       },
       {
        "label": "F4",
        "ref": "brunt_2026",
        "where": "Abstract",
-       "quote": "Future ibogaine‐assisted treatment should be conducted exclusively under controlled medical supervision, with CYP2D6 genotyping and rigorous monitoring of cardiovascular functioning.",
+       "quote": "the development of ibogaine analogues, which retain anti‑addictive efficacy while lacking cardiotoxicity in preclinical models.",
        "sha": "fe42210921266e8c"
       },
       {
-       "label": "F5",
-       "ref": "brunt_2026",
-       "where": "EFFECTS ON THE CARDIOVASCULAR SYSTEM",
-       "quote": "clinical management of ibogaine administration mainly relies on stringent monitoring, administration in controlled settings with comprehensive medical, psychiatric and cardiac monitoring, including continuous ECG surveillance, to detect and manage these life‐threatening complications",
-       "sha": "1122b5e36debc63f"
+       "label": "F6",
+       "ref": "drugscience_ibogaine",
+       "where": "What are the risks?",
+       "quote": "Starting with a low dose can also help to reduce the risk of side effects and unpleasant experiences.",
+       "sha": "cd30b5abc72862c3"
       }
      ],
      "ok": false,
@@ -504,70 +510,84 @@
     },
     {
      "part": "but",
-     "text": "It is unclear which mechanism contributes to ibogaine's heart effects.",
+     "text": "Reducing the dose may eliminate therapeutic effects.",
      "rests_on": [
       {
-       "label": "L1",
-       "ref": "koenig_2015",
-       "where": "3. Effects on the Cardiovascular System › 3.1. Cardiac Electrophysiology › 3.1.1. Ibogaine Effects on the Heart Rate",
-       "quote": "At the moment it is completely unclear which mechanism or which combination of mechanisms essentially contribute.",
-       "sha": "ded41f541dd830e5"
+       "label": "L2",
+       "ref": "brunt_2026",
+       "where": "EFFECTS ON THE CARDIOVASCULAR SYSTEM",
+       "quote": "However, such a dose might not have any therapeutic effects.",
+       "sha": "70d708ac7cb13dc2"
       }
      ],
      "ok": true
     },
     {
      "part": "how1",
-     "text": "A 2015 review recommends ibogaine application under strict medical observation.",
+     "text": "A 2026 review recommends controlled medical supervision, CYP2D6 genotyping, and rigorous cardiovascular monitoring.",
      "rests_on": [
       {
-       "label": "DA",
-       "ref": "koenig_2015",
-       "where": "1. Introduction",
-       "quote": "The aim of this review is to summarize and discuss the current knowledge about ibogaine’s effects on the heart and the cardiovascular system.",
-       "sha": "d15ed137bd8aa811"
+       "label": "F5",
+       "ref": "brunt_2026",
+       "where": "EFFECTS ON THE CARDIOVASCULAR SYSTEM",
+       "quote": "clinical management of ibogaine administration mainly relies on stringent monitoring, administration in controlled settings with comprehensive medical, psychiatric and cardiac monitoring, including continuous ECG surveillance.",
+       "sha": "1122b5e36debc63f"
       },
-      {
-       "label": "F1",
-       "ref": "koenig_2015",
-       "where": "3. Effects on the Cardiovascular System › 3.2. Clinical Evidence of Cardiotoxicity › 3.2.2. Risk Factors",
-       "quote": "First, application of ibogaine, by trained medical personnel only, should be permitted merely under strict medical observation and continuous electrocardiographic monitoring for an extended time period, which carefully takes noribogaine’s longevity in human plasma into account.",
-       "sha": "36d88339971b361f"
-      },
-      {
-       "label": "F2",
-       "ref": "koenig_2015",
-       "where": "3. Effects on the Cardiovascular System › 3.2. Clinical Evidence of Cardiotoxicity › 3.2.2. Risk Factors",
-       "quote": "Secondly, prior to ibogaine application one should carefully consider additional risk factors for drug-induced TdP arrhythmias in a patient including female gender, a prolonged baseline QT interval, bradycardia, abnormal electrolyte levels, preexisting cardiovascular disease, ion channel (e.g., hERG) mutations, drug-drug interactions, and genetic variants influencing drug metabolism.",
-       "sha": "8322136500c5d142"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "A 2026 review says future ibogaine treatment should be under controlled medical supervision.",
-     "rests_on": [
       {
        "label": "F3",
        "ref": "brunt_2026",
        "where": "Abstract",
-       "quote": "Recent efforts to improve safety of ibogaine include different dosing strategies, cardiovascular monitoring and the development of ibogaine analogues",
+       "quote": "Future ibogaine‑assisted treatment should be conducted exclusively under controlled medical supervision, with CYP2D6 genotyping and rigorous monitoring of cardiovascular functioning.",
        "sha": "fe42210921266e8c"
       },
       {
        "label": "F4",
        "ref": "brunt_2026",
        "where": "Abstract",
-       "quote": "Future ibogaine‐assisted treatment should be conducted exclusively under controlled medical supervision, with CYP2D6 genotyping and rigorous monitoring of cardiovascular functioning.",
+       "quote": "the development of ibogaine analogues, which retain anti‑addictive efficacy while lacking cardiotoxicity in preclinical models.",
        "sha": "fe42210921266e8c"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "Drug Science, a UK charity of scientists, says starting with a low dose and taking in a safe environment helps.",
+     "rests_on": [
+      {
+       "label": "F6",
+       "ref": "drugscience_ibogaine",
+       "where": "What are the risks?",
+       "quote": "Starting with a low dose can also help to reduce the risk of side effects and unpleasant experiences.",
+       "sha": "cd30b5abc72862c3"
       },
       {
-       "label": "F5",
-       "ref": "brunt_2026",
-       "where": "EFFECTS ON THE CARDIOVASCULAR SYSTEM",
-       "quote": "clinical management of ibogaine administration mainly relies on stringent monitoring, administration in controlled settings with comprehensive medical, psychiatric and cardiac monitoring, including continuous ECG surveillance, to detect and manage these life‐threatening complications",
-       "sha": "1122b5e36debc63f"
+       "label": "F7",
+       "ref": "drugscience_ibogaine",
+       "where": "Harm Reduction and Drug-Drug Interactions",
+       "quote": "Ibogaine should be taken in a safe and controlled environment, with a trusted person present.",
+       "sha": "1abbc733189b1fe5"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2023 review suggests drawing up protocols for observation and administration of ibogaine, and metabolism screening.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "mosca_2023",
+       "where": "CONCLUSION",
+       "quote": "drawing up protocols for observation and administration of ibogaine and inclusion and exclusion criteria to define with certainty its level of efficacy and toxicity",
+       "sha": "e9b85ed2c93382a2"
+      },
+      {
+       "label": "F2",
+       "ref": "mosca_2023",
+       "where": "CONCLUSION",
+       "quote": "metabolism screening are needed together with drawing up protocols for observation and administration of ibogaine",
+       "sha": "e9b85ed2c93382a2"
       }
      ],
      "ok": true
@@ -580,107 +600,254 @@
    "parts": [
     {
      "part": "short",
-     "text": "Ibogaine should be given by trained medical staff under close heart monitoring, and risk factors like female gender and heart disease should be considered.",
+     "text": "Ibogaine-related heart risk can be reduced by controlled medical supervision, using ibogaine analogues, and administering it in controlled settings with heart monitoring. Starting with a low dose can also help.",
      "rests_on": [
       {
-       "label": "F1",
-       "ref": "koenig_2015",
-       "where": "3. Effects on the Cardiovascular System › 3.2. Clinical Evidence of Cardiotoxicity › 3.2.2. Risk Factors",
-       "quote": "First, application of ibogaine, by trained medical personnel only, should be permitted merely under strict medical observation and continuous electrocardiographic monitoring for an extended time period, which carefully takes noribogaine’s longevity in human plasma into account.",
-       "sha": "36d88339971b361f"
+       "label": "F5",
+       "ref": "brunt_2026",
+       "where": "EFFECTS ON THE CARDIOVASCULAR SYSTEM",
+       "quote": "clinical management of ibogaine administration mainly relies on stringent monitoring, administration in controlled settings with comprehensive medical, psychiatric and cardiac monitoring, including continuous ECG surveillance.",
+       "sha": "1122b5e36debc63f"
       },
       {
-       "label": "F2",
-       "ref": "koenig_2015",
-       "where": "3. Effects on the Cardiovascular System › 3.2. Clinical Evidence of Cardiotoxicity › 3.2.2. Risk Factors",
-       "quote": "Secondly, prior to ibogaine application one should carefully consider additional risk factors for drug-induced TdP arrhythmias in a patient including female gender, a prolonged baseline QT interval, bradycardia, abnormal electrolyte levels, preexisting cardiovascular disease, ion channel (e.g., hERG) mutations, drug-drug interactions, and genetic variants influencing drug metabolism.",
-       "sha": "8322136500c5d142"
+       "label": "F3",
+       "ref": "brunt_2026",
+       "where": "Abstract",
+       "quote": "Future ibogaine‑assisted treatment should be conducted exclusively under controlled medical supervision, with CYP2D6 genotyping and rigorous monitoring of cardiovascular functioning.",
+       "sha": "fe42210921266e8c"
       },
       {
        "label": "F4",
        "ref": "brunt_2026",
        "where": "Abstract",
-       "quote": "Future ibogaine‐assisted treatment should be conducted exclusively under controlled medical supervision, with CYP2D6 genotyping and rigorous monitoring of cardiovascular functioning.",
+       "quote": "the development of ibogaine analogues, which retain anti‑addictive efficacy while lacking cardiotoxicity in preclinical models.",
+       "sha": "fe42210921266e8c"
+      },
+      {
+       "label": "F6",
+       "ref": "drugscience_ibogaine",
+       "where": "What are the risks?",
+       "quote": "Starting with a low dose can also help to reduce the risk of side effects and unpleasant experiences.",
+       "sha": "cd30b5abc72862c3"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages do not show that supervision, controlled settings, or heart monitoring reduce the chance of cardiac events; monitoring is described as detecting and managing complications. The analogue passage concerns preclinical models and f"
+    },
+    {
+     "part": "but",
+     "text": "Reducing the dose may eliminate therapeutic effects.",
+     "rests_on": [
+      {
+       "label": "L2",
+       "ref": "brunt_2026",
+       "where": "EFFECTS ON THE CARDIOVASCULAR SYSTEM",
+       "quote": "However, such a dose might not have any therapeutic effects.",
+       "sha": "70d708ac7cb13dc2"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage says a specific dose reduced tenfold from the studied treatment dose might have no therapeutic effects. The sentence generalizes this to reducing the dose in general."
+    },
+    {
+     "part": "how1",
+     "text": "A 2026 review recommends controlled medical supervision, ibogaine analogues, and heart monitoring.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "brunt_2026",
+       "where": "EFFECTS ON THE CARDIOVASCULAR SYSTEM",
+       "quote": "clinical management of ibogaine administration mainly relies on stringent monitoring, administration in controlled settings with comprehensive medical, psychiatric and cardiac monitoring, including continuous ECG surveillance.",
+       "sha": "1122b5e36debc63f"
+      },
+      {
+       "label": "F3",
+       "ref": "brunt_2026",
+       "where": "Abstract",
+       "quote": "Future ibogaine‑assisted treatment should be conducted exclusively under controlled medical supervision, with CYP2D6 genotyping and rigorous monitoring of cardiovascular functioning.",
+       "sha": "fe42210921266e8c"
+      },
+      {
+       "label": "F4",
+       "ref": "brunt_2026",
+       "where": "Abstract",
+       "quote": "the development of ibogaine analogues, which retain anti‑addictive efficacy while lacking cardiotoxicity in preclinical models.",
+       "sha": "fe42210921266e8c"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The review recommends supervision and cardiovascular monitoring, and says future trials should evaluate safer analogues. It does not recommend using ibogaine analogues as a treatment."
+    },
+    {
+     "part": "how2",
+     "text": "Drug Science, a UK charity of scientists, says starting with a low dose and taking ibogaine in a safe environment can help.",
+     "rests_on": [
+      {
+       "label": "F6",
+       "ref": "drugscience_ibogaine",
+       "where": "What are the risks?",
+       "quote": "Starting with a low dose can also help to reduce the risk of side effects and unpleasant experiences.",
+       "sha": "cd30b5abc72862c3"
+      },
+      {
+       "label": "F7",
+       "ref": "drugscience_ibogaine",
+       "where": "Harm Reduction and Drug-Drug Interactions",
+       "quote": "Ibogaine should be taken in a safe and controlled environment, with a trusted person present.",
+       "sha": "1abbc733189b1fe5"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage does not identify Drug Science as a UK charity of scientists. It says a safe and comfortable environment with trusted people present can alleviate stress or discomfort and provide support; the sentence leaves out those qualifica"
+    },
+    {
+     "part": "how3",
+     "text": "A 2023 review suggests drawing up protocols and metabolism screening.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "mosca_2023",
+       "where": "CONCLUSION",
+       "quote": "drawing up protocols for observation and administration of ibogaine and inclusion and exclusion criteria to define with certainty its level of efficacy and toxicity",
+       "sha": "e9b85ed2c93382a2"
+      },
+      {
+       "label": "F2",
+       "ref": "mosca_2023",
+       "where": "CONCLUSION",
+       "quote": "metabolism screening are needed together with drawing up protocols for observation and administration of ibogaine",
+       "sha": "e9b85ed2c93382a2"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "a rule was broken: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Ibogaine-related heart risk can be reduced by controlled medical supervision, using ibogaine analogues, and administering in controlled settings with ECG surveillance, and starting with a low dose",
+     "rests_on": [
+      {
+       "label": "F3",
+       "ref": "brunt_2026",
+       "where": "Abstract",
+       "quote": "Future ibogaine‑assisted treatment should be conducted exclusively under controlled medical supervision, with CYP2D6 genotyping and rigorous monitoring of cardiovascular functioning.",
+       "sha": "fe42210921266e8c"
+      },
+      {
+       "label": "F4",
+       "ref": "brunt_2026",
+       "where": "Abstract",
+       "quote": "the development of ibogaine analogues, which retain anti‑addictive efficacy while lacking cardiotoxicity in preclinical models.",
        "sha": "fe42210921266e8c"
       },
       {
        "label": "F5",
        "ref": "brunt_2026",
        "where": "EFFECTS ON THE CARDIOVASCULAR SYSTEM",
-       "quote": "clinical management of ibogaine administration mainly relies on stringent monitoring, administration in controlled settings with comprehensive medical, psychiatric and cardiac monitoring, including continuous ECG surveillance, to detect and manage these life‐threatening complications",
+       "quote": "clinical management of ibogaine administration mainly relies on stringent monitoring, administration in controlled settings with comprehensive medical, psychiatric and cardiac monitoring, including continuous ECG surveillance.",
        "sha": "1122b5e36debc63f"
+      },
+      {
+       "label": "F6",
+       "ref": "drugscience_ibogaine",
+       "where": "What are the risks?",
+       "quote": "Starting with a low dose can also help to reduce the risk of side effects and unpleasant experiences.",
+       "sha": "cd30b5abc72862c3"
       }
      ],
      "ok": true
     },
     {
      "part": "but",
-     "text": "It is unclear what mechanisms contribute to ibogaine's effect on the heart.",
+     "text": "Reducing the dose ten-fold may eliminate therapeutic effects",
      "rests_on": [
       {
-       "label": "L1",
-       "ref": "koenig_2015",
-       "where": "3. Effects on the Cardiovascular System › 3.1. Cardiac Electrophysiology › 3.1.1. Ibogaine Effects on the Heart Rate",
-       "quote": "At the moment it is completely unclear which mechanism or which combination of mechanisms essentially contribute.",
-       "sha": "ded41f541dd830e5"
+       "label": "L2",
+       "ref": "brunt_2026",
+       "where": "EFFECTS ON THE CARDIOVASCULAR SYSTEM",
+       "quote": "However, such a dose might not have any therapeutic effects.",
+       "sha": "70d708ac7cb13dc2"
       }
      ],
      "ok": false,
-     "by": "the second reader",
-     "said": "it is about something else than the short answer (All four sentences are directly supported by the cited passages. Sentence 1 provides the recommended risk‑reduction measures, thus answering the question. Sentence 2 discusses uncertainty about mechanisms, which does not limit or qualify th)"
+     "by": "a rule",
+     "said": "a rule: a number that is not in the paper's words it rests on (10)"
     },
     {
      "part": "how1",
-     "text": "A 2015 review recommends ibogaine be given under strict medical observation.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "koenig_2015",
-       "where": "1. Introduction",
-       "quote": "The aim of this review is to summarize and discuss the current knowledge about ibogaine’s effects on the heart and the cardiovascular system.",
-       "sha": "d15ed137bd8aa811"
-      },
-      {
-       "label": "F1",
-       "ref": "koenig_2015",
-       "where": "3. Effects on the Cardiovascular System › 3.2. Clinical Evidence of Cardiotoxicity › 3.2.2. Risk Factors",
-       "quote": "First, application of ibogaine, by trained medical personnel only, should be permitted merely under strict medical observation and continuous electrocardiographic monitoring for an extended time period, which carefully takes noribogaine’s longevity in human plasma into account.",
-       "sha": "36d88339971b361f"
-      },
-      {
-       "label": "F2",
-       "ref": "koenig_2015",
-       "where": "3. Effects on the Cardiovascular System › 3.2. Clinical Evidence of Cardiotoxicity › 3.2.2. Risk Factors",
-       "quote": "Secondly, prior to ibogaine application one should carefully consider additional risk factors for drug-induced TdP arrhythmias in a patient including female gender, a prolonged baseline QT interval, bradycardia, abnormal electrolyte levels, preexisting cardiovascular disease, ion channel (e.g., hERG) mutations, drug-drug interactions, and genetic variants influencing drug metabolism.",
-       "sha": "8322136500c5d142"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "A 2026 review says future treatment should be under controlled medical supervision.",
+     "text": "A 2026 review recommends controlled medical supervision, ibogaine analogues, and ECG surveillance",
      "rests_on": [
       {
        "label": "F3",
        "ref": "brunt_2026",
        "where": "Abstract",
-       "quote": "Recent efforts to improve safety of ibogaine include different dosing strategies, cardiovascular monitoring and the development of ibogaine analogues",
+       "quote": "Future ibogaine‑assisted treatment should be conducted exclusively under controlled medical supervision, with CYP2D6 genotyping and rigorous monitoring of cardiovascular functioning.",
        "sha": "fe42210921266e8c"
       },
       {
        "label": "F4",
        "ref": "brunt_2026",
        "where": "Abstract",
-       "quote": "Future ibogaine‐assisted treatment should be conducted exclusively under controlled medical supervision, with CYP2D6 genotyping and rigorous monitoring of cardiovascular functioning.",
+       "quote": "the development of ibogaine analogues, which retain anti‑addictive efficacy while lacking cardiotoxicity in preclinical models.",
        "sha": "fe42210921266e8c"
       },
       {
        "label": "F5",
        "ref": "brunt_2026",
        "where": "EFFECTS ON THE CARDIOVASCULAR SYSTEM",
-       "quote": "clinical management of ibogaine administration mainly relies on stringent monitoring, administration in controlled settings with comprehensive medical, psychiatric and cardiac monitoring, including continuous ECG surveillance, to detect and manage these life‐threatening complications",
+       "quote": "clinical management of ibogaine administration mainly relies on stringent monitoring, administration in controlled settings with comprehensive medical, psychiatric and cardiac monitoring, including continuous ECG surveillance.",
        "sha": "1122b5e36debc63f"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "Drug Science, a UK charity of scientists, says starting with a low dose can help reduce side effects",
+     "rests_on": [
+      {
+       "label": "F6",
+       "ref": "drugscience_ibogaine",
+       "where": "What are the risks?",
+       "quote": "Starting with a low dose can also help to reduce the risk of side effects and unpleasant experiences.",
+       "sha": "cd30b5abc72862c3"
+      },
+      {
+       "label": "F7",
+       "ref": "drugscience_ibogaine",
+       "where": "Harm Reduction and Drug-Drug Interactions",
+       "quote": "Ibogaine should be taken in a safe and controlled environment, with a trusted person present.",
+       "sha": "1abbc733189b1fe5"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2023 review suggests drawing up protocols for observation and administration of ibogaine",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "mosca_2023",
+       "where": "CONCLUSION",
+       "quote": "drawing up protocols for observation and administration of ibogaine and inclusion and exclusion criteria to define with certainty its level of efficacy and toxicity",
+       "sha": "e9b85ed2c93382a2"
+      },
+      {
+       "label": "F2",
+       "ref": "mosca_2023",
+       "where": "CONCLUSION",
+       "quote": "metabolism screening are needed together with drawing up protocols for observation and administration of ibogaine",
+       "sha": "e9b85ed2c93382a2"
       }
      ],
      "ok": true
@@ -693,39 +860,19 @@
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.7128,
-   "but": 0.9714,
-   "how1": 0.9796,
-   "how2": 0.8733
+   "short": 0.1611,
+   "but": 0.1431,
+   "how1": 0.6285,
+   "how2": 0.0618,
+   "how3": 0.8365
   },
   "scores_quotes_alone": {
-   "short": 0.9063,
-   "but": 0.8152,
-   "how1": 0.9791,
-   "how2": 0.8899
+   "short": 0.3935,
+   "but": 0.0207,
+   "how1": 0.4411,
+   "how2": 0.0464,
+   "how3": 0.8643
   }
- },
- "dropped": [
-  {
-   "try": 3,
-   "part": "but",
-   "text": "It is unclear which mechanisms contribute to ibogaine's heart effects.",
-   "rests_on": [
-    {
-     "label": "L1",
-     "ref": "koenig_2015",
-     "where": "3. Effects on the Cardiovascular System › 3.1. Cardiac Electrophysiology › 3.1.1. Ibogaine Effects on the Heart Rate",
-     "quote": "At the moment it is completely unclear which mechanism or which combination of mechanisms essentially contribute.",
-     "sha": "ded41f541dd830e5"
-    }
-   ],
-   "by": "the second reader",
-   "said": "it is about something else than the short answer (Sentence 1 directly answers the question about reducing ibogaine‑related heart‑attack risk by recommending administration by trained staff with cardiac monitoring and consideration of risk factors. Sentence 2 discusses uncertainty about mec)"
-  }
- ],
- "with_checked": {
-  "differs": [],
-  "same": []
  },
  "place": {
   "home": "new:Ibogaine",
