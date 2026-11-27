@@ -17,9 +17,9 @@
   "methadone-buprenorphine"
  ],
  "made": {
-  "on": "2026-11-26",
+  "on": "2026-11-27",
   "models": {
-   "reader": "gemini:gemini-3.1-flash-lite",
+   "reader": "gemini:gemini-3.5-flash-lite",
    "writer": "groq:qwen/qwen3.8-27b",
    "checker": "groq:openai/gpt-oss-120b",
    "planner": "groq:openai/gpt-oss-120b",
@@ -27,34 +27,31 @@
    "also2": "gemini:gemini-3.6-flash",
    "team": "team I",
    "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
-   "reader_first": "gemini:gemini-3.5-flash-lite"
+   "reader_3": "openrouter:meta-llama/llama-3.3-70b-instruct",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "45801067651",
+  "run": "45996372954",
   "read_by": {
-   "gemini-3.1-flash-lite": 4,
-   "llama-4-scout-17b-16e-instruct": 2
+   "gemini-3.5-flash-lite": 5,
+   "gemini-3.1-flash-lite": 2
   },
-  "read_seconds": 45,
+  "read_seconds": 44,
   "from": {
-   "papers": 1,
+   "papers": 2,
    "summaries": 0,
    "official": 2
   },
-  "neurons": 135.2,
-  "seconds": 291
+  "neurons": 0.0,
+  "seconds": 175
  },
- "status": "published",
- "why": "passed every gate",
+ "status": "none",
+ "why": "no draft passed: not accepted at try 2: a second reader did not accept but (the passage does not state that the reviews summarize known mechanisms rather than testing them directly). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
  "gates": {
-  "reader": "gemini-3.5-flash-lite could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.1-flash-lite read from there",
-  "read": "9 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 2 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
-  "panel": "further readers, each of which must accept every sentence too: gemini-3.5-flash-lite accepted 5 of 5; gemini-3.6-flash could not be asked: gemini says the allowance is used up: [{ \"error\": { \"code\": 429, \"message\": \"You exceeded your current quota, please check your plan and billing details. For mo; gemini-3-flash-preview accepted 4 of 5",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.91, but 0.96, how1 0.85, how2 0.83, how3 0.95",
-  "check": "every sentence kept was accepted by the second reader (groq:openai/gpt-oss-120b) and by gemini:gemini-3.5-flash-lite and by gemini:gemini-3.6-flash; 1 How-do-we-know line(s) dropped; it also found that the short answer answers the question and that the But is about that answer",
-  "rules": "nothing against it",
-  "checked": "set beside the checked claims of the same page: nothing against them"
+  "read": "8 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 4 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 2 official page(s), 0 paper(s) read in summary only",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.98, but 0.09, how1 0.57, how2 0.98",
+  "check": "not accepted at try 2: a second reader did not accept but (the passage does not state that the reviews summarize known mechanisms rather than testing them directly). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
+  "writer": "try 3: no JSON (how the reply ended: stop; reasoned 0 characters, wrote 415)"
  },
  "sources": [
   {
@@ -147,10 +144,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-26",
+     "verified_on": "2026-11-27",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-26"
+      "checked_on": "2026-11-27"
      }
     },
     "volume": "116",
@@ -171,113 +168,197 @@
     "The authors declared no competing interests in this work.",
     "ACKNOWLEDGMENTSWe acknowledge the critical input of members of the Clinical Pharmacogenetics Implementation Consortium (CPIC), funded by the National Institutes of Health. CPIC members are listed here:."
    ],
-   "design": {
-    "passage": 3,
-    "where": "FOCUSED LITERATURE REVIEW",
-    "quote": "A systematic literature review was undertaken to evaluate a possible link between CYP2B6 genotypes and methadone metabolism, exposure, clinical effects, and adverse effects",
-    "text": "A systematic literature review evaluating the link between CYP2B6 genotypes and methadone."
-   },
+   "design": null,
    "findings": [
     {
      "passage": 12,
      "where": "DRUG: METHADONE › Background",
      "quote": "Methadone is a μ opioid receptor agonist and effects are enantioselective. R‐methadone exerts the majority of the opioid effects of the racemate because it has 30‐ to 50‐fold higher binding affinity and analgesic potency than S‐methadone.",
-     "text": "Methadone acts as a mu opioid receptor agonist, with R-methadone providing most of the opioid effects due to having 30- to 50-fold higher binding affinity and analgesic potency than S-methadone.",
+     "text": "Methadone is a mu opioid receptor agonist whose effects are enantioselective, and R-methadone exerts the majority of the opioid effects because it has 30- to 50-fold higher binding affinity and analgesic potency than S-methadone.",
      "id": "F1",
      "second_hand": ""
     },
     {
-     "passage": 13,
+     "passage": 12,
      "where": "DRUG: METHADONE › Background",
-     "quote": "Methadone also interacts with norepinephrine and serotonin reuptake transporters at concentrations which more closely resemble those achieved clinically.",
-     "text": "Methadone interacts with norepinephrine and serotonin reuptake transporters at concentrations similar to those achieved in clinical settings.",
+     "quote": "R‐methadone is also predominantly responsible for other μ opioid effects, including respiratory depression., S‐methadone alone is in clinical trials for the treatment of depression.",
+     "text": "R-methadone is also predominantly responsible for other mu opioid effects, including respiratory depression.",
      "id": "F2",
      "second_hand": ""
     },
     {
      "passage": 13,
      "where": "DRUG: METHADONE › Background",
-     "quote": "methadone blocks N‐methyl‐D‐aspartate (NMDA) receptors in laboratory studies. However, clinical methadone concentrations (often < 1 μM) are lower than the IC50 or Ki of methadone for the NMDA receptor (3–10 μM).",
-     "text": "In laboratory studies, methadone blocks NMDA receptors, but clinical concentrations are lower than the levels required for this effect.",
+     "quote": "Methadone also interacts with norepinephrine and serotonin reuptake transporters at concentrations which more closely resemble those achieved clinically.",
+     "text": "Methadone also interacts with norepinephrine and serotonin reuptake transporters at concentrations that more closely resemble those achieved clinically.",
      "id": "F3",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "A"
+  },
+  {
+   "read": "full",
+   "ref": {
+    "id": "soyka_2021",
+    "type": "article-journal",
+    "title": "Transition from full mu opioid agonists to buprenorphine in opioid dependent patients—a critical review",
+    "author": [
+     {
+      "family": "Soyka",
+      "given": "Michael"
+     }
+    ],
+    "container-title": "Frontiers in Pharmacology",
+    "issued": {
+     "date-parts": [
+      [
+       2021
+      ]
+     ]
+    },
+    "DOI": "10.3389/fphar.2021.718811",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-27",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-27"
+     }
+    },
+    "volume": "12",
+    "number": "718811",
+    "PMCID": "PMC8650116"
+   },
+   "doi": "10.3389/fphar.2021.718811",
+   "pmcid": "PMC8650116",
+   "title": "Transition From Full Mu Opioid Agonists to Buprenorphine in Opioid Dependent Patients-A Critical Review",
+   "year": 2021,
+   "journal": "Frontiers in pharmacology",
+   "kind": "review",
+   "people": true,
+   "near": 0.673,
+   "money": [
+    "The author declares that the research was conducted in the absence of any commercial or financial relationships that could be construed as a potential conflict of interest."
+   ],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "The case series and studies available thus far are reviewed.",
+    "text": "A critical review of studies and case series regarding the transition from methadone to buprenorphine in opioid dependent patients."
+   },
+   "findings": [
+    {
+     "passage": 5,
+     "where": "Introduction",
+     "quote": "Methadone is a synthetic full opioid agonist with high opioid receptor binding (mu, kappa, and delta subtype), requiring daily dosing.",
+     "text": "Methadone is a synthetic full opioid agonist that binds to mu, kappa, and delta opioid receptors.",
+     "id": "F4",
+     "second_hand": ""
+    },
+    {
+     "passage": 5,
+     "where": "Introduction",
+     "quote": "Buprenorphine has to be given sublingually because of its first pass effect and is a partial agonist with a strong binding affinity to the mu-opioid receptor and an antagonistic effect at the kappa-receptor.",
+     "text": "Buprenorphine is a partial agonist that has a strong binding affinity to the mu-opioid receptor and an antagonistic effect at the kappa-receptor.",
+     "id": "F5",
+     "second_hand": ""
+    },
+    {
+     "passage": 5,
+     "where": "Introduction",
+     "quote": "Buprenorphine has a weaker intrinsic activity at the mu-opioid receptor compared to methadone and a ceiling effect on respiratory depression.",
+     "text": "Buprenorphine has weaker intrinsic activity at the mu-opioid receptor than methadone and a ceiling effect on respiratory depression.",
+     "id": "F6",
      "second_hand": ""
     }
    ],
    "limits": [
     {
-     "passage": 13,
-     "where": "DRUG: METHADONE › Background",
-     "quote": "R‐methadone appears more potent than S‐methadone at these non‐opioid receptors. Whether this influences methadone‐induced analgesia is unknown.",
-     "text": "It is unknown if the potency of R-methadone at non-opioid receptors influences the pain relief caused by methadone.",
+     "passage": 38,
+     "where": "Discussion",
+     "quote": "For the transfer of opioid dependent patients from methadone to buprenorphine no accepted clinical algorithim has been established and there are surprisingly few clinical and experimental studies on this important question",
+     "text": "There is no established clinical algorithm for transferring patients from methadone to buprenorphine, and there are few clinical and experimental studies on the subject.",
      "id": "L1",
      "second_hand": ""
     }
    ],
-   "tag": "A"
+   "tag": "B"
   },
   {
    "read": "page",
    "ref": {
-    "id": "frank_methadone",
+    "id": "label_methadone-hydrochloride",
     "type": "webpage",
-    "title": "Methadone",
+    "title": "Methadone Hydrochloride",
     "author": [
      {
-      "literal": "FRANK"
+      "literal": "American Health Packaging"
      }
     ],
     "issued": {
      "date-parts": [
-      []
+      [
+       2026,
+       9,
+       9
+      ]
      ]
     },
-    "URL": "https://www.talktofrank.com/drug/methadone",
+    "URL": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=540edd43-165d-4257-b989-3bccc8f54afb",
     "accessed": {
      "date-parts": [
       [
        2026,
        11,
-       26
+       27
       ]
      ]
     },
     "verification": {
      "status": "made by code",
      "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-26"
-    }
+     "verified_on": "2026-11-27"
+    },
+    "publisher": "DailyMed",
+    "genre": "Drug label"
    },
-   "title": "Methadone",
-   "year": null,
+   "title": "Methadone Hydrochloride",
+   "year": 2026,
    "kind": "official",
    "people": true,
-   "near": 0.727,
-   "name": "FRANK",
-   "short": "FRANK",
+   "near": 0.711,
+   "name": "U.S. Food and Drug Administration",
+   "short": "the US label for methadone",
    "tier": 1,
-   "address": "https://www.talktofrank.com/drug/methadone",
+   "address": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=540edd43-165d-4257-b989-3bccc8f54afb",
    "money": [],
-   "label": false,
+   "label": true,
    "design": null,
    "findings": [
     {
-     "passage": 4,
-     "where": "Mixing methadone with other drugs / How does it make you feel?",
-     "quote": "The effects include: slowing down body functioning and reducing physical and psychological pain; reducing physical and psychological pain; feelings of warmth, relaxation and detachment; relieving feelings of anxiety",
-     "text": "The effects of methadone include slowing down body functioning, reducing physical and psychological pain, feelings of warmth, relaxation and detachment, and relieving feelings of anxiety.",
-     "id": "F5",
-     "second_hand": ""
-    },
-    {
-     "passage": 8,
-     "where": "Mixing methadone with other drugs / What does it look like?",
-     "quote": "Methadone is a synthetic opiate manufactured for use as a painkiller and as a substitute for heroin in the treatment of heroin addiction. It has similar effects to heroin",
-     "text": "Methadone is a synthetic opiate that acts as a painkiller and a substitute for heroin, producing similar effects to heroin.",
-     "id": "F6",
+     "passage": 97,
+     "where": "Use in specific populations",
+     "quote": "Additional animal data demonstrate evidence for neurochemical changes in the brains of offspring from methadone-treated pregnant rats, including changes to the cholinergic, dopaminergic, noradrenergic and serotonergic systems at doses below the HDD.",
+     "text": "In rats, prenatal exposure to methadone is linked to neurochemical changes in the brains of offspring, specifically affecting the cholinergic, dopaminergic, noradrenergic, and serotonergic systems.",
+     "id": "F7",
      "second_hand": ""
     }
    ],
-   "limits": [],
+   "limits": [
+    {
+     "passage": 94,
+     "where": "Use in specific populations",
+     "quote": "Animal Formal reproductive and developmental toxicology studies for methadone have not been conducted.",
+     "text": "Formal reproductive and developmental toxicology studies for methadone have not been conducted in animals.",
+     "id": "L2",
+     "second_hand": ""
+    }
+   ],
    "tag": "C"
   },
   {
@@ -306,14 +387,14 @@
       [
        2026,
        11,
-       26
+       27
       ]
      ]
     },
     "verification": {
      "status": "made by code",
      "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-26"
+     "verified_on": "2026-11-27"
     }
    },
    "title": "About methadone Brand name: Physeptone",
@@ -332,25 +413,9 @@
     {
      "passage": 1,
      "where": "Top of the page",
-     "quote": "Methadone is an opioid medicine. Other opioids include codeine, morphine, fentanyl and oxycodone.",
-     "text": "Methadone is an opioid medicine.",
-     "id": "F7",
-     "second_hand": ""
-    },
-    {
-     "passage": 1,
-     "where": "Top of the page",
      "quote": "It works by reducing heroin withdrawal symptoms, such as feeling restless or anxious, a runny nose, sweating, feeling or being sick, diarrhoea, shaking and muscle cramps.",
-     "text": "Methadone works by reducing heroin withdrawal symptoms.",
+     "text": "Methadone works by reducing heroin withdrawal symptoms like feeling restless or anxious, a runny nose, sweating, feeling or being sick, diarrhoea, shaking and muscle cramps.",
      "id": "F8",
-     "second_hand": ""
-    },
-    {
-     "passage": 1,
-     "where": "Top of the page",
-     "quote": "It also helps stop cravings for heroin.",
-     "text": "Methadone also helps stop cravings for heroin.",
-     "id": "F9",
      "second_hand": ""
     }
    ],
@@ -358,94 +423,9 @@
    "tag": "D"
   }
  ],
- "parts": [
-  {
-   "part": "short",
-   "text": "Methadone is an opioid medicine. It acts as a mu opioid receptor agonist, with R-methadone having 30- to 50-fold higher binding affinity than S-methadone.",
-   "uses": [
-    "F7",
-    "F1"
-   ],
-   "rests_on": [
-    {
-     "label": "F7",
-     "ref": "nhs_about-methadone",
-     "where": "Top of the page",
-     "quote": "Methadone is an opioid medicine. Other opioids include codeine, morphine, fentanyl and oxycodone.",
-     "sha": "06c0e5d88ea61cc4"
-    },
-    {
-     "label": "F1",
-     "ref": "robinson_2024",
-     "where": "DRUG: METHADONE › Background",
-     "quote": "Methadone is a μ opioid receptor agonist and effects are enantioselective. R‐methadone exerts the majority of the opioid effects of the racemate because it has 30‐ to 50‐fold higher binding affinity and analgesic potency than S‐methadone.",
-     "sha": "914ebf032a6a19fc"
-    }
-   ]
-  },
-  {
-   "part": "but",
-   "text": "It is unknown if the potency of R-methadone at non-opioid receptors influences the pain relief caused by methadone.",
-   "uses": [
-    "L1"
-   ],
-   "rests_on": [
-    {
-     "label": "L1",
-     "ref": "robinson_2024",
-     "where": "DRUG: METHADONE › Background",
-     "quote": "R‐methadone appears more potent than S‐methadone at these non‐opioid receptors. Whether this influences methadone‐induced analgesia is unknown.",
-     "sha": "7803f19eab8e3c1f"
-    }
-   ]
-  },
-  {
-   "part": "how1",
-   "text": "FRANK says methadone is a synthetic opiate that acts as a painkiller and a substitute for heroin, producing similar effects to heroin.",
-   "uses": [
-    "F6"
-   ],
-   "rests_on": [
-    {
-     "label": "F6",
-     "ref": "frank_methadone",
-     "where": "Mixing methadone with other drugs / What does it look like?",
-     "quote": "Methadone is a synthetic opiate manufactured for use as a painkiller and as a substitute for heroin in the treatment of heroin addiction. It has similar effects to heroin",
-     "sha": "c8a0c715f0bc074a"
-    }
-   ],
-   "quote": "Methadone is a synthetic opiate manufactured for use as a painkiller and as a substitute",
-   "quote_ref": "frank_methadone"
-  },
-  {
-   "part": "how2",
-   "text": "The NHS says methadone works by reducing heroin withdrawal symptoms and helps stop cravings for heroin.",
-   "uses": [
-    "F8",
-    "F9"
-   ],
-   "rests_on": [
-    {
-     "label": "F8",
-     "ref": "nhs_about-methadone",
-     "where": "Top of the page",
-     "quote": "It works by reducing heroin withdrawal symptoms, such as feeling restless or anxious, a runny nose, sweating, feeling or being sick, diarrhoea, shaking and muscle cramps.",
-     "sha": "06c0e5d88ea61cc4"
-    },
-    {
-     "label": "F9",
-     "ref": "nhs_about-methadone",
-     "where": "Top of the page",
-     "quote": "It also helps stop cravings for heroin.",
-     "sha": "06c0e5d88ea61cc4"
-    }
-   ],
-   "quote": "It works by reducing heroin withdrawal symptoms",
-   "quote_ref": "nhs_about-methadone"
-  }
- ],
+ "parts": [],
  "complete": false,
- "missing": "How buprenorphine works in the brain",
+ "missing": "specific downstream signaling pathways and long‑term neuroadaptations",
  "wanted": [
   {
    "doi": "10.1124/pr.57.1.1",
@@ -470,7 +450,16 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-26",
+   "lane": 19,
+   "status": "published",
+   "why": "passed every gate",
+   "short": "Methadone is an opioid medicine. It acts as a mu opioid receptor agonist, with R-methadone having 30- to 50-fold higher binding affinity than S-methadone.",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "Clinical Pharmacogenetics Implementation Consortium Guideline for CYP2B6 Genotype and Methadone Therapy",
@@ -478,26 +467,47 @@
    "kind": "review",
    "at": "10.1002/cpt.3338",
    "kept": 3,
-   "thrown": []
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "Clinical Pharmacogenetics Implementation Consortium Guideline",
+     "quote": "Clinical Pharmacogenetics Implementation Consortium Guideline for CYP2B6 Genotype and Methadone Therapy (2024), Clinical pharmacology and therapeutics.",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    },
+    {
+     "kind": "limit",
+     "text": "",
+     "quote": "However, clinical methadone concentrations (often < 1 μM) are lower than the IC50 or Ki of methadone for the NMDA receptor (3–10 μM). Thus, the clinical occurrence or significance of this non‐opioid r",
+     "why": "no sentence"
+    },
+    {
+     "kind": "limit",
+     "text": "",
+     "quote": "R‐methadone appears more potent than S‐methadone at these non‐opioid receptors. Whether this influences methadone‐induced analgesia is unknown.",
+     "why": "no sentence"
+    }
+   ]
   },
   {
    "title": "Characterizing post-mortem blood concentrations in methadone-related deaths",
    "read": "full",
    "kind": "review",
    "at": "10.1007/s00414-025-03620-0",
-   "kept": 1,
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Transition From Full Mu Opioid Agonists to Buprenorphine in Opioid Dependent Patients-A Critical Review",
+   "read": "full",
+   "kind": "review",
+   "at": "10.3389/fphar.2021.718811",
+   "kept": 3,
    "thrown": [
     {
      "kind": "limit",
-     "text": "It is difficult to identify demographic susceptibilities or a specific blood concentration level that makes death from methadone likely.",
-     "quote": "it is difficult to identify demographic susceptibilities or a concentration cut-off beyond which death from methadone is considered likely.",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
-    },
-    {
-     "kind": "limit",
-     "text": "It is extremely challenging to create a complete model that predicts the fatality of methadone intoxication using blood concentration and risk factors.",
-     "quote": "it is extremely challenging to define an exhaustive model that allows to predict fatality of methadone intoxication based on blood concentration and risk factors.",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+     "text": "The database of studies reviewed regarding the transition between these medications is very limited.",
+     "quote": "Although the reviewed database is very limited the most promising novel strategy seems to be microdosing of buprenorphine during methadone treatment",
+     "why": "the sentence is not carried by its quote and passage"
     }
    ]
   },
@@ -506,7 +516,7 @@
    "read": "page",
    "kind": "official",
    "at": "https://www.talktofrank.com/drug/methadone",
-   "kept": 2,
+   "kept": 0,
    "thrown": []
   },
   {
@@ -514,7 +524,7 @@
    "read": "page",
    "kind": "official",
    "at": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=540edd43-165d-4257-b989-3bccc8f54afb",
-   "kept": 0,
+   "kept": 1,
    "thrown": []
   },
   {
@@ -530,100 +540,46 @@
    "read": "page",
    "kind": "official",
    "at": "https://www.nhs.uk/medicines/methadone/about-methadone/",
-   "kept": 3,
+   "kept": 1,
    "thrown": []
   }
  ],
  "plan": {
   "short": [
-   "F7",
-   "F1"
+   "F4",
+   "F5"
   ],
   "direct": "",
-  "but": [
-   "L1"
-  ],
+  "but": [],
   "how": [
    [
+    "F1",
+    "F2",
+    "F3"
+   ],
+   [
+    "F4",
     "F5",
     "F6"
-   ],
-   [
-    "F7",
-    "F8",
-    "F9"
-   ],
-   [
-    "DA",
-    "F1"
    ]
   ],
-  "unanswered": "buprenorphine (Suboxone) mechanism"
- },
- "panel": {
-  "gemini:gemini-3.5-flash-lite": {
-   "short": [
-    true,
-    ""
-   ],
-   "but": [
-    true,
-    ""
-   ],
-   "how1": [
-    true,
-    ""
-   ],
-   "how2": [
-    true,
-    ""
-   ],
-   "how3": [
-    true,
-    ""
-   ]
-  },
-  "gemini:gemini-3.6-flash": "could not be asked: gemini says the allowance is used up: [{ \"error\": { \"code\": 429, \"message\": \"You exceeded your current quota, please check your plan and billing details. For mo",
-  "gemini:gemini-3-flash-preview": {
-   "short": [
-    true,
-    ""
-   ],
-   "but": [
-    true,
-    ""
-   ],
-   "how1": [
-    true,
-    ""
-   ],
-   "how2": [
-    true,
-    ""
-   ],
-   "how3": [
-    false,
-    "The sentence leaves out the word 'possible' which narrows the passage's description of the link being evaluated."
-   ]
-  }
+  "unanswered": "specific downstream signaling pathways and long‑term neuroadaptations"
  },
  "panel_gap": [],
  "own": {
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.913,
-   "but": 0.9612,
-   "how1": 0.8451,
-   "how2": 0.8327,
-   "how3": 0.955
+   "short": 0.9787,
+   "but": 0.0877,
+   "how1": 0.5716,
+   "how2": 0.9763
   },
   "scores_quotes_alone": {
-   "short": 0.6755,
-   "but": 0.7574,
-   "how1": 0.6523,
-   "how2": 0.8139,
-   "how3": 0.5816
+   "short": 0.7202,
+   "but": 0.0316,
+   "how1": 0.6826,
+   "how2": 0.942
   }
  },
  "tries": [
@@ -633,140 +589,206 @@
    "parts": [
     {
      "part": "short",
-     "text": "Methadone is an opioid medicine. It works by binding to mu opioid receptors in the brain, with one form binding much more strongly than the other.",
+     "text": "Methadone is a full opioid agonist that binds to mu, kappa, and delta receptors. Buprenorphine is a partial agonist with strong binding to the mu receptor and an antagonistic effect at the kappa receptor.",
      "rests_on": [
       {
-       "label": "F7",
-       "ref": "nhs_about-methadone",
-       "where": "Top of the page",
-       "quote": "Methadone is an opioid medicine. Other opioids include codeine, morphine, fentanyl and oxycodone.",
-       "sha": "06c0e5d88ea61cc4"
+       "label": "F4",
+       "ref": "soyka_2021",
+       "where": "Introduction",
+       "quote": "Methadone is a synthetic full opioid agonist with high opioid receptor binding (mu, kappa, and delta subtype), requiring daily dosing.",
+       "sha": "524c73e4417d7f2d"
       },
+      {
+       "label": "F5",
+       "ref": "soyka_2021",
+       "where": "Introduction",
+       "quote": "Buprenorphine has to be given sublingually because of its first pass effect and is a partial agonist with a strong binding affinity to the mu-opioid receptor and an antagonistic effect at the kappa-receptor.",
+       "sha": "524c73e4417d7f2d"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "These are reviews of existing research, not new studies on people, so they summarize what is known rather than testing new effects.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "soyka_2021",
+       "where": "Abstract",
+       "quote": "The case series and studies available thus far are reviewed.",
+       "sha": "f7879c3dc84846f3"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "the passages do not state that the articles are not new studies on people"
+    },
+    {
+     "part": "how1",
+     "text": "A 2024 guideline review says methadone works mostly through R-methadone, which has 30- to 50-fold higher binding affinity than S-methadone, and also interacts with norepinephrine and serotonin transporters.",
+     "rests_on": [
       {
        "label": "F1",
        "ref": "robinson_2024",
        "where": "DRUG: METHADONE › Background",
        "quote": "Methadone is a μ opioid receptor agonist and effects are enantioselective. R‐methadone exerts the majority of the opioid effects of the racemate because it has 30‐ to 50‐fold higher binding affinity and analgesic potency than S‐methadone.",
        "sha": "914ebf032a6a19fc"
-      }
-     ],
-     "ok": false,
-     "by": "a further reader",
-     "said": "a further reader (gemini-3-flash-preview) did not accept it: The passages do not mention that methadone binds to receptors in the brain."
-    },
-    {
-     "part": "but",
-     "text": "It is unknown if the stronger binding of one form at non-opioid receptors influences the pain relief caused by methadone.",
-     "rests_on": [
-      {
-       "label": "L1",
-       "ref": "robinson_2024",
-       "where": "DRUG: METHADONE › Background",
-       "quote": "R‐methadone appears more potent than S‐methadone at these non‐opioid receptors. Whether this influences methadone‐induced analgesia is unknown.",
-       "sha": "7803f19eab8e3c1f"
-      }
-     ],
-     "ok": false,
-     "by": "a further reader",
-     "said": "a further reader (gemini-3-flash-preview) did not accept it: The passage says R-methadone is more potent at non-opioid receptors, not that it has stronger binding, and potency and binding are different."
-    },
-    {
-     "part": "how1",
-     "text": "FRANK says methadone is a synthetic opiate that acts as a painkiller and substitute for heroin, producing similar effects to heroin.",
-     "rests_on": [
-      {
-       "label": "F5",
-       "ref": "frank_methadone",
-       "where": "Mixing methadone with other drugs / How does it make you feel?",
-       "quote": "The effects include: slowing down body functioning and reducing physical and psychological pain; reducing physical and psychological pain; feelings of warmth, relaxation and detachment; relieving feelings of anxiety",
-       "sha": "24cc8e71a9abee20"
       },
       {
-       "label": "F6",
-       "ref": "frank_methadone",
-       "where": "Mixing methadone with other drugs / What does it look like?",
-       "quote": "Methadone is a synthetic opiate manufactured for use as a painkiller and as a substitute for heroin in the treatment of heroin addiction. It has similar effects to heroin",
-       "sha": "c8a0c715f0bc074a"
+       "label": "F2",
+       "ref": "robinson_2024",
+       "where": "DRUG: METHADONE › Background",
+       "quote": "R‐methadone is also predominantly responsible for other μ opioid effects, including respiratory depression., S‐methadone alone is in clinical trials for the treatment of depression.",
+       "sha": "914ebf032a6a19fc"
+      },
+      {
+       "label": "F3",
+       "ref": "robinson_2024",
+       "where": "DRUG: METHADONE › Background",
+       "quote": "Methadone also interacts with norepinephrine and serotonin reuptake transporters at concentrations which more closely resemble those achieved clinically.",
+       "sha": "7803f19eab8e3c1f"
       }
      ],
      "ok": true
     },
     {
      "part": "how2",
-     "text": "The NHS says methadone is an opioid medicine that works by reducing heroin withdrawal symptoms and helps stop cravings for heroin.",
+     "text": "A 2021 review says buprenorphine has weaker activity at the mu receptor than methadone and a ceiling effect on respiratory depression, while methadone requires daily dosing.",
      "rests_on": [
       {
-       "label": "F7",
-       "ref": "nhs_about-methadone",
-       "where": "Top of the page",
-       "quote": "Methadone is an opioid medicine. Other opioids include codeine, morphine, fentanyl and oxycodone.",
-       "sha": "06c0e5d88ea61cc4"
+       "label": "F4",
+       "ref": "soyka_2021",
+       "where": "Introduction",
+       "quote": "Methadone is a synthetic full opioid agonist with high opioid receptor binding (mu, kappa, and delta subtype), requiring daily dosing.",
+       "sha": "524c73e4417d7f2d"
       },
       {
-       "label": "F8",
-       "ref": "nhs_about-methadone",
-       "where": "Top of the page",
-       "quote": "It works by reducing heroin withdrawal symptoms, such as feeling restless or anxious, a runny nose, sweating, feeling or being sick, diarrhoea, shaking and muscle cramps.",
-       "sha": "06c0e5d88ea61cc4"
+       "label": "F5",
+       "ref": "soyka_2021",
+       "where": "Introduction",
+       "quote": "Buprenorphine has to be given sublingually because of its first pass effect and is a partial agonist with a strong binding affinity to the mu-opioid receptor and an antagonistic effect at the kappa-receptor.",
+       "sha": "524c73e4417d7f2d"
       },
       {
-       "label": "F9",
-       "ref": "nhs_about-methadone",
-       "where": "Top of the page",
-       "quote": "It also helps stop cravings for heroin.",
-       "sha": "06c0e5d88ea61cc4"
+       "label": "F6",
+       "ref": "soyka_2021",
+       "where": "Introduction",
+       "quote": "Buprenorphine has a weaker intrinsic activity at the mu-opioid receptor compared to methadone and a ceiling effect on respiratory depression.",
+       "sha": "524c73e4417d7f2d"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Methadone is a full opioid agonist that binds to mu, kappa, and delta receptors. Buprenorphine is a partial agonist with strong mu binding and kappa antagonism.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "soyka_2021",
+       "where": "Introduction",
+       "quote": "Methadone is a synthetic full opioid agonist with high opioid receptor binding (mu, kappa, and delta subtype), requiring daily dosing.",
+       "sha": "524c73e4417d7f2d"
+      },
+      {
+       "label": "F5",
+       "ref": "soyka_2021",
+       "where": "Introduction",
+       "quote": "Buprenorphine has to be given sublingually because of its first pass effect and is a partial agonist with a strong binding affinity to the mu-opioid receptor and an antagonistic effect at the kappa-receptor.",
+       "sha": "524c73e4417d7f2d"
       }
      ],
      "ok": true
     },
     {
-     "part": "how3",
-     "text": "A 2024 review of literature found methadone acts as a mu opioid receptor agonist, with R-methadone having 30- to 50-fold higher binding affinity than S-methadone.",
+     "part": "but",
+     "text": "These are reviews of existing data, not new studies on people, so they summarize known mechanisms rather than testing them directly.",
      "rests_on": [
       {
-       "label": "DA",
-       "ref": "robinson_2024",
-       "where": "FOCUSED LITERATURE REVIEW",
-       "quote": "A systematic literature review was undertaken to evaluate a possible link between CYP2B6 genotypes and methadone metabolism, exposure, clinical effects, and adverse effects",
-       "sha": "c26cd500aef30404"
-      },
+       "label": "DB",
+       "ref": "soyka_2021",
+       "where": "Abstract",
+       "quote": "The case series and studies available thus far are reviewed.",
+       "sha": "f7879c3dc84846f3"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "the passage does not state that the reviews summarize known mechanisms rather than testing them directly"
+    },
+    {
+     "part": "how1",
+     "text": "A 2024 guideline review says methadone works mainly through R-methadone, which has 30- to 50-fold higher binding affinity than S-methadone.",
+     "rests_on": [
       {
        "label": "F1",
        "ref": "robinson_2024",
        "where": "DRUG: METHADONE › Background",
        "quote": "Methadone is a μ opioid receptor agonist and effects are enantioselective. R‐methadone exerts the majority of the opioid effects of the racemate because it has 30‐ to 50‐fold higher binding affinity and analgesic potency than S‐methadone.",
        "sha": "914ebf032a6a19fc"
+      },
+      {
+       "label": "F2",
+       "ref": "robinson_2024",
+       "where": "DRUG: METHADONE › Background",
+       "quote": "R‐methadone is also predominantly responsible for other μ opioid effects, including respiratory depression., S‐methadone alone is in clinical trials for the treatment of depression.",
+       "sha": "914ebf032a6a19fc"
+      },
+      {
+       "label": "F3",
+       "ref": "robinson_2024",
+       "where": "DRUG: METHADONE › Background",
+       "quote": "Methadone also interacts with norepinephrine and serotonin reuptake transporters at concentrations which more closely resemble those achieved clinically.",
+       "sha": "7803f19eab8e3c1f"
       }
      ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The sentence attributes the finding to a 2024 literature review, which the passages do not state."
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A 2021 review notes buprenorphine has weaker activity at the mu receptor than methadone and a ceiling effect on respiratory depression.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "soyka_2021",
+       "where": "Abstract",
+       "quote": "The case series and studies available thus far are reviewed.",
+       "sha": "f7879c3dc84846f3"
+      },
+      {
+       "label": "F4",
+       "ref": "soyka_2021",
+       "where": "Introduction",
+       "quote": "Methadone is a synthetic full opioid agonist with high opioid receptor binding (mu, kappa, and delta subtype), requiring daily dosing.",
+       "sha": "524c73e4417d7f2d"
+      },
+      {
+       "label": "F5",
+       "ref": "soyka_2021",
+       "where": "Introduction",
+       "quote": "Buprenorphine has to be given sublingually because of its first pass effect and is a partial agonist with a strong binding affinity to the mu-opioid receptor and an antagonistic effect at the kappa-receptor.",
+       "sha": "524c73e4417d7f2d"
+      },
+      {
+       "label": "F6",
+       "ref": "soyka_2021",
+       "where": "Introduction",
+       "quote": "Buprenorphine has a weaker intrinsic activity at the mu-opioid receptor compared to methadone and a ceiling effect on respiratory depression.",
+       "sha": "524c73e4417d7f2d"
+      }
+     ],
+     "ok": true
     }
    ]
   }
  ],
- "dropped": [
-  {
-   "try": 2,
-   "part": "how3",
-   "text": "A systematic literature review evaluated the link between CYP2B6 genotypes and methadone metabolism, exposure, clinical effects, and adverse effects.",
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "robinson_2024",
-     "where": "FOCUSED LITERATURE REVIEW",
-     "quote": "A systematic literature review was undertaken to evaluate a possible link between CYP2B6 genotypes and methadone metabolism, exposure, clinical effects, and adverse effects",
-     "sha": "c26cd500aef30404"
-    }
-   ],
-   "by": "a further reader",
-   "said": "a further reader (gemini-3-flash-preview) did not accept it: The sentence leaves out the word 'possible' which narrows the passage's description of the link being evaluated."
-  }
- ],
- "with_checked": {
-  "differs": [],
-  "same": []
- },
  "place": {
   "home": "methadone-buprenorphine",
   "also": [],
