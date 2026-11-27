@@ -1749,9 +1749,9 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
     threaded = at_once > 1; guard = threading.RLock(); enc_guard = threading.Lock()
     read_until = (time.time() + read_secs) if read_secs else None
     not_these = {base(v) for v in (models.get("writer"), models.get("writer_2"), models.get("checker")) if isinstance(v, str) and v}
-    extra = [m for m in (pool or []) if isinstance(m.get("model"), str) and m["model"] not in (models.get("reader"), models.get("reader_2")) and base(m["model"]) not in not_these]
+    extra = [m for m in (pool or []) if isinstance(m.get("model"), str) and m["model"] not in (models.get("reader"), models.get("reader_2"), models.get("reader_3")) and base(m["model"]) not in not_these]
     mains = [models["reader"]] + [m["model"] for m in extra]            # the models that read side by side
-    by_turn = [m for m in [models.get("reader_2")] if m and m != models["reader"]]      # the reader that stands by: asked only where another could not be
+    by_turn = [m for m in dict.fromkeys([models.get("reader_2"), models.get("reader_3")]) if m and m != models["reader"]]      # the readers that stand by: asked only where another could not be (reader_3: models.json "reader_last")
     takes = dict({m["model"]: float(m.get("secs") or 10) for m in extra}, **{models["reader"]: float(next((m.get("secs") for m in (pool or []) if m.get("model") == models["reader"]), 10) or 10)})
     gone, read_by, busy = {}, {}, {}                                    # a reader that could not be asked, and why (it is not asked again for this answer); how many sources each model read; when each is free again
     def between(m):
@@ -1909,6 +1909,7 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
         if alt != first:
             rec["gates"]["reader"] = f"{base(first)} could not read on ({gone[first]}): {base(alt)} read from there"
             rec["made"]["models"].update(reader=alt, reader_first=first); models["reader"], models["reader_2"] = alt, ""
+            if models.get("reader_3") == alt: models["reader_3"] = ""
     if len(read_by) > 1: rec["made"]["read_by"] = {base(m): k for m, k in sorted(read_by.items(), key=lambda x: -x[1])}
     if late: rec["gates"]["time"] = f"{late} source(s) were not read: the time this run has for reading one question" + (f" ({read_secs:.0f} seconds)" if read_secs else "") + " was over"
     rec["made"]["read_seconds"] = round(time.time() - t_began)
@@ -2387,7 +2388,11 @@ def team(file=None, only=None, avoid=()):
                     # draft was not in the form asked for, Qwen was asked, Groq said no, and twice that stopped the lane for the day with Google's day still open
                     room = lambda x: llm.calls_fit({x: CALLS["writer"]}) if llm.service_of(x)[0] else NEED["writer"][1] <= llm.groq_left(x[5:]) if x.startswith("groq:") else NEED["writer"][0] <= llm.left()
                     w2 = next((x for x in [t.get("writer_else"), "groq:qwen/qwen3.8-27b", "@cf/meta/llama-3.3-70b-instruct-fp8-fast"] if isinstance(x, str) and x and llm.has(x) and base(x) not in taken and room(x)), None)
-                    return dict(m, team=t.get("name") or "", **({"reader_2": other} if other else {}), **({"writer_2": w2} if w2 else {}), **{f"also{n}_else": "|".join(r) for n, r in rest.items() if r})
+                    # (27 November 2026) the last reader of all, for every team: asked only where the team's reader and the one that stands by could not read (that
+                    # night Google's readers answered 503 to every call while Cloudflare's day was spent, and teams G and R read nothing while a question a person had
+                    # sent waited). models.json "reader_last": paid models first allowed by pay.json, each only where it has a key and money left (llm.has)
+                    last = next((x for x in (mf.get("reader_last") or []) if isinstance(x, str) and x and x not in (m["reader"], other) and llm.has(x) and base(x) not in (base(m["writer"]), base(m["checker"]))), None)
+                    return dict(m, team=t.get("name") or "", **({"reader_2": other} if other else {}), **({"reader_3": last} if last else {}), **({"writer_2": w2} if w2 else {}), **{f"also{n}_else": "|".join(r) for n, r in rest.items() if r})
     return None
 
 
@@ -3166,6 +3171,10 @@ def selftest():
     try: make(item, found, chat_both, Enc(), dict(MODELS, reader="gemini:gemma-x", reader_2="groq:stand-by"), fulltext=lambda pmcid: xml, crossref=crossref, ex=ex); raise AssertionError("no reader with room, and no error")
     except llm.Budget: raise AssertionError("a stand-by reader without room must not end the day")
     except llm.Unavailable as e: assert "gemma-x could not read on (gemini answered 503" in str(e) and "has no room left today" in str(e), str(e)
+    # (27 November 2026) and where a last reader stands behind them (models.json "reader_last"), it reads: the answer is not given up
+    script["writer"] = [W(ok_short)]; script["checker"] = [V(True, True, True, True)]
+    r = make(item, found, chat_both, Enc(), dict(MODELS, reader="gemini:gemma-x", reader_2="groq:stand-by", reader_3=MODELS["reader"]), fulltext=lambda pmcid: xml, crossref=crossref, ex=ex)
+    assert r["status"] == "published" and r["made"]["models"]["reader"] == MODELS["reader"], (r["status"], r["why"], r["gates"].get("reader"))
     # ---- lane 13: what the editor's reading of lane 12's three answers about amounts asked for (17 November 2026, 01:40 UTC) ----
     PG = lambda text, where="W": [{"n": 1, "where": where, "text": text}]
     # the parts of one quote never overlap, and a list the reader copied twice gives each amount once
