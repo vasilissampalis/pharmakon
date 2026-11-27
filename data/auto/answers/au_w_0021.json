@@ -19,37 +19,34 @@
  "made": {
   "on": "2026-11-27",
   "models": {
-   "reader": "groq:openai/gpt-oss-20b",
-   "writer": "openrouter:meta-llama/llama-3.3-70b-instruct",
-   "checker": "openrouter:openai/gpt-6-luna",
-   "planner": "openrouter:openai/gpt-oss-120b",
-   "team": "team R",
-   "reader_2": "openrouter:openai/gpt-oss-120b",
-   "reader_first": "gemini:gemma-4-31b-it"
+   "reader": "gemini:gemini-3.5-flash-lite",
+   "writer": "groq:qwen/qwen3.8-27b",
+   "checker": "groq:openai/gpt-oss-120b",
+   "planner": "groq:openai/gpt-oss-120b",
+   "also1": "gemini:gemini-3.5-flash-lite",
+   "also2": "gemini:gemini-3.6-flash",
+   "team": "team I",
+   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "reader_3": "openrouter:meta-llama/llama-3.3-70b-instruct",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "45944755211",
-  "read_by": {
-   "gpt-oss-20b": 1,
-   "gpt-oss-120b": 1
-  },
-  "read_seconds": 100,
+  "run": "46076787012",
+  "read_seconds": 24,
   "from": {
    "papers": 2,
    "summaries": 0,
-   "official": 0
+   "official": 2
   },
   "neurons": 0.0,
-  "seconds": 141
+  "seconds": 219
  },
  "status": "none",
- "why": "no draft passed: not accepted at try 2: a second reader did not accept but (it is about something else than the short answer (Sentence 1 directly addresses whether products sold as street heroin may instead contain fentanyls and what other substances may be present. Sentence 2 concerns how well heroin’s effects are understood, not the identity or contents describe)). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
+ "why": "the second reader did not accept the answer",
  "gates": {
-  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-20b read from there",
-  "read": "5 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 0 official page(s), 0 paper(s) read in summary only",
-  "rules": "broken at try 3: but: a clinical word where an everyday one exists (“pharmacology”): say it plainly",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.66, but 0.86, how1 0.61, how2 0.96",
-  "check": "not accepted at try 2: a second reader did not accept but (it is about something else than the short answer (Sentence 1 directly addresses whether products sold as street heroin may instead contain fentanyls and what other substances may be present. Sentence 2 concerns how well heroin’s effects are understood, not the identity or contents describe)). Say only what the items say, answer the question itself, and let the But be a limit of that answer."
+  "read": "12 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 2 official page(s), 0 paper(s) read in summary only",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.53, but 0.91, how1 0.90, how2 0.18, how3 0.54, how4 0.67",
+  "check": "short: NOT accepted: the word it opens with (“Yes”) is not the answer the passages bear out: The opening word \"Yes\" is a flat affirmation that does not reflect the nuanced information in the sources; the editor explicitly warned against a simple \"Yes\". Conseque; but: accepted; how1: accepted; how2: accepted; how3: accepted; how4: accepted"
  },
  "sources": [
   {
@@ -124,31 +121,31 @@
    "design": {
     "passage": 1,
     "where": "Abstract",
-    "quote": "Ocfentanil and carfentanil are two potent synthetic opioids that are analogues of fentanyl and are actively involved in the recent fentanyl crisis.",
-    "text": "Review paper on fentanyl analogues"
+    "quote": "The aim of this review is to provide all the available information on these two fentanyl analogues.",
+    "text": "A literature review providing information on two fentanyl analogues"
    },
    "findings": [
     {
      "passage": 15,
      "where": "Ocfentanil › Prevalence and use",
-     "quote": "ocfentanil was labeled and sold in the darknet as heroin or “synthetic heroin”",
-     "text": "ocfentanil is sold on the street as heroin",
+     "quote": "Cases in which fentanyls are sold under the guise of heroin are common worldwide. In some, ocfentanil was labeled and sold in the darknet as heroin or “synthetic heroin”",
+     "text": "Cases in which fentanyls are sold under the guise of heroin are common worldwide, with ocfentanil sometimes being labeled and sold on the darknet as heroin or synthetic heroin.",
      "id": "F1",
      "second_hand": ""
     },
     {
      "passage": 48,
      "where": "Carfentanil › Prevalence and use",
-     "quote": "Carfentanil is often used to adulterate heroin, cocaine, and fentanyl",
-     "text": "carfentanil is used to adulterate heroin",
+     "quote": "Carfentanil is often used to adulterate heroin, cocaine, and fentanyl. In some other cases, it is labeled and sold as heroin.",
+     "text": "Carfentanil is often used to adulterate heroin, cocaine, and fentanyl, and in some other cases is labeled and sold as heroin.",
      "id": "F2",
      "second_hand": ""
     },
     {
-     "passage": 48,
-     "where": "Carfentanil › Prevalence and use",
-     "quote": "Carfentanil has also been identified in mixtures along with caffeine, antihistamines, furanylfentanyl, or acrylfentanyl, while in some other cases it has been found to be laced with ketamine",
-     "text": "carfentanil is mixed with caffeine and ketamine in street heroin",
+     "passage": 28,
+     "where": "Ocfentanil › Intoxications and fatal cases",
+     "quote": "The drugs were probably sold as mixtures with either heroin or caffeine and acetaminophen.",
+     "text": "The drugs were probably sold as mixtures with either heroin or caffeine and acetaminophen.",
      "id": "F3",
      "second_hand": ""
     }
@@ -159,44 +156,44 @@
   {
    "read": "full",
    "ref": {
-    "id": "milella_2023",
+    "id": "han_2019",
     "type": "article-journal",
-    "title": "Heroin and its metabolites: Relevance to heroin use disorder",
+    "title": "The rising crisis of illicit fentanyl use, overdose, and potential therapeutic strategies",
     "author": [
      {
-      "family": "Milella",
-      "given": "Michele Stanislaw"
+      "family": "Han",
+      "given": "Ying"
      },
      {
-      "family": "D’Ottavio",
-      "given": "Ginevra"
+      "family": "Yan",
+      "given": "Wei"
      },
      {
-      "family": "De Pirro",
-      "given": "Silvana"
+      "family": "Zheng",
+      "given": "Yongbo"
      },
      {
-      "family": "Barra",
-      "given": "Massimo"
+      "family": "Khan",
+      "given": "Muhammad Zahid"
      },
      {
-      "family": "Caprioli",
-      "given": "Daniele"
+      "family": "Yuan",
+      "given": "Kai"
      },
      {
-      "family": "Badiani",
-      "given": "Aldo"
+      "family": "Lu",
+      "given": "Lin"
      }
     ],
     "container-title": "Translational Psychiatry",
     "issued": {
      "date-parts": [
       [
-       2023
+       2019
       ]
      ]
     },
-    "DOI": "10.1038/s41398-023-02406-5",
+    "DOI": "10.1038/s41398-019-0625-0",
     "verification": {
      "status": "metadata-verified",
      "metadata_source": "crossref",
@@ -208,60 +205,230 @@
       "checked_on": "2026-11-27"
      }
     },
-    "volume": "13",
+    "volume": "9",
     "issue": "1",
-    "number": "120",
-    "PMCID": "PMC10082801"
+    "number": "282",
+    "PMCID": "PMC6848196"
    },
-   "doi": "10.1038/s41398-023-02406-5",
-   "pmcid": "PMC10082801",
-   "title": "Heroin and its metabolites: relevance to heroin use disorder",
-   "year": 2023,
+   "doi": "10.1038/s41398-019-0625-0",
+   "pmcid": "PMC6848196",
+   "title": "The rising crisis of illicit fentanyl use, overdose, and potential therapeutic strategies",
+   "year": 2019,
    "journal": "Translational psychiatry",
    "kind": "review",
    "people": false,
-   "near": 0.754,
-   "money": [],
+   "near": 0.664,
+   "money": [
+    "The authors declare that they have no conflict of interest."
+   ],
    "design": {
     "passage": 1,
     "where": "Abstract",
-    "quote": "We will first review the literature concerning the pharmacokinetics and pharmacodynamics of heroin and its metabolites",
-    "text": "Review article discussing the pharmacokinetics and pharmacodynamics of heroin and its metabolites"
+    "quote": "This review summarizes the recent epidemic and evolution of illicit fentanyl use, its pharmacological mechanisms and side effects, and the potential clinical management and prevention of fentanyl-related overdoses.",
+    "text": "a review of illicit fentanyl use, pharmacological mechanisms, side effects, and clinical management"
    },
    "findings": [
     {
      "passage": 2,
      "where": "Introduction",
-     "quote": "Heroin (3,6-diacetylmorphine or diamorphine) is a semi-synthetic derivative of morphine",
-     "text": "Heroin is a semi-synthetic derivative of morphine.",
+     "quote": "Since 1979, fentanyl and its analogs have been synthesized in laboratories and sold as heroin substitutes or mixed with other illicitly sourced drugs",
+     "text": "Since 1979, fentanyl and its analogs have been synthesized in laboratories and sold as heroin substitutes or mixed with other illicitly sourced drugs.",
      "id": "F4",
      "second_hand": ""
     },
     {
      "passage": 1,
      "where": "Abstract",
-     "quote": "After entering the body, heroin is rapidly deacetylated to 6-monoacetylmorphine (6-MAM), which is then deacetylated to morphine",
-     "text": "After entering the body, heroin is rapidly converted to 6-MAM and then to morphine.",
+     "quote": "fentanyl and its analogs are widely synthesized in laboratories and adulterated with illicit supplies of heroin, cocaine, methamphetamine, and counterfeit pills",
+     "text": "Fentanyl and its analogs are widely synthesized in laboratories and adulterated with illicit supplies of heroin, cocaine, methamphetamine, and counterfeit pills.",
      "id": "F5",
+     "second_hand": ""
+    },
+    {
+     "passage": 3,
+     "where": "Introduction",
+     "quote": "Synthetic opioids are also increasingly detected in illicit supplies of heroin, methamphetamine, and counterfeit pills.",
+     "text": "Synthetic opioids are also increasingly detected in illicit supplies of heroin, methamphetamine, and counterfeit pills.",
+     "id": "F6",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 13,
+     "where": "Interventions for the management and prevention of fentanyl overdose",
+     "quote": "Sparse data are available on the effectiveness of interventions to prevent overdoses that are caused by illicitly manufactured fentanyl",
+     "text": "Sparse data are available on the effectiveness of interventions to prevent overdoses that are caused by illicitly manufactured fentanyl.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "B"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "frank_heroin",
+    "type": "webpage",
+    "title": "Heroin",
+    "author": [
+     {
+      "literal": "FRANK"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      []
+     ]
+    },
+    "URL": "https://www.talktofrank.com/drug/heroin",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       27
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-27"
+    }
+   },
+   "title": "Heroin",
+   "year": null,
+   "kind": "official",
+   "people": true,
+   "near": 0.721,
+   "name": "FRANK",
+   "short": "FRANK",
+   "tier": 1,
+   "address": "https://www.talktofrank.com/drug/heroin",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 15,
+     "where": "Mixing heroin with other drugs / What is heroin cut with?",
+     "quote": "Heroin is often cut with other things, for example highly-potent opioids (like fentanyls) which are even more dangerous than heroin itself.",
+     "text": "Heroin is often cut with other things, such as highly-potent opioids like fentanyls which are even more dangerous than heroin itself.",
+     "id": "F7",
+     "second_hand": ""
+    },
+    {
+     "passage": 15,
+     "where": "Mixing heroin with other drugs / What is heroin cut with?",
+     "quote": "Other substances including sedatives like benzodiazepines and barbiturates can also be added to heroin.",
+     "text": "Other substances like sedatives including benzodiazepines and barbiturates can also be added to heroin.",
+     "id": "F8",
+     "second_hand": ""
+    },
+    {
+     "passage": 15,
+     "where": "Mixing heroin with other drugs / What is heroin cut with?",
+     "quote": "It’s common for heroin to be mixed with a variety of other substances, such as sugar, starch, powdered milk, quinine or paracetamol – as these increase the weight and the drug dealer’s profits.",
+     "text": "It is common for heroin to be mixed with a variety of other substances, such as sugar, starch, powdered milk, quinine or paracetamol to increase the weight and the drug dealer's profits.",
+     "id": "F9",
      "second_hand": ""
     }
    ],
    "limits": [
     {
      "passage": 1,
-     "where": "Abstract",
-     "quote": "the pharmacology of heroin is still poorly understood",
-     "text": "The pharmacology of heroin remains poorly understood.",
-     "id": "L1",
+     "where": "Top of the page",
+     "quote": "This is happening in a wide range of drugs, not just heroin, and you can never really know what is in any street or counterfeit drug.",
+     "text": "You can never really know what is in any street or counterfeit drug.",
+     "id": "L2",
      "second_hand": ""
     }
    ],
-   "tag": "B"
+   "tag": "C"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "healthcanada_heroin",
+    "type": "webpage",
+    "title": "Heroin",
+    "author": [
+     {
+      "literal": "Health Canada"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      [
+       2023,
+       3,
+       14
+      ]
+     ]
+    },
+    "URL": "https://www.canada.ca/en/health-canada/services/substance-use/controlled-illegal-drugs/heroin.html",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       27
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-27"
+    },
+    "publisher": "Government of Canada"
+   },
+   "title": "Heroin",
+   "year": 2023,
+   "kind": "official",
+   "people": true,
+   "near": 0.71,
+   "name": "Health Canada",
+   "short": "Health Canada",
+   "tier": 1,
+   "address": "https://www.canada.ca/en/health-canada/services/substance-use/controlled-illegal-drugs/heroin.html",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 3,
+     "where": "About heroin",
+     "quote": "Illegal heroin is often mixed with other things that look the same, including: sugars; starch; quinine (a drug made from cinchona bark) Heroin is increasingly found laced with fentanyl, a more powerful, synthetic opioid.",
+     "text": "Illegal heroin is often mixed with sugars, starch, and quinine, and is increasingly found laced with fentanyl.",
+     "id": "F10",
+     "second_hand": ""
+    },
+    {
+     "passage": 3,
+     "where": "About heroin",
+     "quote": "Illegal heroin may vary in: purity; colour; consistency It may look like a: white powder; dark sticky gum; brown grainy substance",
+     "text": "Illegal heroin may vary in purity, colour, and consistency, and can look like a white powder, dark sticky gum, or brown grainy substance.",
+     "id": "F11",
+     "second_hand": ""
+    },
+    {
+     "passage": 3,
+     "where": "About heroin",
+     "quote": "Pure heroin is a fine, white, bitter-tasting powder.",
+     "text": "Pure heroin is a fine, white, bitter-tasting powder.",
+     "id": "F12",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "D"
   }
  ],
  "parts": [],
  "complete": false,
- "missing": "exact proportion of heroin versus adulterants in street samples",
+ "missing": "exact proportion of heroin versus adulterants",
  "wanted": [
   {
    "doi": "10.1016/j.drugalcdep.2016.11.033",
@@ -294,6 +461,14 @@
    "why": "passed every gate",
    "short": "Yes. Heroin is a powerful opiate, but it is often cut with other things, including highly-potent opioids like fentanyl that are more dangerous.",
    "complete": true
+  },
+  {
+   "on": "2026-11-27",
+   "lane": 19,
+   "status": "none",
+   "why": "no draft passed: not accepted at try 2: a second reader did not accept but (it is about something else than the short answer (Sentence 1 directly addresses whether products sold as street heroin may instead contain fentanyls and what other substances may be present. Sentence 2 concerns how well heroin’s effects are understood, not the identity or contents describe)). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -310,164 +485,214 @@
    "read": "full",
    "kind": "review",
    "at": "10.1038/s41398-023-02406-5",
-   "kept": 2,
-   "thrown": [
-    {
-     "kind": "finding",
-     "text": "Heroin itself, together with its metabolites, contributes to the drug’s effects.",
-     "quote": "In this review we argued for a more complex interplay among four actors: heroin per se, 6-MAM, morphine, and M6G",
-     "why": "the sentence is not carried by its quote and passage"
-    },
-    {
-     "kind": "finding",
-     "text": "After oral use, heroin and 6-MAM are not detectable in blood, but morphine appears at significant levels.",
-     "quote": "After oral administration, no heroin or 6-MAM can be detected in the blood ... whereas circulating morphine reaches significant levels",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
-    }
-   ]
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "The rising crisis of illicit fentanyl use, overdose, and potential therapeutic strategies",
+   "read": "full",
+   "kind": "review",
+   "at": "10.1038/s41398-019-0625-0",
+   "kept": 3,
+   "thrown": []
+  },
+  {
+   "title": "Heroin",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.talktofrank.com/drug/heroin",
+   "kept": 3,
+   "thrown": []
+  },
+  {
+   "title": "Heroin",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.canada.ca/en/health-canada/services/substance-use/controlled-illegal-drugs/heroin.html",
+   "kept": 3,
+   "thrown": []
   }
  ],
  "plan": {
   "short": [
+   "F10",
    "F1",
-   "F2",
-   "F3"
+   "F9"
   ],
-  "direct": "Sometimes",
+  "direct": "Yes",
   "but": [
-   "L1"
+   "L2"
   ],
   "how": [
    [
-    "DA",
-    "F1",
-    "F2",
-    "F3"
+    "F10"
    ],
    [
-    "DB",
-    "F4",
+    "F7",
+    "F8",
+    "F9"
+   ],
+   [
+    "F1",
+    "F2"
+   ],
+   [
     "F5",
-    "L1"
+    "F6"
    ]
   ],
-  "unanswered": "exact proportion of heroin versus adulterants in street samples"
+  "unanswered": "exact proportion of heroin versus adulterants"
+ },
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.5309,
+   "but": 0.9057,
+   "how1": 0.8951,
+   "how2": 0.1791,
+   "how3": 0.5352,
+   "how4": 0.6679
+  },
+  "scores_quotes_alone": {
+   "short": 0.6609,
+   "but": 0.8722,
+   "how1": 0.6202,
+   "how2": 0.3531,
+   "how3": 0.1334,
+   "how4": 0.3491
+  }
  },
  "tries": [
   {
    "try": 1,
-   "why": "a rule was broken: written again",
+   "why": "the short answer or the But was not accepted: written again",
    "parts": [
     {
      "part": "short",
-     "text": "Sometimes street heroin is not heroin, but fentanyls like ocfentanil and carfentanil, and it can be mixed with other substances like caffeine and ketamine.",
+     "text": "Yes, street heroin is often mixed with sugars, starch, and quinine, and is increasingly found laced with fentanyl. Fentanyls are also commonly sold as heroin.",
      "rests_on": [
+      {
+       "label": "F10",
+       "ref": "healthcanada_heroin",
+       "where": "About heroin",
+       "quote": "Illegal heroin is often mixed with other things that look the same, including: sugars; starch; quinine (a drug made from cinchona bark) Heroin is increasingly found laced with fentanyl, a more powerful, synthetic opioid.",
+       "sha": "c25b71ec277e2f22"
+      },
       {
        "label": "F1",
        "ref": "misailidi_2018",
        "where": "Ocfentanil › Prevalence and use",
-       "quote": "ocfentanil was labeled and sold in the darknet as heroin or “synthetic heroin”",
+       "quote": "Cases in which fentanyls are sold under the guise of heroin are common worldwide. In some, ocfentanil was labeled and sold in the darknet as heroin or “synthetic heroin”",
        "sha": "a5f1389c64de950f"
       },
       {
-       "label": "F2",
-       "ref": "misailidi_2018",
-       "where": "Carfentanil › Prevalence and use",
-       "quote": "Carfentanil is often used to adulterate heroin, cocaine, and fentanyl",
-       "sha": "886ea1013e1f789b"
-      },
+       "label": "F9",
+       "ref": "frank_heroin",
+       "where": "Mixing heroin with other drugs / What is heroin cut with?",
+       "quote": "It’s common for heroin to be mixed with a variety of other substances, such as sugar, starch, powdered milk, quinine or paracetamol – as these increase the weight and the drug dealer’s profits.",
+       "sha": "8baa69e65dbe2251"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "the word it opens with (“Yes”) is not the answer the passages bear out: The opening word 'Yes' is a flat affirmative that the sources do not justify; they stress uncertainty about the exact contents of street heroin, so a more qualified ans"
+    },
+    {
+     "part": "but",
+     "text": "You can never really know what is in any street or counterfeit drug.",
+     "rests_on": [
       {
-       "label": "F3",
-       "ref": "misailidi_2018",
-       "where": "Carfentanil › Prevalence and use",
-       "quote": "Carfentanil has also been identified in mixtures along with caffeine, antihistamines, furanylfentanyl, or acrylfentanyl, while in some other cases it has been found to be laced with ketamine",
-       "sha": "886ea1013e1f789b"
+       "label": "L2",
+       "ref": "frank_heroin",
+       "where": "Top of the page",
+       "quote": "This is happening in a wide range of drugs, not just heroin, and you can never really know what is in any street or counterfeit drug.",
+       "sha": "93deacaa95d9053f"
       }
      ],
      "ok": true
     },
     {
-     "part": "but",
-     "text": "The pharmacology of heroin remains poorly understood.",
-     "rests_on": [
-      {
-       "label": "L1",
-       "ref": "milella_2023",
-       "where": "Abstract",
-       "quote": "the pharmacology of heroin is still poorly understood",
-       "sha": "9640272a2694c383"
-      }
-     ],
-     "ok": false,
-     "by": "a rule",
-     "said": "a rule: a clinical word where an everyday one exists (“pharmacology”): say it plainly"
-    },
-    {
      "part": "how1",
-     "text": "A 2018 review found ocfentanil and carfentanil are sold as heroin or mixed with it.",
+     "text": "Health Canada says illegal heroin is often mixed with sugars, starch, and quinine, and is increasingly found laced with fentanyl.",
      "rests_on": [
       {
-       "label": "DA",
-       "ref": "misailidi_2018",
-       "where": "Abstract",
-       "quote": "Ocfentanil and carfentanil are two potent synthetic opioids that are analogues of fentanyl and are actively involved in the recent fentanyl crisis.",
-       "sha": "9294adbab1334de7"
-      },
-      {
-       "label": "F1",
-       "ref": "misailidi_2018",
-       "where": "Ocfentanil › Prevalence and use",
-       "quote": "ocfentanil was labeled and sold in the darknet as heroin or “synthetic heroin”",
-       "sha": "a5f1389c64de950f"
-      },
-      {
-       "label": "F2",
-       "ref": "misailidi_2018",
-       "where": "Carfentanil › Prevalence and use",
-       "quote": "Carfentanil is often used to adulterate heroin, cocaine, and fentanyl",
-       "sha": "886ea1013e1f789b"
-      },
-      {
-       "label": "F3",
-       "ref": "misailidi_2018",
-       "where": "Carfentanil › Prevalence and use",
-       "quote": "Carfentanil has also been identified in mixtures along with caffeine, antihistamines, furanylfentanyl, or acrylfentanyl, while in some other cases it has been found to be laced with ketamine",
-       "sha": "886ea1013e1f789b"
+       "label": "F10",
+       "ref": "healthcanada_heroin",
+       "where": "About heroin",
+       "quote": "Illegal heroin is often mixed with other things that look the same, including: sugars; starch; quinine (a drug made from cinchona bark) Heroin is increasingly found laced with fentanyl, a more powerful, synthetic opioid.",
+       "sha": "c25b71ec277e2f22"
       }
      ],
      "ok": true
     },
     {
      "part": "how2",
-     "text": "A 2023 review discussed heroin and its metabolites, including its conversion to morphine.",
+     "text": "FRANK says heroin is often cut with fentanyls, sedatives like benzodiazepines, or fillers like sugar and starch to increase weight.",
      "rests_on": [
       {
-       "label": "DB",
-       "ref": "milella_2023",
-       "where": "Abstract",
-       "quote": "We will first review the literature concerning the pharmacokinetics and pharmacodynamics of heroin and its metabolites",
-       "sha": "9640272a2694c383"
+       "label": "F7",
+       "ref": "frank_heroin",
+       "where": "Mixing heroin with other drugs / What is heroin cut with?",
+       "quote": "Heroin is often cut with other things, for example highly-potent opioids (like fentanyls) which are even more dangerous than heroin itself.",
+       "sha": "8baa69e65dbe2251"
       },
       {
-       "label": "F4",
-       "ref": "milella_2023",
-       "where": "Introduction",
-       "quote": "Heroin (3,6-diacetylmorphine or diamorphine) is a semi-synthetic derivative of morphine",
-       "sha": "ba741c44fb65ed3f"
+       "label": "F8",
+       "ref": "frank_heroin",
+       "where": "Mixing heroin with other drugs / What is heroin cut with?",
+       "quote": "Other substances including sedatives like benzodiazepines and barbiturates can also be added to heroin.",
+       "sha": "8baa69e65dbe2251"
       },
+      {
+       "label": "F9",
+       "ref": "frank_heroin",
+       "where": "Mixing heroin with other drugs / What is heroin cut with?",
+       "quote": "It’s common for heroin to be mixed with a variety of other substances, such as sugar, starch, powdered milk, quinine or paracetamol – as these increase the weight and the drug dealer’s profits.",
+       "sha": "8baa69e65dbe2251"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2018 review says fentanyls are commonly sold as heroin, and carfentanil is often used to adulterate heroin.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "misailidi_2018",
+       "where": "Ocfentanil › Prevalence and use",
+       "quote": "Cases in which fentanyls are sold under the guise of heroin are common worldwide. In some, ocfentanil was labeled and sold in the darknet as heroin or “synthetic heroin”",
+       "sha": "a5f1389c64de950f"
+      },
+      {
+       "label": "F2",
+       "ref": "misailidi_2018",
+       "where": "Carfentanil › Prevalence and use",
+       "quote": "Carfentanil is often used to adulterate heroin, cocaine, and fentanyl. In some other cases, it is labeled and sold as heroin.",
+       "sha": "886ea1013e1f789b"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how4",
+     "text": "A 2019 review says fentanyl and its analogs are widely synthesized and adulterated with illicit supplies of heroin.",
+     "rests_on": [
       {
        "label": "F5",
-       "ref": "milella_2023",
+       "ref": "han_2019",
        "where": "Abstract",
-       "quote": "After entering the body, heroin is rapidly deacetylated to 6-monoacetylmorphine (6-MAM), which is then deacetylated to morphine",
-       "sha": "9640272a2694c383"
+       "quote": "fentanyl and its analogs are widely synthesized in laboratories and adulterated with illicit supplies of heroin, cocaine, methamphetamine, and counterfeit pills",
+       "sha": "21bbd28c2bad091a"
       },
       {
-       "label": "L1",
-       "ref": "milella_2023",
-       "where": "Abstract",
-       "quote": "the pharmacology of heroin is still poorly understood",
-       "sha": "9640272a2694c383"
+       "label": "F6",
+       "ref": "han_2019",
+       "where": "Introduction",
+       "quote": "Synthetic opioids are also increasingly detected in illicit supplies of heroin, methamphetamine, and counterfeit pills.",
+       "sha": "010a38d21c516cac"
       }
      ],
      "ok": true
@@ -480,107 +705,121 @@
    "parts": [
     {
      "part": "short",
-     "text": "Sometimes street heroin is not heroin, but fentanyls like ocfentanil and carfentanil, and it can be mixed with other substances like caffeine and ketamine.",
+     "text": "It depends. Street heroin is often cut with sugars, starch, and quinine, and is increasingly found laced with fentanyl.",
      "rests_on": [
       {
-       "label": "F1",
-       "ref": "misailidi_2018",
-       "where": "Ocfentanil › Prevalence and use",
-       "quote": "ocfentanil was labeled and sold in the darknet as heroin or “synthetic heroin”",
-       "sha": "a5f1389c64de950f"
+       "label": "F10",
+       "ref": "healthcanada_heroin",
+       "where": "About heroin",
+       "quote": "Illegal heroin is often mixed with other things that look the same, including: sugars; starch; quinine (a drug made from cinchona bark) Heroin is increasingly found laced with fentanyl, a more powerful, synthetic opioid.",
+       "sha": "c25b71ec277e2f22"
       },
       {
-       "label": "F2",
-       "ref": "misailidi_2018",
-       "where": "Carfentanil › Prevalence and use",
-       "quote": "Carfentanil is often used to adulterate heroin, cocaine, and fentanyl",
-       "sha": "886ea1013e1f789b"
-      },
+       "label": "F9",
+       "ref": "frank_heroin",
+       "where": "Mixing heroin with other drugs / What is heroin cut with?",
+       "quote": "It’s common for heroin to be mixed with a variety of other substances, such as sugar, starch, powdered milk, quinine or paracetamol – as these increase the weight and the drug dealer’s profits.",
+       "sha": "8baa69e65dbe2251"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "the word it opens with (“It depends”) is not the answer the passages bear out: The opening word \"It depends\" is too vague given the passages, which state that street heroin is still heroin but is commonly adulterated and that its exact comp"
+    },
+    {
+     "part": "but",
+     "text": "You can never really know what is in any street or counterfeit drug.",
+     "rests_on": [
       {
-       "label": "F3",
-       "ref": "misailidi_2018",
-       "where": "Carfentanil › Prevalence and use",
-       "quote": "Carfentanil has also been identified in mixtures along with caffeine, antihistamines, furanylfentanyl, or acrylfentanyl, while in some other cases it has been found to be laced with ketamine",
-       "sha": "886ea1013e1f789b"
+       "label": "L2",
+       "ref": "frank_heroin",
+       "where": "Top of the page",
+       "quote": "This is happening in a wide range of drugs, not just heroin, and you can never really know what is in any street or counterfeit drug.",
+       "sha": "93deacaa95d9053f"
       }
      ],
      "ok": true
     },
     {
-     "part": "but",
-     "text": "The effects of heroin are not well understood.",
-     "rests_on": [
-      {
-       "label": "L1",
-       "ref": "milella_2023",
-       "where": "Abstract",
-       "quote": "the pharmacology of heroin is still poorly understood",
-       "sha": "9640272a2694c383"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "it is about something else than the short answer (Sentence 1 directly addresses whether products sold as street heroin may instead contain fentanyls and what other substances may be present. Sentence 2 concerns how well heroin’s effects are understood, not the identity or contents describe)"
-    },
-    {
      "part": "how1",
-     "text": "A 2018 review found ocfentanil and carfentanil are sold as heroin or mixed with it.",
+     "text": "Health Canada says illegal heroin is often mixed with sugars, starch, and quinine, and is increasingly found laced with fentanyl.",
      "rests_on": [
       {
-       "label": "DA",
-       "ref": "misailidi_2018",
-       "where": "Abstract",
-       "quote": "Ocfentanil and carfentanil are two potent synthetic opioids that are analogues of fentanyl and are actively involved in the recent fentanyl crisis.",
-       "sha": "9294adbab1334de7"
-      },
-      {
-       "label": "F1",
-       "ref": "misailidi_2018",
-       "where": "Ocfentanil › Prevalence and use",
-       "quote": "ocfentanil was labeled and sold in the darknet as heroin or “synthetic heroin”",
-       "sha": "a5f1389c64de950f"
-      },
-      {
-       "label": "F2",
-       "ref": "misailidi_2018",
-       "where": "Carfentanil › Prevalence and use",
-       "quote": "Carfentanil is often used to adulterate heroin, cocaine, and fentanyl",
-       "sha": "886ea1013e1f789b"
-      },
-      {
-       "label": "F3",
-       "ref": "misailidi_2018",
-       "where": "Carfentanil › Prevalence and use",
-       "quote": "Carfentanil has also been identified in mixtures along with caffeine, antihistamines, furanylfentanyl, or acrylfentanyl, while in some other cases it has been found to be laced with ketamine",
-       "sha": "886ea1013e1f789b"
+       "label": "F10",
+       "ref": "healthcanada_heroin",
+       "where": "About heroin",
+       "quote": "Illegal heroin is often mixed with other things that look the same, including: sugars; starch; quinine (a drug made from cinchona bark) Heroin is increasingly found laced with fentanyl, a more powerful, synthetic opioid.",
+       "sha": "c25b71ec277e2f22"
       }
      ],
      "ok": true
     },
     {
      "part": "how2",
-     "text": "A 2023 review discussed heroin and its metabolites.",
+     "text": "FRANK says heroin is often cut with fentanyls, sedatives like benzodiazepines, or fillers like sugar and starch to increase weight.",
      "rests_on": [
       {
-       "label": "DB",
-       "ref": "milella_2023",
-       "where": "Abstract",
-       "quote": "We will first review the literature concerning the pharmacokinetics and pharmacodynamics of heroin and its metabolites",
-       "sha": "9640272a2694c383"
+       "label": "F7",
+       "ref": "frank_heroin",
+       "where": "Mixing heroin with other drugs / What is heroin cut with?",
+       "quote": "Heroin is often cut with other things, for example highly-potent opioids (like fentanyls) which are even more dangerous than heroin itself.",
+       "sha": "8baa69e65dbe2251"
       },
       {
-       "label": "F4",
-       "ref": "milella_2023",
-       "where": "Introduction",
-       "quote": "Heroin (3,6-diacetylmorphine or diamorphine) is a semi-synthetic derivative of morphine",
-       "sha": "ba741c44fb65ed3f"
+       "label": "F8",
+       "ref": "frank_heroin",
+       "where": "Mixing heroin with other drugs / What is heroin cut with?",
+       "quote": "Other substances including sedatives like benzodiazepines and barbiturates can also be added to heroin.",
+       "sha": "8baa69e65dbe2251"
       },
+      {
+       "label": "F9",
+       "ref": "frank_heroin",
+       "where": "Mixing heroin with other drugs / What is heroin cut with?",
+       "quote": "It’s common for heroin to be mixed with a variety of other substances, such as sugar, starch, powdered milk, quinine or paracetamol – as these increase the weight and the drug dealer’s profits.",
+       "sha": "8baa69e65dbe2251"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2018 review says fentanyls are commonly sold as heroin, and carfentanil is often used to adulterate heroin.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "misailidi_2018",
+       "where": "Ocfentanil › Prevalence and use",
+       "quote": "Cases in which fentanyls are sold under the guise of heroin are common worldwide. In some, ocfentanil was labeled and sold in the darknet as heroin or “synthetic heroin”",
+       "sha": "a5f1389c64de950f"
+      },
+      {
+       "label": "F2",
+       "ref": "misailidi_2018",
+       "where": "Carfentanil › Prevalence and use",
+       "quote": "Carfentanil is often used to adulterate heroin, cocaine, and fentanyl. In some other cases, it is labeled and sold as heroin.",
+       "sha": "886ea1013e1f789b"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how4",
+     "text": "A 2019 review says fentanyl and its analogs are widely synthesized and adulterated with illicit supplies of heroin.",
+     "rests_on": [
       {
        "label": "F5",
-       "ref": "milella_2023",
+       "ref": "han_2019",
        "where": "Abstract",
-       "quote": "After entering the body, heroin is rapidly deacetylated to 6-monoacetylmorphine (6-MAM), which is then deacetylated to morphine",
-       "sha": "9640272a2694c383"
+       "quote": "fentanyl and its analogs are widely synthesized in laboratories and adulterated with illicit supplies of heroin, cocaine, methamphetamine, and counterfeit pills",
+       "sha": "21bbd28c2bad091a"
+      },
+      {
+       "label": "F6",
+       "ref": "han_2019",
+       "where": "Introduction",
+       "quote": "Synthetic opioids are also increasingly detected in illicit supplies of heroin, methamphetamine, and counterfeit pills.",
+       "sha": "010a38d21c516cac"
       }
      ],
      "ok": true
@@ -589,111 +828,132 @@
   },
   {
    "try": 3,
-   "why": "a rule was broken: written again",
+   "why": "the last draft: no answer",
    "parts": [
     {
      "part": "short",
-     "text": "Sometimes street heroin is not heroin, but ocfentanil or carfentanil, and can be mixed with caffeine, ketamine, or other substances.",
+     "text": "Yes, street heroin is often mixed with sugars, starch, and quinine, and is increasingly found laced with fentanyl.",
      "rests_on": [
+      {
+       "label": "F10",
+       "ref": "healthcanada_heroin",
+       "where": "About heroin",
+       "quote": "Illegal heroin is often mixed with other things that look the same, including: sugars; starch; quinine (a drug made from cinchona bark) Heroin is increasingly found laced with fentanyl, a more powerful, synthetic opioid.",
+       "sha": "c25b71ec277e2f22"
+      },
       {
        "label": "F1",
        "ref": "misailidi_2018",
        "where": "Ocfentanil › Prevalence and use",
-       "quote": "ocfentanil was labeled and sold in the darknet as heroin or “synthetic heroin”",
+       "quote": "Cases in which fentanyls are sold under the guise of heroin are common worldwide. In some, ocfentanil was labeled and sold in the darknet as heroin or “synthetic heroin”",
        "sha": "a5f1389c64de950f"
       },
       {
-       "label": "F2",
-       "ref": "misailidi_2018",
-       "where": "Carfentanil › Prevalence and use",
-       "quote": "Carfentanil is often used to adulterate heroin, cocaine, and fentanyl",
-       "sha": "886ea1013e1f789b"
-      },
+       "label": "F9",
+       "ref": "frank_heroin",
+       "where": "Mixing heroin with other drugs / What is heroin cut with?",
+       "quote": "It’s common for heroin to be mixed with a variety of other substances, such as sugar, starch, powdered milk, quinine or paracetamol – as these increase the weight and the drug dealer’s profits.",
+       "sha": "8baa69e65dbe2251"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "the word it opens with (“Yes”) is not the answer the passages bear out: The opening word \"Yes\" is a flat affirmation that does not reflect the nuanced information in the sources; the editor explicitly warned against a simple \"Yes\". Conseque"
+    },
+    {
+     "part": "but",
+     "text": "You can never really know what is in any street or counterfeit drug.",
+     "rests_on": [
       {
-       "label": "F3",
-       "ref": "misailidi_2018",
-       "where": "Carfentanil › Prevalence and use",
-       "quote": "Carfentanil has also been identified in mixtures along with caffeine, antihistamines, furanylfentanyl, or acrylfentanyl, while in some other cases it has been found to be laced with ketamine",
-       "sha": "886ea1013e1f789b"
+       "label": "L2",
+       "ref": "frank_heroin",
+       "where": "Top of the page",
+       "quote": "This is happening in a wide range of drugs, not just heroin, and you can never really know what is in any street or counterfeit drug.",
+       "sha": "93deacaa95d9053f"
       }
      ],
      "ok": true
     },
     {
-     "part": "but",
-     "text": "The pharmacology of heroin remains poorly understood.",
-     "rests_on": [
-      {
-       "label": "L1",
-       "ref": "milella_2023",
-       "where": "Abstract",
-       "quote": "the pharmacology of heroin is still poorly understood",
-       "sha": "9640272a2694c383"
-      }
-     ],
-     "ok": false,
-     "by": "a rule",
-     "said": "a rule: a clinical word where an everyday one exists (“pharmacology”): say it plainly"
-    },
-    {
      "part": "how1",
-     "text": "A 2018 review found ocfentanil and carfentanil sold as heroin or mixed with it.",
+     "text": "Health Canada says illegal heroin is often mixed with sugars, starch, and quinine, and is increasingly found laced with fentanyl.",
      "rests_on": [
       {
-       "label": "DA",
-       "ref": "misailidi_2018",
-       "where": "Abstract",
-       "quote": "Ocfentanil and carfentanil are two potent synthetic opioids that are analogues of fentanyl and are actively involved in the recent fentanyl crisis.",
-       "sha": "9294adbab1334de7"
-      },
-      {
-       "label": "F1",
-       "ref": "misailidi_2018",
-       "where": "Ocfentanil › Prevalence and use",
-       "quote": "ocfentanil was labeled and sold in the darknet as heroin or “synthetic heroin”",
-       "sha": "a5f1389c64de950f"
-      },
-      {
-       "label": "F2",
-       "ref": "misailidi_2018",
-       "where": "Carfentanil › Prevalence and use",
-       "quote": "Carfentanil is often used to adulterate heroin, cocaine, and fentanyl",
-       "sha": "886ea1013e1f789b"
-      },
-      {
-       "label": "F3",
-       "ref": "misailidi_2018",
-       "where": "Carfentanil › Prevalence and use",
-       "quote": "Carfentanil has also been identified in mixtures along with caffeine, antihistamines, furanylfentanyl, or acrylfentanyl, while in some other cases it has been found to be laced with ketamine",
-       "sha": "886ea1013e1f789b"
+       "label": "F10",
+       "ref": "healthcanada_heroin",
+       "where": "About heroin",
+       "quote": "Illegal heroin is often mixed with other things that look the same, including: sugars; starch; quinine (a drug made from cinchona bark) Heroin is increasingly found laced with fentanyl, a more powerful, synthetic opioid.",
+       "sha": "c25b71ec277e2f22"
       }
      ],
      "ok": true
     },
     {
      "part": "how2",
-     "text": "A 2023 review discussed heroin as a semi-synthetic derivative of morphine.",
+     "text": "FRANK says heroin is often cut with fentanyls, sedatives like benzodiazepines, or fillers like sugar and starch to increase weight.",
      "rests_on": [
       {
-       "label": "DB",
-       "ref": "milella_2023",
-       "where": "Abstract",
-       "quote": "We will first review the literature concerning the pharmacokinetics and pharmacodynamics of heroin and its metabolites",
-       "sha": "9640272a2694c383"
+       "label": "F7",
+       "ref": "frank_heroin",
+       "where": "Mixing heroin with other drugs / What is heroin cut with?",
+       "quote": "Heroin is often cut with other things, for example highly-potent opioids (like fentanyls) which are even more dangerous than heroin itself.",
+       "sha": "8baa69e65dbe2251"
       },
       {
-       "label": "F4",
-       "ref": "milella_2023",
-       "where": "Introduction",
-       "quote": "Heroin (3,6-diacetylmorphine or diamorphine) is a semi-synthetic derivative of morphine",
-       "sha": "ba741c44fb65ed3f"
+       "label": "F8",
+       "ref": "frank_heroin",
+       "where": "Mixing heroin with other drugs / What is heroin cut with?",
+       "quote": "Other substances including sedatives like benzodiazepines and barbiturates can also be added to heroin.",
+       "sha": "8baa69e65dbe2251"
       },
+      {
+       "label": "F9",
+       "ref": "frank_heroin",
+       "where": "Mixing heroin with other drugs / What is heroin cut with?",
+       "quote": "It’s common for heroin to be mixed with a variety of other substances, such as sugar, starch, powdered milk, quinine or paracetamol – as these increase the weight and the drug dealer’s profits.",
+       "sha": "8baa69e65dbe2251"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2018 review says fentanyls are commonly sold as heroin, and carfentanil is often used to adulterate heroin.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "misailidi_2018",
+       "where": "Ocfentanil › Prevalence and use",
+       "quote": "Cases in which fentanyls are sold under the guise of heroin are common worldwide. In some, ocfentanil was labeled and sold in the darknet as heroin or “synthetic heroin”",
+       "sha": "a5f1389c64de950f"
+      },
+      {
+       "label": "F2",
+       "ref": "misailidi_2018",
+       "where": "Carfentanil › Prevalence and use",
+       "quote": "Carfentanil is often used to adulterate heroin, cocaine, and fentanyl. In some other cases, it is labeled and sold as heroin.",
+       "sha": "886ea1013e1f789b"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how4",
+     "text": "A 2019 review says fentanyl and its analogs are widely synthesized and adulterated with illicit supplies of heroin.",
+     "rests_on": [
       {
        "label": "F5",
-       "ref": "milella_2023",
+       "ref": "han_2019",
        "where": "Abstract",
-       "quote": "After entering the body, heroin is rapidly deacetylated to 6-monoacetylmorphine (6-MAM), which is then deacetylated to morphine",
-       "sha": "9640272a2694c383"
+       "quote": "fentanyl and its analogs are widely synthesized in laboratories and adulterated with illicit supplies of heroin, cocaine, methamphetamine, and counterfeit pills",
+       "sha": "21bbd28c2bad091a"
+      },
+      {
+       "label": "F6",
+       "ref": "han_2019",
+       "where": "Introduction",
+       "quote": "Synthetic opioids are also increasingly detected in illicit supplies of heroin, methamphetamine, and counterfeit pills.",
+       "sha": "010a38d21c516cac"
       }
      ],
      "ok": true
@@ -701,23 +961,6 @@
    ]
   }
  ],
- "panel_gap": [],
- "own": {
-  "model": "pharmakon-check-0",
-  "threshold": 0.05,
-  "scores": {
-   "short": 0.6595,
-   "but": 0.8607,
-   "how1": 0.6099,
-   "how2": 0.9559
-  },
-  "scores_quotes_alone": {
-   "short": 0.2208,
-   "but": 0.7793,
-   "how1": 0.8207,
-   "how2": 0.979
-  }
- },
  "place": {
   "home": "heroin",
   "also": [],
