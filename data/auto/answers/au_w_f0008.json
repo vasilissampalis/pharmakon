@@ -17,234 +17,227 @@
   "prescription-opioids"
  ],
  "made": {
-  "on": "2026-11-20",
+  "on": "2026-11-27",
   "models": {
-   "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-   "checker": "@cf/openai/gpt-oss-120b",
-   "planner": "groq:openai/gpt-oss-120b",
-   "team": "team B",
-   "reader_2": "groq:openai/gpt-oss-20b",
-   "writer_2": "groq:qwen/qwen3.8-27b"
+   "reader": "openrouter:openai/gpt-oss-120b",
+   "writer": "openrouter:meta-llama/llama-3.3-70b-instruct",
+   "checker": "openrouter:openai/gpt-6-luna",
+   "planner": "openrouter:openai/gpt-oss-120b",
+   "team": "team R",
+   "reader_2": "openrouter:openai/gpt-oss-120b",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "44652884068",
-  "read_by": {
-   "gemini-3.5-flash-lite": 3,
-   "gemini-3.1-flash-lite": 1
-  },
-  "read_seconds": 76,
+  "run": "45949418613",
+  "read_seconds": 100,
   "from": {
    "papers": 2,
    "summaries": 0,
-   "official": 1
+   "official": 2
   },
-  "neurons": 921.4,
-  "seconds": 132
+  "neurons": 0.0,
+  "seconds": 165
  },
- "status": "published",
- "why": "passed every gate",
+ "status": "none",
+ "why": "the second reader did not accept the answer",
  "gates": {
-  "read": "12 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 4 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 1 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.94, but 0.01, how1 0.88, how2 0.97, how3 0.99",
-  "check": "every sentence kept was accepted by the second reader (@cf/openai/gpt-oss-120b)",
-  "but": "the writer's But was not accepted (the sentence makes a meta claim about reporting that is not stated in the passages): the code wrote the But itself, from what this answer rests on",
-  "rules": "nothing against it",
-  "checked": "set beside the checked claims of the same page: nothing against them"
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-120b read from there",
+  "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
+  "read": "11 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 8 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 1 case report(s) (which do not count), 0 other paper(s), 2 official page(s), 0 paper(s) read in summary only",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.26, but 0.98, how1 0.45, how2 0.95, how3 0.74",
+  "check": "short: NOT accepted: The passages say tramadol use has been linked with serotonin syndrome, not that tramadol can cause it.; but: accepted; how1: NOT accepted: The passages say tramadol may impair abilities and list central nervous system adverse reactions, but do not say those reactions are common.; how2: accepted; how3: NOT accepted: The source describes a study of survey respondents aged 12 or older; it does not say that the study found tramadol to be a centrally acting opioid analgesic."
  },
  "sources": [
   {
    "read": "full",
    "ref": {
-    "id": "stewartyates_2026",
+    "id": "reines_2020",
     "type": "article-journal",
-    "title": "Tramadol in drug-facilitated sexual assault: Global case prevalence, pharmacology, and drug interactions",
+    "title": "Misuse of tramadol in the United States: An analysis of the national survey of drug use and health 2002-2017",
     "author": [
      {
-      "family": "Stewart-Yates",
-      "given": "David"
+      "family": "Reines",
+      "given": "Scott A"
      },
      {
-      "family": "Maker",
-      "given": "Garth L"
+      "family": "Goldmann",
+      "given": "Bonnie"
      },
      {
-      "family": "Coumbaros",
-      "given": "John"
+      "family": "Harnett",
+      "given": "Mark"
+     },
+     {
+      "family": "Lu",
+      "given": "Lucy"
      }
     ],
-    "container-title": "Journal of Analytical Toxicology",
+    "container-title": "Substance Abuse: Research and Treatment",
     "issued": {
      "date-parts": [
       [
-       2026
+       2020
       ]
      ]
     },
-    "DOI": "10.1093/jat/bkag067",
+    "DOI": "10.1177/1178221820930006",
     "verification": {
      "status": "metadata-verified",
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-20",
+     "verified_on": "2026-11-27",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-20"
+      "checked_on": "2026-11-27"
      }
     },
-    "volume": "50",
-    "issue": "7",
-    "number": "bkag067",
-    "PMCID": "PMC13437024"
+    "volume": "14",
+    "number": "1178221820930006",
+    "PMCID": "PMC7271275"
    },
-   "doi": "10.1093/jat/bkag067",
-   "pmcid": "PMC13437024",
-   "title": "Tramadol in drug-facilitated sexual assault: global case prevalence, pharmacology, and drug interactions",
-   "year": 2026,
-   "journal": "Journal of analytical toxicology",
+   "doi": "10.1177/1178221820930006",
+   "pmcid": "PMC7271275",
+   "title": "Misuse of Tramadol in the United States: An Analysis of the National Survey of Drug Use and Health 2002-2017",
+   "year": 2020,
+   "journal": "Substance abuse : research and treatment",
    "kind": "review",
-   "people": false,
-   "near": 0.7,
+   "people": true,
+   "near": 0.793,
    "money": [
-    "AcknowledgmentsD.S.-Y. is a recipient of an Australian Government Research Training Program Scholarship."
+    "This study was funded by Avenue Therapeutics. Special thanks to CERobs Consulting LLC, Chapel Hill, NC, for performing the data analysis and review.",
+    "Declaration of Conflicting Interests:The author(s) declared no potential conflicts of interest with respect to the research, authorship, and/or publication of this article.",
+    "Funding:The author(s) disclosed receipt of the following financial support for the research, authorship, and/or publication of this article: Avenue Therapeutics, Inc., funded this study in full."
    ],
    "design": {
-    "passage": 1,
+    "passage": 2,
     "where": "Abstract",
-    "quote": "This review examines global toxicological case data to assess the prevalence of tramadol, a widely prescribed opioid analgesic, in the context of DFSA.",
-    "text": "a review examining global toxicological case data to assess the prevalence of tramadol in the context of drug-facilitated sexual assault"
+    "quote": "A cross‑sectional surveillance study design was used to examine lifetime and past year misuse of oral tramadol and comparators of interest among NSHUH respondents aged 12 years or older.",
+    "text": "Cross‑sectional surveillance study of US residents aged 12+ using NSDUH data"
    },
    "findings": [
     {
-     "passage": 1,
-     "where": "Abstract",
-     "quote": "Tramadol was confirmed in reports across Africa, Oceania, Europe, the Middle East, and North America, with detection rates ranging from 1% to 33%.",
-     "text": "Tramadol was confirmed in reports across Africa, Oceania, Europe, the Middle East, and North America, with detection rates ranging from 1% to 33%.",
+     "passage": 5,
+     "where": "Introduction",
+     "quote": "Tramadol is a centrally acting opioid analgesic with two mechanisms of action including weak activation of the µ opioid receptor by the parent drug, more potent activation by its primary metabolite (M1), and inhibition of the reuptake of serotonin and norepinephrine.",
+     "text": "Tramadol is a centrally acting opioid analgesic that weakly activates µ opioid receptors, more potently after conversion to metabolite M1, and also blocks serotonin and norepinephrine reuptake.",
      "id": "F1",
      "second_hand": ""
     },
     {
-     "passage": 9,
-     "where": "Tramadol pharmacology",
-     "quote": "It has a dual mechanism of action including μ-opioid receptor (MOR) agonism and monoaminergic modulation, specifically involving the inhibition of norepinephrine (NE) and serotonin (5-hydroxytryptamine [5-HT]) reuptake.",
-     "text": "It has a dual mechanism of action including mu-opioid receptor agonism and monoaminergic modulation, specifically involving the inhibition of norepinephrine and serotonin reuptake.",
+     "passage": 25,
+     "where": "Results › Oral tramadol versus alprazolam › 2012 to 2014 (Any lifetime misuse)",
+     "quote": "any lifetime misuse of oral tramadol increased from approximately 0.4% to 1.5% from 2002 through 2014.",
+     "text": "In the US survey, lifetime misuse of oral tramadol rose from about 0.4% to 1.5% between 2002 and 2014.",
      "id": "F2",
-     "second_hand": ""
-    },
-    {
-     "passage": 10,
-     "where": "Tramadol pharmacology",
-     "quote": "In summary, parent tramadol has weak MOR agonism with serotonergic and noradrenergic activity, whereas its active metabolites demonstrate stronger MOR agonism but lack monoaminergic activity.",
-     "text": "Parent tramadol has weak mu-opioid receptor agonism with serotonergic and noradrenergic activity, whereas its active metabolites demonstrate stronger mu-opioid receptor agonism but lack monoaminergic activity.",
-     "id": "F3",
      "second_hand": ""
     }
    ],
-   "limits": [],
+   "limits": [
+    {
+     "passage": 23,
+     "where": "Results › Data on misuse via injection",
+     "quote": "The NSDUH data included too few reports of tramadol use by injection to allow for reliable estimates or statistical comparisons with other drugs.",
+     "text": "The study could not provide reliable estimates of tramadol injection misuse because too few reports were available.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
    "tag": "A"
   },
   {
    "read": "full",
    "ref": {
-    "id": "gustafsson_2024",
+    "id": "dolan_2025",
     "type": "article-journal",
-    "title": "Misuse, abuse and medication errors’ adverse events associated with opioids—a systematic review",
+    "title": "Tramadol use and risk of seizure: A report of two cases and a review of recent literature",
     "author": [
      {
-      "family": "Gustafsson",
-      "given": "Moa"
+      "family": "Dolan",
+      "given": "Emma"
      },
      {
-      "family": "Silva",
-      "given": "Vítor"
-     },
-     {
-      "family": "Valeiro",
-      "given": "Carolina"
-     },
-     {
-      "family": "Joaquim",
-      "given": "João"
-     },
-     {
-      "family": "van Hunsel",
-      "given": "Florence"
-     },
-     {
-      "family": "Matos",
-      "given": "Cristiano"
+      "family": "Delanty",
+      "given": "Norman"
      }
     ],
-    "container-title": "Pharmaceuticals",
+    "container-title": "Epilepsy & Behavior Reports",
     "issued": {
      "date-parts": [
       [
-       2024
+       2025
       ]
      ]
     },
-    "DOI": "10.3390/ph17081009",
+    "DOI": "10.1016/j.ebr.2025.100763",
     "verification": {
      "status": "metadata-verified",
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-20",
+     "verified_on": "2026-11-27",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-20"
+      "checked_on": "2026-11-27"
      }
     },
-    "volume": "17",
-    "issue": "8",
-    "number": "1009",
-    "PMCID": "PMC11357286"
+    "volume": "30",
+    "number": "100763",
+    "PMCID": "PMC12002874"
    },
-   "doi": "10.3390/ph17081009",
-   "pmcid": "PMC11357286",
-   "title": "Misuse, Abuse and Medication Errors' Adverse Events Associated with Opioids-A Systematic Review",
-   "year": 2024,
-   "journal": "Pharmaceuticals (Basel, Switzerland)",
-   "kind": "review",
+   "doi": "10.1016/j.ebr.2025.100763",
+   "pmcid": "PMC12002874",
+   "title": "Tramadol use and risk of seizure: A report of two cases and a review of recent literature",
+   "year": 2025,
+   "journal": "Epilepsy & behavior reports",
+   "kind": "case",
    "people": true,
-   "near": 0.628,
+   "near": 0.868,
    "money": [
-    "This research received no external funding."
+    "The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper."
    ],
    "design": {
-    "passage": 1,
+    "passage": 2,
     "where": "Abstract",
-    "quote": "The aim of this systematic review was to identify what is known about the adverse events resulting from the abuse, misuse, and medication errors associated with opioid use.",
-    "text": "A systematic review of studies reporting abuse, misuse, and medication errors associated with medicinal opioid use."
+    "quote": "We identified two cases of seizures directly related to tramadol exposure. We then reviewed recent literature on tramadol and its adverse effects, particularly looking at its effect on seizure risk and the incidence of seizures.",
+    "text": "Case report of two patients plus literature review of tramadol adverse effects"
    },
    "findings": [
     {
-     "passage": 18,
-     "where": "3. Results › 3.1. Prevalence of Opioid Abuse",
-     "quote": "Other opioids included hydrocodone, tramadol, and codeine (eight times each)",
-     "text": "Tramadol was mentioned eight times as an opioid in the reviewed studies.",
+     "passage": 16,
+     "where": "Literature review › Tramadol pharmacology and analgesic effects",
+     "quote": "Seizures in particular are more common with tramadol than with other opioids, and can occur at therapeutic doses.",
+     "text": "Tramadol causes seizures more often than other opioids and they can happen at therapeutic doses.",
+     "id": "F3",
+     "second_hand": ""
+    },
+    {
+     "passage": 16,
+     "where": "Literature review › Tramadol pharmacology and analgesic effects",
+     "quote": "Tramadol monotherapy has been reported to cause serotonin syndrome without concomitant serotonergic medications at high doses, but is more likely to occur when combined with other serotonergic agents.",
+     "text": "Tramadol can cause serotonin syndrome, especially when taken with other serotonergic medications.",
      "id": "F4",
      "second_hand": ""
     },
     {
-     "passage": 24,
-     "where": "3. Results › 3.3. AEs Following Abuse and Misuse",
-     "quote": "Common opioids involved included tramadol, morphine, and buprenorphine.",
-     "text": "Tramadol was among the common opioids involved in cases where patients visited the emergency department due to opioid-related adverse drug reactions, including abuse or misuse.",
+     "passage": 21,
+     "where": "Literature review › Clinical reports and case series",
+     "quote": "patients prescribed tricyclic antidepressants and SSRI’s were 5–9.4 times more likely to experience seizures compared to patients not prescribed antidepressants.",
+     "text": "People who use tramadol together with tricyclic antidepressants or SSRIs are 5–9.4 times more likely to have seizures.",
      "id": "F5",
-     "second_hand": ""
-    },
+     "second_hand": "Another case-control study assessing the seizure risk in 11,383 patients exposed to tramadol reported that patients prescribed tricyclic antidepressants and SSRI's were 5-9."
+    }
+   ],
+   "limits": [
     {
-     "passage": 41,
-     "where": "4. Discussion",
-     "quote": "ADRs associated with opioids include serious outcomes resulting in hospitalizations and deaths, with morphine, fentanyl, oxycodone, tramadol, and hydromorphone frequently implicated.",
-     "text": "Tramadol is frequently implicated in adverse drug reactions associated with opioids that result in serious outcomes such as hospitalizations and deaths.",
-     "id": "F6",
+     "passage": 26,
+     "where": "Discussion and recommendations",
+     "quote": "We found that there were scarce recent studies on the relationship between tramadol and seizure risk.",
+     "text": "There are few recent studies on tramadol’s seizure risk.",
+     "id": "L2",
      "second_hand": ""
     }
    ],
-   "limits": [],
    "tag": "B"
   },
   {
@@ -269,14 +262,14 @@
       [
        2026,
        11,
-       20
+       27
       ]
      ]
     },
     "verification": {
      "status": "made by code",
      "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-20"
+     "verified_on": "2026-11-27"
     }
    },
    "title": "Tramadol",
@@ -293,233 +286,232 @@
    "design": null,
    "findings": [
     {
-     "passage": 4,
-     "where": "Mixing tramadol with other drugs / How does it make you feel?",
-     "quote": "Although tramadol is not as strong as heroin, it shares many of the same effects and both are addictive. It is prescribed as a painkiller, but it can make you feel: calm; happy; relaxed; awake",
-     "text": "Tramadol is an addictive painkiller that shares many effects with heroin and can make people feel calm, happy, relaxed, or awake.",
-     "id": "F10",
+     "passage": 7,
+     "where": "Mixing tramadol with other drugs / Physical health risks",
+     "quote": "Tramadol can depress breathing and may be risky for people with asthma and chronic obstructive pulmonary disease. Tramadol use has been linked with serotonin syndrome. This is a potentially life‑threatening condition where the serotonin receptors are overstimulated.",
+     "text": "Tramadol can depress breathing, be risky for people with asthma or COPD, and has been linked with serotonin syndrome, a potentially life‑threatening condition.",
+     "id": "F6",
      "second_hand": ""
     },
     {
-     "passage": 7,
-     "where": "Mixing tramadol with other drugs / Physical health risks",
-     "quote": "Although tramadol isn’t as strong as some of the other opioid drugs (such as heroin), it can still cause some of the same problems and, like other opoid drugs, overdosing can kill.",
-     "text": "Although not as strong as some other opioids, tramadol can cause similar problems and overdosing can kill.",
-     "id": "F11",
+     "passage": 8,
+     "where": "Mixing tramadol with other drugs / Mental health risks",
+     "quote": "If you are on certain antidepressants you should only take tramadol with clear medical advice because of the known risks.",
+     "text": "If people are on certain antidepressants, they should only take tramadol with clear medical advice because of the known risks.",
+     "id": "F7",
      "second_hand": ""
     },
     {
      "passage": 11,
      "where": "Mixing tramadol with other drugs / Can you get addicted?",
      "quote": "Yes, tramadol is addictive. Over time, tramadol can produce cravings and a psychological desire to keep on using. Some people get addicted to tramadol after being prescribed it to treat a physical pain.",
-     "text": "Tramadol is addictive and can produce cravings and a psychological desire to keep using it over time.",
-     "id": "F12",
+     "text": "Tramadol is addictive; over time it can produce cravings and a psychological desire to keep using, and some people become addicted after being prescribed it for physical pain.",
+     "id": "F8",
      "second_hand": ""
     }
    ],
    "limits": [
     {
-     "passage": 5,
-     "where": "Mixing tramadol with other drugs / How does it make people behave?",
-     "quote": "How long the effects last and the drug stays in your system depends on how much you’ve taken, your size and what other drugs you may have also taken.",
-     "text": "The duration of effects and how long the drug remains in the system depends on the amount taken, the person's size, and other drugs taken.",
-     "id": "L1",
+     "passage": 9,
+     "where": "Mixing tramadol with other drugs / What is tramadol cut with?",
+     "quote": "If you’re not sure where the tablets have come from, there’s no way of knowing what’s inside them. Even testing kits may not find everything.",
+     "text": "If the source of tramadol tablets is unknown, there is no way of knowing what is inside them, and testing kits may not find everything.",
+     "id": "L3",
+     "second_hand": ""
+    }
+   ],
+   "tag": "C"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "label_tramadol-hydrochloride",
+    "type": "webpage",
+    "title": "Tramadol Hydrochloride",
+    "author": [
+     {
+      "literal": "REMEDYREPACK INC."
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       16
+      ]
+     ]
+    },
+    "URL": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=9f0e33bd-65f8-446a-886f-e7e16a142ce5",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       27
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-27"
+    },
+    "publisher": "DailyMed",
+    "genre": "Drug label"
+   },
+   "title": "Tramadol Hydrochloride",
+   "year": 2026,
+   "kind": "official",
+   "people": true,
+   "near": 0.758,
+   "name": "U.S. Food and Drug Administration",
+   "short": "the US label for tramadol",
+   "tier": 1,
+   "address": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=9f0e33bd-65f8-446a-886f-e7e16a142ce5",
+   "money": [],
+   "label": true,
+   "design": null,
+   "findings": [
+    {
+     "passage": 51,
+     "where": "Warnings and precautions",
+     "quote": "Seizures have been reported in patients receiving tramadol hydrochloride tablets within the recommended dosage range.",
+     "text": "Seizures have been reported in patients taking tramadol hydrochloride tablets within the recommended dosage range.",
+     "id": "F9",
+     "second_hand": ""
+    },
+    {
+     "passage": 60,
+     "where": "Warnings and precautions",
+     "quote": "Tramadol hydrochloride tablets may impair the mental or physical abilities needed to perform potentially hazardous activities such as driving a car or operating machinery.",
+     "text": "Tramadol hydrochloride tablets may impair mental or physical abilities needed for driving or operating machinery.",
+     "id": "F10",
+     "second_hand": ""
+    },
+    {
+     "passage": 101,
+     "where": "Adverse reactions",
+     "quote": "Central Nervous System: Anxiety, Confusion, Coordination disturbance, Euphoria, Miosis, Nervousness, Sleep disorder.",
+     "text": "Common central nervous system adverse reactions include anxiety, confusion, coordination disturbance, euphoria, miosis, nervousness, and sleep disorder.",
+     "id": "F11",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 29,
+     "where": "Warnings and precautions",
+     "quote": "Although the risk of addiction in any individual is unknown, it can occur in patients appropriately prescribed tramadol hydrochloride tablets.",
+     "text": "The risk of addiction in any individual is unknown.",
+     "id": "L4",
      "second_hand": ""
     }
    ],
    "tag": "D"
   }
  ],
- "parts": [
-  {
-   "part": "short",
-   "text": "Tramadol is an addictive painkiller that can make people feel calm, happy, relaxed, or awake. It is involved in opioid-related adverse drug reactions.",
-   "uses": [
-    "F10",
-    "F5"
-   ],
-   "rests_on": [
-    {
-     "label": "F10",
-     "ref": "frank_tramadol",
-     "where": "Mixing tramadol with other drugs / How does it make you feel?",
-     "quote": "Although tramadol is not as strong as heroin, it shares many of the same effects and both are addictive. It is prescribed as a painkiller, but it can make you feel: calm; happy; relaxed; awake",
-     "sha": "ee19753961eae29e"
-    },
-    {
-     "label": "F5",
-     "ref": "gustafsson_2024",
-     "where": "3. Results › 3.3. AEs Following Abuse and Misuse",
-     "quote": "Common opioids involved included tramadol, morphine, and buprenorphine.",
-     "sha": "742f13c1c32077c5"
-    }
-   ]
-  },
-  {
-   "part": "but",
-   "text": "This rests on 2 reviews and 1 official page.",
-   "uses": [
-    "DA",
-    "DB",
-    "F10"
-   ],
-   "fixed": true,
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "stewartyates_2026",
-     "where": "Abstract",
-     "quote": "This review examines global toxicological case data to assess the prevalence of tramadol, a widely prescribed opioid analgesic, in the context of DFSA.",
-     "sha": "ccb9ead5781c31a4"
-    },
-    {
-     "label": "DB",
-     "ref": "gustafsson_2024",
-     "where": "Abstract",
-     "quote": "The aim of this systematic review was to identify what is known about the adverse events resulting from the abuse, misuse, and medication errors associated with opioid use.",
-     "sha": "f12ed628eee0686b"
-    },
-    {
-     "label": "F10",
-     "ref": "frank_tramadol",
-     "where": "Mixing tramadol with other drugs / How does it make you feel?",
-     "quote": "Although tramadol is not as strong as heroin, it shares many of the same effects and both are addictive. It is prescribed as a painkiller, but it can make you feel: calm; happy; relaxed; awake",
-     "sha": "ee19753961eae29e"
-    }
-   ]
-  },
-  {
-   "part": "how1",
-   "text": "FRANK says tramadol is addictive and has many effects.",
-   "uses": [
-    "F10"
-   ],
-   "rests_on": [
-    {
-     "label": "F10",
-     "ref": "frank_tramadol",
-     "where": "Mixing tramadol with other drugs / How does it make you feel?",
-     "quote": "Although tramadol is not as strong as heroin, it shares many of the same effects and both are addictive. It is prescribed as a painkiller, but it can make you feel: calm; happy; relaxed; awake",
-     "sha": "ee19753961eae29e"
-    }
-   ],
-   "quote": "Although tramadol is not as strong as heroin, it shares many of the same effects",
-   "quote_ref": "frank_tramadol"
-  },
-  {
-   "part": "how2",
-   "text": "A review found tramadol in cases of opioid-related adverse reactions.",
-   "uses": [
-    "F5",
-    "F6"
-   ],
-   "rests_on": [
-    {
-     "label": "F5",
-     "ref": "gustafsson_2024",
-     "where": "3. Results › 3.3. AEs Following Abuse and Misuse",
-     "quote": "Common opioids involved included tramadol, morphine, and buprenorphine.",
-     "sha": "742f13c1c32077c5"
-    },
-    {
-     "label": "F6",
-     "ref": "gustafsson_2024",
-     "where": "4. Discussion",
-     "quote": "ADRs associated with opioids include serious outcomes resulting in hospitalizations and deaths, with morphine, fentanyl, oxycodone, tramadol, and hydromorphone frequently implicated.",
-     "sha": "b02ac3806ec33aa3"
-    }
-   ],
-   "quote": "Common opioids involved included tramadol, morphine, and buprenorphine",
-   "quote_ref": "gustafsson_2024"
-  },
-  {
-   "part": "how3",
-   "text": "A review examined global toxicological case data on tramadol.",
-   "uses": [
-    "DA",
-    "F2"
-   ],
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "stewartyates_2026",
-     "where": "Abstract",
-     "quote": "This review examines global toxicological case data to assess the prevalence of tramadol, a widely prescribed opioid analgesic, in the context of DFSA.",
-     "sha": "ccb9ead5781c31a4"
-    },
-    {
-     "label": "F2",
-     "ref": "stewartyates_2026",
-     "where": "Tramadol pharmacology",
-     "quote": "It has a dual mechanism of action including μ-opioid receptor (MOR) agonism and monoaminergic modulation, specifically involving the inhibition of norepinephrine (NE) and serotonin (5-hydroxytryptamine [5-HT]) reuptake.",
-     "sha": "9e0630ebbd67d311"
-    }
-   ],
-   "quote": "global toxicological case data to assess the prevalence of tramadol, a widely prescribed opioid analgesic",
-   "quote_ref": "stewartyates_2026"
-  }
- ],
- "complete": true,
+ "parts": [],
+ "complete": false,
  "missing": "",
  "wanted": [
   {
-   "doi": "10.2165/00003088-200443130-00004",
-   "apa": "Grond, S., & Sablotzki, A. (2004). Clinical pharmacology of tramadol. Clinical Pharmacokinetics, 43(13), 879–923. https://doi.org/10.2165/00003088-200443130-00004",
-   "near": 0.764,
-   "why": "a review or meta-analysis in people; nearness to the question 0.76; cited 794 times; its full text is not open",
-   "file": "grond_2004_00003088_200443130_00004.pdf"
+   "doi": "10.1016/j.amjmed.2018.04.025",
+   "apa": "Hassamal, S., Miotto, K., Dale, W., & Danovitch, I. (2018). Tramadol: Understanding the risk of serotonin syndrome and seizures. The American Journal of Medicine, 131(11), 1382.e1–1382.e6. https://doi.org/10.1016/j.amjmed.2018.04.025",
+   "near": 0.85,
+   "why": "a review or meta-analysis in people; nearness to the question 0.85; cited 90 times; its full text is not open",
+   "file": "hassamal_2018_j_amjmed_2018_04_025.pdf"
   },
   {
-   "doi": "10.46747/cfp.7109574",
-   "apa": "Otte, J. A., Chu, G., Heran, B., & Bassett, K. (2025). Tramadol (with or without acetaminophen) efficacy and harm: Systematic review and meta-analysis. Canadian Family Physician, 71(9), 574–581. https://doi.org/10.46747/cfp.7109574",
-   "near": 0.763,
-   "why": "a review or meta-analysis in people; nearness to the question 0.76; cited 2 times; its full text is not open",
-   "file": "otte_2025_cfp_7109574.pdf"
+   "doi": "10.1080/10408444.2019.1694861",
+   "apa": "Nakhaee, S., Amirabadizadeh, A., Brent, J., Miri-Moghaddam, E., Foadoddini, M., Farrokhfall, K., Hosseini, M., Abdollahi, M., & Mehrpour, O. (2019). Tramadol and the occurrence of seizures: A systematic review and meta-analysis. Critical Reviews in Toxicology, 49(8), 710–723. https://doi.org/10.1080/10408444.2019.1694861",
+   "near": 0.827,
+   "why": "a review or meta-analysis in people; nearness to the question 0.83; cited 26 times; its full text is not open",
+   "file": "nakhaee_2019_10408444_2019_1694861.pdf"
   },
   {
-   "doi": "10.1177/00912174251322356",
-   "apa": "Gudla, S. S., Bhumireddy, S. K. A., & Vadaga, A. K. (2026). Tramadol and mental health: A systematic review of case reports describing psychological side-effects. The International Journal of Psychiatry in Medicine, 61(3), 276–293. https://doi.org/10.1177/00912174251322356",
-   "near": 0.751,
-   "why": "a review or meta-analysis in people; nearness to the question 0.75; cited 3 times; its full text is not open",
-   "file": "gudla_2026_00912174251322356.pdf"
+   "doi": "10.1177/0310057x0002800403",
+   "apa": "Shipton, E. A. (2000). Tramadol—present and future. Anaesthesia and Intensive Care, 28(4), 363–374. https://doi.org/10.1177/0310057x0002800403",
+   "near": 0.795,
+   "why": "a review or meta-analysis in people; nearness to the question 0.80; cited 131 times; its full text is not open",
+   "file": "shipton_2000_0310057x0002800403.pdf"
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-20",
+   "lane": 19,
+   "status": "published",
+   "why": "passed every gate",
+   "short": "Tramadol is an addictive painkiller that can make people feel calm, happy, relaxed, or awake. It is involved in opioid-related adverse drug reactions.",
+   "complete": true
+  }
+ ],
  "looked": [
   {
-   "title": "Tramadol in drug-facilitated sexual assault: global case prevalence, pharmacology, and drug interactions",
+   "title": "Full Opioid Agonists and Tramadol: Pharmacological and Clinical Considerations",
    "read": "full",
    "kind": "review",
-   "at": "10.1093/jat/bkag067",
-   "kept": 3,
+   "at": "10.5812/aapm.119156",
+   "kept": 0,
    "thrown": [
     {
-     "kind": "limit",
-     "text": "",
-     "quote": "Given tramadol’s widespread prescription and availability, its true involvement in DFSA is likely underestimated, and the extent of drug combinations under realized.",
-     "why": "no sentence"
-    },
-    {
-     "kind": "limit",
-     "text": "",
-     "quote": "Expanding scientific efforts to report toxicology findings in regions not covered by this review, such as Asia and South America, is essential to gain a more comprehensive understanding of the role of",
-     "why": "no sentence"
+     "why": "the reader gave no JSON"
     }
    ]
   },
   {
-   "title": "Misuse, Abuse and Medication Errors' Adverse Events Associated with Opioids-A Systematic Review",
+   "title": "Misuse of Tramadol in the United States: An Analysis of the National Survey of Drug Use and Health 2002-2017",
    "read": "full",
    "kind": "review",
-   "at": "10.3390/ph17081009",
+   "at": "10.1177/1178221820930006",
+   "kept": 2,
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "Reports of tramadol misuse by injection were only seven over 2002‑2017, indicating very rare injection misuse.",
+     "quote": "There were 7 total reports of misuse of tramadol by injection over the 16 year period (2002-2017).",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    },
+    {
+     "kind": "finding",
+     "text": "Tramadol’s lifetime misuse (≤1.5%) was much lower than that of hydrocodone (6‑9%) and oxycodone (4‑6%).",
+     "quote": "any lifetime misuse of tramadol (1.5% or less) between 2002 and 2014 was much lower than other commonly prescribed Schedule II opioids (6-9% for hydrocodone and 4% to 6% for oxycodone).",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    },
+    {
+     "kind": "limit",
+     "text": "Morphine is an unsuitable comparator for oral tramadol because it is not commonly prescribed in oral form.",
+     "quote": "Morphine may not be a suitable comparator as it is not widely prescribed as an oral opioid (due to poor bioavailability).",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
+  },
+  {
+   "title": "A Systematic Review of Laboratory Evidence for the Abuse Potential of Tramadol in Humans",
+   "read": "full",
+   "kind": "review",
+   "at": "10.3389/fpsyt.2019.00704",
+   "kept": 0,
+   "thrown": [
+    {
+     "why": "the reader gave no JSON"
+    }
+   ]
+  },
+  {
+   "title": "Tramadol use and risk of seizure: A report of two cases and a review of recent literature",
+   "read": "full",
+   "kind": "case",
+   "at": "10.1016/j.ebr.2025.100763",
    "kept": 3,
    "thrown": [
     {
      "kind": "finding",
-     "text": "Over time, tramadol became more predominant as an abused opioid in Germany.",
-     "quote": "Over time, tramadol became more predominant.",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+     "text": "Tramadol is increasingly popular for misuse because it is easy to obtain by prescription and can produce euphoric effects.",
+     "quote": "Tramadol appears to be an increasingly popular drug of abuse, possibly related to ease of access to it on prescription, and its potential euphoric effects.",
+     "why": "the sentence is not carried by its quote and passage"
     }
    ]
   },
@@ -528,8 +520,9 @@
    "read": "page",
    "kind": "official",
    "at": "https://www.nhs.uk/medicines/tramadol/side-effects-of-tramadol/",
-   "kept": 3,
-   "thrown": []
+   "kept": 0,
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
   },
   {
    "title": "Tramadol",
@@ -539,53 +532,73 @@
    "kept": 3,
    "thrown": [
     {
-     "kind": "limit",
-     "text": "It is not always possible to know what is inside tablets obtained from dealers or the internet, as even testing kits may not detect all substances.",
-     "quote": "If you’re not sure where the tablets have come from, there’s no way of knowing what’s inside them. Even testing kits may not find everything.",
-     "why": "the sentence is not carried by its quote and passage"
+     "kind": "finding",
+     "text": "Tramadol can make people feel calm, happy, relaxed, awake, sick, dizzy, tired, constipated, drowsy, confused, sweaty, itchy, moody and irritable.",
+     "quote": "Tramadol can make you feel calm, happy, relaxed, awake (may stop you from sleeping), sick (may need to vomit), dizzy, tired and lethargic, may feel like you have no energy, constipated, drowsy, confus",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
+  },
+  {
+   "title": "Tramadol Hydrochloride",
+   "read": "page",
+   "kind": "official",
+   "at": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=9f0e33bd-65f8-446a-886f-e7e16a142ce5",
+   "kept": 3,
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "Tramadol hydrochloride tablets expose users to the risk of addiction, abuse, and misuse, and addiction can occur at recommended dosages.",
+     "quote": "As an opioid, tramadol hydrochloride tablets exposes users to the risks of addiction, abuse, and misuse ... Addiction can occur at recommended dosages and if the drug is misused or abused.",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
     }
    ]
   }
  ],
  "plan": {
   "short": [
-   "F10",
-   "F5"
+   "F1",
+   "F6",
+   "F8"
   ],
   "direct": "",
-  "but": [],
+  "but": [
+   "L4"
+  ],
   "how": [
    [
-    "F10"
+    "F9",
+    "F10",
+    "F11"
    ],
    [
-    "F5",
-    "F6"
+    "F6",
+    "F8"
    ],
    [
     "DA",
-    "F2"
+    "F1"
    ]
   ],
-  "unanswered": "duration of effects"
+  "unanswered": ""
  },
  "panel_gap": [],
  "own": {
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.9414,
-   "but": 0.0093,
-   "how1": 0.8805,
-   "how2": 0.9681,
-   "how3": 0.9884
+   "short": 0.2628,
+   "but": 0.9849,
+   "how1": 0.4468,
+   "how2": 0.9513,
+   "how3": 0.7351
   },
   "scores_quotes_alone": {
-   "short": 0.5424,
-   "but": 0.0035,
-   "how1": 0.8353,
-   "how2": 0.9764,
-   "how3": 0.9852
+   "short": 0.5216,
+   "but": 0.8991,
+   "how1": 0.5891,
+   "how2": 0.9583,
+   "how3": 0.6574
   }
  },
  "tries": [
@@ -595,96 +608,123 @@
    "parts": [
     {
      "part": "short",
-     "text": "Tramadol is an addictive painkiller that can make people feel calm, happy, relaxed, or awake. It is involved in opioid-related adverse drug reactions.",
+     "text": "Tramadol is a pain reliever that can depress breathing and is addictive. It can cause risky reactions, including serotonin syndrome.",
      "rests_on": [
       {
-       "label": "F10",
-       "ref": "frank_tramadol",
-       "where": "Mixing tramadol with other drugs / How does it make you feel?",
-       "quote": "Although tramadol is not as strong as heroin, it shares many of the same effects and both are addictive. It is prescribed as a painkiller, but it can make you feel: calm; happy; relaxed; awake",
-       "sha": "ee19753961eae29e"
+       "label": "F1",
+       "ref": "reines_2020",
+       "where": "Introduction",
+       "quote": "Tramadol is a centrally acting opioid analgesic with two mechanisms of action including weak activation of the µ opioid receptor by the parent drug, more potent activation by its primary metabolite (M1), and inhibition of the reuptake of serotonin and norepinephrine.",
+       "sha": "7f480c68cca003e2"
       },
       {
-       "label": "F5",
-       "ref": "gustafsson_2024",
-       "where": "3. Results › 3.3. AEs Following Abuse and Misuse",
-       "quote": "Common opioids involved included tramadol, morphine, and buprenorphine.",
-       "sha": "742f13c1c32077c5"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "but",
-     "text": "But it is a review and a page, not a controlled study.",
-     "rests_on": [
+       "label": "F6",
+       "ref": "frank_tramadol",
+       "where": "Mixing tramadol with other drugs / Physical health risks",
+       "quote": "Tramadol can depress breathing and may be risky for people with asthma and chronic obstructive pulmonary disease. Tramadol use has been linked with serotonin syndrome. This is a potentially life‑threatening condition where the serotonin receptors are overstimulated.",
+       "sha": "37ed1e83f023f038"
+      },
       {
-       "label": "DA",
-       "ref": "stewartyates_2026",
-       "where": "Abstract",
-       "quote": "This review examines global toxicological case data to assess the prevalence of tramadol, a widely prescribed opioid analgesic, in the context of DFSA.",
-       "sha": "ccb9ead5781c31a4"
+       "label": "F8",
+       "ref": "frank_tramadol",
+       "where": "Mixing tramadol with other drugs / Can you get addicted?",
+       "quote": "Yes, tramadol is addictive. Over time, tramadol can produce cravings and a psychological desire to keep on using. Some people get addicted to tramadol after being prescribed it to treat a physical pain.",
+       "sha": "3383a429c36aac80"
       }
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "The passage does not state that the source is \"not a controlled study\"; it only describes the work as a review."
+     "said": "The passages say tramadol use has been linked with serotonin syndrome, not that tramadol causes it."
+    },
+    {
+     "part": "but",
+     "text": "The risk of addiction is unknown in any individual.",
+     "rests_on": [
+      {
+       "label": "L4",
+       "ref": "label_tramadol-hydrochloride",
+       "where": "Warnings and precautions",
+       "quote": "Although the risk of addiction in any individual is unknown, it can occur in patients appropriately prescribed tramadol hydrochloride tablets.",
+       "sha": "881ece2347c35a06"
+      }
+     ],
+     "ok": true
     },
     {
      "part": "how1",
-     "text": "FRANK says tramadol is addictive and shares effects with heroin.",
+     "text": "The US label for tramadol says it may impair mental or physical abilities and has common central nervous system adverse reactions.",
      "rests_on": [
       {
+       "label": "F9",
+       "ref": "label_tramadol-hydrochloride",
+       "where": "Warnings and precautions",
+       "quote": "Seizures have been reported in patients receiving tramadol hydrochloride tablets within the recommended dosage range.",
+       "sha": "3da3616515bed071"
+      },
+      {
        "label": "F10",
-       "ref": "frank_tramadol",
-       "where": "Mixing tramadol with other drugs / How does it make you feel?",
-       "quote": "Although tramadol is not as strong as heroin, it shares many of the same effects and both are addictive. It is prescribed as a painkiller, but it can make you feel: calm; happy; relaxed; awake",
-       "sha": "ee19753961eae29e"
+       "ref": "label_tramadol-hydrochloride",
+       "where": "Warnings and precautions",
+       "quote": "Tramadol hydrochloride tablets may impair the mental or physical abilities needed to perform potentially hazardous activities such as driving a car or operating machinery.",
+       "sha": "16dc354c529ee785"
+      },
+      {
+       "label": "F11",
+       "ref": "label_tramadol-hydrochloride",
+       "where": "Adverse reactions",
+       "quote": "Central Nervous System: Anxiety, Confusion, Coordination disturbance, Euphoria, Miosis, Nervousness, Sleep disorder.",
+       "sha": "9e33bd511d1072f2"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages say tramadol may impair mental or physical abilities and list central nervous system adverse reactions, but do not call those reactions common."
     },
     {
      "part": "how2",
-     "text": "A 2024 review found tramadol in emergency department visits for opioid-related adverse reactions.",
+     "text": "FRANK says tramadol can cause life-threatening conditions and is addictive.",
      "rests_on": [
       {
-       "label": "F5",
-       "ref": "gustafsson_2024",
-       "where": "3. Results › 3.3. AEs Following Abuse and Misuse",
-       "quote": "Common opioids involved included tramadol, morphine, and buprenorphine.",
-       "sha": "742f13c1c32077c5"
+       "label": "F6",
+       "ref": "frank_tramadol",
+       "where": "Mixing tramadol with other drugs / Physical health risks",
+       "quote": "Tramadol can depress breathing and may be risky for people with asthma and chronic obstructive pulmonary disease. Tramadol use has been linked with serotonin syndrome. This is a potentially life‑threatening condition where the serotonin receptors are overstimulated.",
+       "sha": "37ed1e83f023f038"
       },
       {
-       "label": "F6",
-       "ref": "gustafsson_2024",
-       "where": "4. Discussion",
-       "quote": "ADRs associated with opioids include serious outcomes resulting in hospitalizations and deaths, with morphine, fentanyl, oxycodone, tramadol, and hydromorphone frequently implicated.",
-       "sha": "b02ac3806ec33aa3"
+       "label": "F8",
+       "ref": "frank_tramadol",
+       "where": "Mixing tramadol with other drugs / Can you get addicted?",
+       "quote": "Yes, tramadol is addictive. Over time, tramadol can produce cravings and a psychological desire to keep on using. Some people get addicted to tramadol after being prescribed it to treat a physical pain.",
+       "sha": "3383a429c36aac80"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage says overdose can kill and tramadol use has been linked with a potentially life-threatening syndrome; it does not say tramadol causes life-threatening conditions."
     },
     {
      "part": "how3",
-     "text": "A 2026 review examined global toxicological case data on tramadol in drug-facilitated sexual assault.",
+     "text": "A review of US residents aged 12+ found tramadol is a centrally acting opioid analgesic.",
      "rests_on": [
       {
        "label": "DA",
-       "ref": "stewartyates_2026",
+       "ref": "reines_2020",
        "where": "Abstract",
-       "quote": "This review examines global toxicological case data to assess the prevalence of tramadol, a widely prescribed opioid analgesic, in the context of DFSA.",
-       "sha": "ccb9ead5781c31a4"
+       "quote": "A cross‑sectional surveillance study design was used to examine lifetime and past year misuse of oral tramadol and comparators of interest among NSHUH respondents aged 12 years or older.",
+       "sha": "964d8b36dd59d693"
       },
       {
-       "label": "F2",
-       "ref": "stewartyates_2026",
-       "where": "Tramadol pharmacology",
-       "quote": "It has a dual mechanism of action including μ-opioid receptor (MOR) agonism and monoaminergic modulation, specifically involving the inhibition of norepinephrine (NE) and serotonin (5-hydroxytryptamine [5-HT]) reuptake.",
-       "sha": "9e0630ebbd67d311"
+       "label": "F1",
+       "ref": "reines_2020",
+       "where": "Introduction",
+       "quote": "Tramadol is a centrally acting opioid analgesic with two mechanisms of action including weak activation of the µ opioid receptor by the parent drug, more potent activation by its primary metabolite (M1), and inhibition of the reuptake of serotonin and norepinephrine.",
+       "sha": "7f480c68cca003e2"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "the second reader",
+     "said": "The paper describes tramadol as a centrally acting opioid analgesic in its introduction; it does not say the review found this among US residents aged 12 or older."
     }
    ]
   },
@@ -694,96 +734,245 @@
    "parts": [
     {
      "part": "short",
-     "text": "Tramadol is an addictive painkiller that can make people feel calm, happy, relaxed, or awake. It is involved in opioid-related adverse drug reactions.",
+     "text": "Tramadol is a pain reliever that can depress breathing and is addictive. It can cause risky reactions, including serotonin syndrome.",
      "rests_on": [
       {
-       "label": "F10",
-       "ref": "frank_tramadol",
-       "where": "Mixing tramadol with other drugs / How does it make you feel?",
-       "quote": "Although tramadol is not as strong as heroin, it shares many of the same effects and both are addictive. It is prescribed as a painkiller, but it can make you feel: calm; happy; relaxed; awake",
-       "sha": "ee19753961eae29e"
+       "label": "F1",
+       "ref": "reines_2020",
+       "where": "Introduction",
+       "quote": "Tramadol is a centrally acting opioid analgesic with two mechanisms of action including weak activation of the µ opioid receptor by the parent drug, more potent activation by its primary metabolite (M1), and inhibition of the reuptake of serotonin and norepinephrine.",
+       "sha": "7f480c68cca003e2"
       },
       {
-       "label": "F5",
-       "ref": "gustafsson_2024",
-       "where": "3. Results › 3.3. AEs Following Abuse and Misuse",
-       "quote": "Common opioids involved included tramadol, morphine, and buprenorphine.",
-       "sha": "742f13c1c32077c5"
+       "label": "F6",
+       "ref": "frank_tramadol",
+       "where": "Mixing tramadol with other drugs / Physical health risks",
+       "quote": "Tramadol can depress breathing and may be risky for people with asthma and chronic obstructive pulmonary disease. Tramadol use has been linked with serotonin syndrome. This is a potentially life‑threatening condition where the serotonin receptors are overstimulated.",
+       "sha": "37ed1e83f023f038"
+      },
+      {
+       "label": "F8",
+       "ref": "frank_tramadol",
+       "where": "Mixing tramadol with other drugs / Can you get addicted?",
+       "quote": "Yes, tramadol is addictive. Over time, tramadol can produce cravings and a psychological desire to keep on using. Some people get addicted to tramadol after being prescribed it to treat a physical pain.",
+       "sha": "3383a429c36aac80"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages say tramadol use has been linked with serotonin syndrome, not that tramadol causes it. The vague phrase “risky reactions” also repeats the editor-flagged failure to state the serious risk plainly."
+    },
+    {
+     "part": "but",
+     "text": "The risk of addiction in any individual is unknown.",
+     "rests_on": [
+      {
+       "label": "L4",
+       "ref": "label_tramadol-hydrochloride",
+       "where": "Warnings and precautions",
+       "quote": "Although the risk of addiction in any individual is unknown, it can occur in patients appropriately prescribed tramadol hydrochloride tablets.",
+       "sha": "881ece2347c35a06"
       }
      ],
      "ok": true
     },
     {
-     "part": "but",
-     "text": "But this is from a review and a page by FRANK.",
+     "part": "how1",
+     "text": "The US label for tramadol says it may impair mental or physical abilities and cause seizures.",
      "rests_on": [
       {
-       "label": "DA",
-       "ref": "stewartyates_2026",
-       "where": "Abstract",
-       "quote": "This review examines global toxicological case data to assess the prevalence of tramadol, a widely prescribed opioid analgesic, in the context of DFSA.",
-       "sha": "ccb9ead5781c31a4"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passage does not state that the information comes from a review and a page by FRANK."
-    },
-    {
-     "part": "how1",
-     "text": "FRANK says tramadol shares many effects with heroin.",
-     "rests_on": [
+       "label": "F9",
+       "ref": "label_tramadol-hydrochloride",
+       "where": "Warnings and precautions",
+       "quote": "Seizures have been reported in patients receiving tramadol hydrochloride tablets within the recommended dosage range.",
+       "sha": "3da3616515bed071"
+      },
       {
        "label": "F10",
-       "ref": "frank_tramadol",
-       "where": "Mixing tramadol with other drugs / How does it make you feel?",
-       "quote": "Although tramadol is not as strong as heroin, it shares many of the same effects and both are addictive. It is prescribed as a painkiller, but it can make you feel: calm; happy; relaxed; awake",
-       "sha": "ee19753961eae29e"
+       "ref": "label_tramadol-hydrochloride",
+       "where": "Warnings and precautions",
+       "quote": "Tramadol hydrochloride tablets may impair the mental or physical abilities needed to perform potentially hazardous activities such as driving a car or operating machinery.",
+       "sha": "16dc354c529ee785"
+      },
+      {
+       "label": "F11",
+       "ref": "label_tramadol-hydrochloride",
+       "where": "Adverse reactions",
+       "quote": "Central Nervous System: Anxiety, Confusion, Coordination disturbance, Euphoria, Miosis, Nervousness, Sleep disorder.",
+       "sha": "9e33bd511d1072f2"
       }
      ],
      "ok": true
     },
     {
      "part": "how2",
-     "text": "A 2024 review found tramadol in emergency department visits for opioid-related adverse reactions.",
+     "text": "FRANK says tramadol can cause serotonin syndrome and breathing problems.",
      "rests_on": [
       {
-       "label": "F5",
-       "ref": "gustafsson_2024",
-       "where": "3. Results › 3.3. AEs Following Abuse and Misuse",
-       "quote": "Common opioids involved included tramadol, morphine, and buprenorphine.",
-       "sha": "742f13c1c32077c5"
+       "label": "F6",
+       "ref": "frank_tramadol",
+       "where": "Mixing tramadol with other drugs / Physical health risks",
+       "quote": "Tramadol can depress breathing and may be risky for people with asthma and chronic obstructive pulmonary disease. Tramadol use has been linked with serotonin syndrome. This is a potentially life‑threatening condition where the serotonin receptors are overstimulated.",
+       "sha": "37ed1e83f023f038"
+      },
+      {
+       "label": "F8",
+       "ref": "frank_tramadol",
+       "where": "Mixing tramadol with other drugs / Can you get addicted?",
+       "quote": "Yes, tramadol is addictive. Over time, tramadol can produce cravings and a psychological desire to keep on using. Some people get addicted to tramadol after being prescribed it to treat a physical pain.",
+       "sha": "3383a429c36aac80"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "FRANK says tramadol can depress breathing, but says its use has been linked with serotonin syndrome—not that it causes the syndrome."
+    },
+    {
+     "part": "how3",
+     "text": "A review studied US residents aged 12+ and found tramadol is a centrally acting opioid analgesic.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "reines_2020",
+       "where": "Abstract",
+       "quote": "A cross‑sectional surveillance study design was used to examine lifetime and past year misuse of oral tramadol and comparators of interest among NSHUH respondents aged 12 years or older.",
+       "sha": "964d8b36dd59d693"
+      },
+      {
+       "label": "F1",
+       "ref": "reines_2020",
+       "where": "Introduction",
+       "quote": "Tramadol is a centrally acting opioid analgesic with two mechanisms of action including weak activation of the µ opioid receptor by the parent drug, more potent activation by its primary metabolite (M1), and inhibition of the reuptake of serotonin and norepinephrine.",
+       "sha": "7f480c68cca003e2"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The source describes a cross-sectional surveillance study, not a review; it examined survey respondents aged 12 or older, not residents generally. The analgesic description appears in the introduction, not as a study finding."
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Tramadol is a pain reliever that can depress breathing and is addictive. It can cause risky reactions, including serotonin syndrome.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "reines_2020",
+       "where": "Introduction",
+       "quote": "Tramadol is a centrally acting opioid analgesic with two mechanisms of action including weak activation of the µ opioid receptor by the parent drug, more potent activation by its primary metabolite (M1), and inhibition of the reuptake of serotonin and norepinephrine.",
+       "sha": "7f480c68cca003e2"
       },
       {
        "label": "F6",
-       "ref": "gustafsson_2024",
-       "where": "4. Discussion",
-       "quote": "ADRs associated with opioids include serious outcomes resulting in hospitalizations and deaths, with morphine, fentanyl, oxycodone, tramadol, and hydromorphone frequently implicated.",
-       "sha": "b02ac3806ec33aa3"
+       "ref": "frank_tramadol",
+       "where": "Mixing tramadol with other drugs / Physical health risks",
+       "quote": "Tramadol can depress breathing and may be risky for people with asthma and chronic obstructive pulmonary disease. Tramadol use has been linked with serotonin syndrome. This is a potentially life‑threatening condition where the serotonin receptors are overstimulated.",
+       "sha": "37ed1e83f023f038"
+      },
+      {
+       "label": "F8",
+       "ref": "frank_tramadol",
+       "where": "Mixing tramadol with other drugs / Can you get addicted?",
+       "quote": "Yes, tramadol is addictive. Over time, tramadol can produce cravings and a psychological desire to keep on using. Some people get addicted to tramadol after being prescribed it to treat a physical pain.",
+       "sha": "3383a429c36aac80"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages say tramadol use has been linked with serotonin syndrome, not that tramadol can cause it."
+    },
+    {
+     "part": "but",
+     "text": "The risk of addiction in any individual is unknown.",
+     "rests_on": [
+      {
+       "label": "L4",
+       "ref": "label_tramadol-hydrochloride",
+       "where": "Warnings and precautions",
+       "quote": "Although the risk of addiction in any individual is unknown, it can occur in patients appropriately prescribed tramadol hydrochloride tablets.",
+       "sha": "881ece2347c35a06"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "The US label for tramadol says it may impair mental or physical abilities and has common central nervous system adverse reactions.",
+     "rests_on": [
+      {
+       "label": "F9",
+       "ref": "label_tramadol-hydrochloride",
+       "where": "Warnings and precautions",
+       "quote": "Seizures have been reported in patients receiving tramadol hydrochloride tablets within the recommended dosage range.",
+       "sha": "3da3616515bed071"
+      },
+      {
+       "label": "F10",
+       "ref": "label_tramadol-hydrochloride",
+       "where": "Warnings and precautions",
+       "quote": "Tramadol hydrochloride tablets may impair the mental or physical abilities needed to perform potentially hazardous activities such as driving a car or operating machinery.",
+       "sha": "16dc354c529ee785"
+      },
+      {
+       "label": "F11",
+       "ref": "label_tramadol-hydrochloride",
+       "where": "Adverse reactions",
+       "quote": "Central Nervous System: Anxiety, Confusion, Coordination disturbance, Euphoria, Miosis, Nervousness, Sleep disorder.",
+       "sha": "9e33bd511d1072f2"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages say tramadol may impair abilities and list central nervous system adverse reactions, but do not say those reactions are common."
+    },
+    {
+     "part": "how2",
+     "text": "FRANK says tramadol can depress breathing and has been linked with serotonin syndrome.",
+     "rests_on": [
+      {
+       "label": "F6",
+       "ref": "frank_tramadol",
+       "where": "Mixing tramadol with other drugs / Physical health risks",
+       "quote": "Tramadol can depress breathing and may be risky for people with asthma and chronic obstructive pulmonary disease. Tramadol use has been linked with serotonin syndrome. This is a potentially life‑threatening condition where the serotonin receptors are overstimulated.",
+       "sha": "37ed1e83f023f038"
+      },
+      {
+       "label": "F8",
+       "ref": "frank_tramadol",
+       "where": "Mixing tramadol with other drugs / Can you get addicted?",
+       "quote": "Yes, tramadol is addictive. Over time, tramadol can produce cravings and a psychological desire to keep on using. Some people get addicted to tramadol after being prescribed it to treat a physical pain.",
+       "sha": "3383a429c36aac80"
       }
      ],
      "ok": true
     },
     {
      "part": "how3",
-     "text": "A 2026 review examined global toxicological case data on tramadol in drug-facilitated sexual assault.",
+     "text": "A review of US residents aged 12+ found tramadol is a centrally acting opioid analgesic.",
      "rests_on": [
       {
        "label": "DA",
-       "ref": "stewartyates_2026",
+       "ref": "reines_2020",
        "where": "Abstract",
-       "quote": "This review examines global toxicological case data to assess the prevalence of tramadol, a widely prescribed opioid analgesic, in the context of DFSA.",
-       "sha": "ccb9ead5781c31a4"
+       "quote": "A cross‑sectional surveillance study design was used to examine lifetime and past year misuse of oral tramadol and comparators of interest among NSHUH respondents aged 12 years or older.",
+       "sha": "964d8b36dd59d693"
       },
       {
-       "label": "F2",
-       "ref": "stewartyates_2026",
-       "where": "Tramadol pharmacology",
-       "quote": "It has a dual mechanism of action including μ-opioid receptor (MOR) agonism and monoaminergic modulation, specifically involving the inhibition of norepinephrine (NE) and serotonin (5-hydroxytryptamine [5-HT]) reuptake.",
-       "sha": "9e0630ebbd67d311"
+       "label": "F1",
+       "ref": "reines_2020",
+       "where": "Introduction",
+       "quote": "Tramadol is a centrally acting opioid analgesic with two mechanisms of action including weak activation of the µ opioid receptor by the parent drug, more potent activation by its primary metabolite (M1), and inhibition of the reuptake of serotonin and norepinephrine.",
+       "sha": "7f480c68cca003e2"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "the second reader",
+     "said": "The source describes a study of survey respondents aged 12 or older; it does not say that the study found tramadol to be a centrally acting opioid analgesic."
     }
    ]
   }
@@ -791,25 +980,58 @@
  "dropped": [
   {
    "try": 3,
-   "part": "but",
-   "text": "But it was reported in a review and a page by FRANK.",
+   "part": "how1",
+   "text": "The US label for tramadol says it may impair mental or physical abilities and has common central nervous system adverse reactions.",
    "rests_on": [
     {
-     "label": "DA",
-     "ref": "stewartyates_2026",
-     "where": "Abstract",
-     "quote": "This review examines global toxicological case data to assess the prevalence of tramadol, a widely prescribed opioid analgesic, in the context of DFSA.",
-     "sha": "ccb9ead5781c31a4"
+     "label": "F9",
+     "ref": "label_tramadol-hydrochloride",
+     "where": "Warnings and precautions",
+     "quote": "Seizures have been reported in patients receiving tramadol hydrochloride tablets within the recommended dosage range.",
+     "sha": "3da3616515bed071"
+    },
+    {
+     "label": "F10",
+     "ref": "label_tramadol-hydrochloride",
+     "where": "Warnings and precautions",
+     "quote": "Tramadol hydrochloride tablets may impair the mental or physical abilities needed to perform potentially hazardous activities such as driving a car or operating machinery.",
+     "sha": "16dc354c529ee785"
+    },
+    {
+     "label": "F11",
+     "ref": "label_tramadol-hydrochloride",
+     "where": "Adverse reactions",
+     "quote": "Central Nervous System: Anxiety, Confusion, Coordination disturbance, Euphoria, Miosis, Nervousness, Sleep disorder.",
+     "sha": "9e33bd511d1072f2"
     }
    ],
    "by": "the second reader",
-   "said": "the sentence makes a meta claim about reporting that is not stated in the passages"
+   "said": "The passages say tramadol may impair abilities and list central nervous system adverse reactions, but do not say those reactions are common."
+  },
+  {
+   "try": 3,
+   "part": "how3",
+   "text": "A review of US residents aged 12+ found tramadol is a centrally acting opioid analgesic.",
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "reines_2020",
+     "where": "Abstract",
+     "quote": "A cross‑sectional surveillance study design was used to examine lifetime and past year misuse of oral tramadol and comparators of interest among NSHUH respondents aged 12 years or older.",
+     "sha": "964d8b36dd59d693"
+    },
+    {
+     "label": "F1",
+     "ref": "reines_2020",
+     "where": "Introduction",
+     "quote": "Tramadol is a centrally acting opioid analgesic with two mechanisms of action including weak activation of the µ opioid receptor by the parent drug, more potent activation by its primary metabolite (M1), and inhibition of the reuptake of serotonin and norepinephrine.",
+     "sha": "7f480c68cca003e2"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The source describes a study of survey respondents aged 12 or older; it does not say that the study found tramadol to be a centrally acting opioid analgesic."
   }
  ],
- "with_checked": {
-  "differs": [],
-  "same": []
- },
  "place": {
   "home": "prescription-opioids",
   "also": [],
