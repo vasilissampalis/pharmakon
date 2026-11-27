@@ -12,42 +12,146 @@
  ],
  "drugs": [],
  "made": {
-  "on": "2026-11-18",
+  "on": "2026-11-27",
   "models": {
-   "reader": "groq:openai/gpt-oss-20b",
+   "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
    "writer": "groq:qwen/qwen3.8-27b",
-   "checker": "gemini:gemini-3.5-flash-lite",
-   "planner": "gemini:gemma-4-31b-it",
+   "checker": "openrouter:openai/gpt-6-luna",
+   "planner": "groq:openai/gpt-oss-120b",
    "also1": "gemini:gemini-3-flash-preview",
-   "team": "team L",
+   "team": "team H2",
    "reader_2": "groq:openai/gpt-oss-20b",
    "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-   "also1_else": "gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
-   "reader_first": "gemini:gemma-4-31b-it"
+   "also1_else": "gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "44316032459",
+  "run": "45925293209",
+  "read_seconds": 88,
   "from": {
-   "papers": 1,
+   "papers": 2,
    "summaries": 0,
-   "official": 1
+   "official": 2
   },
-  "neurons": 0.0
+  "neurons": 369.8,
+  "seconds": 125
  },
- "status": "published",
- "why": "passed every gate, and the stricter bar for an answer about pregnancy or children",
+ "status": "none",
+ "why": "no draft passed: not accepted at try 2: a second reader did not accept short (the word it opens with (“Yes”) is not the answer the passages bear out: The passage says parents may feel worried, so “Maybe” would be better calibrated than “Yes.” Sentence 1 speaks about parents and a loved one generally, not specifically); but (The passage identifies an NHS advice page, but does not say it is not a study measuring how often mothers worry.). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
  "gates": {
-  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-20b read from there",
-  "read": "3 findings kept from 3 sources (2 papers read in full, 1 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "0 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 1 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
-  "rules": "1 How-do-we-know line(s) left out for a rule (how2: words that are not person-first (“abuse”))",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.97, but 0.03, how1 0.95",
-  "check": "every sentence kept was accepted by the second reader (gemini:gemini-3.5-flash-lite) and by gemini:gemini-3-flash-preview; it also found that the short answer answers the question and that the But is about that answer",
-  "panel": "further readers, each of which must accept every sentence too: gemini-3-flash-preview accepted 2 of 3",
-  "but": "the writer's But was not accepted (a further reader (gemini-3-flash-preview) did not accept it: the passage does not state what it does not say, and it does not contain the phrase 'not just mothe): the code wrote the But itself, from what this answer rests on",
-  "checked": "set beside the checked claims of the same page: nothing against them",
-  "stakes": "about pregnancy or children: the stricter bar for such an answer: met (an official page or a review read in full under the short answer; a further reader read it; no word that plays a danger down, by code and by every reader)"
+  "read": "9 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 2 official page(s), 0 paper(s) read in summary only",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.97, but 0.02, how1 0.93",
+  "check": "not accepted at try 2: a second reader did not accept short (the word it opens with (“Yes”) is not the answer the passages bear out: The passage says parents may feel worried, so “Maybe” would be better calibrated than “Yes.” Sentence 1 speaks about parents and a loved one generally, not specifically); but (The passage identifies an NHS advice page, but does not say it is not a study measuring how often mothers worry.). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
+  "rules": "broken at try 3: short: the question can be answered with yes or no: begin the short answer with Yes, No, It can, Sometimes, It depends or Not known, then say why in plain words"
  },
  "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "grummitt_2021",
+    "type": "article-journal",
+    "title": "Targets for intervention to prevent substance use in young people exposed to childhood adversity: A systematic review",
+    "author": [
+     {
+      "family": "Grummitt",
+      "given": "Lucinda"
+     },
+     {
+      "family": "Kelly",
+      "given": "Erin"
+     },
+     {
+      "family": "Barrett",
+      "given": "Emma"
+     },
+     {
+      "family": "Keyes",
+      "given": "Katherine"
+     },
+     {
+      "family": "Newton",
+      "given": "Nicola"
+     }
+    ],
+    "container-title": "PLOS ONE",
+    "issued": {
+     "date-parts": [
+      [
+       2021
+      ]
+     ]
+    },
+    "DOI": "10.1371/journal.pone.0252815",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-27",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-27"
+     }
+    },
+    "volume": "16",
+    "issue": "6",
+    "number": "e0252815",
+    "PMCID": "PMC8183991"
+   },
+   "doi": "10.1371/journal.pone.0252815",
+   "pmcid": "PMC8183991",
+   "title": "Targets for intervention to prevent substance use in young people exposed to childhood adversity: A systematic review",
+   "year": 2021,
+   "journal": "PloS one",
+   "kind": "review",
+   "people": true,
+   "near": 0.608,
+   "money": [
+    "This research was supported by the National Health and Medical Research Council (NHMRC) Centre of Research Excellence in Prevention and Early Intervention in Mental Illness and Substance Use (PREMISE; APP1134909). LRG is supported by an Australian Government Research Training Program Scholarship. The funders had no role in study design, data collection and analysis, decision to publish, or preparation of the manuscript."
+   ],
+   "design": {
+    "passage": 2,
+    "where": "Abstract",
+    "quote": "A systematic review was conducted.",
+    "text": "systematic review of research paper"
+   },
+   "findings": [
+    {
+     "passage": 40,
+     "where": "Discussion › Interpersonal factors",
+     "quote": "The current review further highlights the important role of parenting, demonstrating that lower parent-child relationship quality predicted increased substance use, whereas higher family cohesion, relationship quality and parental monitoring attenuated the effect of adversity on substance use outcomes.",
+     "text": "Mothers and parents in general play a role in predicting substance use in children.",
+     "id": "F1",
+     "second_hand": ""
+    },
+    {
+     "passage": 28,
+     "where": "Results › Mediation analyses › 2. Interpersonal mediators",
+     "quote": "Adversity was negatively associated with parental attachment, maternal support, and positive parenting (a composite of monitoring, support and consistency).",
+     "text": "Parental attachment, maternal support, and positive parenting are negatively associated with adversity.",
+     "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 32,
+     "where": "Results › Moderation analyses",
+     "quote": "Positive family factors appeared to mitigate the effect of ACE exposure on substance use.",
+     "text": "Positive family factors mitigate the effect of ACE exposure on substance use.",
+     "id": "F3",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 40,
+     "where": "Discussion › Interpersonal factors",
+     "quote": "Of course, improving the parent-child relationship may be contraindicated when a parent is the source of abuse or adversity for the child,",
+     "text": "Improving parent-child relationship may not be suitable when a parent is the source of abuse.",
+     "id": "L1",
+     "second_hand": "Of course, improving the parent-child relationship may be contraindicated when a parent is the source of abuse or adversity for the child, however, evidence suggests improved relat"
+    }
+   ],
+   "tag": "A"
+  },
   {
    "read": "full",
    "ref": {
@@ -106,10 +210,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-18",
+     "verified_on": "2026-11-27",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-18"
+      "checked_on": "2026-11-27"
      },
      "online_first_year": 2024
     },
@@ -130,33 +234,114 @@
     "Not applicable.",
     "Sponsorships or competing interests that may be relevant to content are disclosed at the end of this article."
    ],
-   "design": {
-    "passage": 2,
-    "where": "Abstract",
-    "quote": "To review available literature which assessed the effects of parenting styles and family-based interventions on the prevention of adolescent substance use.",
-    "text": "Scoping review of parenting styles and family-based interventions on adolescent substance use"
-   },
+   "design": null,
    "findings": [
     {
      "passage": 27,
      "where": "Discussion › Parental problems",
-     "quote": "Out of five studies, one found that poor bonding plays a significant role in the development of ecstasy use. It also showed that mother overprotection correlates positively with all substances and negatively with alcohol abuse.",
-     "text": "Mother overprotection correlates positively with all substances and negatively with alcohol abuse.",
-     "id": "F1",
+     "quote": "mother overprotection correlates positively with all substances",
+     "text": "Mothers' overprotection correlates positively with their children using substances.",
+     "id": "F4",
+     "second_hand": ""
+    },
+    {
+     "passage": 28,
+     "where": "Discussion › Parental support/bond",
+     "quote": "a supportive parent-adolescent relationship can positively impact substance use among adolescents, particularly among males",
+     "text": "A supportive relationship between mothers or fathers and their adolescents can positively impact substance use among adolescents, particularly among males.",
+     "id": "F5",
+     "second_hand": ""
+    },
+    {
+     "passage": 20,
+     "where": "Results › Narrative synthesis",
+     "quote": "Narrative synthesis illustrated that parental involvement, restriction of mature-rated content, parental monitoring, authoritative parenting styles, and parental support and knowledge can help in the prevention of adolescent substance use",
+     "text": "Parental involvement, restriction of mature-rated content, parental monitoring, authoritative parenting styles, and parental support and knowledge can help prevent adolescent substance use.",
+     "id": "F6",
      "second_hand": ""
     }
    ],
    "limits": [
     {
-     "passage": 20,
-     "where": "Results › Narrative synthesis",
-     "quote": "Proximal risk factors like peer influence, previous use of other substances, and risky behaviours had more effect than just parenting styles.",
-     "text": "Proximal risk factors may have a stronger influence than parenting styles.",
-     "id": "L1",
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "there is scarcity of high quality evidence to support these concepts",
+     "text": "There is a scarcity of high-quality evidence to support the concepts of parenting lifestyles and family-based interventions.",
+     "id": "L2",
      "second_hand": ""
     }
    ],
-   "tag": "A"
+   "tag": "B"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "betterhealth_talking-to-children-about-drugs",
+    "type": "webpage",
+    "title": "Talking to kids about drugs",
+    "author": [
+     {
+      "literal": "Department of Health, State Government of Victoria"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      [
+       2016,
+       10,
+       5
+      ]
+     ]
+    },
+    "URL": "https://www.betterhealth.vic.gov.au/health/healthyliving/talking-to-children-about-drugs",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       27
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-27"
+    },
+    "publisher": "Better Health Channel"
+   },
+   "title": "Talking to kids about drugs",
+   "year": 2016,
+   "kind": "official",
+   "people": true,
+   "near": 0.614,
+   "name": "Department of Health, State Government of Victoria",
+   "short": "Victoria's health department (Australia)",
+   "tier": 1,
+   "address": "https://www.betterhealth.vic.gov.au/health/healthyliving/talking-to-children-about-drugs",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 1,
+     "where": "Summary",
+     "quote": "Your child will form attitudes about drug use from what they see at home, among their friends and in the media.",
+     "text": "Children form attitudes about drug use from what they see at home, among their friends and in the media.",
+     "id": "F7",
+     "second_hand": ""
+    },
+    {
+     "passage": 1,
+     "where": "Summary",
+     "quote": "Other people (particularly peers) will talk to your child about drugs, so it is important to learn what your child knows, encourage them to ask questions, and clear up any misconceptions.",
+     "text": "Other people, particularly peers, will talk to children about drugs.",
+     "id": "F8",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "C"
   },
   {
    "read": "page",
@@ -184,14 +369,14 @@
       [
        2026,
        11,
-       18
+       27
       ]
      ]
     },
     "verification": {
      "status": "made by code",
      "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-18"
+     "verified_on": "2026-11-27"
     }
    },
    "title": "Advice for families of people who use drugs",
@@ -210,87 +395,19 @@
     {
      "passage": 1,
      "where": "Top of the page",
-     "quote": "If you're the parent, partner, child or carer of someone who uses drugs, you may feel worried, frustrated and alone.",
-     "text": "Parents of people who use drugs may feel worried, frustrated and alone.",
-     "id": "F3",
+     "quote": "Lots of families in the UK have a loved one who is using or trying to come off drugs. If you're the parent, partner, child or carer of someone who uses drugs, you may feel worried, frustrated and alone.",
+     "text": "Families, including parents, may feel worried if a loved one uses drugs.",
+     "id": "F9",
      "second_hand": ""
     }
    ],
    "limits": [],
-   "tag": "C"
+   "tag": "D"
   }
  ],
- "parts": [
-  {
-   "part": "short",
-   "text": "Yes, the NHS says parents of people who use drugs may feel worried. One study found mother overprotection links to youth substance use.",
-   "uses": [
-    "F3",
-    "F1"
-   ],
-   "rests_on": [
-    {
-     "label": "F3",
-     "ref": "nhs_advice-for-the-families-of-drug-users",
-     "where": "Top of the page",
-     "quote": "If you're the parent, partner, child or carer of someone who uses drugs, you may feel worried, frustrated and alone.",
-     "sha": "97bd09ac4b66de2b"
-    },
-    {
-     "label": "F1",
-     "ref": "williams_2023",
-     "where": "Discussion › Parental problems",
-     "quote": "Out of five studies, one found that poor bonding plays a significant role in the development of ecstasy use. It also showed that mother overprotection correlates positively with all substances and negatively with alcohol abuse.",
-     "sha": "e8190754339edca4"
-    }
-   ]
-  },
-  {
-   "part": "but",
-   "text": "This rests on 1 study in people and 1 official page.",
-   "uses": [
-    "DA",
-    "F3"
-   ],
-   "fixed": true,
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "williams_2023",
-     "where": "Abstract",
-     "quote": "To review available literature which assessed the effects of parenting styles and family-based interventions on the prevention of adolescent substance use.",
-     "sha": "02358ce9b7395977"
-    },
-    {
-     "label": "F3",
-     "ref": "nhs_advice-for-the-families-of-drug-users",
-     "where": "Top of the page",
-     "quote": "If you're the parent, partner, child or carer of someone who uses drugs, you may feel worried, frustrated and alone.",
-     "sha": "97bd09ac4b66de2b"
-    }
-   ]
-  },
-  {
-   "part": "how1",
-   "text": "The NHS says parents, partners, children, or carers of someone who uses drugs may feel worried, frustrated, and alone.",
-   "uses": [
-    "F3"
-   ],
-   "rests_on": [
-    {
-     "label": "F3",
-     "ref": "nhs_advice-for-the-families-of-drug-users",
-     "where": "Top of the page",
-     "quote": "If you're the parent, partner, child or carer of someone who uses drugs, you may feel worried, frustrated and alone.",
-     "sha": "97bd09ac4b66de2b"
-    }
-   ],
-   "quote": "child or carer of someone who uses drugs, you may feel worried, frustrated and alone",
-   "quote_ref": "nhs_advice-for-the-families-of-drug-users"
-  }
- ],
+ "parts": [],
  "complete": false,
- "missing": "Specific data on mothers worrying about their children taking drugs",
+ "missing": "extent and determinants of mothers' worry",
  "wanted": [
   {
    "doi": "10.1016/j.chiabu.2026.108006",
@@ -315,14 +432,23 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-18",
+   "lane": 19,
+   "status": "published",
+   "why": "passed every gate, and the stricter bar for an answer about pregnancy or children",
+   "short": "Yes, the NHS says parents of people who use drugs may feel worried. One study found mother overprotection links to youth substance use.",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "Targets for intervention to prevent substance use in young people exposed to childhood adversity: A systematic review",
    "read": "full",
    "kind": "review",
    "at": "10.1371/journal.pone.0252815",
-   "kept": 0,
+   "kept": 3,
    "thrown": []
   },
   {
@@ -330,76 +456,12 @@
    "read": "full",
    "kind": "other",
    "at": "10.1097/ms9.0000000000001387",
-   "kept": 1,
-   "thrown": []
-  },
-  {
-   "title": "Family Structure, Unstructured Socializing, and Heavy Substance Use among Adolescents",
-   "read": "full",
-   "kind": "other",
-   "at": "10.3390/ijerph19148818",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Developmental Cascade Effects of Maternal Depression on Offspring Substance Use Across Adolescence: Pathway Through Mother-Child Relationship Quality and Peer Deviancy",
-   "read": "full",
-   "kind": "other",
-   "at": "10.1007/s10802-021-00893-y",
-   "kept": 0,
-   "thrown": [],
-   "fault": "its full text could not be fetched (HTTPError)"
-  },
-  {
-   "title": "Perinatal Insights Into Parenting, Pathways, and Addiction (PIPPA): Protocol for a Longitudinal, Strengths-Based Study in Flanders, Belgium",
-   "read": "full",
-   "kind": "other",
-   "at": "10.2196/88030",
-   "kept": 0,
+   "kept": 3,
    "thrown": [
     {
      "kind": "text",
-     "text": "Protocol for a longitudinal strengths-based study on perinatal substance use in Belgium",
-     "quote": "Perinatal substance use is a growing global health concern with significant risks for maternal health, child development, and parenting.",
-     "why": "the sentence is not carried by its quote and passage"
-    }
-   ]
-  },
-  {
-   "title": "Adolescents' experiences with substance use: risks, protective factors and interventions",
-   "read": "full",
-   "kind": "other",
-   "at": "10.1186/s40359-025-03125-w",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "What is positive youth development and how might it reduce substance use and violence? A systematic review and synthesis of theoretical literature",
-   "read": "full",
-   "kind": "review",
-   "at": "10.1186/s12889-016-2817-3",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Linked patterns of biological and environmental covariation with brain structure in adolescence: a population-based longitudinal study",
-   "read": "full",
-   "kind": "other",
-   "at": "10.1038/s41380-020-0757-x",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Substance Use Among Youth During the COVID-19 Pandemic: a Systematic Review",
-   "read": "full",
-   "kind": "review",
-   "at": "10.1007/s11920-022-01338-z",
-   "kept": 1,
-   "thrown": [
-    {
-     "kind": "finding",
-     "text": "Parents, including mothers, expressed concerns about the pandemic’s impact on their children’s mental health and substance use.",
-     "quote": "The COVID‑19 pandemic and associated social restrictions implemented to contain the spread of the virus have led to concerns from parents, educators, and healthcare professionals and researchers about",
+     "text": "scoping review of research paper",
+     "quote": "To review available literature which assessed the effects of parenting styles and family-based interventions on the prevention of adolescent substance use.",
      "why": "the sentence is not carried by its quote and passage"
     }
    ]
@@ -409,7 +471,7 @@
    "read": "page",
    "kind": "official",
    "at": "https://www.betterhealth.vic.gov.au/health/healthyliving/talking-to-children-about-drugs",
-   "kept": 0,
+   "kept": 2,
    "thrown": []
   },
   {
@@ -419,146 +481,86 @@
    "at": "https://www.nhs.uk/live-well/addiction-support/advice-for-the-families-of-drug-users/",
    "kept": 1,
    "thrown": []
-  },
-  {
-   "title": "Cannabis poisonings in children",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.canada.ca/en/health-canada/services/drugs-medication/cannabis/health-effects/poisonings-children.html",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Canadian Drugs and Substances Strategy: Overview",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.canada.ca/en/health-canada/services/substance-use/canadian-drugs-substances-strategy.html",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Accidental Exposures to Fentanyl Patches Continue to Be Deadly to Children",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.fda.gov/consumers/consumer-updates/accidental-exposures-fentanyl-patches-continue-be-deadly-children",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Drinking Alcohol While Using Other Drugs Can Be Deadly",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.cdc.gov/alcohol/about-alcohol-use/other-drug-use.html",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "How drugs affect your body",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.betterhealth.vic.gov.au/health/healthyliving/How-drugs-affect-your-body",
-   "kept": 0,
-   "thrown": []
   }
  ],
  "plan": {
   "short": [
-   "F3",
-   "F1"
+   "F9"
   ],
   "direct": "Yes",
-  "but": [
-   "F2"
-  ],
+  "but": [],
   "how": [
    [
-    "F3"
-   ],
-   [
-    "DA",
-    "F1"
+    "F9"
    ]
   ],
-  "unanswered": ""
+  "unanswered": "extent and determinants of mothers' worry"
+ },
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.9723,
+   "but": 0.0152,
+   "how1": 0.9286
+  },
+  "scores_quotes_alone": {
+   "short": 0.9861,
+   "but": 0.0233,
+   "how1": 0.8432
+  }
  },
  "tries": [
   {
    "try": 1,
-   "why": "a rule was broken: written again",
+   "why": "the short answer or the But was not accepted: written again",
    "parts": [
     {
      "part": "short",
-     "text": "Yes. The NHS says parents of people who use drugs may feel worried. One study found mother overprotection links to youth substance use.",
+     "text": "Yes, the NHS says parents may feel worried if a loved one uses drugs. No source here measured whether mothers worry about their children taking drugs.",
      "rests_on": [
       {
-       "label": "F3",
+       "label": "F9",
        "ref": "nhs_advice-for-the-families-of-drug-users",
        "where": "Top of the page",
-       "quote": "If you're the parent, partner, child or carer of someone who uses drugs, you may feel worried, frustrated and alone.",
+       "quote": "Lots of families in the UK have a loved one who is using or trying to come off drugs. If you're the parent, partner, child or carer of someone who uses drugs, you may feel worried, frustrated and alone.",
        "sha": "97bd09ac4b66de2b"
-      },
-      {
-       "label": "F1",
-       "ref": "williams_2023",
-       "where": "Discussion › Parental problems",
-       "quote": "Out of five studies, one found that poor bonding plays a significant role in the development of ecstasy use. It also showed that mother overprotection correlates positively with all substances and negatively with alcohol abuse.",
-       "sha": "e8190754339edca4"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage says parents may feel worried, but it does not state that no source measured whether mothers worry about their children taking drugs."
     },
     {
      "part": "but",
-     "text": "One study found permissive parental attitudes may encourage youth substance use, especially after social distancing measures were imposed.",
+     "text": "The NHS page is advice for families, not a study measuring how often mothers worry about their children.",
      "rests_on": [
       {
-       "label": "F2",
-       "ref": "layman_2022",
-       "where": "Discussion",
-       "quote": "One study found that youth were drinking and using other substances with their parents shortly after social distancing measures were imposed, suggesting that permissive parental attitudes and behaviors could encourage and facilitate youth alcohol consumption and other substance use.",
-       "sha": "c0cc472319699752"
+       "label": "F9",
+       "ref": "nhs_advice-for-the-families-of-drug-users",
+       "where": "Top of the page",
+       "quote": "Lots of families in the UK have a loved one who is using or trying to come off drugs. If you're the parent, partner, child or carer of someone who uses drugs, you may feel worried, frustrated and alone.",
+       "sha": "97bd09ac4b66de2b"
       }
      ],
      "ok": false,
-     "by": "a rule",
-     "said": "a rule: it says its source found (“One study found”) what that source only reports from another study (F2): say that the source reports or cites that earlier work, called what the passage calls it (“an earlier meta-analysis”, “one study”), or name no finder"
+     "by": "the second reader",
+     "said": "The passage identifies the page as advice for families, but does not state that it is not a study measuring how often mothers worry about their children."
     },
     {
      "part": "how1",
-     "text": "The NHS says parents of people who use drugs may feel worried, frustrated and alone.",
+     "text": "The NHS says families, including parents, may feel worried, frustrated and alone if a loved one uses drugs.",
      "rests_on": [
       {
-       "label": "F3",
+       "label": "F9",
        "ref": "nhs_advice-for-the-families-of-drug-users",
        "where": "Top of the page",
-       "quote": "If you're the parent, partner, child or carer of someone who uses drugs, you may feel worried, frustrated and alone.",
+       "quote": "Lots of families in the UK have a loved one who is using or trying to come off drugs. If you're the parent, partner, child or carer of someone who uses drugs, you may feel worried, frustrated and alone.",
        "sha": "97bd09ac4b66de2b"
       }
      ],
      "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "A 2024 scoping review of parenting styles found mother overprotection correlates positively with all substances and negatively with alcohol abuse.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "williams_2023",
-       "where": "Abstract",
-       "quote": "To review available literature which assessed the effects of parenting styles and family-based interventions on the prevention of adolescent substance use.",
-       "sha": "02358ce9b7395977"
-      },
-      {
-       "label": "F1",
-       "ref": "williams_2023",
-       "where": "Discussion › Parental problems",
-       "quote": "Out of five studies, one found that poor bonding plays a significant role in the development of ecstasy use. It also showed that mother overprotection correlates positively with all substances and negatively with alcohol abuse.",
-       "sha": "e8190754339edca4"
-      }
-     ],
-     "ok": false,
-     "by": "a rule",
-     "said": "a rule: words that are not person-first (“abuse”)"
     }
    ]
   },
@@ -568,74 +570,96 @@
    "parts": [
     {
      "part": "short",
-     "text": "Yes, the NHS says parents of people who use drugs may feel worried. One study found mother overprotection links to youth substance use.",
+     "text": "Yes, the NHS says parents may feel worried if a loved one uses drugs.",
      "rests_on": [
       {
-       "label": "F3",
+       "label": "F9",
        "ref": "nhs_advice-for-the-families-of-drug-users",
        "where": "Top of the page",
-       "quote": "If you're the parent, partner, child or carer of someone who uses drugs, you may feel worried, frustrated and alone.",
+       "quote": "Lots of families in the UK have a loved one who is using or trying to come off drugs. If you're the parent, partner, child or carer of someone who uses drugs, you may feel worried, frustrated and alone.",
        "sha": "97bd09ac4b66de2b"
-      },
-      {
-       "label": "F1",
-       "ref": "williams_2023",
-       "where": "Discussion › Parental problems",
-       "quote": "Out of five studies, one found that poor bonding plays a significant role in the development of ecstasy use. It also showed that mother overprotection correlates positively with all substances and negatively with alcohol abuse.",
-       "sha": "e8190754339edca4"
       }
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "the word it opens with (“Yes”) is not the answer the passages bear out: The question asks whether mothers worry about their children taking drugs, but the passages discuss parents, partners, children, or carers of someone who uses drugs fee"
+     "said": "the word it opens with (“Yes”) is not the answer the passages bear out: The passage says parents may feel worried, so “Maybe” would be better calibrated than “Yes.” Sentence 1 speaks about parents and a loved one generally, not specifically"
     },
     {
      "part": "but",
-     "text": "A 2022 review reports one study found permissive parental attitudes may encourage youth substance use during the pandemic.",
+     "text": "This is advice from the NHS, not a study measuring how often mothers worry.",
      "rests_on": [
       {
-       "label": "F2",
-       "ref": "layman_2022",
-       "where": "Discussion",
-       "quote": "One study found that youth were drinking and using other substances with their parents shortly after social distancing measures were imposed, suggesting that permissive parental attitudes and behaviors could encourage and facilitate youth alcohol consumption and other substance use.",
-       "sha": "c0cc472319699752"
+       "label": "F9",
+       "ref": "nhs_advice-for-the-families-of-drug-users",
+       "where": "Top of the page",
+       "quote": "Lots of families in the UK have a loved one who is using or trying to come off drugs. If you're the parent, partner, child or carer of someone who uses drugs, you may feel worried, frustrated and alone.",
+       "sha": "97bd09ac4b66de2b"
       }
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "it is about something else than the short answer (The question asks whether mothers worry about their children taking drugs, but the passages discuss parents, partners, children, or carers of someone who uses drugs feeling worried, not specifically mothers worrying about drug taking. There)"
+     "said": "The passage identifies an NHS advice page, but does not say it is not a study measuring how often mothers worry."
     },
     {
      "part": "how1",
-     "text": "The NHS says parents of people who use drugs may feel worried, frustrated and alone.",
+     "text": "The NHS page for families says parents may feel worried, frustrated and alone.",
      "rests_on": [
       {
-       "label": "F3",
+       "label": "F9",
        "ref": "nhs_advice-for-the-families-of-drug-users",
        "where": "Top of the page",
-       "quote": "If you're the parent, partner, child or carer of someone who uses drugs, you may feel worried, frustrated and alone.",
+       "quote": "Lots of families in the UK have a loved one who is using or trying to come off drugs. If you're the parent, partner, child or carer of someone who uses drugs, you may feel worried, frustrated and alone.",
+       "sha": "97bd09ac4b66de2b"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "a rule was broken: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Maybe. The NHS says parents of someone who uses drugs may feel worried, frustrated and alone.",
+     "rests_on": [
+      {
+       "label": "F9",
+       "ref": "nhs_advice-for-the-families-of-drug-users",
+       "where": "Top of the page",
+       "quote": "Lots of families in the UK have a loved one who is using or trying to come off drugs. If you're the parent, partner, child or carer of someone who uses drugs, you may feel worried, frustrated and alone.",
+       "sha": "97bd09ac4b66de2b"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: the question can be answered with yes or no: begin the short answer with Yes, No, It can, Sometimes, It depends or Not known, then say why in plain words"
+    },
+    {
+     "part": "but",
+     "text": "This is an advice page, not a study measuring how often mothers worry about their children taking drugs.",
+     "rests_on": [
+      {
+       "label": "F9",
+       "ref": "nhs_advice-for-the-families-of-drug-users",
+       "where": "Top of the page",
+       "quote": "Lots of families in the UK have a loved one who is using or trying to come off drugs. If you're the parent, partner, child or carer of someone who uses drugs, you may feel worried, frustrated and alone.",
        "sha": "97bd09ac4b66de2b"
       }
      ],
      "ok": true
     },
     {
-     "part": "how2",
-     "text": "A 2024 scoping review found mother overprotection correlates with youth substance use, though one study linked it to less alcohol use.",
+     "part": "how1",
+     "text": "The NHS says families, including parents, may feel worried if a loved one uses drugs.",
      "rests_on": [
       {
-       "label": "DA",
-       "ref": "williams_2023",
-       "where": "Abstract",
-       "quote": "To review available literature which assessed the effects of parenting styles and family-based interventions on the prevention of adolescent substance use.",
-       "sha": "02358ce9b7395977"
-      },
-      {
-       "label": "F1",
-       "ref": "williams_2023",
-       "where": "Discussion › Parental problems",
-       "quote": "Out of five studies, one found that poor bonding plays a significant role in the development of ecstasy use. It also showed that mother overprotection correlates positively with all substances and negatively with alcohol abuse.",
-       "sha": "e8190754339edca4"
+       "label": "F9",
+       "ref": "nhs_advice-for-the-families-of-drug-users",
+       "where": "Top of the page",
+       "quote": "Lots of families in the UK have a loved one who is using or trying to come off drugs. If you're the parent, partner, child or carer of someone who uses drugs, you may feel worried, frustrated and alone.",
+       "sha": "97bd09ac4b66de2b"
       }
      ],
      "ok": true
@@ -643,83 +667,6 @@
    ]
   }
  ],
- "panel_gap": [],
- "own": {
-  "model": "pharmakon-check-0",
-  "threshold": 0.05,
-  "scores": {
-   "short": 0.9665,
-   "but": 0.0296,
-   "how1": 0.9451
-  },
-  "scores_quotes_alone": {
-   "short": 0.9813,
-   "but": 0.0305,
-   "how1": 0.8439
-  }
- },
- "dropped": [
-  {
-   "try": 3,
-   "part": "how2",
-   "text": "A 2024 scoping review of parenting styles found mother overprotection correlates positively with all substances and negatively with alcohol abuse.",
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "williams_2023",
-     "where": "Abstract",
-     "quote": "To review available literature which assessed the effects of parenting styles and family-based interventions on the prevention of adolescent substance use.",
-     "sha": "02358ce9b7395977"
-    },
-    {
-     "label": "F1",
-     "ref": "williams_2023",
-     "where": "Discussion › Parental problems",
-     "quote": "Out of five studies, one found that poor bonding plays a significant role in the development of ecstasy use. It also showed that mother overprotection correlates positively with all substances and negatively with alcohol abuse.",
-     "sha": "e8190754339edca4"
-    }
-   ],
-   "by": "a rule",
-   "said": "a rule: words that are not person-first (“abuse”)"
-  },
-  {
-   "try": 3,
-   "part": "but",
-   "text": "The NHS page covers parents, partners, children, or carers, not just mothers. It does not say if mothers worry more than other family members.",
-   "rests_on": [
-    {
-     "label": "F3",
-     "ref": "nhs_advice-for-the-families-of-drug-users",
-     "where": "Top of the page",
-     "quote": "If you're the parent, partner, child or carer of someone who uses drugs, you may feel worried, frustrated and alone.",
-     "sha": "97bd09ac4b66de2b"
-    }
-   ],
-   "by": "a further reader",
-   "said": "a further reader (gemini-3-flash-preview) did not accept it: the passage does not state what it does not say, and it does not contain the phrase 'not just mothers'"
-  }
- ],
- "panel": {
-  "gemini:gemini-3-flash-preview": {
-   "short": [
-    true,
-    ""
-   ],
-   "but": [
-    false,
-    "the passage does not state what it does not say, and it does not contain the phrase 'not just mothers'"
-   ],
-   "how1": [
-    true,
-    ""
-   ]
-  }
- },
- "stakes": "pregnancy or children",
- "with_checked": {
-  "differs": [],
-  "same": []
- },
  "place": {
   "home": "facts",
   "also": [],
