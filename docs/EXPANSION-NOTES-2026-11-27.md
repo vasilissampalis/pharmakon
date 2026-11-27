@@ -110,3 +110,14 @@ the gates catch these by themselves.
   stands in its source is known to the code; a hedge in the quote missing from the line can be checked by words).
 - The code's own But ("This rests on ...") had called every paper with no type in Europe PMC a "study in people"; mended
   (`lane.described`, `lane.is_case`), stricter at the gate for case reports, never looser.
+- The money ledger (`data/auto/lane/usage.json`) is written by every run, and runs that overlap (an Auto run and an exam, say)
+  each push their own copy: on a clash the last run's copy wins (`git pull --rebase -X theirs`), so one run's spending can drop
+  out of the ledger (on 27 November the Auto run of 00:45 UTC wrote over the editor's restored figures for 26 November:
+  the ledger then held $0.02 for the month where $0.43 had been spent). Money stays safe, since every call is also bounded by
+  the credit OpenRouter itself reports (`follow_credit`), but a plan that paces spending to the month's end should count from
+  OpenRouter's own figures (the credit at the month's start minus the credit now, with no automatic top-up) or keep one ledger
+  file per run, not one shared file.
+- The lane's first teams read with Cloudflare's free models (9,000 of 10,000 neurons a day kept for the lane): on 27 November
+  they were spent by 00:55 UTC, and the lane stopped for the day to keep the rest for questions people send. Of the OpenRouter
+  money, $0.43 had been spent in November (most of it on exams). A plan that spends to the month's end has room to read with
+  paid models once the free ones are spent.
