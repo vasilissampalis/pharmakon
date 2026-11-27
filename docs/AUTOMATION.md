@@ -1941,6 +1941,26 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
     findings stated as facts about people, two uses of one medicine mixed, a 'Yes' from one survey against official pages, a
     duplicate of a checked answer); patterns for the plan of 27 November.
 
+48. **The editor's reading of everything published, and what it put into code (27 November 2026, the editor, 03:00 to 05:00
+    Athens).** Three AI readers (815, 816, 817) read for the editor every machine answer no person had read, by eight rules
+    (`data/verification/auto-read-2026-11-27/BRIEF.md`); the editor held each answer with a flag under rules 1 to 7 (49 in all,
+    each with what to say) and noted the ones flagged for jargon alone; 63 of the 93 published answers stood held at 04:50.
+    Their verdicts grew the exam of the lane's own sentences from 108 to 364 (292 good, 72 not good). Put into the lane, each
+    stricter only and measured on that exam: what a study says in its methods is never its finding (`intro_hand`); three hedges
+    a sentence keeps (`hedge_dropped`: "can be dangerous", "research suggests", "in half of the volunteers"); a reputation, a
+    traditional use or a belief is never said as a fact, even from a piece cut out of its sentence (`repute_as_fact`); a finder
+    named after the verb ("estimated by two research groups") marks a passage as reported from others (`CITED_BY`); the But the
+    code writes names each paper by its own words and counts case reports as case reports (`described`, `is_case`). The word
+    rules together catch 15 of the 72 and stop 1 good sentence. Two faults in the lane itself were mended: an answer held twice
+    was taken for one not held, so it was never written again (`is_held` now takes the newest hold, as the site does; `held_say`
+    gives the newest note first); and the second reader was never shown the editor's note, so a version written again repeated
+    what the note forbade and was accepted (every reader of such a version now gets it, `checker_prompt`). On the grown exam
+    GPT-6 Luna caught 47 of 60 and stopped 58 of 227 good sentences, Claude Haiku 5.5 38 and 39 (exam-0027): Luna stays first.
+    When Google's readers answered 503 all night and Cloudflare's day was spent, the lane read nothing while a sent question
+    waited: every team now has a last reader through OpenRouter (`models.json` "reader_last", `reader_3`), asked only where its
+    own reader and the one that stands by cannot read, as the senior author asked of OpenRouter ("a fallback when free capacity
+    is insufficient"). A reader only copies, and code checks every quote it copies.
+
 ## The machine lane: what must be true before a machine-written claim is shown
 
 Five gates, all of them hard-coded (no model's opinion can open a gate that the code has shut):
