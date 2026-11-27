@@ -19,36 +19,40 @@
  "made": {
   "on": "2026-11-27",
   "models": {
-   "reader": "openrouter:openai/gpt-oss-120b",
-   "writer": "openrouter:meta-llama/llama-3.3-70b-instruct",
-   "checker": "openrouter:openai/gpt-6-luna",
-   "planner": "openrouter:openai/gpt-oss-120b",
-   "team": "team R",
-   "reader_2": "openrouter:openai/gpt-oss-120b",
+   "reader": "gemini:gemini-3.5-flash-lite",
+   "writer": "gemini:gemma-4-26b-a4b-it",
+   "checker": "groq:openai/gpt-oss-120b",
+   "planner": "gemini:gemma-4-31b-it",
+   "also1": "gemini:gemini-3.5-flash-lite",
+   "also2": "gemini:gemini-3.6-flash",
+   "team": "team K",
+   "reader_2": "gemini:gemini-3.5-flash-lite",
+   "reader_3": "openrouter:meta-llama/llama-3.3-70b-instruct",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
    "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "45946700535",
+  "run": "46083165092",
   "read_seconds": 100,
   "from": {
    "papers": 2,
    "summaries": 0,
-   "official": 0
+   "official": 1
   },
   "neurons": 0.0,
-  "seconds": 174
+  "seconds": 313
  },
  "status": "none",
- "why": "about dying: written, but it does not meet the stricter bar for such an answer (no further reader read it): no answer yet",
+ "why": "the answer was not accepted: a further reader (gemini-3.5-flash-lite) did not accept it: The sentence includes details about visual and auditory hallucinations as part of the K-hole definition which are not in the 2025 review passage for the K-hole (those hallucinations are placed at lower doses in that passage), and it turns t",
  "gates": {
-  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-120b read from there",
-  "read": "3 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 0 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.95, but 0.76, how1 0.17, how2 0.36",
-  "check": "every sentence kept was accepted by the second reader (openrouter:openai/gpt-6-luna)",
-  "but": "the writer's But was not accepted (The passage says that the ketamine experience at high doses typically lasts no more than two hours; it does not specifically give the duration of a K-hole.): the code wrote the But itself, from what this answer rests on",
-  "rules": "nothing against it",
-  "checked": "set beside the checked claims of the same page: nothing against them",
-  "stakes": "about dying: the stricter bar for such an answer: NOT met: no further reader read it"
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.5-flash-lite read from there",
+  "time": "2 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
+  "read": "5 findings kept from 3 sources (2 papers read in full, 1 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 1 official page(s), 0 paper(s) read in summary only",
+  "told": "the writer was told what the readers said of the last draft that was not accepted: the short answer “A K-hole is feeling cut off from one's body and surroundings, with symptoms like seeing or hearing things that are not there, resembling schizophrenia.”: The passages do not say that a K-hole involves feeling cut off from one’s body and surroundings; the out-of-body sensation and m",
+  "panel": "further readers, each of which must accept every sentence too: gemini-3.5-flash-lite accepted 4 of 5",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.17, but 0.93, how1 0.07, how2 0.64, how3 0.52",
+  "check": "short: NOT accepted: a further reader (gemini-3.5-flash-lite) did not accept it: The sentence includes details about visual and auditory hallucinations as part of the K-hole definition which are not in the 2025 review passage for the K-hole (those hallucinations are placed at lower doses in that passage), and it turns t; but: accepted; how1: NOT accepted: The attribution \"Drug Science, a UK charity of scientists\" is not stated in the passage; the passage only describes the effects, not the organization’s identity.; how2: accepted; how3: accepted",
+  "writer": "try 2: no JSON (how the reply ended: length; reasoned 0 characters, wrote 9142)"
  },
  "sources": [
   {
@@ -122,16 +126,16 @@
     {
      "passage": 61,
      "where": "Tolerability and safety › Adverse psychiatric effects",
-     "quote": "When the dissociative effects of ketamine are severe, the individual may experience a phenomenon known as the K‑hole, which is characterized by symptoms that resemble schizophrenia, such as perceived perceptions that are completely separate from reality (e.g., near‑death experiences).",
-     "text": "A K‑hole is a severe dissociative phenomenon that resembles schizophrenia, with perceptions completely separate from reality, such as near‑death experiences.",
+     "quote": "When the dissociative effects of ketamine are severe, the individual may experience a phenomenon known as the K-hole",
+     "text": "When the dissociative effects of ketamine are severe, people who use ketamine may experience a phenomenon known as the K-hole.",
      "id": "F1",
      "second_hand": ""
     },
     {
      "passage": 61,
      "where": "Tolerability and safety › Adverse psychiatric effects",
-     "quote": "Ketamine is often used by individuals who ingest, snort, or inject it at relatively high doses, which can result in an experience that typically lasts no more than 2 h.",
-     "text": "The K‑hole experience typically lasts no more than two hours.",
+     "quote": "the K-hole, which is characterized by symptoms that resemble schizophrenia, such as perceived perceptions that are completely separate from reality (e.g., near-death experiences).",
+     "text": "The K-hole is characterized by symptoms that resemble schizophrenia, such as perceived perceptions that are completely separate from reality, including near-death experiences.",
      "id": "F2",
      "second_hand": ""
     }
@@ -208,110 +212,91 @@
    "design": {
     "passage": 1,
     "where": "Abstract",
-    "quote": "This article provides a concise exploration of the historical use of ketamine and its two enantiomers in anesthesia and psychiatry",
-    "text": "historical review of ketamine and its enantiomers"
+    "quote": "This article provides a concise exploration of the historical use of ketamine and its two enantiomers in anesthesia and psychiatry, while also delving into potential future directions for their application in these fields.",
+    "text": "A historical review of ketamine and its two enantiomers in anesthesiology and psychiatry"
    },
    "findings": [
     {
      "passage": 11,
      "where": "Pharmacology of ketamine enantiomers › Use of ketamine and its two enantiomers in psychiatry › Antidepressant effects of ketamine in humans",
      "quote": "At sufficiently high doses, users of ketamine may experience what is known as the \"K-hole\", characterized by profound dissociation accompanied by visual and auditory hallucinations.",
-     "text": "People who use ketamine at sufficiently high doses may experience a K-hole, which is profound dissociation with visual and auditory hallucinations.",
+     "text": "At sufficiently high doses, people who use ketamine may experience what is known as the \"K-hole\", which is characterized by profound dissociation alongside visual and auditory hallucinations.",
      "id": "F3",
      "second_hand": ""
     }
    ],
    "limits": [],
    "tag": "B"
-  }
- ],
- "parts": [
+  },
   {
-   "part": "short",
-   "text": "A K-hole is a severe dissociative phenomenon with perceptions separate from reality, like near-death experiences, and symptoms that resemble schizophrenia.",
-   "uses": [
-    "F1",
-    "F3"
-   ],
-   "rests_on": [
+   "read": "page",
+   "ref": {
+    "id": "drugscience_ketamine",
+    "type": "webpage",
+    "title": "Ketamine",
+    "author": [
+     {
+      "literal": "Drug Science"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      []
+     ]
+    },
+    "URL": "https://www.drugscience.org.uk/drugs/ketamine",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       27
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-27"
+    }
+   },
+   "title": "Ketamine",
+   "year": null,
+   "kind": "official",
+   "people": true,
+   "near": 0.705,
+   "name": "Drug Science",
+   "short": "Drug Science, a UK charity of scientists",
+   "tier": 2,
+   "address": "https://www.drugscience.org.uk/drugs/ketamine",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
     {
-     "label": "F1",
-     "ref": "quintero_2025",
-     "where": "Tolerability and safety › Adverse psychiatric effects",
-     "quote": "When the dissociative effects of ketamine are severe, the individual may experience a phenomenon known as the K‑hole, which is characterized by symptoms that resemble schizophrenia, such as perceived perceptions that are completely separate from reality (e.g., near‑death experiences).",
-     "sha": "92826f81d5b40fdb"
+     "passage": 10,
+     "where": "How might the drug make you feel?",
+     "quote": "At higher doses still, you may enter a state of profoundly altered consciousness known as a ‘k-hole’, in which your experience of reality is almost completely detached from what is actually going on around you.",
+     "text": "At higher doses, people who use ketamine may enter a state of profoundly altered consciousness known as a k-hole, where their experience of reality is almost completely detached from surroundings.",
+     "id": "F4",
+     "second_hand": ""
     },
     {
-     "label": "F3",
-     "ref": "hashimoto_2024",
-     "where": "Pharmacology of ketamine enantiomers › Use of ketamine and its two enantiomers in psychiatry › Antidepressant effects of ketamine in humans",
-     "quote": "At sufficiently high doses, users of ketamine may experience what is known as the \"K-hole\", characterized by profound dissociation accompanied by visual and auditory hallucinations.",
-     "sha": "faef2339d4741d52"
-    }
-   ]
-  },
-  {
-   "part": "but",
-   "text": "This rests on 2 reviews.",
-   "uses": [
-    "F1",
-    "DB"
-   ],
-   "fixed": true,
-   "rests_on": [
-    {
-     "label": "F1",
-     "ref": "quintero_2025",
-     "where": "Tolerability and safety › Adverse psychiatric effects",
-     "quote": "When the dissociative effects of ketamine are severe, the individual may experience a phenomenon known as the K‑hole, which is characterized by symptoms that resemble schizophrenia, such as perceived perceptions that are completely separate from reality (e.g., near‑death experiences).",
-     "sha": "92826f81d5b40fdb"
-    },
-    {
-     "label": "DB",
-     "ref": "hashimoto_2024",
-     "where": "Abstract",
-     "quote": "This article provides a concise exploration of the historical use of ketamine and its two enantiomers in anesthesia and psychiatry",
-     "sha": "2bc84f916f101b92"
-    }
-   ]
-  },
-  {
-   "part": "how1",
-   "text": "A 2025 review describes the K-hole as a severe dissociative phenomenon.",
-   "uses": [
-    "F1"
-   ],
-   "rests_on": [
-    {
-     "label": "F1",
-     "ref": "quintero_2025",
-     "where": "Tolerability and safety › Adverse psychiatric effects",
-     "quote": "When the dissociative effects of ketamine are severe, the individual may experience a phenomenon known as the K‑hole, which is characterized by symptoms that resemble schizophrenia, such as perceived perceptions that are completely separate from reality (e.g., near‑death experiences).",
-     "sha": "92826f81d5b40fdb"
+     "passage": 19,
+     "where": "Myths and Misconceptions",
+     "quote": "Whilst a k-hole is entirely possible, it is not always going to happen every time you take ketamine. A k-hole more often happens at high doses of ketamine.",
+     "text": "While a k-hole is entirely possible, it does not always happen every time you take ketamine and more often happens at high doses.",
+     "id": "F5",
+     "second_hand": ""
     }
    ],
-   "quote": "When the dissociative effects of ketamine are severe, the individual may experience a phenomenon known",
-   "quote_ref": "quintero_2025"
-  },
-  {
-   "part": "how2",
-   "text": "A 2024 review says people who use ketamine at high doses may experience a K-hole with hallucinations.",
-   "uses": [
-    "F3"
-   ],
-   "rests_on": [
-    {
-     "label": "F3",
-     "ref": "hashimoto_2024",
-     "where": "Pharmacology of ketamine enantiomers › Use of ketamine and its two enantiomers in psychiatry › Antidepressant effects of ketamine in humans",
-     "quote": "At sufficiently high doses, users of ketamine may experience what is known as the \"K-hole\", characterized by profound dissociation accompanied by visual and auditory hallucinations.",
-     "sha": "faef2339d4741d52"
-    }
-   ]
+   "limits": [],
+   "tag": "C"
   }
  ],
+ "parts": [],
  "complete": false,
- "missing": "a paper that stands nearer the question could not be read",
+ "missing": "",
  "wanted": [
   {
    "doi": "10.1111/j.1360-0443.2011.03576.x",
@@ -352,6 +337,14 @@
    "why": "passed every gate",
    "short": "A K-hole is a state of profound dissociation where reality feels detached, with visual and auditory hallucinations. It can happen at high doses of ketamine.",
    "complete": false
+  },
+  {
+   "on": "2026-11-27",
+   "lane": 19,
+   "status": "none",
+   "why": "about dying: written, but it does not meet the stricter bar for such an answer (no further reader read it): no answer yet",
+   "short": "A K-hole is a severe dissociative phenomenon with perceptions separate from reality, like near-death experiences, and symptoms that resemble schizophrenia.",
+   "complete": false
   }
  ],
  "looked": [
@@ -372,9 +365,9 @@
    "thrown": [
     {
      "kind": "text",
-     "text": "review of ketamine's clinical uses and adverse effects",
-     "quote": "Beyond psychiatry, ketamine remains a valuable anesthetic and analgesic agent with applications in acute and chronic pain management.",
-     "why": "the sentence is not carried by its quote and passage"
+     "text": "a research paper reviewing ketamine in clinical practice",
+     "quote": "Ketamine in clinical practice: transitioning from anesthetic agent to psychiatric therapeutic (2025), CNS spectrums.",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
     }
    ]
   },
@@ -385,43 +378,101 @@
    "at": "10.1016/j.jatmed.2024.07.001",
    "kept": 1,
    "thrown": []
+  },
+  {
+   "title": "Ketamine",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.drugscience.org.uk/drugs/ketamine",
+   "kept": 2,
+   "thrown": []
+  },
+  {
+   "title": "Ketamine",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.canada.ca/en/health-canada/services/substance-use/controlled-illegal-drugs/ketamine.html",
+   "kept": 0,
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
+  },
+  {
+   "title": "Ketamine",
+   "read": "page",
+   "kind": "official",
+   "at": "https://thelevel.org.nz/drug-information/ketamine",
+   "kept": 0,
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
   }
  ],
  "plan": {
   "short": [
+   "F4",
+   "F3",
    "F1",
-   "F3"
+   "F2"
   ],
   "direct": "",
   "but": [
-   "F2"
+   "F5"
   ],
   "how": [
    [
-    "F1",
-    "F2"
+    "F4"
    ],
    [
+    "DB",
     "F3"
+   ],
+   [
+    "F1",
+    "F2"
    ]
   ],
   "unanswered": ""
+ },
+ "panel": {
+  "gemini:gemini-3.5-flash-lite": {
+   "short": [
+    false,
+    "The sentence includes details about visual and auditory hallucinations as part of the K-hole definition which are not in the 2025 review passage for the K-hole (those hallucinations are placed at lower doses in that passage), and it turns t"
+   ],
+   "but": [
+    true,
+    ""
+   ],
+   "how1": [
+    true,
+    ""
+   ],
+   "how2": [
+    true,
+    ""
+   ],
+   "how3": [
+    true,
+    ""
+   ]
+  }
  },
  "panel_gap": [],
  "own": {
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.9503,
-   "but": 0.7617,
-   "how1": 0.1738,
-   "how2": 0.3613
+   "short": 0.165,
+   "but": 0.9251,
+   "how1": 0.0688,
+   "how2": 0.6442,
+   "how3": 0.5178
   },
   "scores_quotes_alone": {
-   "short": 0.5956,
-   "but": 0.3392,
-   "how1": 0.197,
-   "how2": 0.4341
+   "short": 0.7075,
+   "but": 0.7684,
+   "how1": 0.0897,
+   "how2": 0.5967,
+   "how3": 0.4456
   }
  },
  "tries": [
@@ -431,14 +482,79 @@
    "parts": [
     {
      "part": "short",
-     "text": "A K-hole is feeling cut off from one's body and surroundings, and seeing or hearing things that are not there, with symptoms that resemble schizophrenia.",
+     "text": "A K-hole is a state of profoundly altered consciousness where reality is almost completely detached from surroundings. It can involve profound dissociation, visual and auditory hallucinations, and symptoms that resemble schizophrenia, such as near-death experiences.",
      "rests_on": [
       {
        "label": "F1",
        "ref": "quintero_2025",
        "where": "Tolerability and safety › Adverse psychiatric effects",
-       "quote": "When the dissociative effects of ketamine are severe, the individual may experience a phenomenon known as the K‑hole, which is characterized by symptoms that resemble schizophrenia, such as perceived perceptions that are completely separate from reality (e.g., near‑death experiences).",
+       "quote": "When the dissociative effects of ketamine are severe, the individual may experience a phenomenon known as the K-hole",
        "sha": "92826f81d5b40fdb"
+      },
+      {
+       "label": "F2",
+       "ref": "quintero_2025",
+       "where": "Tolerability and safety › Adverse psychiatric effects",
+       "quote": "the K-hole, which is characterized by symptoms that resemble schizophrenia, such as perceived perceptions that are completely separate from reality (e.g., near-death experiences).",
+       "sha": "92826f81d5b40fdb"
+      },
+      {
+       "label": "F3",
+       "ref": "hashimoto_2024",
+       "where": "Pharmacology of ketamine enantiomers › Use of ketamine and its two enantiomers in psychiatry › Antidepressant effects of ketamine in humans",
+       "quote": "At sufficiently high doses, users of ketamine may experience what is known as the \"K-hole\", characterized by profound dissociation accompanied by visual and auditory hallucinations.",
+       "sha": "faef2339d4741d52"
+      },
+      {
+       "label": "F4",
+       "ref": "drugscience_ketamine",
+       "where": "How might the drug make you feel?",
+       "quote": "At higher doses still, you may enter a state of profoundly altered consciousness known as a ‘k-hole’, in which your experience of reality is almost completely detached from what is actually going on around you.",
+       "sha": "5c782a872c35fd47"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.5-flash-lite) did not accept it: The sentence incorrectly turns the K-hole's symptoms resembling schizophrenia into saying it resembles schizophrenia such as near-death experiences, whereas the passage states near-death experiences are examples of perceived perceptions sep"
+    },
+    {
+     "part": "but",
+     "text": "A k-hole is entirely possible, but it does not always happen every time people use ketamine and more often happens at high doses.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "drugscience_ketamine",
+       "where": "Myths and Misconceptions",
+       "quote": "Whilst a k-hole is entirely possible, it is not always going to happen every time you take ketamine. A k-hole more often happens at high doses of ketamine.",
+       "sha": "0e2d98f88ca1c986"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "Drug Science, a UK charity of scientists says, that at higher doses, people who use ketamine may enter this state of profoundly altered consciousness.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "drugscience_ketamine",
+       "where": "How might the drug make you feel?",
+       "quote": "At higher doses still, you may enter a state of profoundly altered consciousness known as a ‘k-hole’, in which your experience of reality is almost completely detached from what is actually going on around you.",
+       "sha": "5c782a872c35fd47"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A 2024 historical review says that at sufficiently high doses, people who use ketamine may experience a K-hole with profound dissociation and hallucinations.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "hashimoto_2024",
+       "where": "Abstract",
+       "quote": "This article provides a concise exploration of the historical use of ketamine and its two enantiomers in anesthesia and psychiatry, while also delving into potential future directions for their application in these fields.",
+       "sha": "2bc84f916f101b92"
       },
       {
        "label": "F3",
@@ -448,72 +564,112 @@
        "sha": "faef2339d4741d52"
       }
      ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passages associate feeling out of one's body or melting into one's surroundings with lower-dose mild dissociation, not specifically with a K-hole. The 2025 review does say K-hole symptoms resemble schizophrenia, as the sentence correctl"
+     "ok": true
     },
     {
-     "part": "but",
-     "text": "The K-hole experience typically lasts no more than two hours.",
-     "rests_on": [
-      {
-       "label": "F2",
-       "ref": "quintero_2025",
-       "where": "Tolerability and safety › Adverse psychiatric effects",
-       "quote": "Ketamine is often used by individuals who ingest, snort, or inject it at relatively high doses, which can result in an experience that typically lasts no more than 2 h.",
-       "sha": "92826f81d5b40fdb"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passage says a high-dose ketamine experience typically lasts no more than two hours; it does not say that the K-hole itself lasts that long."
-    },
-    {
-     "part": "how1",
-     "text": "A 2025 review describes the K-hole as a severe dissociative phenomenon.",
+     "part": "how3",
+     "text": "A 2025 review says that when dissociative effects are severe, people who use ketamine may experience a K-hole with symptoms that resemble schizophrenia.",
      "rests_on": [
       {
        "label": "F1",
        "ref": "quintero_2025",
        "where": "Tolerability and safety › Adverse psychiatric effects",
-       "quote": "When the dissociative effects of ketamine are severe, the individual may experience a phenomenon known as the K‑hole, which is characterized by symptoms that resemble schizophrenia, such as perceived perceptions that are completely separate from reality (e.g., near‑death experiences).",
+       "quote": "When the dissociative effects of ketamine are severe, the individual may experience a phenomenon known as the K-hole",
+       "sha": "92826f81d5b40fdb"
+      },
+      {
+       "label": "F2",
+       "ref": "quintero_2025",
+       "where": "Tolerability and safety › Adverse psychiatric effects",
+       "quote": "the K-hole, which is characterized by symptoms that resemble schizophrenia, such as perceived perceptions that are completely separate from reality (e.g., near-death experiences).",
        "sha": "92826f81d5b40fdb"
       }
      ],
      "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "A 2024 review says it is profound dissociation with visual and auditory hallucinations.",
-     "rests_on": [
-      {
-       "label": "F3",
-       "ref": "hashimoto_2024",
-       "where": "Pharmacology of ketamine enantiomers › Use of ketamine and its two enantiomers in psychiatry › Antidepressant effects of ketamine in humans",
-       "quote": "At sufficiently high doses, users of ketamine may experience what is known as the \"K-hole\", characterized by profound dissociation accompanied by visual and auditory hallucinations.",
-       "sha": "faef2339d4741d52"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The review says users may experience a K-hole at sufficiently high doses; the sentence omits those qualifications."
     }
    ]
   },
   {
-   "try": 2,
-   "why": "the short answer or the But was not accepted: written again",
+   "try": 3,
+   "why": "the last draft: no answer",
    "parts": [
     {
      "part": "short",
-     "text": "A K-hole is feeling cut off from one's body and surroundings, with symptoms like seeing or hearing things that are not there, resembling schizophrenia.",
+     "text": "A K-hole is a state of profoundly altered consciousness where reality is almost completely detached from surroundings. It can involve profound dissociation, visual and auditory hallucinations, and symptoms that resemble schizophrenia, such as near-death experiences.",
      "rests_on": [
       {
        "label": "F1",
        "ref": "quintero_2025",
        "where": "Tolerability and safety › Adverse psychiatric effects",
-       "quote": "When the dissociative effects of ketamine are severe, the individual may experience a phenomenon known as the K‑hole, which is characterized by symptoms that resemble schizophrenia, such as perceived perceptions that are completely separate from reality (e.g., near‑death experiences).",
+       "quote": "When the dissociative effects of ketamine are severe, the individual may experience a phenomenon known as the K-hole",
        "sha": "92826f81d5b40fdb"
+      },
+      {
+       "label": "F2",
+       "ref": "quintero_2025",
+       "where": "Tolerability and safety › Adverse psychiatric effects",
+       "quote": "the K-hole, which is characterized by symptoms that resemble schizophrenia, such as perceived perceptions that are completely separate from reality (e.g., near-death experiences).",
+       "sha": "92826f81d5b40fdb"
+      },
+      {
+       "label": "F3",
+       "ref": "hashimoto_2024",
+       "where": "Pharmacology of ketamine enantiomers › Use of ketamine and its two enantiomers in psychiatry › Antidepressant effects of ketamine in humans",
+       "quote": "At sufficiently high doses, users of ketamine may experience what is known as the \"K-hole\", characterized by profound dissociation accompanied by visual and auditory hallucinations.",
+       "sha": "faef2339d4741d52"
+      },
+      {
+       "label": "F4",
+       "ref": "drugscience_ketamine",
+       "where": "How might the drug make you feel?",
+       "quote": "At higher doses still, you may enter a state of profoundly altered consciousness known as a ‘k-hole’, in which your experience of reality is almost completely detached from what is actually going on around you.",
+       "sha": "5c782a872c35fd47"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.5-flash-lite) did not accept it: The sentence includes details about visual and auditory hallucinations as part of the K-hole definition which are not in the 2025 review passage for the K-hole (those hallucinations are placed at lower doses in that passage), and it turns t"
+    },
+    {
+     "part": "but",
+     "text": "A K-hole is entirely possible, but it does not always happen every time people use ketamine and more often happens at high doses.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "drugscience_ketamine",
+       "where": "Myths and Misconceptions",
+       "quote": "Whilst a k-hole is entirely possible, it is not always going to happen every time you take ketamine. A k-hole more often happens at high doses of ketamine.",
+       "sha": "0e2d98f88ca1c986"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "Drug Science, a UK charity of scientists says, that at higher doses, people who use ketamine may enter this state of altered consciousness.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "drugscience_ketamine",
+       "where": "How might the drug make you feel?",
+       "quote": "At higher doses still, you may enter a state of profoundly altered consciousness known as a ‘k-hole’, in which your experience of reality is almost completely detached from what is actually going on around you.",
+       "sha": "5c782a872c35fd47"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The attribution \"Drug Science, a UK charity of scientists\" is not stated in the passage; the passage only describes the effects, not the organization’s identity."
+    },
+    {
+     "part": "how2",
+     "text": "A 2024 historical review says that at sufficiently high doses, people who use ketamine may experience a K-hole with profound dissociation and hallucinations.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "hashimoto_2024",
+       "where": "Abstract",
+       "quote": "This article provides a concise exploration of the historical use of ketamine and its two enantiomers in anesthesia and psychiatry, while also delving into potential future directions for their application in these fields.",
+       "sha": "2bc84f916f101b92"
       },
       {
        "label": "F3",
@@ -523,50 +679,25 @@
        "sha": "faef2339d4741d52"
       }
      ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passages do not say that a K-hole involves feeling cut off from one’s body and surroundings; the out-of-body sensation and melting into surroundings are described for lower-dose, mild dissociation. The schizophrenia comparison is phrase"
+     "ok": true
     },
     {
-     "part": "but",
-     "text": "The K-hole experience typically lasts no more than two hours.",
-     "rests_on": [
-      {
-       "label": "F2",
-       "ref": "quintero_2025",
-       "where": "Tolerability and safety › Adverse psychiatric effects",
-       "quote": "Ketamine is often used by individuals who ingest, snort, or inject it at relatively high doses, which can result in an experience that typically lasts no more than 2 h.",
-       "sha": "92826f81d5b40fdb"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passage says a high-dose ketamine experience typically lasts no more than two hours; it does not say that the K-hole itself typically lasts that long."
-    },
-    {
-     "part": "how1",
-     "text": "A 2025 review describes the K-hole as a severe dissociative phenomenon.",
+     "part": "how3",
+     "text": "A 2025 review says that when dissociative effects are severe, people who use ketamine may experience a K-hole with symptoms that resemble schizophrenia.",
      "rests_on": [
       {
        "label": "F1",
        "ref": "quintero_2025",
        "where": "Tolerability and safety › Adverse psychiatric effects",
-       "quote": "When the dissociative effects of ketamine are severe, the individual may experience a phenomenon known as the K‑hole, which is characterized by symptoms that resemble schizophrenia, such as perceived perceptions that are completely separate from reality (e.g., near‑death experiences).",
+       "quote": "When the dissociative effects of ketamine are severe, the individual may experience a phenomenon known as the K-hole",
        "sha": "92826f81d5b40fdb"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "A 2024 review says people who use ketamine at high doses may experience a K-hole with hallucinations.",
-     "rests_on": [
+      },
       {
-       "label": "F3",
-       "ref": "hashimoto_2024",
-       "where": "Pharmacology of ketamine enantiomers › Use of ketamine and its two enantiomers in psychiatry › Antidepressant effects of ketamine in humans",
-       "quote": "At sufficiently high doses, users of ketamine may experience what is known as the \"K-hole\", characterized by profound dissociation accompanied by visual and auditory hallucinations.",
-       "sha": "faef2339d4741d52"
+       "label": "F2",
+       "ref": "quintero_2025",
+       "where": "Tolerability and safety › Adverse psychiatric effects",
+       "quote": "the K-hole, which is characterized by symptoms that resemble schizophrenia, such as perceived perceptions that are completely separate from reality (e.g., near-death experiences).",
+       "sha": "92826f81d5b40fdb"
       }
      ],
      "ok": true
@@ -577,26 +708,21 @@
  "dropped": [
   {
    "try": 3,
-   "part": "but",
-   "text": "The K-hole experience typically lasts no more than two hours.",
+   "part": "how1",
+   "text": "Drug Science, a UK charity of scientists says, that at higher doses, people who use ketamine may enter this state of altered consciousness.",
    "rests_on": [
     {
-     "label": "F2",
-     "ref": "quintero_2025",
-     "where": "Tolerability and safety › Adverse psychiatric effects",
-     "quote": "Ketamine is often used by individuals who ingest, snort, or inject it at relatively high doses, which can result in an experience that typically lasts no more than 2 h.",
-     "sha": "92826f81d5b40fdb"
+     "label": "F4",
+     "ref": "drugscience_ketamine",
+     "where": "How might the drug make you feel?",
+     "quote": "At higher doses still, you may enter a state of profoundly altered consciousness known as a ‘k-hole’, in which your experience of reality is almost completely detached from what is actually going on around you.",
+     "sha": "5c782a872c35fd47"
     }
    ],
    "by": "the second reader",
-   "said": "The passage says that the ketamine experience at high doses typically lasts no more than two hours; it does not specifically give the duration of a K-hole."
+   "said": "The attribution \"Drug Science, a UK charity of scientists\" is not stated in the passage; the passage only describes the effects, not the organization’s identity."
   }
  ],
- "stakes": "dying",
- "with_checked": {
-  "differs": [],
-  "same": []
- },
  "place": {
   "home": "ketamine",
   "also": [],
