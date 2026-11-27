@@ -15,42 +15,35 @@
  ],
  "drugs": [],
  "made": {
-  "on": "2026-11-23",
+  "on": "2026-11-27",
   "models": {
-   "reader": "gemini:gemini-3.5-flash-lite",
-   "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-   "checker": "@cf/openai/gpt-oss-120b",
-   "planner": "groq:openai/gpt-oss-120b",
-   "team": "team B",
-   "reader_2": "groq:openai/gpt-oss-20b",
-   "reader_first": "@cf/meta/llama-4-scout-17b-16e-instruct"
+   "reader": "openrouter:openai/gpt-oss-120b",
+   "writer": "openrouter:meta-llama/llama-3.3-70b-instruct",
+   "checker": "openrouter:openai/gpt-6-luna",
+   "planner": "openrouter:openai/gpt-oss-120b",
+   "team": "team R",
+   "reader_2": "openrouter:openai/gpt-oss-120b",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "45087767314",
-  "read_by": {
-   "gemini-3.5-flash-lite": 3,
-   "llama-4-scout-17b-16e-instruct": 1
-  },
-  "read_seconds": 43,
+  "run": "45931359023",
+  "read_seconds": 85,
   "from": {
    "papers": 2,
    "summaries": 0,
    "official": 0
   },
-  "neurons": 727.6,
-  "seconds": 109
+  "neurons": 0.0,
+  "seconds": 162
  },
- "status": "published",
- "why": "passed every gate",
+ "status": "none",
+ "why": "the answer was not accepted: our own checker does not find it in the words it rests on (0.04): say only what those words say, in their own measure",
  "gates": {
-  "reader": "llama-4-scout-17b-16e-instruct could not read on (the model service could not be reached: The read operation timed out): gemini-3.5-flash-lite read from there",
-  "read": "5 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "1 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
-  "told": "the writer was told what the readers said of the last draft that was not accepted: the short answer “Yes. A review says gabapentinoids work for nerve pain. In animal models, other drugs also eased nerve pain symptoms.”: our own checker does not find it in the words it rests on (0.04): say only what those words say, in their own measure | the But “The animal studies used drugs that",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.75, but 0.91, how1 0.97, how2 0.98",
-  "check": "every sentence kept was accepted by the second reader (@cf/openai/gpt-oss-120b)",
-  "but": "the writer's But was not accepted (The sentence says none have progressed to clinical trials, but the passage states FAAH inhibitors have been tried in clinical trials (though none have progresse): the code wrote the But itself, from what this answer rests on",
-  "rules": "nothing against it",
-  "checked": "set beside the checked claims of the same page: nothing against them"
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-120b read from there",
+  "read": "6 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 0 official page(s), 0 paper(s) read in summary only",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.04, but 0.97, how1 0.61, how2 0.66",
+  "check": "short: NOT accepted: our own checker does not find it in the words it rests on (0.04): say only what those words say, in their own measure; but: NOT accepted: The passage says reports of a 1% population-level abuse prevalence stem from one UK internet survey; it does not say that reported problems among gabapentin users generally are based on that survey. Nor does it establish that the benefit ho; how1: NOT accepted: The review says the medicines’ activities reduce the likelihood of central sensitization, not that they reduce central sensitization. It does support efficacy in managing neuropathic pain.; how2: NOT accepted: The reported potential antiallodynic effects of CB2R-selective agonists are from preclinical studies in animals. The sentence incorrectly extends that finding to patients.",
+  "rules": "broken at try 2: but: words that are not person-first (“abuse”); but: a clinical word where an everyday one exists (“prevalence”): say it plainly"
  },
  "sources": [
   {
@@ -87,10 +80,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-23",
+     "verified_on": "2026-11-27",
      "retraction_check": {
       "status": "correction",
-      "checked_on": "2026-11-23",
+      "checked_on": "2026-11-27",
       "note": "Crossref lists a correction; read it with the paper."
      }
     },
@@ -112,27 +105,44 @@
     "passage": 1,
     "where": "Abstract",
     "quote": "In this targeted narrative review, we aim to disabuse pain physicians and other clinicians, pharmacists, and policymakers of both the positive and negative myths concerning gabapentinoid medications.",
-    "text": "a targeted narrative review"
+    "text": "targeted narrative review of gabapentinoid medications"
    },
    "findings": [
     {
-     "passage": 10,
-     "where": "The Therapeutic Benefits of Gabapentinoids",
-     "quote": "the literature supports a well-established efficacy of gabapentinoids for traditional neuropathic pain indications, with numerous systematic reviews and meta-analyses demonstrating significant and superior benefit in these states.",
-     "text": "The literature supports a well-established efficacy of gabapentinoids for traditional neuropathic pain indications, with numerous systematic reviews and meta-analyses demonstrating significant and superior benefit in these states.",
+     "passage": 2,
+     "where": "Abstract",
+     "quote": "These activities reduce the likelihood of central sensitization, which explains in part the efficacy of the gabapentinoids in the management of neuropathic pain.",
+     "text": "Gabapentinoids reduce central sensitization and are effective in managing neuropathic pain.",
      "id": "F1",
      "second_hand": ""
     },
     {
-     "passage": 6,
-     "where": "Introduction",
-     "quote": "The calcium channel α-2-δ (CCα2δ) subunit ligands gabapentin and pregabalin play an increasingly important role in the post-opioid-centric and multimodal-focused era of pain management, with a primary role in the treatment of neuropathic pain.",
-     "text": "The calcium channel alpha-2-delta subunit ligands gabapentin and pregabalin play an increasingly important role in pain management, with a primary role in the treatment of neuropathic pain.",
+     "passage": 10,
+     "where": "The Therapeutic Benefits of Gabapentinoids",
+     "quote": "the literature supports a well-established efficacy of gabapentinoids for traditional neuropathic pain indications, with numerous systematic reviews and meta-analyses demonstrating significant and superior benefit in these states.",
+     "text": "Evidence shows gabapentinoids have well-established efficacy for traditional neuropathic pain indications.",
      "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 15,
+     "where": "The Therapeutic Benefits of Gabapentinoids › Mechanism: Amelioration of Central Sensitization",
+     "quote": "gabapentin has also correspondingly been shown to inhibit the activity of this complex. This key finding may explain why gabapentinoids display optimal therapeutic efficacy in CS states given the primacy of the NMDAR in the development of that phenomenon.",
+     "text": "Gabapentin inhibits the calcium channel–NMDA receptor complex, which may explain its optimal efficacy in central sensitization states.",
+     "id": "F3",
      "second_hand": ""
     }
    ],
-   "limits": [],
+   "limits": [
+    {
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "Reports of a 1% population-level abuse prevalence stem from a single internet survey in the UK, and the vanishingly small adverse event outcomes data do not support such frequency.",
+     "text": "The reported 1% abuse prevalence is based on a single UK internet survey, indicating limited evidence.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
    "tag": "A"
   },
   {
@@ -165,10 +175,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-23",
+     "verified_on": "2026-11-27",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-23"
+      "checked_on": "2026-11-27"
      }
     },
     "volume": "10",
@@ -190,31 +200,31 @@
     "passage": 1,
     "where": "Abstract",
     "quote": "All original research articles that evaluated the efficacy of molecules that modulate the endocannabinoid system (ECS) for the prevention and/or treatment of pain in HIV-NP animal models and patients with HIV-NP were included.",
-    "text": "a systematic review evaluating molecules that modulate the endocannabinoid system in HIV-associated neuropathic pain animal models and patients"
+    "text": "Systematic review of ECS-modulating drugs for HIV-associated neuropathic pain in animal models and patients"
    },
    "findings": [
     {
-     "passage": 15,
-     "where": "Results › Preclinical studies › FAAH inhibitors",
-     "quote": "A FAAH inhibitor palmitoylallylamide (L-29) alleviated mechanical sensitivity induced by ddC and its effects were comparable to gabapentin, which is used in the management of NP.",
-     "text": "A FAAH inhibitor called palmitoylallylamide (L-29) alleviated mechanical sensitivity induced by ddC in preclinical studies, and its effects were comparable to gabapentin.",
-     "id": "F3",
-     "second_hand": ""
-    },
-    {
-     "passage": 15,
-     "where": "Results › Preclinical studies › FAAH inhibitors",
-     "quote": "Two other FAAH inhibitors, URB597 and PF-3845, alleviated HIV-gp120-induced cold and tactile/mechanical allodynia with limited effects on mechanical hyperalgesia.",
-     "text": "Two other FAAH inhibitors, URB597 and PF-3845, alleviated HIV-gp120-induced cold and tactile/mechanical allodynia with limited effects on mechanical hyperalgesia.",
+     "passage": 16,
+     "where": "Results › Preclinical studies › COX and LOX inhibitors",
+     "quote": "The IPM combination alleviated both mechanical allodynia and thermal hyperalgesia induced by ddC.",
+     "text": "The indomethacin plus minocycline combination reduced mechanical allodynia and thermal hyperalgesia in a rat model of HIV-associated neuropathic pain.",
      "id": "F4",
      "second_hand": ""
     },
     {
-     "passage": 24,
+     "passage": 22,
      "where": "Discussion › Preclinical studies on the effects of cannabis/cannabinoids in HIV-NP animal models",
-     "quote": "The IPM combination was found to alleviate ddC-induced mechanical allodynia and thermal hyperalgesia in a CBR-dependent manner.",
-     "text": "The IPM combination was found to alleviate ddC-induced mechanical allodynia and thermal hyperalgesia in a CBR-dependent manner.",
+     "quote": "CB2R-selective agonists could be a better option as they could produce antiallodynic effects without the unwanted psychoactive effects associated with CB1R activation.",
+     "text": "CB2R-selective agonists may provide antiallodynic effects without psychoactive side effects.",
      "id": "F5",
+     "second_hand": ""
+    },
+    {
+     "passage": 30,
+     "where": "Concluding remarks and opinion",
+     "quote": "All the FAAH inhibitors evaluated were effective in preclinical studies of HIV-NP.",
+     "text": "All FAAH inhibitors tested were effective in preclinical HIV-associated neuropathic pain models.",
+     "id": "F6",
      "second_hand": ""
     }
    ],
@@ -223,135 +233,17 @@
      "passage": 30,
      "where": "Concluding remarks and opinion",
      "quote": "Various FAAH inhibitors have been tried in clinical trials for various types of pain but to our knowledge, none have progressed so far.",
-     "text": "Various FAAH inhibitors have been tried in clinical trials for various types of pain, but to the authors' knowledge, none have progressed so far.",
-     "id": "L1",
+     "text": "FAAH inhibitors have not progressed in clinical trials for HIV-associated neuropathic pain.",
+     "id": "L2",
      "second_hand": ""
     }
    ],
    "tag": "B"
   }
  ],
- "parts": [
-  {
-   "part": "short",
-   "text": "Yes. Gabapentinoids can help with nerve issues.",
-   "uses": [
-    "F1",
-    "F3"
-   ],
-   "rests_on": [
-    {
-     "label": "F1",
-     "ref": "mcanally_2020",
-     "where": "The Therapeutic Benefits of Gabapentinoids",
-     "quote": "the literature supports a well-established efficacy of gabapentinoids for traditional neuropathic pain indications, with numerous systematic reviews and meta-analyses demonstrating significant and superior benefit in these states.",
-     "sha": "19fcd613f42c8068"
-    },
-    {
-     "label": "F3",
-     "ref": "aly_2021",
-     "where": "Results › Preclinical studies › FAAH inhibitors",
-     "quote": "A FAAH inhibitor palmitoylallylamide (L-29) alleviated mechanical sensitivity induced by ddC and its effects were comparable to gabapentin, which is used in the management of NP.",
-     "sha": "6e25ad8c661883b3"
-    }
-   ]
-  },
-  {
-   "part": "but",
-   "text": "This rests on 1 review and 1 study in people.",
-   "uses": [
-    "DA",
-    "DB"
-   ],
-   "fixed": true,
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "mcanally_2020",
-     "where": "Abstract",
-     "quote": "In this targeted narrative review, we aim to disabuse pain physicians and other clinicians, pharmacists, and policymakers of both the positive and negative myths concerning gabapentinoid medications.",
-     "sha": "516fd95f7e7bedf5"
-    },
-    {
-     "label": "DB",
-     "ref": "aly_2021",
-     "where": "Abstract",
-     "quote": "All original research articles that evaluated the efficacy of molecules that modulate the endocannabinoid system (ECS) for the prevention and/or treatment of pain in HIV-NP animal models and patients with HIV-NP were included.",
-     "sha": "61ec1bcbf9210728"
-    }
-   ]
-  },
-  {
-   "part": "how1",
-   "text": "A review found gabapentinoids work for neuropathic pain.",
-   "uses": [
-    "DA",
-    "F1",
-    "F2"
-   ],
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "mcanally_2020",
-     "where": "Abstract",
-     "quote": "In this targeted narrative review, we aim to disabuse pain physicians and other clinicians, pharmacists, and policymakers of both the positive and negative myths concerning gabapentinoid medications.",
-     "sha": "516fd95f7e7bedf5"
-    },
-    {
-     "label": "F1",
-     "ref": "mcanally_2020",
-     "where": "The Therapeutic Benefits of Gabapentinoids",
-     "quote": "the literature supports a well-established efficacy of gabapentinoids for traditional neuropathic pain indications, with numerous systematic reviews and meta-analyses demonstrating significant and superior benefit in these states.",
-     "sha": "19fcd613f42c8068"
-    },
-    {
-     "label": "F2",
-     "ref": "mcanally_2020",
-     "where": "Introduction",
-     "quote": "The calcium channel α-2-δ (CCα2δ) subunit ligands gabapentin and pregabalin play an increasingly important role in the post-opioid-centric and multimodal-focused era of pain management, with a primary role in the treatment of neuropathic pain.",
-     "sha": "9d5a5db535c5b751"
-    }
-   ],
-   "quote": "multimodal-focused era of pain management, with a primary role in the treatment of neuropathic pain",
-   "quote_ref": "mcanally_2020"
-  },
-  {
-   "part": "how2",
-   "text": "A systematic review studied molecules for HIV-associated neuropathic pain.",
-   "uses": [
-    "DB",
-    "F3",
-    "F5"
-   ],
-   "rests_on": [
-    {
-     "label": "DB",
-     "ref": "aly_2021",
-     "where": "Abstract",
-     "quote": "All original research articles that evaluated the efficacy of molecules that modulate the endocannabinoid system (ECS) for the prevention and/or treatment of pain in HIV-NP animal models and patients with HIV-NP were included.",
-     "sha": "61ec1bcbf9210728"
-    },
-    {
-     "label": "F3",
-     "ref": "aly_2021",
-     "where": "Results › Preclinical studies › FAAH inhibitors",
-     "quote": "A FAAH inhibitor palmitoylallylamide (L-29) alleviated mechanical sensitivity induced by ddC and its effects were comparable to gabapentin, which is used in the management of NP.",
-     "sha": "6e25ad8c661883b3"
-    },
-    {
-     "label": "F5",
-     "ref": "aly_2021",
-     "where": "Discussion › Preclinical studies on the effects of cannabis/cannabinoids in HIV-NP animal models",
-     "quote": "The IPM combination was found to alleviate ddC-induced mechanical allodynia and thermal hyperalgesia in a CBR-dependent manner.",
-     "sha": "8e5d4a398516b0d1"
-    }
-   ],
-   "quote": "All original research articles that evaluated the efficacy of molecules that modulate the endocannabinoid system",
-   "quote_ref": "aly_2021"
-  }
- ],
- "complete": true,
- "missing": "",
+ "parts": [],
+ "complete": false,
+ "missing": "optimal drug selection and long‑term safety",
  "wanted": [
   {
    "doi": "10.1016/j.neubiorev.2025.106209",
@@ -384,6 +276,14 @@
    "why": "the answer was not accepted: our own checker does not find it in the words it rests on (0.04): say only what those words say, in their own measure",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-23",
+   "lane": 19,
+   "status": "published",
+   "why": "passed every gate",
+   "short": "Yes. Gabapentinoids can help with nerve issues.",
+   "complete": true
   }
  ],
  "looked": [
@@ -392,7 +292,7 @@
    "read": "full",
    "kind": "review",
    "at": "10.1007/s40122-020-00189-x",
-   "kept": 2,
+   "kept": 3,
    "thrown": []
   },
   {
@@ -401,7 +301,14 @@
    "kind": "other",
    "at": "10.1016/j.ibneur.2021.01.004",
    "kept": 3,
-   "thrown": []
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "L-29 reduced mechanical sensitivity in a rat model of HIV-associated neuropathic pain, comparable to gabapentin.",
+     "quote": "A FAAH inhibitor palmitoylallylamide (L-29) alleviated mechanical sensitivity induced by ddC and its effects were comparable to gabapentin, which is used in the management of NP.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   },
   {
    "title": "Medications - non-steroidal anti-inflammatory drugs",
@@ -417,8 +324,11 @@
    "kind": "official",
    "at": "https://ods.od.nih.gov/factsheets/PrimaryMitochondrialDisorders-HealthProfessional/",
    "kept": 0,
-   "thrown": [],
-   "fault": "the page could not be fetched (OSError)"
+   "thrown": [
+    {
+     "why": "the reader gave no JSON"
+    }
+   ]
   },
   {
    "title": "Sleep Disorders and Complementary Health Approaches",
@@ -432,7 +342,7 @@
  "plan": {
   "short": [
    "F1",
-   "F3"
+   "F5"
   ],
   "direct": "Yes",
   "but": [
@@ -441,32 +351,30 @@
   "how": [
    [
     "DA",
-    "F1",
-    "F2"
+    "F1"
    ],
    [
     "DB",
-    "F3",
     "F5"
    ]
   ],
-  "unanswered": "specific drug recommendations for particular neuropathies"
+  "unanswered": "optimal drug selection and long‑term safety"
  },
  "panel_gap": [],
  "own": {
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.7498,
-   "but": 0.9091,
-   "how1": 0.9721,
-   "how2": 0.9816
+   "short": 0.0356,
+   "but": 0.9714,
+   "how1": 0.6065,
+   "how2": 0.6601
   },
   "scores_quotes_alone": {
-   "short": 0.5155,
-   "but": 0.9521,
-   "how1": 0.9702,
-   "how2": 0.9843
+   "short": 0.0077,
+   "but": 0.9027,
+   "how1": 0.0342,
+   "how2": 0.3956
   }
  },
  "tries": [
@@ -476,44 +384,46 @@
    "parts": [
     {
      "part": "short",
-     "text": "Yes. Gabapentinoids can help with nerve issues.",
+     "text": "Yes, gabapentin and pregabalin can help with nerve pain. The sources do not speak of other nerve problems.",
      "rests_on": [
       {
        "label": "F1",
        "ref": "mcanally_2020",
-       "where": "The Therapeutic Benefits of Gabapentinoids",
-       "quote": "the literature supports a well-established efficacy of gabapentinoids for traditional neuropathic pain indications, with numerous systematic reviews and meta-analyses demonstrating significant and superior benefit in these states.",
-       "sha": "19fcd613f42c8068"
+       "where": "Abstract",
+       "quote": "These activities reduce the likelihood of central sensitization, which explains in part the efficacy of the gabapentinoids in the management of neuropathic pain.",
+       "sha": "880d09f2f7c60a1f"
       },
       {
-       "label": "F3",
+       "label": "F5",
        "ref": "aly_2021",
-       "where": "Results › Preclinical studies › FAAH inhibitors",
-       "quote": "A FAAH inhibitor palmitoylallylamide (L-29) alleviated mechanical sensitivity induced by ddC and its effects were comparable to gabapentin, which is used in the management of NP.",
-       "sha": "6e25ad8c661883b3"
+       "where": "Discussion › Preclinical studies on the effects of cannabis/cannabinoids in HIV-NP animal models",
+       "quote": "CB2R-selective agonists could be a better option as they could produce antiallodynic effects without the unwanted psychoactive effects associated with CB1R activation.",
+       "sha": "2fb5e65e929b16f6"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "our own checker",
+     "said": "our own checker does not find it in the words it rests on (0.04): say only what those words say, in their own measure"
     },
     {
      "part": "but",
-     "text": "None have progressed to clinical trials for people.",
+     "text": "The answer holds with limited evidence, based on a single UK internet survey.",
      "rests_on": [
       {
        "label": "L1",
-       "ref": "aly_2021",
-       "where": "Concluding remarks and opinion",
-       "quote": "Various FAAH inhibitors have been tried in clinical trials for various types of pain but to our knowledge, none have progressed so far.",
-       "sha": "ec5895cf55eabab7"
+       "ref": "mcanally_2020",
+       "where": "Abstract",
+       "quote": "Reports of a 1% population-level abuse prevalence stem from a single internet survey in the UK, and the vanishingly small adverse event outcomes data do not support such frequency.",
+       "sha": "516fd95f7e7bedf5"
       }
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "Passage states FAAH inhibitors have been tried in clinical trials, contradicting the claim that none have progressed to clinical trials."
+     "said": "The single UK internet survey concerns reported abuse prevalence, not whether gabapentin and pregabalin help with nerve pain."
     },
     {
      "part": "how1",
-     "text": "A review found gabapentinoids work for neuropathic pain.",
+     "text": "A 2020 review of gabapentin and pregabalin found they reduce central sensitization and manage nerve pain.",
      "rests_on": [
       {
        "label": "DA",
@@ -525,23 +435,18 @@
       {
        "label": "F1",
        "ref": "mcanally_2020",
-       "where": "The Therapeutic Benefits of Gabapentinoids",
-       "quote": "the literature supports a well-established efficacy of gabapentinoids for traditional neuropathic pain indications, with numerous systematic reviews and meta-analyses demonstrating significant and superior benefit in these states.",
-       "sha": "19fcd613f42c8068"
-      },
-      {
-       "label": "F2",
-       "ref": "mcanally_2020",
-       "where": "Introduction",
-       "quote": "The calcium channel α-2-δ (CCα2δ) subunit ligands gabapentin and pregabalin play an increasingly important role in the post-opioid-centric and multimodal-focused era of pain management, with a primary role in the treatment of neuropathic pain.",
-       "sha": "9d5a5db535c5b751"
+       "where": "Abstract",
+       "quote": "These activities reduce the likelihood of central sensitization, which explains in part the efficacy of the gabapentinoids in the management of neuropathic pain.",
+       "sha": "880d09f2f7c60a1f"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage says these activities reduce the likelihood of central sensitization, not that they reduce central sensitization. It does support efficacy in managing neuropathic pain, but the sentence overstates the central-sensitization claim"
     },
     {
      "part": "how2",
-     "text": "Animal models and patients with HIV-associated neuropathic pain were studied.",
+     "text": "A 2021 review of ECS-modulating drugs for HIV-associated nerve pain in animals and patients found CB2R-selective agonists may provide antiallodynic effects.",
      "rests_on": [
       {
        "label": "DB",
@@ -551,18 +456,91 @@
        "sha": "61ec1bcbf9210728"
       },
       {
-       "label": "F3",
+       "label": "F5",
        "ref": "aly_2021",
-       "where": "Results › Preclinical studies › FAAH inhibitors",
-       "quote": "A FAAH inhibitor palmitoylallylamide (L-29) alleviated mechanical sensitivity induced by ddC and its effects were comparable to gabapentin, which is used in the management of NP.",
-       "sha": "6e25ad8c661883b3"
+       "where": "Discussion › Preclinical studies on the effects of cannabis/cannabinoids in HIV-NP animal models",
+       "quote": "CB2R-selective agonists could be a better option as they could produce antiallodynic effects without the unwanted psychoactive effects associated with CB1R activation.",
+       "sha": "2fb5e65e929b16f6"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The CB2R-selective agonist finding is from preclinical studies in animal models. The sentence does not plainly identify that finding as animal evidence, as required by the editor’s note."
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "a rule was broken: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Yes, gabapentin and pregabalin can help with nerve pain.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "mcanally_2020",
+       "where": "Abstract",
+       "quote": "These activities reduce the likelihood of central sensitization, which explains in part the efficacy of the gabapentinoids in the management of neuropathic pain.",
+       "sha": "880d09f2f7c60a1f"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "The answer is based on limited evidence of abuse prevalence.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "mcanally_2020",
+       "where": "Abstract",
+       "quote": "Reports of a 1% population-level abuse prevalence stem from a single internet survey in the UK, and the vanishingly small adverse event outcomes data do not support such frequency.",
+       "sha": "516fd95f7e7bedf5"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: words that are not person-first (“abuse”); a clinical word where an everyday one exists (“prevalence”): say it plainly"
+    },
+    {
+     "part": "how1",
+     "text": "A review of gabapentinoid medications found they reduce central sensitization and manage nerve pain.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "mcanally_2020",
+       "where": "Abstract",
+       "quote": "In this targeted narrative review, we aim to disabuse pain physicians and other clinicians, pharmacists, and policymakers of both the positive and negative myths concerning gabapentinoid medications.",
+       "sha": "516fd95f7e7bedf5"
+      },
+      {
+       "label": "F1",
+       "ref": "mcanally_2020",
+       "where": "Abstract",
+       "quote": "These activities reduce the likelihood of central sensitization, which explains in part the efficacy of the gabapentinoids in the management of neuropathic pain.",
+       "sha": "880d09f2f7c60a1f"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A systematic review of ECS-modulating drugs found CB2R-selective agonists may provide antiallodynic effects.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "aly_2021",
+       "where": "Abstract",
+       "quote": "All original research articles that evaluated the efficacy of molecules that modulate the endocannabinoid system (ECS) for the prevention and/or treatment of pain in HIV-NP animal models and patients with HIV-NP were included.",
+       "sha": "61ec1bcbf9210728"
       },
       {
        "label": "F5",
        "ref": "aly_2021",
        "where": "Discussion › Preclinical studies on the effects of cannabis/cannabinoids in HIV-NP animal models",
-       "quote": "The IPM combination was found to alleviate ddC-induced mechanical allodynia and thermal hyperalgesia in a CBR-dependent manner.",
-       "sha": "8e5d4a398516b0d1"
+       "quote": "CB2R-selective agonists could be a better option as they could produce antiallodynic effects without the unwanted psychoactive effects associated with CB1R activation.",
+       "sha": "2fb5e65e929b16f6"
       }
      ],
      "ok": true
@@ -570,49 +548,51 @@
    ]
   },
   {
-   "try": 2,
-   "why": "the short answer or the But was not accepted: written again",
+   "try": 3,
+   "why": "the last draft: no answer",
    "parts": [
     {
      "part": "short",
-     "text": "Yes. Gabapentinoids can help with nerve issues.",
+     "text": "Yes, gabapentin and pregabalin can help with nerve pain. The sources do not speak of other nerve problems.",
      "rests_on": [
       {
        "label": "F1",
        "ref": "mcanally_2020",
-       "where": "The Therapeutic Benefits of Gabapentinoids",
-       "quote": "the literature supports a well-established efficacy of gabapentinoids for traditional neuropathic pain indications, with numerous systematic reviews and meta-analyses demonstrating significant and superior benefit in these states.",
-       "sha": "19fcd613f42c8068"
+       "where": "Abstract",
+       "quote": "These activities reduce the likelihood of central sensitization, which explains in part the efficacy of the gabapentinoids in the management of neuropathic pain.",
+       "sha": "880d09f2f7c60a1f"
       },
       {
-       "label": "F3",
+       "label": "F5",
        "ref": "aly_2021",
-       "where": "Results › Preclinical studies › FAAH inhibitors",
-       "quote": "A FAAH inhibitor palmitoylallylamide (L-29) alleviated mechanical sensitivity induced by ddC and its effects were comparable to gabapentin, which is used in the management of NP.",
-       "sha": "6e25ad8c661883b3"
+       "where": "Discussion › Preclinical studies on the effects of cannabis/cannabinoids in HIV-NP animal models",
+       "quote": "CB2R-selective agonists could be a better option as they could produce antiallodynic effects without the unwanted psychoactive effects associated with CB1R activation.",
+       "sha": "2fb5e65e929b16f6"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "our own checker",
+     "said": "our own checker does not find it in the words it rests on (0.04): say only what those words say, in their own measure"
     },
     {
      "part": "but",
-     "text": "None of these FAAH inhibitors have progressed so far in clinical trials.",
+     "text": "This holds for people who use it, but the reported problems with people who use gabapentin are based on a single UK internet survey.",
      "rests_on": [
       {
        "label": "L1",
-       "ref": "aly_2021",
-       "where": "Concluding remarks and opinion",
-       "quote": "Various FAAH inhibitors have been tried in clinical trials for various types of pain but to our knowledge, none have progressed so far.",
-       "sha": "ec5895cf55eabab7"
+       "ref": "mcanally_2020",
+       "where": "Abstract",
+       "quote": "Reports of a 1% population-level abuse prevalence stem from a single internet survey in the UK, and the vanishingly small adverse event outcomes data do not support such frequency.",
+       "sha": "516fd95f7e7bedf5"
       }
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "it is about something else than the short answer"
+     "said": "The passage says reports of a 1% population-level abuse prevalence stem from one UK internet survey; it does not say that reported problems among gabapentin users generally are based on that survey. Nor does it establish that the benefit ho"
     },
     {
      "part": "how1",
-     "text": "A review found gabapentinoids work for neuropathic pain.",
+     "text": "A 2020 review of gabapentin and pregabalin found they reduce central sensitization and manage nerve pain.",
      "rests_on": [
       {
        "label": "DA",
@@ -624,23 +604,18 @@
       {
        "label": "F1",
        "ref": "mcanally_2020",
-       "where": "The Therapeutic Benefits of Gabapentinoids",
-       "quote": "the literature supports a well-established efficacy of gabapentinoids for traditional neuropathic pain indications, with numerous systematic reviews and meta-analyses demonstrating significant and superior benefit in these states.",
-       "sha": "19fcd613f42c8068"
-      },
-      {
-       "label": "F2",
-       "ref": "mcanally_2020",
-       "where": "Introduction",
-       "quote": "The calcium channel α-2-δ (CCα2δ) subunit ligands gabapentin and pregabalin play an increasingly important role in the post-opioid-centric and multimodal-focused era of pain management, with a primary role in the treatment of neuropathic pain.",
-       "sha": "9d5a5db535c5b751"
+       "where": "Abstract",
+       "quote": "These activities reduce the likelihood of central sensitization, which explains in part the efficacy of the gabapentinoids in the management of neuropathic pain.",
+       "sha": "880d09f2f7c60a1f"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "the second reader",
+     "said": "The review says the medicines’ activities reduce the likelihood of central sensitization, not that they reduce central sensitization. It does support efficacy in managing neuropathic pain."
     },
     {
      "part": "how2",
-     "text": "A systematic review studied molecules for HIV-associated neuropathic pain in animal models and patients.",
+     "text": "A 2021 review of ECS-modulating drugs for HIV-associated nerve pain in animals and patients found CB2R-selective agonists may provide antiallodynic effects.",
      "rests_on": [
       {
        "label": "DB",
@@ -650,21 +625,16 @@
        "sha": "61ec1bcbf9210728"
       },
       {
-       "label": "F3",
-       "ref": "aly_2021",
-       "where": "Results › Preclinical studies › FAAH inhibitors",
-       "quote": "A FAAH inhibitor palmitoylallylamide (L-29) alleviated mechanical sensitivity induced by ddC and its effects were comparable to gabapentin, which is used in the management of NP.",
-       "sha": "6e25ad8c661883b3"
-      },
-      {
        "label": "F5",
        "ref": "aly_2021",
        "where": "Discussion › Preclinical studies on the effects of cannabis/cannabinoids in HIV-NP animal models",
-       "quote": "The IPM combination was found to alleviate ddC-induced mechanical allodynia and thermal hyperalgesia in a CBR-dependent manner.",
-       "sha": "8e5d4a398516b0d1"
+       "quote": "CB2R-selective agonists could be a better option as they could produce antiallodynic effects without the unwanted psychoactive effects associated with CB1R activation.",
+       "sha": "2fb5e65e929b16f6"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "the second reader",
+     "said": "The reported potential antiallodynic effects of CB2R-selective agonists are from preclinical studies in animals. The sentence incorrectly extends that finding to patients."
     }
    ]
   }
@@ -672,25 +642,51 @@
  "dropped": [
   {
    "try": 3,
-   "part": "but",
-   "text": "None have progressed to clinical trials for various types of pain.",
+   "part": "how1",
+   "text": "A 2020 review of gabapentin and pregabalin found they reduce central sensitization and manage nerve pain.",
    "rests_on": [
     {
-     "label": "L1",
-     "ref": "aly_2021",
-     "where": "Concluding remarks and opinion",
-     "quote": "Various FAAH inhibitors have been tried in clinical trials for various types of pain but to our knowledge, none have progressed so far.",
-     "sha": "ec5895cf55eabab7"
+     "label": "DA",
+     "ref": "mcanally_2020",
+     "where": "Abstract",
+     "quote": "In this targeted narrative review, we aim to disabuse pain physicians and other clinicians, pharmacists, and policymakers of both the positive and negative myths concerning gabapentinoid medications.",
+     "sha": "516fd95f7e7bedf5"
+    },
+    {
+     "label": "F1",
+     "ref": "mcanally_2020",
+     "where": "Abstract",
+     "quote": "These activities reduce the likelihood of central sensitization, which explains in part the efficacy of the gabapentinoids in the management of neuropathic pain.",
+     "sha": "880d09f2f7c60a1f"
     }
    ],
    "by": "the second reader",
-   "said": "The sentence says none have progressed to clinical trials, but the passage states FAAH inhibitors have been tried in clinical trials (though none have progressed further)."
+   "said": "The review says the medicines’ activities reduce the likelihood of central sensitization, not that they reduce central sensitization. It does support efficacy in managing neuropathic pain."
+  },
+  {
+   "try": 3,
+   "part": "how2",
+   "text": "A 2021 review of ECS-modulating drugs for HIV-associated nerve pain in animals and patients found CB2R-selective agonists may provide antiallodynic effects.",
+   "rests_on": [
+    {
+     "label": "DB",
+     "ref": "aly_2021",
+     "where": "Abstract",
+     "quote": "All original research articles that evaluated the efficacy of molecules that modulate the endocannabinoid system (ECS) for the prevention and/or treatment of pain in HIV-NP animal models and patients with HIV-NP were included.",
+     "sha": "61ec1bcbf9210728"
+    },
+    {
+     "label": "F5",
+     "ref": "aly_2021",
+     "where": "Discussion › Preclinical studies on the effects of cannabis/cannabinoids in HIV-NP animal models",
+     "quote": "CB2R-selective agonists could be a better option as they could produce antiallodynic effects without the unwanted psychoactive effects associated with CB1R activation.",
+     "sha": "2fb5e65e929b16f6"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The reported potential antiallodynic effects of CB2R-selective agonists are from preclinical studies in animals. The sentence incorrectly extends that finding to patients."
   }
  ],
- "with_checked": {
-  "differs": [],
-  "same": []
- },
  "place": {
   "home": "facts",
   "also": [],
