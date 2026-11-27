@@ -18,44 +18,37 @@
   "amphetamine"
  ],
  "made": {
-  "on": "2026-11-23",
+  "on": "2026-11-27",
   "models": {
-   "reader": "gemini:gemini-3.1-flash-lite",
+   "reader": "openrouter:openai/gpt-oss-120b",
    "writer": "groq:qwen/qwen3.8-27b",
-   "checker": "groq:openai/gpt-oss-120b",
+   "checker": "openrouter:openai/gpt-6-luna",
    "planner": "groq:openai/gpt-oss-120b",
-   "also1": "gemini:gemini-3.5-flash-lite",
-   "also2": "gemini:gemini-3.6-flash",
-   "team": "team I",
+   "also1": "gemini:gemini-3-flash-preview",
+   "team": "team G",
    "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
-   "reader_first": "gemini:gemini-3.5-flash-lite"
+   "reader_3": "openrouter:openai/gpt-oss-120b",
+   "also1_else": "gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "45259557698",
-  "read_by": {
-   "gemini-3.1-flash-lite": 1,
-   "gemini-3.5-flash-lite": 1
-  },
-  "read_seconds": 100,
+  "run": "45942570270",
+  "read_seconds": 15,
   "from": {
    "papers": 2,
    "summaries": 0,
-   "official": 0
+   "official": 2
   },
   "neurons": 0.0,
-  "seconds": 231
+  "seconds": 108
  },
- "status": "published",
- "why": "passed every gate",
+ "status": "none",
+ "why": "the second reader did not accept the answer",
  "gates": {
-  "reader": "gemini-3.5-flash-lite could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.1-flash-lite read from there",
-  "read": "3 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
-  "rules": "broken at try 1: but: it says “both”, and the words it rests on carry no such word: say what the source says, in its own measure, or leave the word out; written again, then nothing against it",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.77, but 0.11, how1 0.25, how2 0.73",
-  "check": "every sentence kept was accepted by the second reader (groq:openai/gpt-oss-120b) and by gemini:gemini-3.5-flash-lite and by gemini:gemini-3.6-flash",
-  "but": "the writer's But was not accepted (The passages do not state that the source is not a direct comparison of how the drugs feel or work; this is an inference not present in the text.): the code wrote the But itself, from what this answer rests on",
-  "checked": "set beside the checked claims of the same page: nothing against them"
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-120b read from there",
+  "read": "9 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 2 official page(s), 0 paper(s) read in summary only",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.89, but 0.07, how1 0.14, how2 0.79, how3 0.74, how4 0.74",
+  "check": "short: NOT accepted: the word it opens with (“Yes”) is not the answer the passages bear out: The passages support some differences, but the review itself says methamphetamine is considered more potent and longer-lasting, while sentence 2 concerns the makeup of ; but: NOT accepted: The passage gives the participant counts but does not state that this limits comparison with amphetamine; it reports the characteristics of studies in a treatment review, not a limitation on the drug differences in sentence 1.; how1: NOT accepted: The passages support the claims about Adderall’s salts and amphetamine mechanisms, but do not say Drug Science is a UK charity of scientists.; how2: NOT accepted: The passage says the high lasts much longer than the high produced by crack cocaine; the sentence omits that comparison.; how3: accepted; how4: accepted"
  },
  "sources": [
   {
@@ -96,10 +89,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-23",
+     "verified_on": "2026-11-27",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-23"
+      "checked_on": "2026-11-27"
      }
     },
     "volume": "34",
@@ -123,27 +116,28 @@
     "passage": 2,
     "where": "Abstract",
     "quote": "We systematically reviewed the peer-reviewed literature via the electronic databases PubMed, EMBASE, CINAHL and SCOPUS for randomised controlled trials reported in the English language examining a pharmacological treatment for AMPH/MA dependence or use disorder.",
-    "text": "A systematic review of peer-reviewed literature on pharmacological treatments for amphetamine or methamphetamine dependence."
+    "text": "systematic review of randomized controlled trials on pharmacological treatment for amphetamine/methamphetamine dependence"
    },
    "findings": [
     {
      "passage": 7,
      "where": "Introduction",
-     "quote": "MA is considered a more potent derivative of AMPH, with a longer duration of action and increased ability to cross the blood–brain barrier",
-     "text": "Methamphetamine is considered a more potent derivative of amphetamine with a longer duration of action and an increased ability to cross the blood-brain barrier.",
+     "quote": "MA is considered a more potent derivative of AMPH, with a longer duration of action and increased ability to cross the blood–brain barrier; and global shifts in the illicit stimulant market have resulted in the predominance of MA.",
+     "text": "Methamphetamine is a more potent derivative of amphetamine, has a longer duration of action, and crosses the blood–brain barrier more readily.",
      "id": "F1",
-     "second_hand": ""
-    },
-    {
-     "passage": 7,
-     "where": "Introduction",
-     "quote": "Amphetamines refer to both amphetamine (AMPH) and the structurally similar methamphetamines (MA), both of which are used extra-medically.",
-     "text": "Amphetamines refer to both amphetamine and the structurally similar methamphetamine, both of which are used extra-medically.",
-     "id": "F2",
      "second_hand": ""
     }
    ],
-   "limits": [],
+   "limits": [
+    {
+     "passage": 23,
+     "where": "Results › Study Selection and Characteristics",
+     "quote": "Thirty of the 43 studies (69.8%) included participants dependent on MA only [–, –, –,,, –, –,, –, ]; four (9.3%) were on MA/AMPH [,,, ]; four (9.3%) were on AMPH only [,,, ]; three (7.0%) were on amphetamine-type stimulants (ATS) and opioids [,, ] and two (4.7%) were on MA/cocaine.",
+     "text": "Most studies (69.8%) included participants dependent on methamphetamine only, limiting comparison with amphetamine.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
    "tag": "A"
   },
   {
@@ -188,10 +182,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-23",
+     "verified_on": "2026-11-27",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-23"
+      "checked_on": "2026-11-27"
      }
     },
     "volume": "2020",
@@ -212,136 +206,180 @@
    "design": {
     "passage": 1,
     "where": "Abstract",
-    "quote": "This review summarized the mechanisms of methamphetamine-induced neurotoxicity including apoptosis and blood-brain barrier breakdown through oxidative stress and analyzed several possible antioxidative mechanisms of tert-butylhydroquinone (TBHQ) which is a kind of food additive with antioxidative effects.",
-    "text": "A review summarizing mechanisms of methamphetamine-induced neurotoxicity and antioxidative mechanisms of TBHQ"
+    "quote": "This review summarized the mechanisms of methamphetamine-induced neurotoxicity including apoptosis and blood-brain barrier breakdown through oxidative stress",
+    "text": "Review article summarizing mechanisms of methamphetamine neurotoxicity"
    },
    "findings": [
     {
      "passage": 1,
      "where": "Abstract",
-     "quote": "Methamphetamine is a derivative of amphetamines, a highly addictive central stimulant with multiple systemic toxicity including the brain, heart, liver, lung, and spleen.",
-     "text": "Methamphetamine is a derivative of amphetamines and a highly addictive central stimulant with multiple systemic toxicity including the brain, heart, liver, lung, and spleen.",
+     "quote": "Methamphetamine is a derivative of amphetamines, a highly addictive central stimulant",
+     "text": "Meth is chemically a derivative of amphetamines.",
+     "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 2,
+     "where": "1. Introduction",
+     "quote": "Brain hyperthermia is an important death cause of methamphetamine. Toxic doses of methamphetamine can cause hyperthermia, and high core temperature can cause a large amount of dopamine loss in the brain.",
+     "text": "Meth can cause brain hyperthermia, which can lead to dopamine loss and death.",
      "id": "F3",
+     "second_hand": ""
+    },
+    {
+     "passage": 2,
+     "where": "1. Introduction",
+     "quote": "global seizures of methamphetamine accounted for 71% of the total amphetamine-type stimulants, followed by amphetamine with 21%",
+     "text": "Meth accounts for 71% of global amphetamine-type stimulant seizures, more than amphetamine.",
+     "id": "F4",
      "second_hand": ""
     }
    ],
    "limits": [],
    "tag": "B"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "drugscience_adderall",
+    "type": "webpage",
+    "title": "Adderall",
+    "author": [
+     {
+      "literal": "Drug Science"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      []
+     ]
+    },
+    "URL": "https://www.drugscience.org.uk/drugs/adderall",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       27
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-27"
+    }
+   },
+   "title": "Adderall",
+   "year": null,
+   "kind": "official",
+   "people": true,
+   "near": 0.73,
+   "name": "Drug Science",
+   "short": "Drug Science, a UK charity of scientists",
+   "tier": 2,
+   "address": "https://www.drugscience.org.uk/drugs/adderall",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 3,
+     "where": "What is the science of Adderall?",
+     "quote": "Adderall is a chemical compound that is made up of powerful blends of the amphetamine salts dextroamphetamine and levoamphetamine, which are isomers of the original amphetamine molecule and come in a 3:1 ratio.",
+     "text": "Adderall is composed of a mixture of amphetamine salts rather than a single amphetamine compound.",
+     "id": "F5",
+     "second_hand": ""
+    },
+    {
+     "passage": 4,
+     "where": "What is the science of Adderall?",
+     "quote": "Amphetamines exert their pharmacologic action by blocking the reuptake of noradrenaline (NA) and dopamine into presynaptic neurons, increasing the release of these into the extraneuronal space.",
+     "text": "Adderall works by blocking reuptake and increasing release of norepinephrine and dopamine.",
+     "id": "F6",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "C"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "frank_methamphetamine",
+    "type": "webpage",
+    "title": "Methamphetamine",
+    "author": [
+     {
+      "literal": "FRANK"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      []
+     ]
+    },
+    "URL": "https://www.talktofrank.com/drug/methamphetamine",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       27
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-27"
+    }
+   },
+   "title": "Methamphetamine",
+   "year": null,
+   "kind": "official",
+   "people": true,
+   "near": 0.65,
+   "name": "FRANK",
+   "short": "FRANK",
+   "tier": 1,
+   "address": "https://www.talktofrank.com/drug/methamphetamine",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 12,
+     "where": "Mixing methamphetamine with other drugs / What does it look like?",
+     "quote": "Smoking the purer, crystalline form of methamphetamine, known as crystal meth, produces a very intense high similar to that produced by crack cocaine but much longer lasting.",
+     "text": "Methamphetamine can be smoked as crystal meth, producing a very intense high that lasts much longer.",
+     "id": "F7",
+     "second_hand": ""
+    },
+    {
+     "passage": 13,
+     "where": "Mixing methamphetamine with other drugs / Can you get addicted?",
+     "quote": "The crystal form of methamphetamine, sometimes called crystal meth or ice, is extremely powerful and addictive.",
+     "text": "The crystal form of methamphetamine is extremely powerful and addictive.",
+     "id": "F8",
+     "second_hand": ""
+    },
+    {
+     "passage": 9,
+     "where": "Mixing methamphetamine with other drugs / Physical health risks",
+     "quote": "Increased heart rate and blood pressure, raising the risk of heart attack – the higher the dose, the greater these effects.",
+     "text": "Methamphetamine can increase heart rate and blood pressure, raising heart attack risk, and higher doses cause greater effects.",
+     "id": "F9",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "D"
   }
  ],
- "parts": [
-  {
-   "part": "short",
-   "text": "Yes. Methamphetamine is considered a more potent derivative of amphetamine with a longer duration of action and an increased ability to cross the blood-brain barrier.",
-   "uses": [
-    "F1",
-    "F2"
-   ],
-   "rests_on": [
-    {
-     "label": "F1",
-     "ref": "siefried_2020",
-     "where": "Introduction",
-     "quote": "MA is considered a more potent derivative of AMPH, with a longer duration of action and increased ability to cross the blood–brain barrier",
-     "sha": "318f7d82df1c6d97"
-    },
-    {
-     "label": "F2",
-     "ref": "siefried_2020",
-     "where": "Introduction",
-     "quote": "Amphetamines refer to both amphetamine (AMPH) and the structurally similar methamphetamines (MA), both of which are used extra-medically.",
-     "sha": "318f7d82df1c6d97"
-    }
-   ]
-  },
-  {
-   "part": "but",
-   "text": "This rests on 2 reviews.",
-   "uses": [
-    "DA",
-    "DB"
-   ],
-   "fixed": true,
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "siefried_2020",
-     "where": "Abstract",
-     "quote": "We systematically reviewed the peer-reviewed literature via the electronic databases PubMed, EMBASE, CINAHL and SCOPUS for randomised controlled trials reported in the English language examining a pharmacological treatment for AMPH/MA dependence or use disorder.",
-     "sha": "52c293ffa599352e"
-    },
-    {
-     "label": "DB",
-     "ref": "zhao_2020",
-     "where": "Abstract",
-     "quote": "This review summarized the mechanisms of methamphetamine-induced neurotoxicity including apoptosis and blood-brain barrier breakdown through oxidative stress and analyzed several possible antioxidative mechanisms of tert-butylhydroquinone (TBHQ) which is a kind of food additive with antioxidative effects.",
-     "sha": "77423c867cb085fb"
-    }
-   ]
-  },
-  {
-   "part": "how1",
-   "text": "A 2020 systematic review of treatments for amphetamine or methamphetamine dependence says methamphetamine is considered a more potent derivative of amphetamine.",
-   "uses": [
-    "DA",
-    "F1",
-    "F2"
-   ],
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "siefried_2020",
-     "where": "Abstract",
-     "quote": "We systematically reviewed the peer-reviewed literature via the electronic databases PubMed, EMBASE, CINAHL and SCOPUS for randomised controlled trials reported in the English language examining a pharmacological treatment for AMPH/MA dependence or use disorder.",
-     "sha": "52c293ffa599352e"
-    },
-    {
-     "label": "F1",
-     "ref": "siefried_2020",
-     "where": "Introduction",
-     "quote": "MA is considered a more potent derivative of AMPH, with a longer duration of action and increased ability to cross the blood–brain barrier",
-     "sha": "318f7d82df1c6d97"
-    },
-    {
-     "label": "F2",
-     "ref": "siefried_2020",
-     "where": "Introduction",
-     "quote": "Amphetamines refer to both amphetamine (AMPH) and the structurally similar methamphetamines (MA), both of which are used extra-medically.",
-     "sha": "318f7d82df1c6d97"
-    }
-   ],
-   "quote": "MA is considered a more potent derivative of AMPH",
-   "quote_ref": "siefried_2020"
-  },
-  {
-   "part": "how2",
-   "text": "A 2020 review of methamphetamine neurotoxicity says it is a derivative of amphetamines and a highly addictive central stimulant with systemic toxicity.",
-   "uses": [
-    "DB",
-    "F3"
-   ],
-   "rests_on": [
-    {
-     "label": "DB",
-     "ref": "zhao_2020",
-     "where": "Abstract",
-     "quote": "This review summarized the mechanisms of methamphetamine-induced neurotoxicity including apoptosis and blood-brain barrier breakdown through oxidative stress and analyzed several possible antioxidative mechanisms of tert-butylhydroquinone (TBHQ) which is a kind of food additive with antioxidative effects.",
-     "sha": "77423c867cb085fb"
-    },
-    {
-     "label": "F3",
-     "ref": "zhao_2020",
-     "where": "Abstract",
-     "quote": "Methamphetamine is a derivative of amphetamines, a highly addictive central stimulant with multiple systemic toxicity including the brain, heart, liver, lung, and spleen.",
-     "sha": "77423c867cb085fb"
-    }
-   ],
-   "quote": "Methamphetamine is a derivative of amphetamines, a highly addictive central stimulant with multiple systemic toxicity",
-   "quote_ref": "zhao_2020"
-  }
- ],
+ "parts": [],
  "complete": false,
- "missing": "a paper that stands nearer the question could not be read",
+ "missing": "",
  "wanted": [
   {
    "doi": "10.1007/bf03033567",
@@ -374,6 +412,14 @@
    "why": "it disagrees with a checked claim of the same page (cl_meth_dopamine_damage): waiting for a person; the claim is not changed",
    "short": "Yes. Methamphetamine is a more potent form of amphetamine that lasts longer and crosses into the brain more easily.",
    "complete": false
+  },
+  {
+   "on": "2026-11-23",
+   "lane": 19,
+   "status": "published",
+   "why": "passed every gate",
+   "short": "Yes. Methamphetamine is considered a more potent derivative of amphetamine with a longer duration of action and an increased ability to cross the blood-brain barrier.",
+   "complete": false
   }
  ],
  "looked": [
@@ -382,13 +428,13 @@
    "read": "full",
    "kind": "review",
    "at": "10.1007/s40263-020-00711-x",
-   "kept": 2,
+   "kept": 1,
    "thrown": [
     {
      "kind": "limit",
-     "text": "There is little data available to determine if there are distinct differences in use disorders caused by amphetamine and methamphetamine.",
-     "quote": "However, there is little data on which to assess whether there are distinct differences in use disorders due to these two substances; further assessment is required.",
-     "why": "the sentence is not carried by its quote and passage"
+     "text": "There is little data to assess whether there are distinct differences in use disorders between methamphetamine and amphetamine.",
+     "quote": "Finally, because of the similarities in chemical structure and behavioural, psychological and physical effects of AMPH and MA, we have included studies of AMPH and MA, and studies that did not disting",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
     }
    ]
   },
@@ -397,75 +443,175 @@
    "read": "full",
    "kind": "review",
    "at": "10.1155/2020/8874304",
-   "kept": 1,
+   "kept": 3,
+   "thrown": [
+    {
+     "kind": "limit",
+     "text": "The specific mechanism of TBHQ's antioxidative effect against meth-induced oxidative stress is not very clear.",
+     "quote": "but the specific mechanism is not very clear",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
+  },
+  {
+   "title": "Adderall",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.drugscience.org.uk/drugs/adderall",
+   "kept": 2,
+   "thrown": []
+  },
+  {
+   "title": "Methamphetamine",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.talktofrank.com/drug/methamphetamine",
+   "kept": 3,
    "thrown": []
   }
  ],
  "plan": {
   "short": [
-   "F1",
-   "F2"
+   "F5",
+   "F1"
   ],
   "direct": "Yes",
-  "but": [],
+  "but": [
+   "L1"
+  ],
   "how": [
    [
+    "F5",
+    "F6"
+   ],
+   [
+    "F7",
+    "F8",
+    "F9"
+   ],
+   [
     "DA",
-    "F1",
-    "F2"
+    "F1"
    ],
    [
     "DB",
-    "F3"
+    "F2"
    ]
   ],
   "unanswered": ""
  },
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.8884,
+   "but": 0.07,
+   "how1": 0.143,
+   "how2": 0.7866,
+   "how3": 0.7399,
+   "how4": 0.7441
+  },
+  "scores_quotes_alone": {
+   "short": 0.62,
+   "but": 0.1692,
+   "how1": 0.0348,
+   "how2": 0.7521,
+   "how3": 0.565,
+   "how4": 0.3411
+  }
+ },
  "tries": [
   {
    "try": 1,
-   "why": "a rule was broken: written again",
+   "why": "the short answer or the But was not accepted: written again",
    "parts": [
     {
      "part": "short",
-     "text": "Yes. Methamphetamine is considered a more potent derivative of amphetamine with a longer duration of action and an increased ability to cross the blood-brain barrier.",
+     "text": "Yes. Methamphetamine is considered a more potent form of amphetamine that lasts longer and gets into the brain more easily.",
      "rests_on": [
       {
        "label": "F1",
        "ref": "siefried_2020",
        "where": "Introduction",
-       "quote": "MA is considered a more potent derivative of AMPH, with a longer duration of action and increased ability to cross the blood–brain barrier",
+       "quote": "MA is considered a more potent derivative of AMPH, with a longer duration of action and increased ability to cross the blood–brain barrier; and global shifts in the illicit stimulant market have resulted in the predominance of MA.",
        "sha": "318f7d82df1c6d97"
       },
       {
-       "label": "F2",
-       "ref": "siefried_2020",
-       "where": "Introduction",
-       "quote": "Amphetamines refer to both amphetamine (AMPH) and the structurally similar methamphetamines (MA), both of which are used extra-medically.",
-       "sha": "318f7d82df1c6d97"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "but",
-     "text": "This is a systematic review of literature, not a direct comparison of effects in people using both drugs.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "siefried_2020",
-       "where": "Abstract",
-       "quote": "We systematically reviewed the peer-reviewed literature via the electronic databases PubMed, EMBASE, CINAHL and SCOPUS for randomised controlled trials reported in the English language examining a pharmacological treatment for AMPH/MA dependence or use disorder.",
-       "sha": "52c293ffa599352e"
+       "label": "F5",
+       "ref": "drugscience_adderall",
+       "where": "What is the science of Adderall?",
+       "quote": "Adderall is a chemical compound that is made up of powerful blends of the amphetamine salts dextroamphetamine and levoamphetamine, which are isomers of the original amphetamine molecule and come in a 3:1 ratio.",
+       "sha": "01813db4b12c8094"
       }
      ],
      "ok": false,
-     "by": "a rule",
-     "said": "a rule: it says “both”, and the words it rests on carry no such word: say what the source says, in its own measure, or leave the word out"
+     "by": "the second reader",
+     "said": "the word it opens with (“Yes”) is not the answer the passages bear out: A qualified answer such as “in some ways” would be fair, rather than a flat “Yes.” Sentence 2 concerns the populations in the review’s dependence studies, not the pharm"
+    },
+    {
+     "part": "but",
+     "text": "Most studies looked only at people dependent on methamphetamine, so direct comparisons with amphetamine are limited.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "siefried_2020",
+       "where": "Results › Study Selection and Characteristics",
+       "quote": "Thirty of the 43 studies (69.8%) included participants dependent on MA only [–, –, –,,, –, –,, –, ]; four (9.3%) were on MA/AMPH [,,, ]; four (9.3%) were on AMPH only [,,, ]; three (7.0%) were on amphetamine-type stimulants (ATS) and opioids [,, ] and two (4.7%) were on MA/cocaine.",
+       "sha": "8068ba987d1f575c"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage gives the study populations, but does not state that direct comparisons with amphetamine were limited."
     },
     {
      "part": "how1",
-     "text": "A 2020 systematic review of peer-reviewed literature on treatments for amphetamine or methamphetamine dependence says methamphetamine is considered a more potent derivative.",
+     "text": "Drug Science, a UK charity of scientists says Adderall is a mix of amphetamine salts that block reuptake and increase release of norepinephrine and dopamine.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "drugscience_adderall",
+       "where": "What is the science of Adderall?",
+       "quote": "Adderall is a chemical compound that is made up of powerful blends of the amphetamine salts dextroamphetamine and levoamphetamine, which are isomers of the original amphetamine molecule and come in a 3:1 ratio.",
+       "sha": "01813db4b12c8094"
+      },
+      {
+       "label": "F6",
+       "ref": "drugscience_adderall",
+       "where": "What is the science of Adderall?",
+       "quote": "Amphetamines exert their pharmacologic action by blocking the reuptake of noradrenaline (NA) and dopamine into presynaptic neurons, increasing the release of these into the extraneuronal space.",
+       "sha": "8d1e9b9c88958793"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage does not identify Drug Science as a UK charity of scientists."
+    },
+    {
+     "part": "how2",
+     "text": "FRANK says smoking crystal meth produces a very intense high that lasts much longer, and the crystal form is extremely powerful and addictive.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "frank_methamphetamine",
+       "where": "Mixing methamphetamine with other drugs / What does it look like?",
+       "quote": "Smoking the purer, crystalline form of methamphetamine, known as crystal meth, produces a very intense high similar to that produced by crack cocaine but much longer lasting.",
+       "sha": "1424d29378780974"
+      },
+      {
+       "label": "F8",
+       "ref": "frank_methamphetamine",
+       "where": "Mixing methamphetamine with other drugs / Can you get addicted?",
+       "quote": "The crystal form of methamphetamine, sometimes called crystal meth or ice, is extremely powerful and addictive.",
+       "sha": "66cc3f0e5f155762"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2020 systematic review of trials found methamphetamine is a more potent derivative of amphetamine with a longer duration of action.",
      "rests_on": [
       {
        "label": "DA",
@@ -478,35 +624,30 @@
        "label": "F1",
        "ref": "siefried_2020",
        "where": "Introduction",
-       "quote": "MA is considered a more potent derivative of AMPH, with a longer duration of action and increased ability to cross the blood–brain barrier",
-       "sha": "318f7d82df1c6d97"
-      },
-      {
-       "label": "F2",
-       "ref": "siefried_2020",
-       "where": "Introduction",
-       "quote": "Amphetamines refer to both amphetamine (AMPH) and the structurally similar methamphetamines (MA), both of which are used extra-medically.",
+       "quote": "MA is considered a more potent derivative of AMPH, with a longer duration of action and increased ability to cross the blood–brain barrier; and global shifts in the illicit stimulant market have resulted in the predominance of MA.",
        "sha": "318f7d82df1c6d97"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "the second reader",
+     "said": "The review’s introduction says methamphetamine is considered more potent and longer-lasting; the passages do not say its trials found this."
     },
     {
-     "part": "how2",
-     "text": "A 2020 review of mechanisms says methamphetamine is a derivative of amphetamines and a highly addictive central stimulant with toxicity to the brain, heart, liver, lung, and spleen.",
+     "part": "how4",
+     "text": "A 2020 review of mechanisms says methamphetamine is a derivative of amphetamines and a highly addictive central stimulant.",
      "rests_on": [
       {
        "label": "DB",
        "ref": "zhao_2020",
        "where": "Abstract",
-       "quote": "This review summarized the mechanisms of methamphetamine-induced neurotoxicity including apoptosis and blood-brain barrier breakdown through oxidative stress and analyzed several possible antioxidative mechanisms of tert-butylhydroquinone (TBHQ) which is a kind of food additive with antioxidative effects.",
+       "quote": "This review summarized the mechanisms of methamphetamine-induced neurotoxicity including apoptosis and blood-brain barrier breakdown through oxidative stress",
        "sha": "77423c867cb085fb"
       },
       {
-       "label": "F3",
+       "label": "F2",
        "ref": "zhao_2020",
        "where": "Abstract",
-       "quote": "Methamphetamine is a derivative of amphetamines, a highly addictive central stimulant with multiple systemic toxicity including the brain, heart, liver, lung, and spleen.",
+       "quote": "Methamphetamine is a derivative of amphetamines, a highly addictive central stimulant",
        "sha": "77423c867cb085fb"
       }
      ],
@@ -520,44 +661,97 @@
    "parts": [
     {
      "part": "short",
-     "text": "Yes. Methamphetamine is considered a more potent derivative of amphetamine with a longer duration of action and increased ability to cross the blood-brain barrier.",
+     "text": "Yes, methamphetamine is a stronger form of amphetamine. It lasts longer and gets into the brain more easily.",
      "rests_on": [
       {
        "label": "F1",
        "ref": "siefried_2020",
        "where": "Introduction",
-       "quote": "MA is considered a more potent derivative of AMPH, with a longer duration of action and increased ability to cross the blood–brain barrier",
+       "quote": "MA is considered a more potent derivative of AMPH, with a longer duration of action and increased ability to cross the blood–brain barrier; and global shifts in the illicit stimulant market have resulted in the predominance of MA.",
        "sha": "318f7d82df1c6d97"
       },
       {
-       "label": "F2",
-       "ref": "siefried_2020",
-       "where": "Introduction",
-       "quote": "Amphetamines refer to both amphetamine (AMPH) and the structurally similar methamphetamines (MA), both of which are used extra-medically.",
-       "sha": "318f7d82df1c6d97"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "but",
-     "text": "This is a systematic review of literature, not a direct comparison of effects in people.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "siefried_2020",
-       "where": "Abstract",
-       "quote": "We systematically reviewed the peer-reviewed literature via the electronic databases PubMed, EMBASE, CINAHL and SCOPUS for randomised controlled trials reported in the English language examining a pharmacological treatment for AMPH/MA dependence or use disorder.",
-       "sha": "52c293ffa599352e"
+       "label": "F5",
+       "ref": "drugscience_adderall",
+       "where": "What is the science of Adderall?",
+       "quote": "Adderall is a chemical compound that is made up of powerful blends of the amphetamine salts dextroamphetamine and levoamphetamine, which are isomers of the original amphetamine molecule and come in a 3:1 ratio.",
+       "sha": "01813db4b12c8094"
       }
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "The passages do not state that the review is \"not a direct comparison of effects in people\"."
+     "said": "The review says methamphetamine is “considered” more potent. This sentence states without that hedge that it is a stronger form; the editor’s note specifically warns to keep the hedge."
+    },
+    {
+     "part": "but",
+     "text": "Most studies looked at people dependent on methamphetamine only, so direct comparisons with amphetamine were rare.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "siefried_2020",
+       "where": "Results › Study Selection and Characteristics",
+       "quote": "Thirty of the 43 studies (69.8%) included participants dependent on MA only [–, –, –,,, –, –,, –, ]; four (9.3%) were on MA/AMPH [,,, ]; four (9.3%) were on AMPH only [,,, ]; three (7.0%) were on amphetamine-type stimulants (ATS) and opioids [,, ] and two (4.7%) were on MA/cocaine.",
+       "sha": "8068ba987d1f575c"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage supports that most included studies had participants dependent on methamphetamine only, but it does not say direct comparisons with amphetamine were rare."
     },
     {
      "part": "how1",
-     "text": "A 2020 systematic review of literature says methamphetamine is considered a more potent derivative of amphetamine.",
+     "text": "Drug Science, a UK charity of scientists says Adderall is a mix of amphetamine salts that block reuptake and increase release of norepinephrine and dopamine.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "drugscience_adderall",
+       "where": "What is the science of Adderall?",
+       "quote": "Adderall is a chemical compound that is made up of powerful blends of the amphetamine salts dextroamphetamine and levoamphetamine, which are isomers of the original amphetamine molecule and come in a 3:1 ratio.",
+       "sha": "01813db4b12c8094"
+      },
+      {
+       "label": "F6",
+       "ref": "drugscience_adderall",
+       "where": "What is the science of Adderall?",
+       "quote": "Amphetamines exert their pharmacologic action by blocking the reuptake of noradrenaline (NA) and dopamine into presynaptic neurons, increasing the release of these into the extraneuronal space.",
+       "sha": "8d1e9b9c88958793"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages do not identify Drug Science as a UK charity of scientists."
+    },
+    {
+     "part": "how2",
+     "text": "FRANK says smoking crystal meth produces a very intense high that lasts much longer. It is extremely powerful and addictive, and can raise heart attack risk.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "frank_methamphetamine",
+       "where": "Mixing methamphetamine with other drugs / What does it look like?",
+       "quote": "Smoking the purer, crystalline form of methamphetamine, known as crystal meth, produces a very intense high similar to that produced by crack cocaine but much longer lasting.",
+       "sha": "1424d29378780974"
+      },
+      {
+       "label": "F8",
+       "ref": "frank_methamphetamine",
+       "where": "Mixing methamphetamine with other drugs / Can you get addicted?",
+       "quote": "The crystal form of methamphetamine, sometimes called crystal meth or ice, is extremely powerful and addictive.",
+       "sha": "66cc3f0e5f155762"
+      },
+      {
+       "label": "F9",
+       "ref": "frank_methamphetamine",
+       "where": "Mixing methamphetamine with other drugs / Physical health risks",
+       "quote": "Increased heart rate and blood pressure, raising the risk of heart attack – the higher the dose, the greater these effects.",
+       "sha": "56d64158d1cdd7b9"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2020 review of trials on dependence treatment says methamphetamine is considered a more potent derivative of amphetamine with a longer duration of action.",
      "rests_on": [
       {
        "label": "DA",
@@ -570,35 +764,168 @@
        "label": "F1",
        "ref": "siefried_2020",
        "where": "Introduction",
-       "quote": "MA is considered a more potent derivative of AMPH, with a longer duration of action and increased ability to cross the blood–brain barrier",
-       "sha": "318f7d82df1c6d97"
-      },
-      {
-       "label": "F2",
-       "ref": "siefried_2020",
-       "where": "Introduction",
-       "quote": "Amphetamines refer to both amphetamine (AMPH) and the structurally similar methamphetamines (MA), both of which are used extra-medically.",
+       "quote": "MA is considered a more potent derivative of AMPH, with a longer duration of action and increased ability to cross the blood–brain barrier; and global shifts in the illicit stimulant market have resulted in the predominance of MA.",
        "sha": "318f7d82df1c6d97"
       }
      ],
      "ok": true
     },
     {
-     "part": "how2",
-     "text": "A 2020 review of mechanisms says methamphetamine is a highly addictive stimulant with toxicity to the brain, heart, liver, lung, and spleen.",
+     "part": "how4",
+     "text": "A 2020 review of neurotoxicity mechanisms says methamphetamine is a derivative of amphetamines and a highly addictive central stimulant.",
      "rests_on": [
       {
        "label": "DB",
        "ref": "zhao_2020",
        "where": "Abstract",
-       "quote": "This review summarized the mechanisms of methamphetamine-induced neurotoxicity including apoptosis and blood-brain barrier breakdown through oxidative stress and analyzed several possible antioxidative mechanisms of tert-butylhydroquinone (TBHQ) which is a kind of food additive with antioxidative effects.",
+       "quote": "This review summarized the mechanisms of methamphetamine-induced neurotoxicity including apoptosis and blood-brain barrier breakdown through oxidative stress",
        "sha": "77423c867cb085fb"
       },
       {
-       "label": "F3",
+       "label": "F2",
        "ref": "zhao_2020",
        "where": "Abstract",
-       "quote": "Methamphetamine is a derivative of amphetamines, a highly addictive central stimulant with multiple systemic toxicity including the brain, heart, liver, lung, and spleen.",
+       "quote": "Methamphetamine is a derivative of amphetamines, a highly addictive central stimulant",
+       "sha": "77423c867cb085fb"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Yes. Methamphetamine is considered a more potent derivative of amphetamine with a longer duration of action. Adderall is a mixture of amphetamine salts.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "siefried_2020",
+       "where": "Introduction",
+       "quote": "MA is considered a more potent derivative of AMPH, with a longer duration of action and increased ability to cross the blood–brain barrier; and global shifts in the illicit stimulant market have resulted in the predominance of MA.",
+       "sha": "318f7d82df1c6d97"
+      },
+      {
+       "label": "F5",
+       "ref": "drugscience_adderall",
+       "where": "What is the science of Adderall?",
+       "quote": "Adderall is a chemical compound that is made up of powerful blends of the amphetamine salts dextroamphetamine and levoamphetamine, which are isomers of the original amphetamine molecule and come in a 3:1 ratio.",
+       "sha": "01813db4b12c8094"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "the word it opens with (“Yes”) is not the answer the passages bear out: The passages support some differences, but the review itself says methamphetamine is considered more potent and longer-lasting, while sentence 2 concerns the makeup of "
+    },
+    {
+     "part": "but",
+     "text": "Most studies included people dependent on methamphetamine only, limiting comparison with amphetamine.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "siefried_2020",
+       "where": "Results › Study Selection and Characteristics",
+       "quote": "Thirty of the 43 studies (69.8%) included participants dependent on MA only [–, –, –,,, –, –,, –, ]; four (9.3%) were on MA/AMPH [,,, ]; four (9.3%) were on AMPH only [,,, ]; three (7.0%) were on amphetamine-type stimulants (ATS) and opioids [,, ] and two (4.7%) were on MA/cocaine.",
+       "sha": "8068ba987d1f575c"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage gives the participant counts but does not state that this limits comparison with amphetamine; it reports the characteristics of studies in a treatment review, not a limitation on the drug differences in sentence 1."
+    },
+    {
+     "part": "how1",
+     "text": "Drug Science, a UK charity of scientists says Adderall is a mixture of amphetamine salts that blocks reuptake and increases release of norepinephrine and dopamine.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "drugscience_adderall",
+       "where": "What is the science of Adderall?",
+       "quote": "Adderall is a chemical compound that is made up of powerful blends of the amphetamine salts dextroamphetamine and levoamphetamine, which are isomers of the original amphetamine molecule and come in a 3:1 ratio.",
+       "sha": "01813db4b12c8094"
+      },
+      {
+       "label": "F6",
+       "ref": "drugscience_adderall",
+       "where": "What is the science of Adderall?",
+       "quote": "Amphetamines exert their pharmacologic action by blocking the reuptake of noradrenaline (NA) and dopamine into presynaptic neurons, increasing the release of these into the extraneuronal space.",
+       "sha": "8d1e9b9c88958793"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages support the claims about Adderall’s salts and amphetamine mechanisms, but do not say Drug Science is a UK charity of scientists."
+    },
+    {
+     "part": "how2",
+     "text": "FRANK says smoking crystal meth produces a very intense high that lasts much longer. It is extremely powerful and addictive, and can raise heart attack risk.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "frank_methamphetamine",
+       "where": "Mixing methamphetamine with other drugs / What does it look like?",
+       "quote": "Smoking the purer, crystalline form of methamphetamine, known as crystal meth, produces a very intense high similar to that produced by crack cocaine but much longer lasting.",
+       "sha": "1424d29378780974"
+      },
+      {
+       "label": "F8",
+       "ref": "frank_methamphetamine",
+       "where": "Mixing methamphetamine with other drugs / Can you get addicted?",
+       "quote": "The crystal form of methamphetamine, sometimes called crystal meth or ice, is extremely powerful and addictive.",
+       "sha": "66cc3f0e5f155762"
+      },
+      {
+       "label": "F9",
+       "ref": "frank_methamphetamine",
+       "where": "Mixing methamphetamine with other drugs / Physical health risks",
+       "quote": "Increased heart rate and blood pressure, raising the risk of heart attack – the higher the dose, the greater these effects.",
+       "sha": "56d64158d1cdd7b9"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage says the high lasts much longer than the high produced by crack cocaine; the sentence omits that comparison."
+    },
+    {
+     "part": "how3",
+     "text": "A 2020 systematic review of trials on treatment for dependence found methamphetamine is considered a more potent derivative of amphetamine that crosses the blood-brain barrier more readily.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "siefried_2020",
+       "where": "Abstract",
+       "quote": "We systematically reviewed the peer-reviewed literature via the electronic databases PubMed, EMBASE, CINAHL and SCOPUS for randomised controlled trials reported in the English language examining a pharmacological treatment for AMPH/MA dependence or use disorder.",
+       "sha": "52c293ffa599352e"
+      },
+      {
+       "label": "F1",
+       "ref": "siefried_2020",
+       "where": "Introduction",
+       "quote": "MA is considered a more potent derivative of AMPH, with a longer duration of action and increased ability to cross the blood–brain barrier; and global shifts in the illicit stimulant market have resulted in the predominance of MA.",
+       "sha": "318f7d82df1c6d97"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how4",
+     "text": "A 2020 review of mechanisms says methamphetamine is a derivative of amphetamines and a highly addictive central stimulant.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "zhao_2020",
+       "where": "Abstract",
+       "quote": "This review summarized the mechanisms of methamphetamine-induced neurotoxicity including apoptosis and blood-brain barrier breakdown through oxidative stress",
+       "sha": "77423c867cb085fb"
+      },
+      {
+       "label": "F2",
+       "ref": "zhao_2020",
+       "where": "Abstract",
+       "quote": "Methamphetamine is a derivative of amphetamines, a highly addictive central stimulant",
        "sha": "77423c867cb085fb"
       }
      ],
@@ -607,45 +934,61 @@
    ]
   }
  ],
- "panel_gap": [],
- "own": {
-  "model": "pharmakon-check-0",
-  "threshold": 0.05,
-  "scores": {
-   "short": 0.7721,
-   "but": 0.1141,
-   "how1": 0.2518,
-   "how2": 0.735
-  },
-  "scores_quotes_alone": {
-   "short": 0.4908,
-   "but": 0.1388,
-   "how1": 0.4774,
-   "how2": 0.2845
-  }
- },
  "dropped": [
   {
    "try": 3,
-   "part": "but",
-   "text": "The source is a systematic review of treatments for dependence, not a direct comparison of how the drugs feel or work in people.",
+   "part": "how1",
+   "text": "Drug Science, a UK charity of scientists says Adderall is a mixture of amphetamine salts that blocks reuptake and increases release of norepinephrine and dopamine.",
    "rests_on": [
     {
-     "label": "DA",
-     "ref": "siefried_2020",
-     "where": "Abstract",
-     "quote": "We systematically reviewed the peer-reviewed literature via the electronic databases PubMed, EMBASE, CINAHL and SCOPUS for randomised controlled trials reported in the English language examining a pharmacological treatment for AMPH/MA dependence or use disorder.",
-     "sha": "52c293ffa599352e"
+     "label": "F5",
+     "ref": "drugscience_adderall",
+     "where": "What is the science of Adderall?",
+     "quote": "Adderall is a chemical compound that is made up of powerful blends of the amphetamine salts dextroamphetamine and levoamphetamine, which are isomers of the original amphetamine molecule and come in a 3:1 ratio.",
+     "sha": "01813db4b12c8094"
+    },
+    {
+     "label": "F6",
+     "ref": "drugscience_adderall",
+     "where": "What is the science of Adderall?",
+     "quote": "Amphetamines exert their pharmacologic action by blocking the reuptake of noradrenaline (NA) and dopamine into presynaptic neurons, increasing the release of these into the extraneuronal space.",
+     "sha": "8d1e9b9c88958793"
     }
    ],
    "by": "the second reader",
-   "said": "The passages do not state that the source is not a direct comparison of how the drugs feel or work; this is an inference not present in the text."
+   "said": "The passages support the claims about Adderall’s salts and amphetamine mechanisms, but do not say Drug Science is a UK charity of scientists."
+  },
+  {
+   "try": 3,
+   "part": "how2",
+   "text": "FRANK says smoking crystal meth produces a very intense high that lasts much longer. It is extremely powerful and addictive, and can raise heart attack risk.",
+   "rests_on": [
+    {
+     "label": "F7",
+     "ref": "frank_methamphetamine",
+     "where": "Mixing methamphetamine with other drugs / What does it look like?",
+     "quote": "Smoking the purer, crystalline form of methamphetamine, known as crystal meth, produces a very intense high similar to that produced by crack cocaine but much longer lasting.",
+     "sha": "1424d29378780974"
+    },
+    {
+     "label": "F8",
+     "ref": "frank_methamphetamine",
+     "where": "Mixing methamphetamine with other drugs / Can you get addicted?",
+     "quote": "The crystal form of methamphetamine, sometimes called crystal meth or ice, is extremely powerful and addictive.",
+     "sha": "66cc3f0e5f155762"
+    },
+    {
+     "label": "F9",
+     "ref": "frank_methamphetamine",
+     "where": "Mixing methamphetamine with other drugs / Physical health risks",
+     "quote": "Increased heart rate and blood pressure, raising the risk of heart attack – the higher the dose, the greater these effects.",
+     "sha": "56d64158d1cdd7b9"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The passage says the high lasts much longer than the high produced by crack cocaine; the sentence omits that comparison."
   }
  ],
- "with_checked": {
-  "differs": [],
-  "same": []
- },
  "place": {
   "home": "methamphetamine",
   "also": [
