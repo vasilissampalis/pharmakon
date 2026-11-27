@@ -3,7 +3,8 @@
 (data/auto/exam/lane-sentences.json; docs/AUTOMATION.md, decision 23).
 
     python3 -I scripts/editor/label_auto.py show [--ids au_w_0044,...]     (every sentence not judged yet, beside the words it rests on)
-    python3 -I scripts/editor/label_auto.py add FILE.json                    (the verdicts: {"au_w_0001": {"short": [0, "what it says that its source does not"], "how1": [1, ""]}})
+    python3 -I scripts/editor/label_auto.py add FILE.json [--by WHO]         (the verdicts: {"au_w_0001": {"short": [0, "what it says that its source does not"], "how1": [1, ""]}};
+                                                                             --by: who read them, where it was not the editor alone, e.g. a reader whose verdicts the editor adopted)
     python3 -I scripts/editor/label_auto.py rate                             (for each lane: of the sentences it kept, how many are not good; of the ones it did not keep, how many were good)
     python3 -I scripts/editor/label_auto.py --selftest
 
@@ -186,7 +187,7 @@ if __name__ == "__main__":
             for q in quotes: print(wrap(q, "            rests on: "))
         print("=" * 150); print(f"{len(w)} sentences wait for a verdict; judged so far: {doc['good']} good, {doc['bad']} not good ({by_lane(doc) or 'none'})")
     elif len(a) >= 2 and a[0] == "add":
-        doc = load(); n, bad = add(json.load(open(a[1], encoding="utf-8")), doc, answers(), again="--again" in a)
+        doc = load(); n, bad = add(json.load(open(a[1], encoding="utf-8")), doc, answers(), by=(a[a.index("--by") + 1] if "--by" in a else BY), again="--again" in a)
         if n: json.dump(doc, open(EXAM, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
         for b in bad: print("refused:", b)
         print(f"{n} verdicts written; the exam now: {doc['good']} good, {doc['bad']} not good ({by_lane(doc)})")

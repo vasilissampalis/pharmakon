@@ -614,8 +614,16 @@ def second_hand(text, q):
 def intro_hand(src, item):
     """(20 November 2026) What a single study says in its introduction is what earlier work found, not its own finding, unless the sentence speaks of its own
     work ("we", "this study"): "" or the line the writer is shown. On 20 November an answer said "a study of surgeons found" what that paper's text said of
-    the field (the editor held it). Reviews are left as they are: what a review says anywhere is the review's own summing up."""
-    if src.get("read") != "full" or src.get("kind") in ("review", "official") or not re.match(r"(?:\d+\.?\s*)?(?:introduction|background)\b", str(item.get("where") or ""), re.I): return ""
+    the field (the editor held it). Reviews are left as they are: what a review says anywhere is the review's own summing up.
+    (27 November 2026, reader 815 for the editor) Its methods too: "a 2020 study of patients in intensive care found withdrawal may begin in 6-12 hours" rested
+    on the sentence of the study's methods that describes the scale it used. What a study says in its methods is how it worked, never what it found, whoever
+    speaks there ("we used ..."). Measured on the exam of the lane's own sentences (287, 60 not good): of the sentences resting only on a study's introduction
+    or methods, the one that says "found" is not good; the fourteen that say "says" stand as they were."""
+    where = str(item.get("where") or "")
+    if src.get("read") != "full" or src.get("kind") in ("review", "official"): return ""
+    if re.match(r"(?:\d+\.?\s*)?(?:(?:materials|patients|subjects|participants)\s+and\s+methods|methods?|methodology|study design|instruments?|measures)\b", where, re.I):
+        return "(the paper's methods, where it tells how the study was done: what it says there is not what it found)"
+    if not re.match(r"(?:\d+\.?\s*)?(?:introduction|background)\b", where, re.I): return ""
     text = norm((src.get("_text") or {}).get(item.get("passage"), "")); q = norm(item.get("quote") or ""); i = text.find(q.strip(' ."\'…'))
     sent = next((m.group(0) for m in re.finditer(r"[^.!?]+(?:[.!?]+|$)", text) if i >= 0 and m.start() <= i < m.end()), q)
     return "" if OWN_FRAME.search(sent) else "(the paper's introduction, where it tells what is known from earlier work)"
@@ -849,7 +857,8 @@ def writer_prompt(question, sources, examples, fix="", plan=None, note="", last=
         if s["read"] == "page": lines.append(f"OFFICIAL PAGE {s['tag']}: \"{s['title']}\", a page of {s['name']}" + (f" ({s['year']})" if s.get("year") else "") + f". When you use it, name the body: \"{s['short'][0].upper() + s['short'][1:]} says\".")
         else: lines.append(f"PAPER {s['tag']}{' (ONLY ITS SUMMARY COULD BE READ)' if s['read'] == 'summary' else ''}: {s['title']} ({s.get('year') or 'n.d.'}). {('A review or meta-analysis.' if s['kind'] == 'review' else 'A case report: one person or a few.' if s['kind'] == 'case' else 'A single study.')}")
         if s.get("design"): lines.append(f"  [D{s['tag']}] what it is and who was studied: {s['design']['text']} (the paper's words: {s['design']['quote']})")
-        other = lambda x: (" (IT REPORTS THIS FROM ANOTHER STUDY" + (f", in the passage's words: “{x['second_hand']}”" if isinstance(x.get("second_hand"), str) else "") + ": never say that this source found it; say that it reports or cites that earlier work, called what the passage calls it)") if x.get("second_hand") else ""
+        other = lambda x: ((" (IT SAYS THIS IN ITS METHODS, where it tells how the study was done: never say that this source found it; say that the study describes it so, or leave it out)" if str(x["second_hand"]).startswith("(the paper's methods") else
+                            " (IT REPORTS THIS FROM ANOTHER STUDY" + (f", in the passage's words: “{x['second_hand']}”" if isinstance(x.get("second_hand"), str) else "") + ": never say that this source found it; say that it reports or cites that earlier work, called what the passage calls it)") if x.get("second_hand") else "")
         for f in s["findings"]: lines.append(f"  [{f['id']}] {f['text']} (the paper's words: {f['quote']})" + other(f))
         for l in s["limits"]: lines.append(f"  [{l['id']}] a limit the paper states: {l['text']} (the paper's words: {l['quote']})" + other(l))
     ex = "\n\n".join(f"Question: {e['q']}\nshort: {e['short']}\nbut: {e['but']}\nhow: " + " | ".join(e["how"][:3]) for e in examples)
@@ -1306,6 +1315,30 @@ def as_was(ours, quotes):
     return None
 
 
+# (27 November 2026) Three hedges of a source's own words that a sentence must keep, from the readers' reading of everything the system had published
+# (data/verification/auto-read-2026-11-27): the NHS's "can be dangerous" said as "is dangerous"; FRANK's "Research suggests that you can become dependent"
+# said as "FRANK says people can become dependent"; a result "in half of the volunteers" said of everyone. On the quotes alone (the passage around them can
+# hold the same words for another thing). Measured on the exam of the lane's own sentences (287, 60 not good): each catches the one sentence it was written
+# for (so this is no fresh measure) and stops none of the 227 good ones.
+DANGER_WORD = r"(dangerous|harmful|toxic|addictive|fatal|deadly|lethal|life-threatening|risky|unsafe|habit-forming)"
+SHARE_OF = re.compile(r"\bin\s+(half|some|a (?:third|quarter|minority|majority)|one in \w+|two in \w+|\d+(?:\.\d+)?\s*%|\d+ of \d+)\s+(?:of\s+)?(?:the\s+)?(?:volunteers|participants|patients|people|users|subjects|respondents|samples)\b", re.I)
+
+
+def hedge_dropped(ours, quotes):
+    """The source's hedge that our sentence drops, as the reason to give the writer; else None."""
+    for m in re.finditer(r"\b(?:is|are|was|were)\s+(?:very\s+|highly\s+|extremely\s+)?" + DANGER_WORD + r"\b", ours, re.I):
+        w = m.group(1).lower(); q = re.search(r"\b(?:can|could|may|might)\s+(?:also\s+)?(?:be|become)\s+(?:very\s+|highly\s+|extremely\s+|potentially\s+)?" + re.escape(w) + r"\b", quotes, re.I)
+        if q and not re.search(r"\b(?:is|are)\s+(?:very\s+|highly\s+|extremely\s+)?" + re.escape(w) + r"\b", quotes, re.I):
+            return f"its source says “{q.group(0)}”, and the sentence says “{m.group(0)}”: say it as the source does"
+    q = re.search(r"\b(?:research|evidence|studies|data|findings)\s+(?:suggests?|indicates?|may suggest)\b", quotes, re.I)
+    if q and not re.search(r"\b(?:suggest\w*|research|studies|evidence|indicat\w*|may|might|could|possibl\w*|likely)\b", ours, re.I):
+        return f"its source says “{q.group(0)}”: keep the source's own hedge (that research suggests it), not as a thing known"
+    q = SHARE_OF.search(quotes)
+    if q and not re.search(r"\b(?:half|some|third|quarter|minority|majority|one in|two in|\d+\s*%|\d+ of \d+|few|many|most|not all|percent)\b", ours, re.I):
+        return f"its source gives this “{q.group(0)}”: say for how many it was so, not as true of everyone"
+    return None
+
+
 def says_more(parts, labels):
     """What a draft says that its sources do not carry (the kinds in MORE, what people say of themselves said as what is, a result for one sex said of people): [(part, what)]."""
     bad = []
@@ -1315,7 +1348,9 @@ def says_more(parts, labels):
         found = says_more_text(p["text"], src)
         if found: bad.append((p["part"], found[0][2])); continue
         w = as_was(p["text"], " ".join(labels[u]["quote"] for u in p["uses"]))
-        if w: bad.append((p["part"], f"its source says “{w}”: that is what people perceived or said of themselves, not what was measured. Keep the word (“perceived”), or say that people said so"))
+        if w: bad.append((p["part"], f"its source says “{w}”: that is what people perceived or said of themselves, not what was measured. Keep the word (“perceived”), or say that people said so")); continue
+        h = hedge_dropped(p["text"], " ".join(labels[u]["quote"] for u in p["uses"]))
+        if h: bad.append((p["part"], h))
     return bad
 
 
@@ -1413,7 +1448,9 @@ def rules(parts, labels, years=(), asked=()):
         # (lane 16) what a source reports from another study is not what that source found
         cited = [u for u in p["uses"] if labels[u].get("second_hand")]; m = OWN_FIND.search(p["text"])
         if cited and m and not SECOND_SAID.search(p["text"]):
-            bad.append((p["part"], f"it says its source found (“{m.group(0)}”) what that source only reports from another study ({', '.join(cited)}): say that the source reports or cites that earlier work, called what the passage calls it (“an earlier meta-analysis”, “one study”), or name no finder"))
+            if all(str(labels[u]["second_hand"]).startswith("(the paper's methods") for u in cited):
+                bad.append((p["part"], f"it says its source found (“{m.group(0)}”) what that study only says in its methods, where it tells how it was done ({', '.join(cited)}): never say it found that; say that the study describes it so, or leave it out"))
+            else: bad.append((p["part"], f"it says its source found (“{m.group(0)}”) what that source only reports from another study ({', '.join(cited)}): say that the source reports or cites that earlier work, called what the passage calls it (“an earlier meta-analysis”, “one study”), or name no finder"))
         have = set().union(*[numbers(labels[u]["quote"]) for u in p["uses"]])
         known = [labels[u] for u in p["uses"] if "year" in labels[u]]                       # (labels that say which year their source is of; where none does, as before: any source's year)
         own = {str(l["year"]) for l in known if l.get("year")} if known else all_years
@@ -3216,6 +3253,19 @@ def selftest():
     intro = {"read": "full", "kind": "study", "_text": {2: "Stimulants improve vigilance in sleep-deprived people. In this study we asked 1,105 surgeons about their use."}}
     assert intro_hand(intro, {"passage": 2, "where": "1. Introduction", "quote": "Stimulants improve vigilance in sleep-deprived people"}) and not intro_hand(intro, {"passage": 2, "where": "Introduction", "quote": "we asked 1,105 surgeons about their use"})
     assert not intro_hand(intro, {"passage": 2, "where": "3. Results", "quote": "Stimulants improve vigilance in sleep-deprived people"}) and not intro_hand(dict(intro, kind="review"), {"passage": 2, "where": "Introduction", "quote": "Stimulants improve vigilance in sleep-deprived people"})
+    # (27 November 2026) three hedges a sentence keeps: "can be dangerous", "research suggests", "in half of the volunteers"
+    assert hedge_dropped("The NHS says taking more than the recommended dose is dangerous.", "Taking too much diphenhydramine can be dangerous.") and not hedge_dropped("The NHS says taking too much can be dangerous.", "Taking too much diphenhydramine can be dangerous.")
+    assert hedge_dropped("FRANK says people can become dependent.", "Research suggests that you can become dependent on synthetic cannabinoids.") and not hedge_dropped("FRANK says research suggests people can become dependent.", "Research suggests that you can become dependent.")
+    assert hedge_dropped("2C-B can be found in saliva for up to 24 hours.", "could be detected in oral fluid up to 24 h in half of the volunteers.") and not hedge_dropped("In half of 16 volunteers, 2C-B was found in saliva up to 24 hours.", "could be detected in oral fluid up to 24 h in half of the volunteers.")
+    assert not hedge_dropped("Higher doses can cause death.", "misuse can result in severe toxicity and even death in some cases.") and not hedge_dropped("It is dangerous.", "It can be dangerous, and in large amounts it is dangerous.")
+    assert says_more([{"part": "how2", "text": "The NHS says taking more than the recommended dose is dangerous.", "uses": ["F1"]}], {"F1": {"quote": "Taking too much diphenhydramine can be dangerous.", "passage_text": ""}})
+    # (27 November 2026) a study's methods: never its finding, whoever speaks there; the rule that refuses "found" for it (rules) then has its reason
+    assert intro_hand(intro, {"passage": 2, "where": "MATERIALS AND METHODS › Instruments", "quote": "Stimulants improve vigilance in sleep-deprived people"}).startswith("(the paper's methods")
+    assert intro_hand(intro, {"passage": 2, "where": "2. Methods", "quote": "we asked 1,105 surgeons about their use"}) and intro_hand(intro, {"passage": 2, "where": "Methodological limits of earlier work", "quote": "x"}) == ""
+    assert not intro_hand(dict(intro, kind="review"), {"passage": 2, "where": "2. Methods", "quote": "we searched four databases"})
+    mb = rules([{"part": "how3", "text": "A 2020 study of trauma patients found withdrawal may begin in 6-12 hours.", "uses": ["F1"]}], {"F1": {"quote": "Withdrawal signs and symptoms may begin to appear within 6–12 hours", "second_hand": "(the paper's methods, where it tells how the study was done: what it says there is not what it found)", "year": 2020}}, years={"2020"})
+    assert any("only says in its methods" in w for _, w in mb), mb
+    assert "IT SAYS THIS IN ITS METHODS" in writer_prompt("Q?", [{"read": "full", "tag": "A", "title": "T", "year": 2020, "kind": "study", "design": None, "findings": [{"id": "F4", "text": "x", "quote": "y", "second_hand": "(the paper's methods, where it tells how the study was done: what it says there is not what it found)"}], "limits": []}], [])
     # (lane 18) "A 2023 survey found ... A 2024 review reports ...": the second sentence says who reports it, so the rule has nothing against the first sentence's "found"
     assert not rules([{"part": "short", "text": "A 2023 survey found cannabis tends to improve perceived sexual satisfaction. A 2024 review reports that moderate doses improved female sexual function.", "uses": ["F5", "F1"]}], {"F5": {"quote": "x", "second_hand": ""}, "F1": {"quote": "y", "second_hand": "In a review of recent studies, Kipping and Lynn found"}}, years=[2023, 2024])
     # (lane 18) what people perceive or say of themselves, said as what is
