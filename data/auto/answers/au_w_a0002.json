@@ -17,34 +17,33 @@
  "made": {
   "on": "2026-11-27",
   "models": {
-   "reader": "groq:openai/gpt-oss-20b",
+   "reader": "openrouter:openai/gpt-oss-120b",
    "writer": "openrouter:meta-llama/llama-3.3-70b-instruct",
    "checker": "openrouter:openai/gpt-6-luna",
    "planner": "openrouter:openai/gpt-oss-120b",
    "team": "team R",
-   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+   "reader_2": "openrouter:openai/gpt-oss-120b",
    "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "45925293209",
-  "read_seconds": 124,
+  "run": "45928586464",
+  "read_seconds": 23,
   "from": {
    "papers": 2,
    "summaries": 0,
    "official": 0
   },
   "neurons": 0.0,
-  "seconds": 238
+  "seconds": 98
  },
  "status": "published",
  "why": "passed every gate",
  "gates": {
-  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-20b read from there",
-  "read": "5 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 7 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-120b read from there",
+  "read": "6 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 4 thrown away (the quote was not in the passage, or a number was not in the quote)",
   "sources": "1 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 0 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.79, but 0.94, how1 0.80, how2 0.57",
-  "check": "every sentence kept was accepted by the second reader (openrouter:openai/gpt-6-luna)",
-  "but": "the writer's But was not accepted (it is about something else than the short answer (“Yes” is fair: the passages describe kanna as promoting well-being by relieving stress with calming effects. S): the code wrote the But itself, from what this answer rests on",
+  "mended": "the item that holds a number of a sentence was added to what the sentence rests on: but + DB (16)",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.12, but 0.14, how1 0.83, how2 0.97",
+  "check": "every sentence kept was accepted by the second reader (openrouter:openai/gpt-6-luna); it also found that the short answer answers the question and that the But is about that answer",
   "rules": "nothing against it",
   "checked": "set beside the checked claims of the same page: nothing against them"
  },
@@ -112,31 +111,31 @@
    "design": {
     "passage": 1,
     "where": "Abstract",
-    "quote": "Sceletium tortuosum (L.) N.E.Br. (Mesembryanthemaceae), commonly known as kanna or kougoed, is an effective indigenous medicinal plant in South Africa, specifically to the native San and Khoikhoi tribes.",
-    "text": "Review paper summarizing biological and pharmaceutical properties of Sceletium tortuosum (kanna)"
+    "quote": "Thus, this review provides an extensive overview of the biological and p",
+    "text": "Review article summarizing biological and pharmaceutical properties of Sceletium tortuosum"
    },
    "findings": [
     {
      "passage": 1,
      "where": "Abstract",
-     "quote": "Today, the plant has gained strong global attraction and reputation due to its capabilities to promote a sense of well‑being by relieving stress with calming effects.",
-     "text": "Kanna promotes a sense of well‑being by relieving stress with calming effects.",
+     "quote": "promote a sense of well‑being by relieving stress with calming effects",
+     "text": "Kanna promotes a sense of well‑being and relieves stress with calming effects.",
      "id": "F1",
      "second_hand": ""
     },
     {
-     "passage": 19,
-     "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.2. Anti-Stress Properties of Sceletium Plants",
-     "quote": "The study involved 16 healthy patients in a perceptual‑load and an emotion‑matching task. The first report showed the effectiveness of S. tortuosum on the threat circuitry of the human brain.",
-     "text": "In a small human study, S. tortuosum was effective on threat circuitry in the brain.",
+     "passage": 22,
+     "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.3. Anti-Depressant Properties of Sceletium Plants",
+     "quote": "The plant improves mood, thus has anti-depression properties.",
+     "text": "Kanna improves mood and has anti‑depression properties.",
      "id": "F2",
      "second_hand": ""
     },
     {
-     "passage": 24,
+     "passage": 25,
      "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.4. Anxiolytic Properties of Sceletium Plants",
-     "quote": "Sharma and co‑workers identified S. tortuosum as one of the most potent medicinal plants used globally for the treatment of anxiety‑associated conditions and anxiety.",
-     "text": "S. tortuosum is identified as a potent plant for treating anxiety.",
+     "quote": "S. tortuosum displayed an anti-anxiety effect in zebrafish larvae.",
+     "text": "In zebrafish larvae, S. tortuosum displayed an anti‑anxiety effect.",
      "id": "F3",
      "second_hand": ""
     }
@@ -224,23 +223,31 @@
     "passage": 1,
     "where": "Abstract",
     "quote": "In a double‑blind, placebo‑controlled, cross‑over design, 16 healthy participants were scanned during performance in a perceptual‑load and an emotion‑matching task.",
-    "text": "double‑blind, placebo‑controlled, cross‑over fMRI study on healthy adults"
+    "text": "double‑blind, placebo‑controlled, cross‑over fMRI study in healthy humans"
    },
    "findings": [
     {
-     "passage": 29,
-     "where": "DISCUSSION",
-     "quote": "a decrease in functional connectivity of the amygdala and hypothalamus was observed after Zembrin administration.",
-     "text": "Zembrin decreased functional connectivity between the amygdala and hypothalamus in healthy adults.",
+     "passage": 21,
+     "where": "RESULTS › PLT",
+     "quote": "significant attenuation of amygdala activity after Zembrin administration on the contrast fear>neutral in the low‑load condition",
+     "text": "Zembrin attenuated amygdala activity to fearful faces under low perceptual load.",
      "id": "F4",
      "second_hand": ""
     },
     {
-     "passage": 30,
-     "where": "DISCUSSION",
-     "quote": "Combined, these results provide support for the anxiolytic potential of dual 5‑HT reuptake and PDE4 inhibitors.",
-     "text": "The study supports the anxiolytic potential of Zembrin, a dual 5‑HT reuptake and PDE4 inhibitor, in healthy adults.",
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "Follow‑up connectivity analysis on the emotion‑matching task showed that amygdala–hypothalamus coupling was also reduced.",
+     "text": "Zembrin reduced amygdala–hypothalamus functional coupling during the emotion‑matching task.",
      "id": "F5",
+     "second_hand": ""
+    },
+    {
+     "passage": 28,
+     "where": "DISCUSSION",
+     "quote": "Although we did not observe general subjective mood effects, the effects noted here arguably reflect a reduction of responsivity of the threat system",
+     "text": "No general subjective mood effects were observed after Zembrin administration.",
+     "id": "F6",
      "second_hand": ""
     }
    ],
@@ -251,43 +258,42 @@
  "parts": [
   {
    "part": "short",
-   "text": "Yes, kanna promotes a sense of well-being and relieving stress with calming effects.",
+   "text": "Yes, kanna can have psychoactive effects, as it contains compounds that act on the mind.",
    "uses": [
     "F1",
-    "F5"
+    "F2"
    ],
    "rests_on": [
     {
      "label": "F1",
      "ref": "manganyi_2021",
      "where": "Abstract",
-     "quote": "Today, the plant has gained strong global attraction and reputation due to its capabilities to promote a sense of well‑being by relieving stress with calming effects.",
+     "quote": "promote a sense of well‑being by relieving stress with calming effects",
      "sha": "926eab80cf3dad03"
     },
     {
-     "label": "F5",
-     "ref": "terburg_2013",
-     "where": "DISCUSSION",
-     "quote": "Combined, these results provide support for the anxiolytic potential of dual 5‑HT reuptake and PDE4 inhibitors.",
-     "sha": "be43a234a9236de3"
+     "label": "F2",
+     "ref": "manganyi_2021",
+     "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.3. Anti-Depressant Properties of Sceletium Plants",
+     "quote": "The plant improves mood, thus has anti-depression properties.",
+     "sha": "a2a1a8fb7ba7f860"
     }
    ]
   },
   {
    "part": "but",
-   "text": "This rests on 1 review and 1 study in people.",
+   "text": "No general subjective mood effects were observed in 16 healthy participants.",
    "uses": [
-    "DA",
+    "F6",
     "DB"
    ],
-   "fixed": true,
    "rests_on": [
     {
-     "label": "DA",
-     "ref": "manganyi_2021",
-     "where": "Abstract",
-     "quote": "Sceletium tortuosum (L.) N.E.Br. (Mesembryanthemaceae), commonly known as kanna or kougoed, is an effective indigenous medicinal plant in South Africa, specifically to the native San and Khoikhoi tribes.",
-     "sha": "926eab80cf3dad03"
+     "label": "F6",
+     "ref": "terburg_2013",
+     "where": "DISCUSSION",
+     "quote": "Although we did not observe general subjective mood effects, the effects noted here arguably reflect a reduction of responsivity of the threat system",
+     "sha": "354d675da7f1d2e8"
     },
     {
      "label": "DB",
@@ -300,35 +306,44 @@
   },
   {
    "part": "how1",
-   "text": "A review paper summarized biological and pharmaceutical properties of Sceletium tortuosum, promoting well-being and relieving stress.",
+   "text": "A 2021 review summarizes biological and pharmaceutical properties of Sceletium tortuosum.",
    "uses": [
     "DA",
-    "F1"
+    "F1",
+    "F2"
    ],
    "rests_on": [
     {
      "label": "DA",
      "ref": "manganyi_2021",
      "where": "Abstract",
-     "quote": "Sceletium tortuosum (L.) N.E.Br. (Mesembryanthemaceae), commonly known as kanna or kougoed, is an effective indigenous medicinal plant in South Africa, specifically to the native San and Khoikhoi tribes.",
+     "quote": "Thus, this review provides an extensive overview of the biological and p",
      "sha": "926eab80cf3dad03"
     },
     {
      "label": "F1",
      "ref": "manganyi_2021",
      "where": "Abstract",
-     "quote": "Today, the plant has gained strong global attraction and reputation due to its capabilities to promote a sense of well‑being by relieving stress with calming effects.",
+     "quote": "promote a sense of well‑being by relieving stress with calming effects",
      "sha": "926eab80cf3dad03"
+    },
+    {
+     "label": "F2",
+     "ref": "manganyi_2021",
+     "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.3. Anti-Depressant Properties of Sceletium Plants",
+     "quote": "The plant improves mood, thus has anti-depression properties.",
+     "sha": "a2a1a8fb7ba7f860"
     }
    ],
-   "quote": "capabilities to promote a sense of well-being by relieving stress with calming effects",
+   "quote": "Thus, this review provides an extensive overview of the biological and p",
    "quote_ref": "manganyi_2021"
   },
   {
    "part": "how2",
-   "text": "A double-blind study on healthy adults supported the anxiolytic potential of Zembrin.",
+   "text": "A 2013 study scanned 16 healthy participants during tasks after Zembrin administration.",
    "uses": [
     "DB",
+    "F4",
     "F5"
    ],
    "rests_on": [
@@ -340,14 +355,21 @@
      "sha": "89076b899c033ad3"
     },
     {
+     "label": "F4",
+     "ref": "terburg_2013",
+     "where": "RESULTS › PLT",
+     "quote": "significant attenuation of amygdala activity after Zembrin administration on the contrast fear>neutral in the low‑load condition",
+     "sha": "e3fbfd9512c94396"
+    },
+    {
      "label": "F5",
      "ref": "terburg_2013",
-     "where": "DISCUSSION",
-     "quote": "Combined, these results provide support for the anxiolytic potential of dual 5‑HT reuptake and PDE4 inhibitors.",
-     "sha": "be43a234a9236de3"
+     "where": "Abstract",
+     "quote": "Follow‑up connectivity analysis on the emotion‑matching task showed that amygdala–hypothalamus coupling was also reduced.",
+     "sha": "89076b899c033ad3"
     }
    ],
-   "quote": "these results provide support for the anxiolytic potential of dual 5-HT reuptake and PDE4 inhibitors",
+   "quote": "attenuation of amygdala activity after Zembrin administration on the contrast fear>neutral in the low-load condition",
    "quote_ref": "terburg_2013"
   }
  ],
@@ -395,6 +417,14 @@
    "why": "passed every gate",
    "short": "Yes, kanna has psychoactive compounds. In one study, it did not cause general mood changes, but it may reduce threat responses.",
    "complete": true
+  },
+  {
+   "on": "2026-11-27",
+   "lane": 19,
+   "status": "published",
+   "why": "passed every gate",
+   "short": "Yes, kanna promotes a sense of well-being and relieving stress with calming effects.",
+   "complete": true
   }
  ],
  "looked": [
@@ -406,21 +436,15 @@
    "kept": 3,
    "thrown": [
     {
-     "kind": "finding",
-     "text": "In a placebo‑controlled double‑blind study, 25 mg of Zembrin® reduced anxiety compared to placebo.",
-     "quote": "The results showed levels of anxiety were inferior in the Zembrin® group compared to the placebo group. Behavioral evidence demonstrated the efficacy of S. tortuosum (25 mg Zembrin®) as an anti‑anxiol",
-     "why": "a number of the sentence is not in its quote"
-    },
-    {
      "kind": "limit",
-     "text": "The human study included only 16 healthy participants.",
-     "quote": "The study involved 16 healthy patients in a perceptual‑load and an emotion‑matching task.",
+     "text": "The anti‑stress effect was demonstrated only in male Wistar rats.",
+     "quote": "using male Wistar rats",
      "why": "the sentence is not carried by its quote and passage"
     },
     {
      "kind": "limit",
-     "text": "The anxiety reduction was measured only under induced stress conditions.",
-     "quote": "Prior to this, participants were placed under stressful conditions to invoke feelings of stress and or anxiety.",
+     "text": "The anxiolytic effect was shown only in a zebrafish model.",
+     "quote": "A zebrafish model study was conducted on ethnopharmacological experiments to determine anxiolytic properties.",
      "why": "the sentence is not carried by its quote and passage"
     }
    ]
@@ -430,31 +454,19 @@
    "read": "full",
    "kind": "study",
    "at": "10.1038/npp.2013.183",
-   "kept": 2,
+   "kept": 3,
    "thrown": [
     {
-     "kind": "finding",
-     "text": "Zembrin significantly reduced amygdala activity to fearful faces under low‑load conditions in healthy adults.",
-     "quote": "the three‑way interaction was due to a significant attenuation of amygdala activity after Zembrin administration on the contrast fear>neutral in the low‑load condition (F(1,14)=6.90, P=0.020, partial ",
-     "why": "the sentence is not carried by its quote and passage"
-    },
-    {
-     "kind": "finding",
-     "text": "Zembrin significantly attenuated amygdala reactivity to facial fear under low‑load conditions in healthy adults.",
-     "quote": "the amygdala reactivity to facial fear under low‑load conditions was significantly attenuated after Zembrin administration.",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
-    },
-    {
      "kind": "limit",
-     "text": "The study did not find general subjective mood changes, so the anxiolytic effect was inferred only from neural measures.",
-     "quote": "Although we did not observe general subjective mood effects, the effects noted here arguably reflect a reduction of responsivity of the threat system related to the anxiolytic properties of S. tortuos",
+     "text": "The study was conducted only with 16 healthy participants.",
+     "quote": "In a double‑blind, placebo‑controlled, cross‑over design, 16 healthy participants were scanned",
      "why": "the sentence is not carried by its quote and passage"
     },
     {
      "kind": "limit",
-     "text": "The attenuation of amygdala activity by Zembrin was observed only under low‑load conditions, not under high‑load conditions.",
-     "quote": "which was non‑significant in the high‑load condition (F(1,14)=0.003, P=0.956).",
-     "why": "the sentence is not carried by its quote and passage"
+     "text": "The authors could not separate the effects of PDE4 inhibition from 5‑HT reuptake inhibition.",
+     "quote": "Although we cannot separate these pharmacological actions in the present results",
+     "why": "a number of the sentence is not in its quote"
     }
    ]
   }
@@ -462,39 +474,41 @@
  "plan": {
   "short": [
    "F1",
-   "F5"
+   "F2"
   ],
   "direct": "Yes",
   "but": [
-   "F2"
+   "F6"
   ],
   "how": [
    [
     "DA",
-    "F1"
+    "F1",
+    "F2"
    ],
    [
     "DB",
+    "F4",
     "F5"
    ]
   ],
-  "unanswered": "dosage, duration, and safety details"
+  "unanswered": ""
  },
  "panel_gap": [],
  "own": {
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.7868,
-   "but": 0.9441,
-   "how1": 0.7964,
-   "how2": 0.5683
+   "short": 0.1218,
+   "but": 0.1389,
+   "how1": 0.8315,
+   "how2": 0.9664
   },
   "scores_quotes_alone": {
-   "short": 0.6462,
-   "but": 0.9522,
-   "how1": 0.1939,
-   "how2": 0.2703
+   "short": 0.0595,
+   "but": 0.0511,
+   "how1": 0.7587,
+   "how2": 0.9647
   }
  },
  "tries": [
@@ -504,65 +518,83 @@
    "parts": [
     {
      "part": "short",
-     "text": "Yes, kanna can promote a sense of well-being and relieve stress with calming effects.",
+     "text": "Yes, kanna can have psychoactive effects, as it contains compounds that act on the mind.",
      "rests_on": [
       {
        "label": "F1",
        "ref": "manganyi_2021",
        "where": "Abstract",
-       "quote": "Today, the plant has gained strong global attraction and reputation due to its capabilities to promote a sense of well‑being by relieving stress with calming effects.",
+       "quote": "promote a sense of well‑being by relieving stress with calming effects",
        "sha": "926eab80cf3dad03"
       },
       {
-       "label": "F5",
-       "ref": "terburg_2013",
-       "where": "DISCUSSION",
-       "quote": "Combined, these results provide support for the anxiolytic potential of dual 5‑HT reuptake and PDE4 inhibitors.",
-       "sha": "be43a234a9236de3"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "but",
-     "text": "It was reported in a small human study with 16 healthy patients.",
-     "rests_on": [
-      {
        "label": "F2",
        "ref": "manganyi_2021",
-       "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.2. Anti-Stress Properties of Sceletium Plants",
-       "quote": "The study involved 16 healthy patients in a perceptual‑load and an emotion‑matching task. The first report showed the effectiveness of S. tortuosum on the threat circuitry of the human brain.",
-       "sha": "f4eebcc792659366"
+       "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.3. Anti-Depressant Properties of Sceletium Plants",
+       "quote": "The plant improves mood, thus has anti-depression properties.",
+       "sha": "a2a1a8fb7ba7f860"
       }
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "The passage reports a study involving 16 healthy patients, but it does not describe the study as small."
+     "said": "The passages describe mood and mental-health effects and compounds with uptake-inhibitory activity, but do not state that kanna has psychoactive effects or that its compounds act on the mind."
+    },
+    {
+     "part": "but",
+     "text": "No general subjective mood effects were observed in 16 healthy adults.",
+     "rests_on": [
+      {
+       "label": "F6",
+       "ref": "terburg_2013",
+       "where": "DISCUSSION",
+       "quote": "Although we did not observe general subjective mood effects, the effects noted here arguably reflect a reduction of responsivity of the threat system",
+       "sha": "354d675da7f1d2e8"
+      },
+      {
+       "label": "DB",
+       "ref": "terburg_2013",
+       "where": "Abstract",
+       "quote": "In a double‑blind, placebo‑controlled, cross‑over design, 16 healthy participants were scanned during performance in a perceptual‑load and an emotion‑matching task.",
+       "sha": "89076b899c033ad3"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages say 16 healthy participants, not that they were adults."
     },
     {
      "part": "how1",
-     "text": "A 2021 review summarized kanna's biological and pharmaceutical properties.",
+     "text": "A 2021 review found kanna has compounds that act on the mind.",
      "rests_on": [
       {
        "label": "DA",
        "ref": "manganyi_2021",
        "where": "Abstract",
-       "quote": "Sceletium tortuosum (L.) N.E.Br. (Mesembryanthemaceae), commonly known as kanna or kougoed, is an effective indigenous medicinal plant in South Africa, specifically to the native San and Khoikhoi tribes.",
+       "quote": "Thus, this review provides an extensive overview of the biological and p",
        "sha": "926eab80cf3dad03"
       },
       {
        "label": "F1",
        "ref": "manganyi_2021",
        "where": "Abstract",
-       "quote": "Today, the plant has gained strong global attraction and reputation due to its capabilities to promote a sense of well‑being by relieving stress with calming effects.",
+       "quote": "promote a sense of well‑being by relieving stress with calming effects",
        "sha": "926eab80cf3dad03"
+      },
+      {
+       "label": "F2",
+       "ref": "manganyi_2021",
+       "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.3. Anti-Depressant Properties of Sceletium Plants",
+       "quote": "The plant improves mood, thus has anti-depression properties.",
+       "sha": "a2a1a8fb7ba7f860"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "the second reader",
+     "said": "The review identifies compounds and reports biological, mood, and mental-health effects, but does not state that the compounds act on the mind."
     },
     {
      "part": "how2",
-     "text": "A 2013 double-blind study on 16 healthy adults found anxiolytic potential.",
+     "text": "A 2013 study of 16 healthy adults found no general change in mood, but brain scans suggested a smaller reaction to threat.",
      "rests_on": [
       {
        "label": "DB",
@@ -572,123 +604,25 @@
        "sha": "89076b899c033ad3"
       },
       {
-       "label": "F5",
+       "label": "F4",
        "ref": "terburg_2013",
-       "where": "DISCUSSION",
-       "quote": "Combined, these results provide support for the anxiolytic potential of dual 5‑HT reuptake and PDE4 inhibitors.",
-       "sha": "be43a234a9236de3"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passages report attenuated threat-circuit activity and discuss anxiolytic potential for the combination of dual 5-HT reuptake and PDE4 inhibitors; they do not state that the study found kanna itself had anxiolytic potential. They also s"
-    }
-   ]
-  },
-  {
-   "try": 2,
-   "why": "the short answer or the But was not accepted: written again",
-   "parts": [
-    {
-     "part": "short",
-     "text": "Yes, kanna can promote a sense of well-being and relieve stress with calming effects. It also supports anxiolytic potential.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "manganyi_2021",
-       "where": "Abstract",
-       "quote": "Today, the plant has gained strong global attraction and reputation due to its capabilities to promote a sense of well‑being by relieving stress with calming effects.",
-       "sha": "926eab80cf3dad03"
+       "where": "RESULTS › PLT",
+       "quote": "significant attenuation of amygdala activity after Zembrin administration on the contrast fear>neutral in the low‑load condition",
+       "sha": "e3fbfd9512c94396"
       },
       {
        "label": "F5",
        "ref": "terburg_2013",
-       "where": "DISCUSSION",
-       "quote": "Combined, these results provide support for the anxiolytic potential of dual 5‑HT reuptake and PDE4 inhibitors.",
-       "sha": "be43a234a9236de3"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passages describe kanna/Sceletium as promoting well-being and relieving stress with calming effects, but the anxiolytic-potential claim is specifically about dual 5-HT reuptake and PDE4 inhibitors, not kanna itself."
-    },
-    {
-     "part": "but",
-     "text": "It was effective on threat circuitry in the brain in a small human study.",
-     "rests_on": [
-      {
-       "label": "F2",
-       "ref": "manganyi_2021",
-       "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.2. Anti-Stress Properties of Sceletium Plants",
-       "quote": "The study involved 16 healthy patients in a perceptual‑load and an emotion‑matching task. The first report showed the effectiveness of S. tortuosum on the threat circuitry of the human brain.",
-       "sha": "f4eebcc792659366"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "it is about something else than the short answer (“Yes” is a fair answer: the passages describe calming and stress-relieving effects and report an effect on human brain threat circuitry. Sentence 2 reports a finding; it does not limit or cast doubt on sentence 1.)"
-    },
-    {
-     "part": "how1",
-     "text": "A review paper summarized biological and pharmaceutical properties of Sceletium tortuosum, promoting a sense of well-being.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "manganyi_2021",
        "where": "Abstract",
-       "quote": "Sceletium tortuosum (L.) N.E.Br. (Mesembryanthemaceae), commonly known as kanna or kougoed, is an effective indigenous medicinal plant in South Africa, specifically to the native San and Khoikhoi tribes.",
-       "sha": "926eab80cf3dad03"
-      },
-      {
-       "label": "F1",
-       "ref": "manganyi_2021",
-       "where": "Abstract",
-       "quote": "Today, the plant has gained strong global attraction and reputation due to its capabilities to promote a sense of well‑being by relieving stress with calming effects.",
-       "sha": "926eab80cf3dad03"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "A double-blind, placebo-controlled, cross-over fMRI study on healthy adults supported anxiolytic potential.",
-     "rests_on": [
-      {
-       "label": "DB",
-       "ref": "terburg_2013",
-       "where": "Abstract",
-       "quote": "In a double‑blind, placebo‑controlled, cross‑over design, 16 healthy participants were scanned during performance in a perceptual‑load and an emotion‑matching task.",
+       "quote": "Follow‑up connectivity analysis on the emotion‑matching task showed that amygdala–hypothalamus coupling was also reduced.",
        "sha": "89076b899c033ad3"
-      },
-      {
-       "label": "F5",
-       "ref": "terburg_2013",
-       "where": "DISCUSSION",
-       "quote": "Combined, these results provide support for the anxiolytic potential of dual 5‑HT reuptake and PDE4 inhibitors.",
-       "sha": "be43a234a9236de3"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "the second reader",
+     "said": "The study reports 16 healthy participants, but the passages do not say they were adults."
     }
    ]
-  }
- ],
- "dropped": [
-  {
-   "try": 3,
-   "part": "but",
-   "text": "It was effective on threat circuitry in the brain in a small human study.",
-   "rests_on": [
-    {
-     "label": "F2",
-     "ref": "manganyi_2021",
-     "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.2. Anti-Stress Properties of Sceletium Plants",
-     "quote": "The study involved 16 healthy patients in a perceptual‑load and an emotion‑matching task. The first report showed the effectiveness of S. tortuosum on the threat circuitry of the human brain.",
-     "sha": "f4eebcc792659366"
-    }
-   ],
-   "by": "the second reader",
-   "said": "it is about something else than the short answer (“Yes” is fair: the passages describe kanna as promoting well-being by relieving stress with calming effects. Sentence 2 reports an additional finding about Sceletium’s effects on human brain threat circuitry; it does not limit or cast doubt)"
   }
  ],
  "with_checked": {
