@@ -17,33 +17,41 @@
  "made": {
   "on": "2026-11-27",
   "models": {
-   "reader": "openrouter:openai/gpt-oss-120b",
-   "writer": "openrouter:meta-llama/llama-3.3-70b-instruct",
-   "checker": "openrouter:openai/gpt-6-luna",
-   "planner": "openrouter:openai/gpt-oss-120b",
-   "team": "team R",
-   "reader_2": "openrouter:openai/gpt-oss-120b",
-   "reader_first": "gemini:gemma-4-31b-it"
+   "reader": "gemini:gemini-3.5-flash-lite",
+   "writer": "groq:qwen/qwen3.8-27b",
+   "checker": "groq:openai/gpt-oss-120b",
+   "planner": "gemini:gemma-4-31b-it",
+   "also1": "gemini:gemini-3.5-flash-lite",
+   "also2": "gemini:gemini-3.6-flash",
+   "team": "team K",
+   "reader_2": "gemini:gemini-3.5-flash-lite",
+   "reader_3": "openrouter:meta-llama/llama-3.3-70b-instruct",
+   "writer_2": "groq:qwen/qwen3.8-27b",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "reader_first": "gemini:gemma-4-31b-it",
+   "writer_first": "gemini:gemma-4-26b-a4b-it"
   },
-  "run": "45943540784",
-  "read_seconds": 87,
+  "run": "46067418256",
+  "read_seconds": 37,
   "from": {
    "papers": 2,
    "summaries": 0,
    "official": 0
   },
   "neurons": 0.0,
-  "seconds": 167
+  "seconds": 232
  },
  "status": "none",
  "why": "the second reader did not accept the answer",
  "gates": {
-  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-120b read from there",
-  "read": "6 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.5-flash-lite read from there",
+  "read": "5 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
   "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 0 official page(s), 0 paper(s) read in summary only",
-  "rules": "broken at try 1: but: words that are not person-first (“users”)",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.03, but 0.97, how1 0.41, how2 0.93",
-  "check": "short: NOT accepted: The Georgia passage says there was no measurable reduction, not that crackdowns categorically did not reduce use. It reports changes in markets and user behavior, but does not say drug use was moved somewhere else. This also fails to keep t; but: accepted; how1: NOT accepted: The passage presents this as what local studies showed in the review’s Nigeria example. The sentence leaves out that scope, contrary to the editor’s instruction to give it as the review’s example.; how2: NOT accepted: The passage specifies mass street drug testing and says it brought no measurable reduction in Georgia. The sentence broadens that to police crackdowns generally and drops the qualification “measurable”; it also combines this finding with a "
+  "told": "the writer was told what the readers said of the last draft that was not accepted: the short answer “No, police crackdowns did not reduce drug use in Georgia and may move it somewhere else.”: The Georgia passage says there was no measurable reduction, not that crackdowns categorically did not reduce use. It reports changes in markets and user behavior, but does not say drug use wa",
+  "writer": "try 1: no JSON (how the reply ended: length; reasoned 0 characters, wrote 9262) gemma-4-26b-a4b-it gave no answer in the form asked for: qwen3.8-27b wrote from there.",
+  "rules": "broken at try 2: but: words that are not person-first (“users”)",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.89, but 0.96, how1 0.70, how2 0.98, how3 0.98, how4 0.99",
+  "check": "short: NOT accepted: it does not answer the question itself (The opening word “No” correctly reflects that the passages report criminalization has not reduced drug use, so it is a fair answer. However, sentence 1 only states that use was not reduced and does not address whether crackdowns simply relo); but: NOT accepted: it is about something else than the short answer (The opening word “No” correctly reflects that the passages report criminalization has not reduced drug use, so it is a fair answer. However, sentence 1 only states that use was not reduced and does not address whether crackdowns simply relo); how1: accepted; how2: accepted; how3: accepted; how4: accepted"
  },
  "sources": [
   {
@@ -104,18 +112,13 @@
    "people": true,
    "near": 0.604,
    "money": [],
-   "design": {
-    "passage": 10,
-    "where": "Methods",
-    "quote": "Our analyses included critical assessment of policy changes and law enforcement interventions along the timeline of events, and concurrent changes in patterns of use.",
-    "text": "policy case study reviewing law enforcement interventions and drug use patterns in Georgia"
-   },
+   "design": null,
    "findings": [
     {
      "passage": 32,
      "where": "Discussion › Legal and ethical aspects of massive street drug testing",
-     "quote": "Punitive measures, including massive street drug testing, that have no analogue in developed countries did not result in any measurable reduction in drug use in Georgia.",
-     "text": "Police crackdowns did not reduce drug use in Georgia.",
+     "quote": "Importantly, these punitive measures had little or no influence on individual decisions to cease or to continue using drugs.",
+     "text": "These punitive measures had little or no influence on individual decisions to cease or to continue using drugs.",
      "id": "F1",
      "second_hand": ""
     },
@@ -123,7 +126,7 @@
      "passage": 32,
      "where": "Discussion › Legal and ethical aspects of massive street drug testing",
      "quote": "Our earlier report showed that 89 % of individuals punished for drug use (as per positive drug test) returned to drugs immediately after the punishment, and 11 % did so within few months following the penalty.",
-     "text": "Most people who are punished for drug use returned to using drugs immediately.",
+     "text": "89 percent of individuals punished for drug use returned to drugs immediately after the punishment, and 11 percent did so within few months following the penalty.",
      "id": "F2",
      "second_hand": ""
     },
@@ -131,7 +134,7 @@
      "passage": 21,
      "where": "Discussion",
      "quote": "Reactive in its nature, the simplistic, repressive response heavily relied on consumer sanctions and stimulated shifts in drug markets and users behavior.",
-     "text": "Police crackdowns stimulated shifts in drug markets and user behavior toward new toxic drugs.",
+     "text": "The repressive response heavily relied on consumer sanctions and stimulated shifts in drug markets and users behavior.",
      "id": "F3",
      "second_hand": ""
     }
@@ -140,8 +143,8 @@
     {
      "passage": 34,
      "where": "Discussion › Limitations › Literature review",
-     "quote": "due to lack or complete absence of data, we were unable to assess the effect of drug enforcement measures on initiation of drug use by new users.",
-     "text": "The study could not assess the effect of enforcement on initiation of drug use because of lack of data.",
+     "quote": "Secondly, due to lack or complete absence of data, we were unable to assess the effect of drug enforcement measures on initiation of drug use by new users.",
+     "text": "Due to lack or complete absence of data, the researchers were unable to assess the effect of drug enforcement measures on initiation of drug use by new users.",
      "id": "L1",
      "second_hand": ""
     }
@@ -217,50 +220,33 @@
     "passage": 1,
     "where": "Abstract",
     "quote": "This article provides four case examples, Ukraine, Philippines, Nigeria and Peru, where there is movement to develop addiction public health infrastructure.",
-    "text": "Review of four country case examples of drug policy approaches"
+    "text": "four case examples paper"
    },
    "findings": [
     {
-     "passage": 38,
-     "where": "Country case examples › Nigeria",
-     "quote": "criminalization has not reduced substance use, rather it has produced social harms",
-     "text": "Criminalization has not reduced substance use.",
-     "id": "F4",
-     "second_hand": "Local studies have shown that criminalization has not reduced substance use, rather it has produced social harms including stigma, large proportions of the population with criminal"
-    },
-    {
-     "passage": 38,
-     "where": "Country case examples › Nigeria",
-     "quote": "prompted people who use drugs to adopt more dangerous practices such as using in riskier settings where social controls are weak and substances are more likely to be adulterated.",
-     "text": "Criminalization has prompted people who use drugs to adopt more dangerous practices by using in riskier settings.",
-     "id": "F5",
-     "second_hand": ""
-    },
-    {
      "passage": 50,
      "where": "Discussion",
-     "quote": "Addressing drug use via attempting to reduce the supply through a law enforcement approach has proven costly and less effective than hoped, both within the United States and internationally",
-     "text": "Law enforcement approaches to reducing drug supply have been costly and less effective than hoped.",
-     "id": "F6",
+     "quote": "Addressing drug use via attempting to reduce the supply through a law enforcement approach has proven costly and less effective than hoped, both within the United States and internationally, yet it remains the dominant strategy in most of the world.",
+     "text": "Addressing drug use by trying to reduce the supply through a law enforcement approach has proven costly and less effective than hoped both within the United States and internationally.",
+     "id": "F4",
      "second_hand": ""
-    }
-   ],
-   "limits": [
+    },
     {
-     "passage": 1,
-     "where": "Abstract",
-     "quote": "All four countries highlighted have barriers to moving towards a more public health approach which may include popularity of the law enforcement approach, turbulent government environments, and economics of being a drug producing nation.",
-     "text": "Barriers such as popularity of law enforcement, turbulent government environments, and drug‑producing economics may impede moving towards a public health approach.",
-     "id": "L2",
-     "second_hand": ""
+     "passage": 38,
+     "where": "Country case examples › Nigeria",
+     "quote": "Local studies have shown that criminalization has not reduced substance use, rather it has produced social harms including stigma, large proportions of the population with criminal records, disruption of relationships, loss of employment and housing and drug-related violence.",
+     "text": "Local studies have shown that criminalization has not reduced substance use, but has instead produced various social harms.",
+     "id": "F5",
+     "second_hand": "Local studies have shown that criminalization has not reduced substance use, rather it has produced social harms including stigma, large proportions of the population with criminal"
     }
    ],
+   "limits": [],
    "tag": "B"
   }
  ],
  "parts": [],
  "complete": false,
- "missing": "effect on initiation of drug use",
+ "missing": "",
  "wanted": [
   {
    "doi": "10.1016/j.drugpo.2009.12.001",
@@ -317,6 +303,14 @@
    "why": "passed every gate",
    "short": "No. A review says trying to cut supply via law enforcement is less effective than hoped. In Georgia, massive street drug testing did not reduce drug use.",
    "complete": false
+  },
+  {
+   "on": "2026-11-27",
+   "lane": 19,
+   "status": "none",
+   "why": "the second reader did not accept the answer",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -328,10 +322,10 @@
    "kept": 3,
    "thrown": [
     {
-     "kind": "limit",
-     "text": "The review did not analyze political, socio‑economic, and cultural factors influencing drug trends.",
-     "quote": "Analyzing those factors, whatever the importance, was beyond the scope of current review.",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+     "kind": "text",
+     "text": "a policy case study reviewing relevant literature, legislation, and practices in Georgia",
+     "quote": "The aim of the current review is to describe the drug-related law enforcement response in Georgia and its impact on illicit drug consumption and drug-related harm.",
+     "why": "the sentence is not carried by its quote and passage"
     }
    ]
   },
@@ -340,7 +334,7 @@
    "read": "full",
    "kind": "review",
    "at": "10.1080/07853890.2022.2079150",
-   "kept": 3,
+   "kept": 2,
    "thrown": []
   },
   {
@@ -386,10 +380,10 @@
  ],
  "plan": {
   "short": [
+   "F5",
    "F1",
    "F3",
-   "F4",
-   "F5"
+   "F4"
   ],
   "direct": "No",
   "but": [
@@ -397,65 +391,53 @@
   ],
   "how": [
    [
-    "F4",
-    "F5"
+    "DB",
+    "F5",
+    "F4"
    ],
    [
     "F1",
+    "F2",
     "F3"
    ]
   ],
-  "unanswered": "effect on initiation of drug use"
+  "unanswered": ""
  },
  "tries": [
   {
-   "try": 1,
+   "try": 2,
    "why": "a rule was broken: written again",
    "parts": [
     {
      "part": "short",
-     "text": "No, police crackdowns did not reduce drug use, and may move it somewhere else.",
+     "text": "No, local studies report criminalization has not reduced substance use. A review says supply-focused law enforcement has been less effective than hoped.",
      "rests_on": [
-      {
-       "label": "F1",
-       "ref": "otiashvili_2016",
-       "where": "Discussion › Legal and ethical aspects of massive street drug testing",
-       "quote": "Punitive measures, including massive street drug testing, that have no analogue in developed countries did not result in any measurable reduction in drug use in Georgia.",
-       "sha": "4e02cfef7a5c19a5"
-      },
-      {
-       "label": "F3",
-       "ref": "otiashvili_2016",
-       "where": "Discussion",
-       "quote": "Reactive in its nature, the simplistic, repressive response heavily relied on consumer sanctions and stimulated shifts in drug markets and users behavior.",
-       "sha": "4b2faf1b0049aa54"
-      },
-      {
-       "label": "F4",
-       "ref": "johnson_2022",
-       "where": "Country case examples › Nigeria",
-       "quote": "criminalization has not reduced substance use, rather it has produced social harms",
-       "sha": "acb7c9695eddac5a"
-      },
       {
        "label": "F5",
        "ref": "johnson_2022",
        "where": "Country case examples › Nigeria",
-       "quote": "prompted people who use drugs to adopt more dangerous practices such as using in riskier settings where social controls are weak and substances are more likely to be adulterated.",
+       "quote": "Local studies have shown that criminalization has not reduced substance use, rather it has produced social harms including stigma, large proportions of the population with criminal records, disruption of relationships, loss of employment and housing and drug-related violence.",
        "sha": "acb7c9695eddac5a"
+      },
+      {
+       "label": "F4",
+       "ref": "johnson_2022",
+       "where": "Discussion",
+       "quote": "Addressing drug use via attempting to reduce the supply through a law enforcement approach has proven costly and less effective than hoped, both within the United States and internationally, yet it remains the dominant strategy in most of the world.",
+       "sha": "2132b26651ecb970"
       }
      ],
      "ok": true
     },
     {
      "part": "but",
-     "text": "The study could not assess the effect on new users due to lack of data.",
+     "text": "The Georgia study could not assess if enforcement affects new users starting drugs, due to a lack of data.",
      "rests_on": [
       {
        "label": "L1",
        "ref": "otiashvili_2016",
        "where": "Discussion › Limitations › Literature review",
-       "quote": "due to lack or complete absence of data, we were unable to assess the effect of drug enforcement measures on initiation of drug use by new users.",
+       "quote": "Secondly, due to lack or complete absence of data, we were unable to assess the effect of drug enforcement measures on initiation of drug use by new users.",
        "sha": "90843c7939499ef7"
       }
      ],
@@ -465,135 +447,62 @@
     },
     {
      "part": "how1",
-     "text": "A 2016 review of Georgia's policy found no reduction in drug use.",
+     "text": "A 2022 review of four countries reports local studies found criminalization did not reduce use but caused social harms.",
      "rests_on": [
       {
-       "label": "F1",
-       "ref": "otiashvili_2016",
-       "where": "Discussion › Legal and ethical aspects of massive street drug testing",
-       "quote": "Punitive measures, including massive street drug testing, that have no analogue in developed countries did not result in any measurable reduction in drug use in Georgia.",
-       "sha": "4e02cfef7a5c19a5"
+       "label": "DB",
+       "ref": "johnson_2022",
+       "where": "Abstract",
+       "quote": "This article provides four case examples, Ukraine, Philippines, Nigeria and Peru, where there is movement to develop addiction public health infrastructure.",
+       "sha": "33c14dc313296827"
       },
       {
-       "label": "F3",
-       "ref": "otiashvili_2016",
-       "where": "Discussion",
-       "quote": "Reactive in its nature, the simplistic, repressive response heavily relied on consumer sanctions and stimulated shifts in drug markets and users behavior.",
-       "sha": "4b2faf1b0049aa54"
+       "label": "F5",
+       "ref": "johnson_2022",
+       "where": "Country case examples › Nigeria",
+       "quote": "Local studies have shown that criminalization has not reduced substance use, rather it has produced social harms including stigma, large proportions of the population with criminal records, disruption of relationships, loss of employment and housing and drug-related violence.",
+       "sha": "acb7c9695eddac5a"
       }
      ],
      "ok": true
     },
     {
      "part": "how2",
-     "text": "A 2022 review reports that criminalization has not reduced substance use.",
+     "text": "The same review says supply-focused law enforcement has proven costly and less effective than hoped in the US and globally.",
      "rests_on": [
       {
        "label": "F4",
        "ref": "johnson_2022",
-       "where": "Country case examples › Nigeria",
-       "quote": "criminalization has not reduced substance use, rather it has produced social harms",
-       "sha": "acb7c9695eddac5a"
-      },
-      {
-       "label": "F5",
-       "ref": "johnson_2022",
-       "where": "Country case examples › Nigeria",
-       "quote": "prompted people who use drugs to adopt more dangerous practices such as using in riskier settings where social controls are weak and substances are more likely to be adulterated.",
-       "sha": "acb7c9695eddac5a"
-      }
-     ],
-     "ok": true
-    }
-   ]
-  },
-  {
-   "try": 2,
-   "why": "the short answer or the But was not accepted: written again",
-   "parts": [
-    {
-     "part": "short",
-     "text": "No, police crackdowns did not reduce drug use, and may move it somewhere else.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "otiashvili_2016",
-       "where": "Discussion › Legal and ethical aspects of massive street drug testing",
-       "quote": "Punitive measures, including massive street drug testing, that have no analogue in developed countries did not result in any measurable reduction in drug use in Georgia.",
-       "sha": "4e02cfef7a5c19a5"
-      },
-      {
-       "label": "F3",
-       "ref": "otiashvili_2016",
        "where": "Discussion",
-       "quote": "Reactive in its nature, the simplistic, repressive response heavily relied on consumer sanctions and stimulated shifts in drug markets and users behavior.",
-       "sha": "4b2faf1b0049aa54"
-      },
-      {
-       "label": "F4",
-       "ref": "johnson_2022",
-       "where": "Country case examples › Nigeria",
-       "quote": "criminalization has not reduced substance use, rather it has produced social harms",
-       "sha": "acb7c9695eddac5a"
-      },
-      {
-       "label": "F5",
-       "ref": "johnson_2022",
-       "where": "Country case examples › Nigeria",
-       "quote": "prompted people who use drugs to adopt more dangerous practices such as using in riskier settings where social controls are weak and substances are more likely to be adulterated.",
-       "sha": "acb7c9695eddac5a"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passages report no measurable reduction from specific punitive measures in Georgia and describe shifts in drug markets, user behavior, or riskier settings; they do not establish that police crackdowns generally failed to reduce use or t"
-    },
-    {
-     "part": "but",
-     "text": "The study could not assess the effect on people who start using drugs.",
-     "rests_on": [
-      {
-       "label": "L1",
-       "ref": "otiashvili_2016",
-       "where": "Discussion › Limitations › Literature review",
-       "quote": "due to lack or complete absence of data, we were unable to assess the effect of drug enforcement measures on initiation of drug use by new users.",
-       "sha": "90843c7939499ef7"
+       "quote": "Addressing drug use via attempting to reduce the supply through a law enforcement approach has proven costly and less effective than hoped, both within the United States and internationally, yet it remains the dominant strategy in most of the world.",
+       "sha": "2132b26651ecb970"
       }
      ],
      "ok": true
     },
     {
-     "part": "how1",
-     "text": "A 2022 review reports criminalization has not reduced substance use and prompted people who use drugs to adopt more dangerous practices.",
-     "rests_on": [
-      {
-       "label": "F4",
-       "ref": "johnson_2022",
-       "where": "Country case examples › Nigeria",
-       "quote": "criminalization has not reduced substance use, rather it has produced social harms",
-       "sha": "acb7c9695eddac5a"
-      },
-      {
-       "label": "F5",
-       "ref": "johnson_2022",
-       "where": "Country case examples › Nigeria",
-       "quote": "prompted people who use drugs to adopt more dangerous practices such as using in riskier settings where social controls are weak and substances are more likely to be adulterated.",
-       "sha": "acb7c9695eddac5a"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passage presents this as a finding of local studies in the Nigeria country example, not as a general finding about criminalization. The sentence leaves out that narrowing context, contrary to the editor's instruction to identify the Nig"
-    },
-    {
-     "part": "how2",
-     "text": "A 2016 review of Georgia found police crackdowns did not reduce drug use and stimulated shifts in drug markets.",
+     "part": "how3",
+     "text": "A 2016 Georgia case study found punitive measures had little influence on individual decisions to stop or continue using drugs.",
      "rests_on": [
       {
        "label": "F1",
        "ref": "otiashvili_2016",
        "where": "Discussion › Legal and ethical aspects of massive street drug testing",
-       "quote": "Punitive measures, including massive street drug testing, that have no analogue in developed countries did not result in any measurable reduction in drug use in Georgia.",
+       "quote": "Importantly, these punitive measures had little or no influence on individual decisions to cease or to continue using drugs.",
+       "sha": "4e02cfef7a5c19a5"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how4",
+     "text": "In Georgia, 89 percent of punished people returned to drugs immediately, and the repressive response stimulated shifts in drug markets.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "otiashvili_2016",
+       "where": "Discussion › Legal and ethical aspects of massive street drug testing",
+       "quote": "Our earlier report showed that 89 % of individuals punished for drug use (as per positive drug test) returned to drugs immediately after the punishment, and 11 % did so within few months following the penalty.",
        "sha": "4e02cfef7a5c19a5"
       },
       {
@@ -604,9 +513,7 @@
        "sha": "4b2faf1b0049aa54"
       }
      ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passage specifies massive street drug testing in Georgia when reporting no measurable fall in use; it does not establish that police crackdowns generally had that result. The sentence also calls the source a review, though its title ide"
+     "ok": true
     }
    ]
   },
@@ -616,100 +523,105 @@
    "parts": [
     {
      "part": "short",
-     "text": "No, police crackdowns did not reduce drug use in Georgia and may move it somewhere else.",
+     "text": "No, local studies report criminalization has not reduced substance use. A review says supply-focused law enforcement has been less effective than hoped.",
      "rests_on": [
-      {
-       "label": "F1",
-       "ref": "otiashvili_2016",
-       "where": "Discussion › Legal and ethical aspects of massive street drug testing",
-       "quote": "Punitive measures, including massive street drug testing, that have no analogue in developed countries did not result in any measurable reduction in drug use in Georgia.",
-       "sha": "4e02cfef7a5c19a5"
-      },
-      {
-       "label": "F3",
-       "ref": "otiashvili_2016",
-       "where": "Discussion",
-       "quote": "Reactive in its nature, the simplistic, repressive response heavily relied on consumer sanctions and stimulated shifts in drug markets and users behavior.",
-       "sha": "4b2faf1b0049aa54"
-      },
-      {
-       "label": "F4",
-       "ref": "johnson_2022",
-       "where": "Country case examples › Nigeria",
-       "quote": "criminalization has not reduced substance use, rather it has produced social harms",
-       "sha": "acb7c9695eddac5a"
-      },
       {
        "label": "F5",
        "ref": "johnson_2022",
        "where": "Country case examples › Nigeria",
-       "quote": "prompted people who use drugs to adopt more dangerous practices such as using in riskier settings where social controls are weak and substances are more likely to be adulterated.",
+       "quote": "Local studies have shown that criminalization has not reduced substance use, rather it has produced social harms including stigma, large proportions of the population with criminal records, disruption of relationships, loss of employment and housing and drug-related violence.",
        "sha": "acb7c9695eddac5a"
+      },
+      {
+       "label": "F4",
+       "ref": "johnson_2022",
+       "where": "Discussion",
+       "quote": "Addressing drug use via attempting to reduce the supply through a law enforcement approach has proven costly and less effective than hoped, both within the United States and internationally, yet it remains the dominant strategy in most of the world.",
+       "sha": "2132b26651ecb970"
       }
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "The Georgia passage says there was no measurable reduction, not that crackdowns categorically did not reduce use. It reports changes in markets and user behavior, but does not say drug use was moved somewhere else. This also fails to keep t"
+     "said": "it does not answer the question itself (The opening word “No” correctly reflects that the passages report criminalization has not reduced drug use, so it is a fair answer. However, sentence 1 only states that use was not reduced and does not address whether crackdowns simply relo)"
     },
     {
      "part": "but",
-     "text": "The study could not assess the effect on initiation of drug use due to lack of data.",
+     "text": "The Georgia study could not assess if enforcement affects new people starting to use drugs due to missing data.",
      "rests_on": [
       {
        "label": "L1",
        "ref": "otiashvili_2016",
        "where": "Discussion › Limitations › Literature review",
-       "quote": "due to lack or complete absence of data, we were unable to assess the effect of drug enforcement measures on initiation of drug use by new users.",
+       "quote": "Secondly, due to lack or complete absence of data, we were unable to assess the effect of drug enforcement measures on initiation of drug use by new users.",
        "sha": "90843c7939499ef7"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer (The opening word “No” correctly reflects that the passages report criminalization has not reduced drug use, so it is a fair answer. However, sentence 1 only states that use was not reduced and does not address whether crackdowns simply relo)"
     },
     {
      "part": "how1",
-     "text": "A 2022 review reports criminalization has not reduced substance use and prompted riskier practices.",
+     "text": "A 2022 review of four countries reports local studies found criminalization did not reduce use but caused social harms.",
      "rests_on": [
       {
-       "label": "F4",
+       "label": "DB",
        "ref": "johnson_2022",
-       "where": "Country case examples › Nigeria",
-       "quote": "criminalization has not reduced substance use, rather it has produced social harms",
-       "sha": "acb7c9695eddac5a"
+       "where": "Abstract",
+       "quote": "This article provides four case examples, Ukraine, Philippines, Nigeria and Peru, where there is movement to develop addiction public health infrastructure.",
+       "sha": "33c14dc313296827"
       },
       {
        "label": "F5",
        "ref": "johnson_2022",
        "where": "Country case examples › Nigeria",
-       "quote": "prompted people who use drugs to adopt more dangerous practices such as using in riskier settings where social controls are weak and substances are more likely to be adulterated.",
+       "quote": "Local studies have shown that criminalization has not reduced substance use, rather it has produced social harms including stigma, large proportions of the population with criminal records, disruption of relationships, loss of employment and housing and drug-related violence.",
        "sha": "acb7c9695eddac5a"
       }
      ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passage presents this as what local studies showed in the review’s Nigeria example. The sentence leaves out that scope, contrary to the editor’s instruction to give it as the review’s example."
+     "ok": true
     },
     {
      "part": "how2",
-     "text": "A 2016 review found police crackdowns in Georgia did not reduce drug use and stimulated market shifts.",
+     "text": "The same review says supply-focused law enforcement has proven costly and less effective than hoped in the US and globally.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "johnson_2022",
+       "where": "Discussion",
+       "quote": "Addressing drug use via attempting to reduce the supply through a law enforcement approach has proven costly and less effective than hoped, both within the United States and internationally, yet it remains the dominant strategy in most of the world.",
+       "sha": "2132b26651ecb970"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2016 Georgia case study found punitive measures had little influence on individual decisions to stop or continue using drugs.",
      "rests_on": [
       {
        "label": "F1",
        "ref": "otiashvili_2016",
        "where": "Discussion › Legal and ethical aspects of massive street drug testing",
-       "quote": "Punitive measures, including massive street drug testing, that have no analogue in developed countries did not result in any measurable reduction in drug use in Georgia.",
+       "quote": "Importantly, these punitive measures had little or no influence on individual decisions to cease or to continue using drugs.",
        "sha": "4e02cfef7a5c19a5"
-      },
-      {
-       "label": "F3",
-       "ref": "otiashvili_2016",
-       "where": "Discussion",
-       "quote": "Reactive in its nature, the simplistic, repressive response heavily relied on consumer sanctions and stimulated shifts in drug markets and users behavior.",
-       "sha": "4b2faf1b0049aa54"
       }
      ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passage specifies mass street drug testing and says it brought no measurable reduction in Georgia. The sentence broadens that to police crackdowns generally and drops the qualification “measurable”; it also combines this finding with a "
+     "ok": true
+    },
+    {
+     "part": "how4",
+     "text": "In Georgia, 89 percent of people punished for drug use returned to drugs immediately, and 11 percent within a few months.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "otiashvili_2016",
+       "where": "Discussion › Legal and ethical aspects of massive street drug testing",
+       "quote": "Our earlier report showed that 89 % of individuals punished for drug use (as per positive drug test) returned to drugs immediately after the punishment, and 11 % did so within few months following the penalty.",
+       "sha": "4e02cfef7a5c19a5"
+      }
+     ],
+     "ok": true
     }
    ]
   }
@@ -719,66 +631,22 @@
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.0302,
-   "but": 0.9705,
-   "how1": 0.4051,
-   "how2": 0.9304
+   "short": 0.8859,
+   "but": 0.9631,
+   "how1": 0.7035,
+   "how2": 0.9776,
+   "how3": 0.9779,
+   "how4": 0.9858
   },
   "scores_quotes_alone": {
-   "short": 0.056,
-   "but": 0.9566,
-   "how1": 0.3077,
-   "how2": 0.8792
+   "short": 0.4539,
+   "but": 0.9514,
+   "how1": 0.5918,
+   "how2": 0.6581,
+   "how3": 0.8847,
+   "how4": 0.9082
   }
  },
- "dropped": [
-  {
-   "try": 3,
-   "part": "how1",
-   "text": "A 2022 review reports criminalization has not reduced substance use and prompted riskier practices.",
-   "rests_on": [
-    {
-     "label": "F4",
-     "ref": "johnson_2022",
-     "where": "Country case examples › Nigeria",
-     "quote": "criminalization has not reduced substance use, rather it has produced social harms",
-     "sha": "acb7c9695eddac5a"
-    },
-    {
-     "label": "F5",
-     "ref": "johnson_2022",
-     "where": "Country case examples › Nigeria",
-     "quote": "prompted people who use drugs to adopt more dangerous practices such as using in riskier settings where social controls are weak and substances are more likely to be adulterated.",
-     "sha": "acb7c9695eddac5a"
-    }
-   ],
-   "by": "the second reader",
-   "said": "The passage presents this as what local studies showed in the review’s Nigeria example. The sentence leaves out that scope, contrary to the editor’s instruction to give it as the review’s example."
-  },
-  {
-   "try": 3,
-   "part": "how2",
-   "text": "A 2016 review found police crackdowns in Georgia did not reduce drug use and stimulated market shifts.",
-   "rests_on": [
-    {
-     "label": "F1",
-     "ref": "otiashvili_2016",
-     "where": "Discussion › Legal and ethical aspects of massive street drug testing",
-     "quote": "Punitive measures, including massive street drug testing, that have no analogue in developed countries did not result in any measurable reduction in drug use in Georgia.",
-     "sha": "4e02cfef7a5c19a5"
-    },
-    {
-     "label": "F3",
-     "ref": "otiashvili_2016",
-     "where": "Discussion",
-     "quote": "Reactive in its nature, the simplistic, repressive response heavily relied on consumer sanctions and stimulated shifts in drug markets and users behavior.",
-     "sha": "4b2faf1b0049aa54"
-    }
-   ],
-   "by": "the second reader",
-   "said": "The passage specifies mass street drug testing and says it brought no measurable reduction in Georgia. The sentence broadens that to police crackdowns generally and drops the qualification “measurable”; it also combines this finding with a "
-  }
- ],
  "place": {
   "home": "facts",
   "also": [],
