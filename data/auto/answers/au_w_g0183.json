@@ -15,37 +15,224 @@
  ],
  "drugs": [],
  "made": {
-  "on": "2026-11-26",
+  "on": "2026-11-27",
   "models": {
-   "reader": "gemini:gemini-3.1-flash-lite",
-   "writer": "gemini:gemma-4-26b-a4b-it",
-   "checker": "gemini:gemini-3.5-flash-lite",
-   "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3.1-flash-lite",
-   "team": "team Z",
-   "reader_2": "gemini:gemini-3.1-flash-lite",
-   "writer_2": "groq:qwen/qwen3.8-27b",
-   "also1_else": "gemini:gemma-4-31b-it",
-   "reader_first": "gemini:gemma-4-31b-it"
+   "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+   "checker": "openrouter:openai/gpt-6-luna",
+   "planner": "groq:openai/gpt-oss-120b",
+   "team": "team B",
+   "reader_2": "groq:openai/gpt-oss-20b"
   },
-  "run": "45858024557",
-  "read_seconds": 100,
+  "run": "45917773718",
+  "read_seconds": 22,
   "from": {
-   "papers": 0,
+   "papers": 2,
    "summaries": 0,
    "official": 0
   },
-  "neurons": 0.0,
-  "seconds": 100
+  "neurons": 607.7,
+  "seconds": 48
  },
  "status": "none",
- "why": "no source that can be read gave a finding for this question (1 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
+ "why": "the second reader did not accept the answer",
  "gates": {
-  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.1-flash-lite read from there",
-  "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)"
+  "read": "4 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 6 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.98, but 0.12, how1 0.98, how2 0.91",
+  "check": "short: NOT accepted: The passages discuss ibogaine’s effects on self-administration and how long beneficial effects lasted; they do not say that people or animals build tolerance.; but: NOT accepted: it is about something else than the short answer (Sentence 1 shifts the question about people’s tolerance to an unsupported claim about animals. Sentence 2 describes the review’s animal-study scope, not a limitation or doubt specific to a finding about tolerance.); how1: accepted; how2: accepted",
+  "writer": "try 2: short names no item it rests on (how the reply ended: stop; reasoned 0 characters, wrote 363)"
  },
- "sources": [],
+ "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "belgers_2016",
+    "type": "article-journal",
+    "title": "Ibogaine and addiction in the animal model, a systematic review and meta-analysis",
+    "author": [
+     {
+      "family": "Belgers",
+      "given": "M"
+     },
+     {
+      "family": "Leenaars",
+      "given": "M"
+     },
+     {
+      "family": "Homberg",
+      "given": "J R"
+     },
+     {
+      "family": "Ritskes-Hoitinga",
+      "given": "M"
+     },
+     {
+      "family": "Schellekens",
+      "given": "A F A"
+     },
+     {
+      "family": "Hooijmans",
+      "given": "C R"
+     }
+    ],
+    "container-title": "Translational Psychiatry",
+    "issued": {
+     "date-parts": [
+      [
+       2016
+      ]
+     ]
+    },
+    "DOI": "10.1038/tp.2016.71",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-27",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-27"
+     }
+    },
+    "volume": "6",
+    "issue": "5",
+    "number": "e826",
+    "PMCID": "PMC5545647"
+   },
+   "doi": "10.1038/tp.2016.71",
+   "pmcid": "PMC5545647",
+   "title": "Ibogaine and addiction in the animal model, a systematic review and meta-analysis",
+   "year": 2016,
+   "journal": "Translational psychiatry",
+   "kind": "review",
+   "people": true,
+   "near": 0.707,
+   "money": [
+    "We are grateful for the support of ZonMw (Netherlands) who provided SYRCLE, a grant to promote Synthesis of Evidence of animal studies.",
+    "The authors declare no conflict of interest."
+   ],
+   "design": {
+    "passage": 6,
+    "where": "Materials and methods",
+    "quote": "The present review was based on published results of the therapeutic, toxic and neurobiological effects of ibogaine in animal studies.",
+    "text": "systematic review and meta-analysis of animal studies"
+   },
+   "findings": [
+    {
+     "passage": 33,
+     "where": "Discussion",
+     "quote": "Though the beneficial effects of ibogaine were most prominent in the first 24 h after administration, the beneficial effects lasted for over 72 h.",
+     "text": "The beneficial effects of ibogaine on drug self-administration lasted for over 72 hours in animal studies.",
+     "id": "F1",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 28,
+     "where": "Results › Description of characteristics and MA of the effects of ibogaine in animals › Toxic effects of ibogaine",
+     "quote": "The effect of ibogaine on heart rhythm: No studies were found on cardiovascular effects of ibogaine that matched our inclusion criteria.",
+     "text": "There were no studies on the effect of ibogaine on heart rhythm that matched the inclusion criteria.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "A"
+  },
+  {
+   "read": "full",
+   "ref": {
+    "id": "koenig_2015",
+    "type": "article-journal",
+    "title": "The anti-addiction drug ibogaine and the heart: A delicate relation",
+    "author": [
+     {
+      "family": "Koenig",
+      "given": "Xaver"
+     },
+     {
+      "family": "Hilber",
+      "given": "Karlheinz"
+     }
+    ],
+    "container-title": "Molecules",
+    "issued": {
+     "date-parts": [
+      [
+       2015
+      ]
+     ]
+    },
+    "DOI": "10.3390/molecules20022208",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-27",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-27"
+     }
+    },
+    "volume": "20",
+    "issue": "2",
+    "page": "2208-2228",
+    "PMCID": "PMC4382526"
+   },
+   "doi": "10.3390/molecules20022208",
+   "pmcid": "PMC4382526",
+   "title": "The anti-addiction drug ibogaine and the heart: a delicate relation",
+   "year": 2015,
+   "journal": "Molecules (Basel, Switzerland)",
+   "kind": "review",
+   "people": false,
+   "near": 0.676,
+   "money": [
+    "The authors declare no conflict of interest. The founding sponsors had no role in the design of the study; in the collection, analyses, or interpretation of data; in the writing of the manuscript, and in the decision to publish the results."
+   ],
+   "design": null,
+   "findings": [
+    {
+     "passage": 30,
+     "where": "3. Effects on the Cardiovascular System › 3.2. Clinical Evidence of Cardiotoxicity › 3.2.1. Clinical Reports",
+     "quote": "Noteworthy is that ibogaine intake is typically not immediately accompanied by deleterious adverse events.",
+     "text": "Ibogaine intake is not immediately accompanied by adverse events.",
+     "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 30,
+     "where": "3. Effects on the Cardiovascular System › 3.2. Clinical Evidence of Cardiotoxicity › 3.2.1. Clinical Reports",
+     "quote": "the appearance of fatalities 24–76 h after drug ingestion can hardly be attributed to the sole action of the alkaloid.",
+     "text": "Fatalities occur 24–76 hours after ibogaine ingestion.",
+     "id": "F3",
+     "second_hand": ""
+    },
+    {
+     "passage": 30,
+     "where": "3. Effects on the Cardiovascular System › 3.2. Clinical Evidence of Cardiotoxicity › 3.2.1. Clinical Reports",
+     "quote": "QT interval prolongation after ibogaine administration typically lasts for more than 24 hours, and has been observed to sometimes persist for longer than a week.",
+     "text": "QT interval prolongation after ibogaine administration lasts more than 24 hours.",
+     "id": "F4",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 33,
+     "where": "3. Effects on the Cardiovascular System › 3.2. Clinical Evidence of Cardiotoxicity › 3.2.2. Risk Factors",
+     "quote": "When related to the large number of people who have received ibogaine treatments over many years worldwide, comparably few fatality cases have occurred or have been reported.",
+     "text": "Few fatality cases have been reported in people who received ibogaine treatments.",
+     "id": "L2",
+     "second_hand": ""
+    }
+   ],
+   "tag": "B"
+  }
+ ],
  "parts": [],
  "complete": false,
  "missing": "",
@@ -81,6 +268,14 @@
    "why": "no source that can be read gave a finding for this question (1 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-26",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question (1 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -89,43 +284,244 @@
    "read": "full",
    "kind": "review",
    "at": "10.1038/tp.2016.71",
-   "kept": 0,
-   "thrown": []
+   "kept": 1,
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "Ibogaine's effect on drug self-administration did not change for measurements taken more than 24 hours after dosing in animal studies.",
+     "quote": "There was also no difference between these subgroups if we analysed the prolonged effect of ibogaine on SA (measurements >24 h after ibogaine dosing).",
+     "why": "the sentence is not carried by its quote and passage"
+    },
+    {
+     "kind": "finding",
+     "text": "Ibogaine reduced drug self-administration in animal studies.",
+     "quote": "MA indicates that ibogaine reduced drug SA (SMD=−1.54 [−1.93; −1.14] n=29; I2=64%),",
+     "why": "the sentence is not carried by its quote and passage"
+    },
+    {
+     "kind": "limit",
+     "text": "The study was based on animal research, not human research.",
+     "quote": "Although human clinical trials on the safety and efficacy of ibogaine are lacking, animal studies do support the efficacy of ibogaine.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   },
   {
    "title": "The anti-addiction drug ibogaine and the heart: a delicate relation",
    "read": "full",
    "kind": "review",
    "at": "10.3390/molecules20022208",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
-  },
-  {
-   "title": "Rare but relevant: Ibogaine and cardiovascular complications-prolonged QT interval and ventricular arrhythmias",
-   "read": "full",
-   "kind": "review",
-   "at": "10.1111/add.70319",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Ibogaine/Noribogaine in the Treatment of Substance Use Disorders: A Systematic Review of the Current Literature",
-   "read": "full",
-   "kind": "review",
-   "at": "10.2174/1570159x21666221017085612",
-   "kept": 0,
+   "kept": 3,
    "thrown": [
     {
      "kind": "text",
-     "text": "A systematic review of literature regarding the use of ibogaine and noribogaine for substance use disorders.",
-     "quote": "This review aims to assess the anti-addictive role of ibogaine and evaluate its side effects.",
+     "text": "review of research paper",
+     "quote": "The aim of this review is to recapitulate the current knowledge about ibogaine’s effects on the heart and the cardiovascular system, and to assess the cardiac risks associated with the use of this dru",
      "why": "the sentence is not carried by its quote and passage"
+    },
+    {
+     "kind": "finding",
+     "text": "Ibogaine has a plasma half-life of 4–7 hours in humans.",
+     "quote": "ibogaine levels peak 2 h after ingestion (oral doses, 500–1000 mg) reaching a free maximum plasma concentration (Cmax) of approximately 1 µg/mL, and the majority of the alkaloid (>90%) is eliminated a",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    },
+    {
+     "kind": "limit",
+     "text": "Some studies on ibogaine's safety had limited conditions.",
+     "quote": "Drug safety studies on human addicts performed under well-controlled conditions revealed no significant adverse effects.",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
+  },
+  {
+   "title": "Ibogaine",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.drugscience.org.uk/drugs/ibogaine",
+   "kept": 0,
+   "thrown": []
+  }
+ ],
+ "plan": "the planner gave no plan that could be used: the writer chose the items itself",
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.9756,
+   "but": 0.1178,
+   "how1": 0.9796,
+   "how2": 0.9111
+  },
+  "scores_quotes_alone": {
+   "short": 0.9856,
+   "but": 0.1272,
+   "how1": 0.9818,
+   "how2": 0.6528
+  }
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "It can, but the findings are from animal studies.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "belgers_2016",
+       "where": "Materials and methods",
+       "quote": "The present review was based on published results of the therapeutic, toxic and neurobiological effects of ibogaine in animal studies.",
+       "sha": "dbcb41a8469964f5"
+      },
+      {
+       "label": "F1",
+       "ref": "belgers_2016",
+       "where": "Discussion",
+       "quote": "Though the beneficial effects of ibogaine were most prominent in the first 24 h after administration, the beneficial effects lasted for over 72 h.",
+       "sha": "af72a591a5d8fb41"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages do not address whether people build up a tolerance to ibogaine, so they do not support “It can.”"
+    },
+    {
+     "part": "but",
+     "text": "The studies were done in animals, not people.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "belgers_2016",
+       "where": "Materials and methods",
+       "quote": "The present review was based on published results of the therapeutic, toxic and neurobiological effects of ibogaine in animal studies.",
+       "sha": "dbcb41a8469964f5"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer (Sentence 1 directly answers whether people can build up a tolerance. Sentence 2 describes the animal-study basis of a review about ibogaine’s effects, but the passages do not show that those studies examined tolerance, so it is not a suppor)"
+    },
+    {
+     "part": "how1",
+     "text": "A 2016 review of animal studies found effects lasted over 72 hours.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "belgers_2016",
+       "where": "Materials and methods",
+       "quote": "The present review was based on published results of the therapeutic, toxic and neurobiological effects of ibogaine in animal studies.",
+       "sha": "dbcb41a8469964f5"
+      },
+      {
+       "label": "F1",
+       "ref": "belgers_2016",
+       "where": "Discussion",
+       "quote": "Though the beneficial effects of ibogaine were most prominent in the first 24 h after administration, the beneficial effects lasted for over 72 h.",
+       "sha": "af72a591a5d8fb41"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "Another review discussed ibogaine and the heart.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "koenig_2015",
+       "where": "3. Effects on the Cardiovascular System › 3.2. Clinical Evidence of Cardiotoxicity › 3.2.1. Clinical Reports",
+       "quote": "Noteworthy is that ibogaine intake is typically not immediately accompanied by deleterious adverse events.",
+       "sha": "b9475c3018443ea7"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "It can, in animals",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "belgers_2016",
+       "where": "Materials and methods",
+       "quote": "The present review was based on published results of the therapeutic, toxic and neurobiological effects of ibogaine in animal studies.",
+       "sha": "dbcb41a8469964f5"
+      },
+      {
+       "label": "F1",
+       "ref": "belgers_2016",
+       "where": "Discussion",
+       "quote": "Though the beneficial effects of ibogaine were most prominent in the first 24 h after administration, the beneficial effects lasted for over 72 h.",
+       "sha": "af72a591a5d8fb41"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages discuss ibogaine’s effects on self-administration and how long beneficial effects lasted; they do not say that people or animals build tolerance."
+    },
+    {
+     "part": "but",
+     "text": "Only animal studies",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "belgers_2016",
+       "where": "Materials and methods",
+       "quote": "The present review was based on published results of the therapeutic, toxic and neurobiological effects of ibogaine in animal studies.",
+       "sha": "dbcb41a8469964f5"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer (Sentence 1 shifts the question about people’s tolerance to an unsupported claim about animals. Sentence 2 describes the review’s animal-study scope, not a limitation or doubt specific to a finding about tolerance.)"
+    },
+    {
+     "part": "how1",
+     "text": "A 2016 review of animal studies found effects lasted over 72 hours",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "belgers_2016",
+       "where": "Materials and methods",
+       "quote": "The present review was based on published results of the therapeutic, toxic and neurobiological effects of ibogaine in animal studies.",
+       "sha": "dbcb41a8469964f5"
+      },
+      {
+       "label": "F1",
+       "ref": "belgers_2016",
+       "where": "Discussion",
+       "quote": "Though the beneficial effects of ibogaine were most prominent in the first 24 h after administration, the beneficial effects lasted for over 72 h.",
+       "sha": "af72a591a5d8fb41"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "Another review discussed ibogaine and the heart",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "koenig_2015",
+       "where": "3. Effects on the Cardiovascular System › 3.2. Clinical Evidence of Cardiotoxicity › 3.2.1. Clinical Reports",
+       "quote": "Noteworthy is that ibogaine intake is typically not immediately accompanied by deleterious adverse events.",
+       "sha": "b9475c3018443ea7"
+      }
+     ],
+     "ok": true
     }
    ]
   }
  ],
- "soft": "a source could not be fetched",
  "place": {
   "home": "new:Ibogaine",
   "also": [],

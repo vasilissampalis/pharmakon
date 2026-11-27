@@ -17,125 +17,242 @@
   "synthetic-cathinones"
  ],
  "made": {
-  "on": "2026-11-26",
+  "on": "2026-11-27",
   "models": {
-   "reader": "groq:openai/gpt-oss-20b",
-   "writer": "gemini:gemma-4-26b-a4b-it",
-   "checker": "groq:openai/gpt-oss-120b",
-   "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3.5-flash-lite",
-   "also2": "gemini:gemini-3-flash-preview",
-   "team": "team K",
-   "reader_2": "gemini:gemini-3.5-flash-lite",
-   "also2_else": "gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
-   "reader_first": "gemini:gemma-4-31b-it"
+   "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+   "checker": "openrouter:openai/gpt-6-luna",
+   "planner": "groq:openai/gpt-oss-120b",
+   "team": "team B",
+   "reader_2": "groq:openai/gpt-oss-20b"
   },
-  "run": "45855071869",
-  "read_by": {
-   "gpt-oss-20b": 2,
-   "gemini-3.1-flash-lite": 2,
-   "gemini-3.5-flash-lite": 1
-  },
-  "read_seconds": 100,
+  "run": "45917773718",
+  "read_seconds": 19,
   "from": {
-   "papers": 1,
+   "papers": 2,
    "summaries": 0,
    "official": 2
   },
-  "neurons": 0.0,
-  "seconds": 428
+  "neurons": 648.2,
+  "seconds": 78
  },
- "status": "waiting",
- "why": "passed every reader that could be asked, but a further reader of its team could not be (gemini-3-flash-preview): it is worked on again by itself when that reader can be asked",
+ "status": "none",
+ "why": "the second reader did not accept the answer",
  "gates": {
-  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-20b read from there",
-  "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "7 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 9 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "0 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 2 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
-  "panel": "further readers, each of which must accept every sentence too: gemini-3.5-flash-lite accepted 4 of 5; gemini-3-flash-preview could not be asked: gemini could not be reached: The read operation timed out; gemini-4-hydrogen could not be asked: the time for this question was over before gemini-4-hydrogen could be asked; gemini-3.8-flash could not be asked: the time for this question was over before gemini-3.8-flash could be asked",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.43, but 0.99, how1 0.81, how2 0.71, how3 0.02",
-  "check": "every sentence kept was accepted by the second reader (groq:openai/gpt-oss-120b) and by gemini:gemini-3.5-flash-lite and by gemini:gemini-3-flash-preview; 1 How-do-we-know line(s) dropped; it also found that the short answer answers the question and that the But is about that answer",
-  "rules": "nothing against it",
-  "checked": "set beside the checked claims of the same page: nothing against them"
+  "read": "9 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 4 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 2 official page(s), 0 paper(s) read in summary only",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.92, but 0.98, how1 0.98, how2 0.80",
+  "check": "short: NOT accepted: The passages say 3-MMC releases norepinephrine and dopamine, not serotonin, and do not establish that synthetic cathinones generally affect all three chemicals.; but: accepted; how1: accepted; how2: accepted"
  },
  "sources": [
   {
    "read": "full",
    "ref": {
-    "id": "prezpereira_2023",
+    "id": "keleevi_2024",
     "type": "article-journal",
-    "title": "Integrated approach for synthetic cathinone drug prioritization and risk assessment: In silico approach and sub-chronic studies in daphnia magna and tetrahymena thermophila",
+    "title": "Metaphedrone (3-methylmethcathinone): Pharmacological, clinical, and toxicological profile",
     "author": [
      {
-      "family": "Pérez-Pereira",
-      "given": "Ariana"
+      "family": "Kelečević",
+      "given": "Igor"
      },
      {
-      "family": "Carvalho",
-      "given": "Ana Rita"
+      "family": "Vejnović",
+      "given": "Ana-Marija"
      },
      {
-      "family": "Carrola",
-      "given": "João Soares"
+      "family": "Javorac",
+      "given": "Jovan"
      },
      {
-      "family": "Tiritan",
-      "given": "Maria Elizabeth"
+      "family": "Gvozdenović",
+      "given": "Nemanja"
      },
      {
-      "family": "Ribeiro",
-      "given": "Cláudia"
+      "family": "Janjić",
+      "given": "Nataša"
+     },
+     {
+      "family": "Mijatović Jovin",
+      "given": "Vesna"
      }
     ],
-    "container-title": "Molecules",
+    "container-title": "Medicina",
     "issued": {
      "date-parts": [
       [
-       2023
+       2024
       ]
      ]
     },
-    "DOI": "10.3390/molecules28072899",
+    "DOI": "10.3390/medicina60030466",
     "verification": {
      "status": "metadata-verified",
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-26",
+     "verified_on": "2026-11-27",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-26"
+      "checked_on": "2026-11-27"
      }
     },
-    "volume": "28",
-    "issue": "7",
-    "number": "2899",
-    "PMCID": "PMC10096003"
+    "volume": "60",
+    "issue": "3",
+    "number": "466",
+    "PMCID": "PMC10972361"
    },
-   "doi": "10.3390/molecules28072899",
-   "pmcid": "PMC10096003",
-   "title": "Integrated Approach for Synthetic Cathinone Drug Prioritization and Risk Assessment: In Silico Approach and Sub-Chronic Studies in Daphnia magna and Tetrahymena thermophila",
-   "year": 2023,
-   "journal": "Molecules (Basel, Switzerland)",
-   "kind": "other",
+   "doi": "10.3390/medicina60030466",
+   "pmcid": "PMC10972361",
+   "title": "Metaphedrone (3-Methylmethcathinone): Pharmacological, Clinical, and Toxicological Profile",
+   "year": 2024,
+   "journal": "Medicina (Kaunas, Lithuania)",
+   "kind": "review",
    "people": true,
-   "near": 0.54,
+   "near": 0.655,
    "money": [
-    "The authors declare no conflict of interest.",
-    "This work is financed by portuguese national funds through the FCT/MCTES (PIDDAC), under the project PTDC/CTA-AMB/6686/2020. Partially supported by FCT—Foundation for Science and Technology through the projects UIDB/04033/2020 (CITAB), UIDB/04423/2020 and UIDP/04423/2020 (Group of Marine Natural Products and Medicinal Chemistry—CIIMAR)."
+    "The Ministry of Education, Science and Technological Development of the Republic of Serbia (grant numbered 451-03-47/2023-01/200114) supported this research work. Provincial Secretariat for Higher Education and Scientific Research of Vojvodina, project No 142-451-3531/2023-01 supported this research work."
+   ],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "The aim: The collection, analysis, and review of relevant research on the subject of metaphedrone in order to present information about the pharmacological, clinical, and toxicological profile of this compound.",
+    "text": "A review of research on metaphedrone"
+   },
+   "findings": [
+    {
+     "passage": 21,
+     "where": "3. Key Results and Discussion › 3.2. Pharmacological Profile",
+     "quote": "3-MMC potently inhibits the norepinephrine transporter (NET) which is probably responsible for sympathomimetic stimulation and cardiovascular adverse effects, being similar, in terms of its effects, to amphetamine and MDMA.",
+     "text": "3-MMC potently inhibits the norepinephrine transporter (NET) which is probably responsible for sympathomimetic stimulation and cardiovascular adverse effects.",
+     "id": "F1",
+     "second_hand": ""
+    },
+    {
+     "passage": 21,
+     "where": "3. Key Results and Discussion › 3.2. Pharmacological Profile",
+     "quote": "3-MMC more potently inhibits the dopamine transporter (DAT) than the serotonin transporter (SERT).",
+     "text": "3-MMC more potently inhibits the dopamine transporter (DAT) than the serotonin transporter (SERT).",
+     "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 21,
+     "where": "3. Key Results and Discussion › 3.2. Pharmacological Profile",
+     "quote": "3-MMC is also a substrate-type monoamine releaser and evokes the release of norepinephrine and dopamine in the synaptic cleft.",
+     "text": "3-MMC is also a substrate-type monoamine releaser and evokes the release of norepinephrine and dopamine in the synaptic cleft.",
+     "id": "F3",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "A"
+  },
+  {
+   "read": "full",
+   "ref": {
+    "id": "ramaekers_2025",
+    "type": "article-journal",
+    "title": "Low to moderate doses of 3-methylmethcathinone (3-MMC) produce analgesic effects in healthy volunteers: A proof of principle study with a designer drug",
+    "author": [
+     {
+      "family": "Ramaekers",
+      "given": "Johannes G"
+     },
+     {
+      "family": "Reckweg",
+      "given": "Johannes T"
+     },
+     {
+      "family": "Mason",
+      "given": "Natasha L"
+     },
+     {
+      "family": "Kuypers",
+      "given": "Kim PC"
+     },
+     {
+      "family": "Toennes",
+      "given": "Stefan W"
+     },
+     {
+      "family": "Theunissen",
+      "given": "Eef L"
+     }
+    ],
+    "container-title": "Psychopharmacology",
+    "issued": {
+     "date-parts": [
+      [
+       2025
+      ]
+     ]
+    },
+    "DOI": "10.1007/s00213-025-06798-8",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-27",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-27"
+     }
+    },
+    "volume": "242",
+    "issue": "10",
+    "page": "2293-2301",
+    "PMCID": "PMC12449331"
+   },
+   "doi": "10.1007/s00213-025-06798-8",
+   "pmcid": "PMC12449331",
+   "title": "Low to moderate doses of 3-methylmethcathinone (3-MMC) produce analgesic effects in healthy volunteers: a proof of principle study with a designer drug",
+   "year": 2025,
+   "journal": "Psychopharmacology",
+   "kind": "study",
+   "people": true,
+   "near": 0.582,
+   "money": [
+    "The study was funded by an unrestricted grant from Human Affairs Foundation."
    ],
    "design": null,
    "findings": [
     {
-     "passage": 5,
-     "where": "1. Introduction",
-     "quote": "SC are β-keto analogs of commonly abused substances such as cathinone (CATH), isolated from the Khat plant (Catha edulis), which produce similar effects to their non-keto analogs’ amphetamine-type substances (indirect agonists of dopamine, serotonin, and noradrenaline receptors).",
-     "text": "Synthetic cathinones are beta-keto analogs of commonly abused substances such as cathinone, isolated from the Khat plant, which produce similar effects to their non-keto analogs' amphetamine-type substances, acting as indirect agonists of dopamine, serotonin, and noradrenaline receptors.",
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "3-MMC produced dose-related elevations in pressure pain threshold and reduced subjective painfulness and unpleasantness",
+     "text": "3-MMC produced dose-related elevations in pressure pain threshold and reduced subjective painfulness and unpleasantness in healthy volunteers.",
      "id": "F4",
-     "second_hand": "(the paper's introduction, where it tells what is known from earlier work)"
+     "second_hand": ""
+    },
+    {
+     "passage": 22,
+     "where": "Discussion",
+     "quote": "cathinone-induced analgesia primarily depends on the stimulation of monoaminergic pathways, followed by a release of opioid peptides",
+     "text": "cathinone-induced analgesia primarily depends on the stimulation of monoaminergic pathways, followed by a release of opioid peptides in rats or laboratory.",
+     "id": "F5",
+     "second_hand": ""
+    },
+    {
+     "passage": 22,
+     "where": "Discussion",
+     "quote": "The analgesic effect of 3-MMC occurred independent from its subjective effects on mood",
+     "text": "The analgesic effect of 3-MMC occurred independent from its subjective effects on mood in healthy volunteers.",
+     "id": "F6",
+     "second_hand": ""
     }
    ],
-   "limits": [],
+   "limits": [
+    {
+     "passage": 23,
+     "where": "Discussion",
+     "quote": "experimental pain activates only a portion of the complex mechanisms involved in pathological pain",
+     "text": "experimental pain activates only a portion of the complex mechanisms involved in pathological pain.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
    "tag": "B"
   },
   {
@@ -164,14 +281,14 @@
       [
        2026,
        11,
-       26
+       27
       ]
      ]
     },
     "verification": {
      "status": "made by code",
      "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-26"
+     "verified_on": "2026-11-27"
     },
     "publisher": "Government of Canada"
    },
@@ -192,40 +309,31 @@
      "passage": 6,
      "where": "Short-term effects of \"bath salts\" / Mental effects",
      "quote": "\"Bath salts\" affect certain chemicals in the brain, such as: dopamine; serotonin; norepinephrine",
-     "text": "Bath salts affect the brain chemicals dopamine, serotonin, and norepinephrine.",
-     "id": "F5",
+     "text": "Bath salts affect certain chemicals in the brain, such as dopamine, serotonin, and norepinephrine.",
+     "id": "F7",
      "second_hand": ""
     },
     {
      "passage": 3,
      "where": "About \"bath salts\"",
      "quote": "\"Bath salts\" stimulate the central nervous system to: improve mood and sociability; increase alertness and energy",
-     "text": "Bath salts stimulate the central nervous system to improve mood, sociability, alertness, and energy.",
-     "id": "F6",
+     "text": "Bath salts stimulate the central nervous system to improve mood and sociability, and increase alertness and energy.",
+     "id": "F8",
      "second_hand": ""
     }
    ],
-   "limits": [
-    {
-     "passage": 7,
-     "where": "Short-term effects of \"bath salts\" / Physical effects",
-     "quote": "Dealers may add other substances such as ketamine or cocaine to \"bath salts.\" These can cause other harmful effects.",
-     "text": "Dealers may add other substances to bath salts, which can cause additional harmful effects.",
-     "id": "L2",
-     "second_hand": ""
-    }
-   ],
+   "limits": [],
    "tag": "C"
   },
   {
    "read": "page",
    "ref": {
-    "id": "frank_cathinones",
+    "id": "thelevel_synthetic-cathinones",
     "type": "webpage",
-    "title": "Synthetic cathinones",
+    "title": "Synthetic Cathinones (Bath Salts)",
     "author": [
      {
-      "literal": "FRANK"
+      "literal": "NZ Drug Foundation"
      }
     ],
     "issued": {
@@ -233,151 +341,61 @@
       []
      ]
     },
-    "URL": "https://www.talktofrank.com/drug/cathinones",
+    "URL": "https://thelevel.org.nz/drug-information/synthetic-cathinones",
     "accessed": {
      "date-parts": [
       [
        2026,
        11,
-       26
+       27
       ]
      ]
     },
     "verification": {
      "status": "made by code",
      "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-26"
-    }
+     "verified_on": "2026-11-27"
+    },
+    "publisher": "The Level"
    },
-   "title": "Synthetic cathinones",
+   "title": "Synthetic Cathinones (Bath Salts)",
    "year": null,
    "kind": "official",
    "people": true,
-   "near": 0.599,
-   "name": "FRANK",
-   "short": "FRANK",
-   "tier": 1,
-   "address": "https://www.talktofrank.com/drug/cathinones",
+   "near": 0.653,
+   "name": "NZ Drug Foundation",
+   "short": "the NZ Drug Foundation",
+   "tier": 2,
+   "address": "https://thelevel.org.nz/drug-information/synthetic-cathinones",
    "money": [],
    "label": false,
    "design": null,
    "findings": [
     {
-     "passage": 5,
-     "where": "Mixing Synthetic cathinones with other drugs / Physical health risks",
-     "quote": "Over-stimulate the nervous system and cause fits (seizures).",
-     "text": "Synthetic cathinones over-stimulate the nervous system and can cause seizures.",
-     "id": "F7",
+     "passage": 27,
+     "where": "Working and driving / How can synthetic cathinones affect your daily life?",
+     "quote": "Synthetic cathinones change the way your brain works.",
+     "text": "Synthetic cathinones change the way the brain works.",
+     "id": "F9",
      "second_hand": ""
     }
    ],
    "limits": [
     {
-     "passage": 4,
-     "where": "Mixing Synthetic cathinones with other drugs / How does it make you feel?",
-     "quote": "There are many different synthetic cathinones, which makes their effects hard to predict, and some are more risky than others.",
-     "text": "The effects of synthetic cathinones are difficult to predict because there are many different types.",
-     "id": "L3",
+     "passage": 22,
+     "where": "Long-term effects / What are the long-term effects of using synthetic cathinones?",
+     "quote": "There isn’t much research on what happens when people use synthetic cathinones long-term.",
+     "text": "There is not much research on the long-term effects of using synthetic cathinones.",
+     "id": "L2",
      "second_hand": ""
     }
    ],
    "tag": "D"
   }
  ],
- "parts": [
-  {
-   "part": "short",
-   "text": "Bath salts affect brain chemicals like dopamine, serotonin, and norepinephrine. They can stimulate the central nervous system to improve mood, sociability, alertness, and energy. They act as indirect agonists of dopamine, serotonin, and noradrenaline receptors.",
-   "uses": [
-    "F4",
-    "F5",
-    "F6"
-   ],
-   "rests_on": [
-    {
-     "label": "F4",
-     "ref": "prezpereira_2023",
-     "where": "1. Introduction",
-     "quote": "SC are β-keto analogs of commonly abused substances such as cathinone (CATH), isolated from the Khat plant (Catha edulis), which produce similar effects to their non-keto analogs’ amphetamine-type substances (indirect agonists of dopamine, serotonin, and noradrenaline receptors).",
-     "sha": "57cd6e3a314f8548"
-    },
-    {
-     "label": "F5",
-     "ref": "healthcanada_bath-salts",
-     "where": "Short-term effects of \"bath salts\" / Mental effects",
-     "quote": "\"Bath salts\" affect certain chemicals in the brain, such as: dopamine; serotonin; norepinephrine",
-     "sha": "fa28c623d8b2b517"
-    },
-    {
-     "label": "F6",
-     "ref": "healthcanada_bath-salts",
-     "where": "About \"bath salts\"",
-     "quote": "\"Bath salts\" stimulate the central nervous system to: improve mood and sociability; increase alertness and energy",
-     "sha": "d7b7a9cdc85bc75c"
-    }
-   ]
-  },
-  {
-   "part": "but",
-   "text": "The effects of synthetic cathinones are difficult to predict because there are many different types.",
-   "uses": [
-    "L3"
-   ],
-   "rests_on": [
-    {
-     "label": "L3",
-     "ref": "frank_cathinones",
-     "where": "Mixing Synthetic cathinones with other drugs / How does it make you feel?",
-     "quote": "There are many different synthetic cathinones, which makes their effects hard to predict, and some are more risky than others.",
-     "sha": "9fd202bc66de0b9f"
-    }
-   ]
-  },
-  {
-   "part": "how1",
-   "text": "Health Canada says bath salts affect dopamine, serotonin, and norepinephrine, and can stimulate the central nervous system to improve mood, sociability, alertness, and energy.",
-   "uses": [
-    "F5",
-    "F6"
-   ],
-   "rests_on": [
-    {
-     "label": "F5",
-     "ref": "healthcanada_bath-salts",
-     "where": "Short-term effects of \"bath salts\" / Mental effects",
-     "quote": "\"Bath salts\" affect certain chemicals in the brain, such as: dopamine; serotonin; norepinephrine",
-     "sha": "fa28c623d8b2b517"
-    },
-    {
-     "label": "F6",
-     "ref": "healthcanada_bath-salts",
-     "where": "About \"bath salts\"",
-     "quote": "\"Bath salts\" stimulate the central nervous system to: improve mood and sociability; increase alertness and energy",
-     "sha": "d7b7a9cdc85bc75c"
-    }
-   ]
-  },
-  {
-   "part": "how2",
-   "text": "A 2023 study reports that synthetic cathinones act as indirect agonists of dopamine, serotonin, and noradrenaline receptors.",
-   "uses": [
-    "F4"
-   ],
-   "rests_on": [
-    {
-     "label": "F4",
-     "ref": "prezpereira_2023",
-     "where": "1. Introduction",
-     "quote": "SC are β-keto analogs of commonly abused substances such as cathinone (CATH), isolated from the Khat plant (Catha edulis), which produce similar effects to their non-keto analogs’ amphetamine-type substances (indirect agonists of dopamine, serotonin, and noradrenaline receptors).",
-     "sha": "57cd6e3a314f8548"
-    }
-   ],
-   "quote": "effects to their non-keto analogs' amphetamine-type substances (indirect agonists of dopamine, serotonin, and noradrenaline receptors)",
-   "quote_ref": "prezpereira_2023"
-  }
- ],
- "complete": true,
- "missing": "",
+ "parts": [],
+ "complete": false,
+ "missing": "long‑term neuroadaptations and precise receptor pathways",
  "wanted": [],
  "person": null,
  "history": [
@@ -388,6 +406,14 @@
    "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (2 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-26",
+   "lane": 19,
+   "status": "waiting",
+   "why": "passed every reader that could be asked, but a further reader of its team could not be (gemini-3-flash-preview): it is worked on again by itself when that reader can be asked",
+   "short": "Bath salts affect brain chemicals like dopamine, serotonin, and norepinephrine. They can stimulate the central nervous system to improve mood, sociability, alertness, and energy. They act as indirect agonists of dopamine, serotonin, and noradrenaline receptors.",
+   "complete": true
   }
  ],
  "looked": [
@@ -396,37 +422,13 @@
    "read": "full",
    "kind": "review",
    "at": "10.3390/medicina60030466",
-   "kept": 0,
+   "kept": 3,
    "thrown": [
     {
-     "kind": "text",
-     "text": "Review paper summarizing the pharmacological, clinical, and toxicological profile of metaphedrone (3‑Methylmethcathinone, 3‑MMC).",
-     "quote": "The aim: The collection, analysis, and review of relevant research on the subject of metaphedrone in order to present information about the pharmacological, clinical, and toxicological profile of this",
-     "why": "a number of the sentence is not in its quote"
-    },
-    {
      "kind": "finding",
-     "text": "3‑MMC potently inhibits the norepinephrine transporter (NET), producing sympathomimetic stimulation and cardiovascular effects similar to amphetamine and MDMA.",
-     "quote": "3-MMC potently inhibits the norepinephrine transporter (NET) which is probably responsible for sympathomimetic stimulation and cardiovascular adverse effects, being similar, in terms of its effects, t",
-     "why": "a number of the sentence is not in its quote"
-    },
-    {
-     "kind": "finding",
-     "text": "3‑MMC more potently inhibits the dopamine transporter (DAT) than the serotonin transporter (SERT).",
-     "quote": "3-MMC more potently inhibits the dopamine transporter (DAT) than the serotonin transporter (SERT).",
-     "why": "a number of the sentence is not in its quote"
-    },
-    {
-     "kind": "finding",
-     "text": "3‑MMC is a substrate-type monoamine releaser that evokes the release of norepinephrine and dopamine in the synaptic cleft.",
-     "quote": "Like most amphetamines and other synthetic cathinones, 3-MMC is also a substrate-type monoamine releaser and evokes the release of norepinephrine and dopamine in the synaptic cleft.",
-     "why": "a number of the sentence is not in its quote"
-    },
-    {
-     "kind": "finding",
-     "text": "3‑MMC strongly binds to serotonin 5‑HT1A, 5‑HT2A, and 5‑HT2C receptors but does not activate 5‑HT2A receptors, making it more of a stimulant than a hallucinogen.",
-     "quote": "Also, this drug strongly binds to the serotonin 5-HT1A, 5-HT2A, and 5-HT2C receptors, similar to mephedrone and MDMA, but also with a significant difference since it does not activate 5-HT2A receptors",
-     "why": "a number of the sentence is not in its quote"
+     "text": "3-MMC strongly binds to the serotonin 5-HT1A, 5-HT2A, and 5-HT2C receptors.",
+     "quote": "3-MMC strongly binds to the serotonin 5-HT1A, 5-HT2A, and 5-HT2C receptors, similar to mephedrone and MDMA, but also with a significant difference since it does not activate 5-HT2A receptors, thereby ",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
     }
    ]
   },
@@ -436,32 +438,12 @@
    "kind": "study",
    "at": "10.1007/s00213-025-06798-8",
    "kept": 3,
-   "thrown": []
-  },
-  {
-   "title": "Integrated Approach for Synthetic Cathinone Drug Prioritization and Risk Assessment: In Silico Approach and Sub-Chronic Studies in Daphnia magna and Tetrahymena thermophila",
-   "read": "full",
-   "kind": "other",
-   "at": "10.3390/molecules28072899",
-   "kept": 1,
    "thrown": [
     {
      "kind": "text",
-     "text": "An in silico approach and sub-chronic studies of synthetic cathinones in Daphnia magna and Tetrahymena thermophila",
-     "quote": "Integrated Approach for Synthetic Cathinone Drug Prioritization and Risk Assessment: In Silico Approach and Sub-Chronic Studies in Daphnia magna and Tetrahymena thermophila",
+     "text": "a proof of principle study with a designer drug",
+     "quote": "a proof of principle study with a designer drug",
      "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
-    },
-    {
-     "kind": "limit",
-     "text": "",
-     "quote": "Nevertheless, little is known about their impacts on wildlife and potential long-term effects at environmental concentrations on both non-target animals and humans.",
-     "why": "no sentence"
-    },
-    {
-     "kind": "limit",
-     "text": "",
-     "quote": "Recognizing which of these substances are truly a concern is a complex issue due to the lack of information about their pharmacology and potential toxicity because of the high number of new substances",
-     "why": "no sentence"
     }
    ]
   },
@@ -474,8 +456,14 @@
    "thrown": [
     {
      "kind": "limit",
-     "text": "It is not possible to know the exact contents of the powder.",
-     "quote": "As with most illegal drugs in powder form, you have no way of knowing what exactly is in the powder.",
+     "text": "The page does not provide information on how bath salts work in the brain from studies on people who use bath salts.",
+     "quote": "Because \"bath salts\" can increase sexual desire, there is also the potential for spreading HIV and other sexually transmitted infections.",
+     "why": "the sentence is not carried by its quote and passage"
+    },
+    {
+     "kind": "limit",
+     "text": "The page does not provide information on how the findings are based on specific studies or research.",
+     "quote": "Dealers may add other substances such as ketamine or cocaine to \"bath salts.\" These can cause other harmful effects.",
      "why": "the sentence is not carried by its quote and passage"
     }
    ]
@@ -485,123 +473,373 @@
    "read": "page",
    "kind": "official",
    "at": "https://thelevel.org.nz/drug-information/synthetic-cathinones",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
-  },
-  {
-   "title": "Synthetic cathinones",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.talktofrank.com/drug/cathinones",
    "kept": 1,
    "thrown": []
   }
  ],
  "plan": {
   "short": [
-   "F5",
-   "F4",
-   "F6"
+   "F7",
+   "F2",
+   "F3"
   ],
   "direct": "",
-  "but": [
-   "L3"
-  ],
+  "but": [],
   "how": [
    [
-    "F5",
-    "F6"
-   ],
-   [
-    "F4"
+    "F7",
+    "F8"
    ],
    [
     "DA",
-    "F2"
+    "F1",
+    "F2",
+    "F3"
    ]
   ],
-  "unanswered": ""
+  "unanswered": "long‑term neuroadaptations and precise receptor pathways"
  },
- "panel": {
-  "gemini:gemini-3.5-flash-lite": {
-   "short": [
-    true,
-    ""
-   ],
-   "but": [
-    true,
-    ""
-   ],
-   "how1": [
-    true,
-    ""
-   ],
-   "how2": [
-    true,
-    ""
-   ],
-   "how3": [
-    false,
-    "The sentence attributes the cross-over, placebo-controlled study of 14 healthy volunteers to preclinical work regarding cathinone analgesia depending on monoaminergic pathway stimulation, whereas the passages show the 14-volunteer study tes"
-   ]
-  },
-  "gemini:gemini-3-flash-preview": "could not be asked: gemini could not be reached: The read operation timed out",
-  "gemini:gemini-4-hydrogen": "could not be asked: the time for this question was over before gemini-4-hydrogen could be asked",
-  "gemini:gemini-3.8-flash": "could not be asked: the time for this question was over before gemini-3.8-flash could be asked"
- },
- "panel_gap": [
-  "gemini-3-flash-preview"
- ],
+ "panel_gap": [],
  "own": {
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.428,
-   "but": 0.9888,
-   "how1": 0.8109,
-   "how2": 0.7115,
-   "how3": 0.017
+   "short": 0.923,
+   "but": 0.9793,
+   "how1": 0.9828,
+   "how2": 0.7972
   },
   "scores_quotes_alone": {
-   "short": 0.5108,
-   "but": 0.9847,
-   "how1": 0.535,
-   "how2": 0.3746,
-   "how3": 0.4951
+   "short": 0.1977,
+   "but": 0.9031,
+   "how1": 0.9597,
+   "how2": 0.9483
   }
  },
- "dropped": [
+ "tries": [
   {
    "try": 1,
-   "part": "how3",
-   "text": "In a cross-over, placebo-controlled study of 14 healthy volunteers, preclinical work shows cathinone analgesia depends on monoaminergic pathway stimulation and subsequent opioid peptide release.",
-   "rests_on": [
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
     {
-     "label": "DA",
-     "ref": "ramaekers_2025",
-     "where": "Abstract",
-     "quote": "The present study aimed to assess the analgesic effects of low to moderate doses (25, 50 and 100 mg) of 3‑MMC in healthy volunteers (N = 14) in a cross‑over, placebo‑controlled study.",
-     "sha": "4d906f981dc55e6d"
+     "part": "short",
+     "text": "Synthetic cathinones affect dopamine, serotonin, and norepinephrine in the brain. They inhibit transporters and evoke release of these chemicals.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "healthcanada_bath-salts",
+       "where": "Short-term effects of \"bath salts\" / Mental effects",
+       "quote": "\"Bath salts\" affect certain chemicals in the brain, such as: dopamine; serotonin; norepinephrine",
+       "sha": "fa28c623d8b2b517"
+      },
+      {
+       "label": "F2",
+       "ref": "keleevi_2024",
+       "where": "3. Key Results and Discussion › 3.2. Pharmacological Profile",
+       "quote": "3-MMC more potently inhibits the dopamine transporter (DAT) than the serotonin transporter (SERT).",
+       "sha": "bb7a50ae495d885a"
+      },
+      {
+       "label": "F3",
+       "ref": "keleevi_2024",
+       "where": "3. Key Results and Discussion › 3.2. Pharmacological Profile",
+       "quote": "3-MMC is also a substrate-type monoamine releaser and evokes the release of norepinephrine and dopamine in the synaptic cleft.",
+       "sha": "bb7a50ae495d885a"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages report transporter inhibition and release of norepinephrine and dopamine for 3-MMC, but do not say that synthetic cathinones generally release all three listed chemicals, including serotonin."
     },
     {
-     "label": "F2",
-     "ref": "ramaekers_2025",
-     "where": "Discussion",
-     "quote": "Preclinical work has shown that cathinone‑induced analgesia primarily depends on the stimulation of monoaminergic pathways, followed by a release of opioid peptides.",
-     "sha": "38dd805594713277"
+     "part": "but",
+     "text": "But this is from a review of research.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "keleevi_2024",
+       "where": "Abstract",
+       "quote": "The aim: The collection, analysis, and review of relevant research on the subject of metaphedrone in order to present information about the pharmacological, clinical, and toxicological profile of this compound.",
+       "sha": "f6a84e6c6d37a3f7"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer (Sentence 1 directly describes a proposed brain mechanism. Sentence 2 identifies the source as a review, but does not state a limitation or doubt about that mechanism.)"
+    },
+    {
+     "part": "how1",
+     "text": "Health Canada says bath salts stimulate the central nervous system.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "healthcanada_bath-salts",
+       "where": "Short-term effects of \"bath salts\" / Mental effects",
+       "quote": "\"Bath salts\" affect certain chemicals in the brain, such as: dopamine; serotonin; norepinephrine",
+       "sha": "fa28c623d8b2b517"
+      },
+      {
+       "label": "F8",
+       "ref": "healthcanada_bath-salts",
+       "where": "About \"bath salts\"",
+       "quote": "\"Bath salts\" stimulate the central nervous system to: improve mood and sociability; increase alertness and energy",
+       "sha": "d7b7a9cdc85bc75c"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A review of research on metaphedrone found it inhibits transporters and evokes release of chemicals.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "keleevi_2024",
+       "where": "Abstract",
+       "quote": "The aim: The collection, analysis, and review of relevant research on the subject of metaphedrone in order to present information about the pharmacological, clinical, and toxicological profile of this compound.",
+       "sha": "f6a84e6c6d37a3f7"
+      },
+      {
+       "label": "F1",
+       "ref": "keleevi_2024",
+       "where": "3. Key Results and Discussion › 3.2. Pharmacological Profile",
+       "quote": "3-MMC potently inhibits the norepinephrine transporter (NET) which is probably responsible for sympathomimetic stimulation and cardiovascular adverse effects, being similar, in terms of its effects, to amphetamine and MDMA.",
+       "sha": "bb7a50ae495d885a"
+      },
+      {
+       "label": "F2",
+       "ref": "keleevi_2024",
+       "where": "3. Key Results and Discussion › 3.2. Pharmacological Profile",
+       "quote": "3-MMC more potently inhibits the dopamine transporter (DAT) than the serotonin transporter (SERT).",
+       "sha": "bb7a50ae495d885a"
+      },
+      {
+       "label": "F3",
+       "ref": "keleevi_2024",
+       "where": "3. Key Results and Discussion › 3.2. Pharmacological Profile",
+       "quote": "3-MMC is also a substrate-type monoamine releaser and evokes the release of norepinephrine and dopamine in the synaptic cleft.",
+       "sha": "bb7a50ae495d885a"
+      }
+     ],
+     "ok": true
     }
-   ],
-   "by": "a further reader",
-   "said": "a further reader (gemini-3.5-flash-lite) did not accept it: The sentence attributes the cross-over, placebo-controlled study of 14 healthy volunteers to preclinical work regarding cathinone analgesia depending on monoaminergic pathway stimulation, whereas the passages show the 14-volunteer study tes"
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Synthetic cathinones affect dopamine, serotonin, and norepinephrine in the brain. 3-MMC inhibits transporters and releases norepinephrine and dopamine.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "healthcanada_bath-salts",
+       "where": "Short-term effects of \"bath salts\" / Mental effects",
+       "quote": "\"Bath salts\" affect certain chemicals in the brain, such as: dopamine; serotonin; norepinephrine",
+       "sha": "fa28c623d8b2b517"
+      },
+      {
+       "label": "F2",
+       "ref": "keleevi_2024",
+       "where": "3. Key Results and Discussion › 3.2. Pharmacological Profile",
+       "quote": "3-MMC more potently inhibits the dopamine transporter (DAT) than the serotonin transporter (SERT).",
+       "sha": "bb7a50ae495d885a"
+      },
+      {
+       "label": "F3",
+       "ref": "keleevi_2024",
+       "where": "3. Key Results and Discussion › 3.2. Pharmacological Profile",
+       "quote": "3-MMC is also a substrate-type monoamine releaser and evokes the release of norepinephrine and dopamine in the synaptic cleft.",
+       "sha": "bb7a50ae495d885a"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages support effects on brain chemicals for bath salts and specific transporter effects for 3-MMC, but do not establish the broad claim that synthetic cathinones as a class affect all three chemicals."
+    },
+    {
+     "part": "but",
+     "text": "It is a review of research on metaphedrone.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "keleevi_2024",
+       "where": "Abstract",
+       "quote": "The aim: The collection, analysis, and review of relevant research on the subject of metaphedrone in order to present information about the pharmacological, clinical, and toxicological profile of this compound.",
+       "sha": "f6a84e6c6d37a3f7"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer (Sentence 1 directly describes how the substances act. Sentence 2 says the source is a review of metaphedrone research; it does not express a limit or doubt about sentence 1.)"
+    },
+    {
+     "part": "how1",
+     "text": "Health Canada says bath salts affect brain chemicals and stimulate the central nervous system.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "healthcanada_bath-salts",
+       "where": "Short-term effects of \"bath salts\" / Mental effects",
+       "quote": "\"Bath salts\" affect certain chemicals in the brain, such as: dopamine; serotonin; norepinephrine",
+       "sha": "fa28c623d8b2b517"
+      },
+      {
+       "label": "F8",
+       "ref": "healthcanada_bath-salts",
+       "where": "About \"bath salts\"",
+       "quote": "\"Bath salts\" stimulate the central nervous system to: improve mood and sociability; increase alertness and energy",
+       "sha": "d7b7a9cdc85bc75c"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A review of metaphedrone research found it inhibits transporters and releases norepinephrine and dopamine.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "keleevi_2024",
+       "where": "Abstract",
+       "quote": "The aim: The collection, analysis, and review of relevant research on the subject of metaphedrone in order to present information about the pharmacological, clinical, and toxicological profile of this compound.",
+       "sha": "f6a84e6c6d37a3f7"
+      },
+      {
+       "label": "F1",
+       "ref": "keleevi_2024",
+       "where": "3. Key Results and Discussion › 3.2. Pharmacological Profile",
+       "quote": "3-MMC potently inhibits the norepinephrine transporter (NET) which is probably responsible for sympathomimetic stimulation and cardiovascular adverse effects, being similar, in terms of its effects, to amphetamine and MDMA.",
+       "sha": "bb7a50ae495d885a"
+      },
+      {
+       "label": "F2",
+       "ref": "keleevi_2024",
+       "where": "3. Key Results and Discussion › 3.2. Pharmacological Profile",
+       "quote": "3-MMC more potently inhibits the dopamine transporter (DAT) than the serotonin transporter (SERT).",
+       "sha": "bb7a50ae495d885a"
+      },
+      {
+       "label": "F3",
+       "ref": "keleevi_2024",
+       "where": "3. Key Results and Discussion › 3.2. Pharmacological Profile",
+       "quote": "3-MMC is also a substrate-type monoamine releaser and evokes the release of norepinephrine and dopamine in the synaptic cleft.",
+       "sha": "bb7a50ae495d885a"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Synthetic cathinones affect brain chemicals like dopamine, serotonin, and norepinephrine. 3-MMC inhibits transporters and releases these chemicals.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "healthcanada_bath-salts",
+       "where": "Short-term effects of \"bath salts\" / Mental effects",
+       "quote": "\"Bath salts\" affect certain chemicals in the brain, such as: dopamine; serotonin; norepinephrine",
+       "sha": "fa28c623d8b2b517"
+      },
+      {
+       "label": "F2",
+       "ref": "keleevi_2024",
+       "where": "3. Key Results and Discussion › 3.2. Pharmacological Profile",
+       "quote": "3-MMC more potently inhibits the dopamine transporter (DAT) than the serotonin transporter (SERT).",
+       "sha": "bb7a50ae495d885a"
+      },
+      {
+       "label": "F3",
+       "ref": "keleevi_2024",
+       "where": "3. Key Results and Discussion › 3.2. Pharmacological Profile",
+       "quote": "3-MMC is also a substrate-type monoamine releaser and evokes the release of norepinephrine and dopamine in the synaptic cleft.",
+       "sha": "bb7a50ae495d885a"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages say 3-MMC releases norepinephrine and dopamine, not serotonin, and do not establish that synthetic cathinones generally affect all three chemicals."
+    },
+    {
+     "part": "but",
+     "text": "But this is from a review of research on metaphedrone.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "keleevi_2024",
+       "where": "Abstract",
+       "quote": "The aim: The collection, analysis, and review of relevant research on the subject of metaphedrone in order to present information about the pharmacological, clinical, and toxicological profile of this compound.",
+       "sha": "f6a84e6c6d37a3f7"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "Health Canada says bath salts stimulate the central nervous system.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "healthcanada_bath-salts",
+       "where": "Short-term effects of \"bath salts\" / Mental effects",
+       "quote": "\"Bath salts\" affect certain chemicals in the brain, such as: dopamine; serotonin; norepinephrine",
+       "sha": "fa28c623d8b2b517"
+      },
+      {
+       "label": "F8",
+       "ref": "healthcanada_bath-salts",
+       "where": "About \"bath salts\"",
+       "quote": "\"Bath salts\" stimulate the central nervous system to: improve mood and sociability; increase alertness and energy",
+       "sha": "d7b7a9cdc85bc75c"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A review of metaphedrone research found it inhibits transporters and releases chemicals.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "keleevi_2024",
+       "where": "Abstract",
+       "quote": "The aim: The collection, analysis, and review of relevant research on the subject of metaphedrone in order to present information about the pharmacological, clinical, and toxicological profile of this compound.",
+       "sha": "f6a84e6c6d37a3f7"
+      },
+      {
+       "label": "F1",
+       "ref": "keleevi_2024",
+       "where": "3. Key Results and Discussion › 3.2. Pharmacological Profile",
+       "quote": "3-MMC potently inhibits the norepinephrine transporter (NET) which is probably responsible for sympathomimetic stimulation and cardiovascular adverse effects, being similar, in terms of its effects, to amphetamine and MDMA.",
+       "sha": "bb7a50ae495d885a"
+      },
+      {
+       "label": "F2",
+       "ref": "keleevi_2024",
+       "where": "3. Key Results and Discussion › 3.2. Pharmacological Profile",
+       "quote": "3-MMC more potently inhibits the dopamine transporter (DAT) than the serotonin transporter (SERT).",
+       "sha": "bb7a50ae495d885a"
+      },
+      {
+       "label": "F3",
+       "ref": "keleevi_2024",
+       "where": "3. Key Results and Discussion › 3.2. Pharmacological Profile",
+       "quote": "3-MMC is also a substrate-type monoamine releaser and evokes the release of norepinephrine and dopamine in the synaptic cleft.",
+       "sha": "bb7a50ae495d885a"
+      }
+     ],
+     "ok": true
+    }
+   ]
   }
  ],
- "with_checked": {
-  "differs": [],
-  "same": []
- },
- "for": "again",
- "soft": "a further reader could not be asked",
  "place": {
   "home": "synthetic-cathinones",
   "also": [],
