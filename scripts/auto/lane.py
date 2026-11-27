@@ -2339,21 +2339,27 @@ def trial_items(raw):
     return out[:12]
 
 
-def held_say(aid, lane=None):
+def held_say(aid, lane=None, held=None):
     """(lane 19) What the editor found in an answer it holds (data/auto/held.json, "say"), for the writer of the next one: "" where there is none. The editor's
-    reading goes back into the lane by itself: until lane 18 a held answer waited "to be written again" for a person to ask for it."""
-    try: held = json.load(open(ROOT / "data" / "auto" / "held.json", encoding="utf-8")).get("held") or []
-    except (OSError, ValueError): return ""
-    return next((re.sub(r"\s+", " ", str(h.get("say") or ""))[:600] for h in held if isinstance(h, dict) and h.get("id") == aid and h.get("say")), "")
+    reading goes back into the lane by itself: until lane 18 a held answer waited "to be written again" for a person to ask for it.
+    (27 November 2026) An answer held more than once: the newest note first, then the earlier ones ("Earlier: ..."); until then the writer was given the
+    OLDEST note alone, so a version held again for something new was written again without being told what."""
+    if held is None:
+        try: held = json.load(open(ROOT / "data" / "auto" / "held.json", encoding="utf-8")).get("held") or []
+        except (OSError, ValueError): return ""
+    says = [re.sub(r"\s+", " ", str(h.get("say") or "")).strip() for h in held if isinstance(h, dict) and h.get("id") == aid and h.get("say")][::-1]
+    return (says[0][:600] + "".join(" Earlier: " + s[:300] for s in says[1:3]))[:1200] if says else ""
 
 
 def is_held(rec, held=None):
     """Does the editor hold THIS version of an answer (data/auto/held.json)? By the run that wrote it where the hold names one ("run": site 2.21.1), else by its
-    lane (a hold of lane N holds every version written by lane N or older). The same test as site/build.js makes before it shows an answer."""
+    lane (a hold of lane N holds every version written by lane N or older). The same test as site/build.js makes before it shows an answer: where an answer is
+    held more than once, by its NEWEST entry (27 November 2026: this test took the oldest, so a version held again was taken for one not held, and the lane
+    never wrote it again while the site, which takes the newest, did not show it)."""
     if held is None:
         try: held = json.load(open(ROOT / "data" / "auto" / "held.json", encoding="utf-8")).get("held") or []
         except (OSError, ValueError): return False
-    for h in held:
+    for h in reversed(held):
         if isinstance(h, dict) and h.get("id") == (rec or {}).get("id"):
             if h.get("run") is not None: return str(((rec or {}).get("made") or {}).get("run") or "") == str(h["run"])
             return h.get("lane") is None or int((rec or {}).get("lane") or 1) <= int(h["lane"])
@@ -3277,6 +3283,10 @@ def selftest():
     hl = [{"id": "au_w_1", "lane": 19, "run": "77"}, {"id": "au_w_2", "lane": 18}, "au_w_3"]
     assert is_held({"id": "au_w_1", "lane": 19, "made": {"run": "77"}}, hl) and not is_held({"id": "au_w_1", "lane": 19, "made": {"run": "78"}}, hl) and is_held({"id": "au_w_2", "lane": 18, "made": {"run": "5"}}, hl)
     assert not is_held({"id": "au_w_2", "lane": 19}, hl) and not is_held({"id": "au_w_9", "lane": 1}, hl) and not is_held(None, hl)
+    # (27 November 2026) held twice: the newest entry decides, as on the site; and the writer is told the newest note first
+    hl2 = [{"id": "au_w_4", "lane": 19, "run": "50", "say": "old note"}, {"id": "au_w_5", "lane": 19, "run": "9"}, {"id": "au_w_4", "lane": 19, "run": "60", "say": "new note"}]
+    assert is_held({"id": "au_w_4", "lane": 19, "made": {"run": "60"}}, hl2) and not is_held({"id": "au_w_4", "lane": 19, "made": {"run": "61"}}, hl2) and is_held({"id": "au_w_5", "lane": 19, "made": {"run": "9"}}, hl2)
+    assert held_say("au_w_4", held=hl2) == "new note Earlier: old note" and held_say("au_w_5", held=hl2) == "" and held_say("au_w_9", held=hl2) == ""
     # the editor's note goes to the writer
     calls.clear(); script["writer"] = [W(ok_short)]; script["checker"] = [V(True, True, True, True)]
     r = make(item, found, chat, Enc(), MODELS, fulltext=lambda pmcid: xml, crossref=crossref, ex=ex, note="say what people report, as reports")
