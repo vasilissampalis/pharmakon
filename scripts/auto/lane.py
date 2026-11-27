@@ -1367,15 +1367,28 @@ REPUTE_S = re.compile(r"\b(?:reputation|reputed|traditional\w*|(?:is|are|was|wer
 _REPUTE_STOP = {"with", "that", "this", "from", "have", "been", "their", "which", "these", "those", "into", "about", "also", "more", "most", "such", "they", "them", "than", "were", "being", "its", "capabilities", "capability", "due"}
 
 
-def repute_as_fact(ours, quotes):
+def repute_as_fact(ours, quotes, passages=()):
     """The words of a quote that give a thing as a reputation or a belief, where a sentence of ours says that thing as a fact; else None. Sentence by sentence:
-    "A 2021 review says kanna relieves stress. It notes traditional use as a pain reliever." says the first as a fact, whatever the second says."""
+    "A 2021 review says kanna relieves stress. It notes traditional use as a pain reliever." says the first as a fact, whatever the second says.
+    (27 November 2026, 04:55) A quote cut out of a sentence of reputation is that sentence: "promote a sense of well-being by relieving stress with calming
+    effects", cut from "the plant has gained ... reputation due to its capabilities to promote ...", stood under "Yes, kanna can have psychoactive effects".
+    passages: the passage each quote stands in, in the same order; one word of what follows the reputation, in a sentence of ours with no word of its own
+    that it is one, is enough (measured on the exam of 364: the same one caught, no good one stopped)."""
+    whole = []
+    for n, q in enumerate(quotes):
+        q = q or ""; ptext = passages[n] if n < len(passages) and isinstance(passages[n], str) else ""
+        i = ptext.find(q.strip(' ."\'…')) if q.strip() else -1
+        if i >= 0:
+            s0 = max(ptext.rfind(". ", 0, i) + 1, 0); s1 = ptext.find(". ", i + len(q.strip(' ."\'…'))); s1 = len(ptext) if s1 < 0 else s1 + 1
+            sent_q = ptext[s0:s1]
+            if REPUTE_Q.search(sent_q): q = sent_q
+        whole.append(q)
     for sent in re.split(r"(?<=[.!?])\s+", ours or ""):
         if REPUTE_S.search(sent): continue
-        for q in quotes:
-            for m in REPUTE_Q.finditer(q or ""):
+        for q in whole:
+            for m in REPUTE_Q.finditer(q):
                 tail = {w.lower()[:6] for w in re.findall(r"[A-Za-z][A-Za-z-]{3,}", q[m.end():m.end() + 160]) if w.lower() not in _REPUTE_STOP}
-                if sum(1 for w in tail if re.search(r"\b" + re.escape(w), sent, re.I)) >= 2: return m.group(0)
+                if sum(1 for w in tail if re.search(r"\b" + re.escape(w), sent, re.I)) >= 1: return m.group(0)
     return None
 
 
@@ -1391,7 +1404,7 @@ def says_more(parts, labels):
         if w: bad.append((p["part"], f"its source says “{w}”: that is what people perceived or said of themselves, not what was measured. Keep the word (“perceived”), or say that people said so")); continue
         h = hedge_dropped(p["text"], [labels[u]["quote"] for u in p["uses"]])
         if h: bad.append((p["part"], h)); continue
-        r = repute_as_fact(p["text"], [labels[u]["quote"] for u in p["uses"]])
+        r = repute_as_fact(p["text"], [labels[u]["quote"] for u in p["uses"]], [labels[u].get("passage_text") or "" for u in p["uses"]])
         if r: bad.append((p["part"], f"its source gives this as a reputation or a belief (“{r}”), and the sentence says it as what the drug does: say that it is a reputation, a traditional use or a belief, as the source does, or leave it out"))
     return bad
 
@@ -3318,6 +3331,10 @@ def selftest():
     assert not repute_as_fact("A 2021 review says kanna has a reputation for relieving stress.", [rq]) and not repute_as_fact("Kanna contains mesembrine, which acts on serotonin.", [rq])
     assert not repute_as_fact("Khoi and San people have traditionally used kanna to relieve pain.", ["Native Khoi and San tribes of South Africa have been traditionally using Kanna plants as a pain reliever."])
     assert repute_as_fact("A 2021 review says kanna relieves stress and improves mood. It notes traditional use as a pain reliever by Khoi and San tribes.", [rq])
+    rp = "Thus, this review provides an overview. " + rq + " Kanna is chewed."
+    assert repute_as_fact("Yes, kanna can have psychoactive effects, as it contains compounds that act on the mind.", ["promote a sense of well‑being by relieving stress with calming effects"], [rp])
+    assert not repute_as_fact("Yes, kanna can have psychoactive effects, as it contains compounds that act on the mind.", ["promote a sense of well‑being by relieving stress with calming effects"])   # without its passage, no word of reputation is seen
+    assert not repute_as_fact("A 2021 review summarizes the plant's properties.", ["promote a sense of well‑being by relieving stress with calming effects"], [rp])
     assert says_more([{"part": "short", "text": "Kanna relieves stress with calming effects.", "uses": ["F1"]}], {"F1": {"quote": rq, "passage_text": ""}})
     # (27 November 2026) the finder named after the verb ("estimated ... by 2 different research groups"); not one's own staff or participants
     pk = "3-MeO-PCP's half-life in vivo (estimated at 10 and 11 hours by 2 different research groups) explains the rapid clinical improvement observed."
