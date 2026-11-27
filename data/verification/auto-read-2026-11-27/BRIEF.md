@@ -43,7 +43,7 @@ Change no file but your output. Run Python with `python3 -I`. The answers and th
 Quotations at most 15 words. If an automatic filter stops a step, do not retry or reword it: write what you have and
 finish. Final message under 150 words: how many answers read, how many flagged, by rule.
 
-## Added for reader 817 (27 November 2026, 04:45), after the editor read readers 815 and 816
+## Added for reader 817 (27 November 2026, 04:12), after the editor read readers 815 and 816
 
 - Your answers were published 24 to 27 November and are shown on the site now; the editor read some of them once already.
 - Rule 1: "can", "may" and "has been reported" claim the same (the lane's own standard): a line that writes "can" where its
