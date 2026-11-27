@@ -94,3 +94,19 @@ the gates catch these by themselves.
   background (the barbiturates answer rested on one background sentence in the abstract of a review of natural sleep
   aids). Luna accepted it. A gate could tell background from findings by where the passage stands (an abstract's opening,
   an introduction) and refuse "found" for those.
+
+## The editor's reading of everything the system had published (27 November, 03:00 to 03:50 Athens)
+
+- Two readers (815, 816) read for the editor the 54 answers of 15 to 23 November that no person had read, by eight rules
+  (`data/verification/auto-read-2026-11-27/BRIEF.md`). 35 were held (flags under rules 1 to 7), 7 noted for jargon alone. With the
+  holds before, 56 of the 98 answers the system has published are held and 42 shown. These answers were written before GPT-6 Luna
+  checked first (00:40, 27 November); whether Luna stops what the readers caught is worth measuring on these 35 (their records and
+  the readers' flags are the test set).
+- What the readers caught most: a line that says more than its quote (dropped hedges: "has been reported", "by as much as", "large
+  amounts"; a flat "Yes" that no source carries); background, a methods section, a reputation or another paper's summary called a
+  finding; animal findings leading or said of people; the question asked narrowed (only microdosing for "psychedelics or
+  microdosing"; only cocaine for "cocaine and alcohol"); jargon at the top ("mesolimbic dopaminergic pathway", "contingency
+  management", "hemorrhagic and ischemic"). A design that writes more should let code catch the first three (where a passage
+  stands in its source is known to the code; a hedge in the quote missing from the line can be checked by words).
+- The code's own But ("This rests on ...") had called every paper with no type in Europe PMC a "study in people"; mended
+  (`lane.described`, `lane.is_case`), stricter at the gate for case reports, never looser.

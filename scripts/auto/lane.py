@@ -1338,7 +1338,8 @@ def own_but(sources, wanted_nearer):
     stands in where the writer's But was not accepted (not supported by its source, or about something else)."""
     cn = counts(sources); n = lambda k, one, many: f"{k} {one if k == 1 else many}"
     kinds = [x for x in (n(cn["reviews"], "review", "reviews") if cn["reviews"] else "", n(cn["studies in people"], "study in people", "studies in people") if cn["studies in people"] else "",
-                         n(cn["case reports"], "case report", "case reports") if cn["case reports"] else "", n(cn["official"], "official page", "official pages") if cn["official"] else "",
+                         n(cn["case reports"], "case report", "case reports") if cn["case reports"] else "", n(cn["other papers"], "other paper", "other papers") if cn["other papers"] else "",
+                         n(cn["official"], "official page", "official pages") if cn["official"] else "",
                          ("the summary of " + n(cn["summaries"], "paper", "papers")) if cn["summaries"] else "") if x]
     what = kinds[0] if len(kinds) == 1 else ", ".join(kinds[:-1]) + " and " + kinds[-1]
     # (2.25.0; the senior author, 19 November 2026, 17:48: "we should not always say 'our system' ... it creates unecessary words") the claims and
@@ -1531,17 +1532,46 @@ def summary_of(doi):
     return p, [{"n": i + 1, "where": "Summary", "text": t} for i, t in enumerate(parts)]
 
 
+# (27 November 2026, reader 816 for the editor) Europe PMC tags no type on many papers ("other"), and the code took every such paper in people for
+# "a study in people": a systematic review of studies mostly in animals (au_w_a0028) and two case reports of a false positive (au_w_g0033) were
+# both written "1 study in people" in the But the code writes. A paper of no type whose own words (its title, or what the reader quoted as its
+# design) say it is case reports counts as case reports, which do not count at the gate: stricter, never looser. Others of no type keep their
+# weight at the gate (an observational study is often tagged with nothing). The But names one for what its own words say: a review where its
+# title says so, a study in people where its title or the reader's quote says it is a trial or a study of participants and nothing says review;
+# any other, "other paper". Words only describe there; they never add weight at the gate.
+CASES = re.compile(r"\bcase (?:reports?|series)\b|\b(?:describes?|reports?|reported|presents?|presented) (?:a|an|one|two|three|four|five|[1-5]) (?:\w+ )?(?:cases?|patients?)\b", re.I)
+REVIEWED = re.compile(r"\b(?:review|meta-analys[ie]s|meta analys[ie]s|overview|literature search|pubmed search)\b", re.I)
+IN_PEOPLE = re.compile(r"\b(?:randomi[sz]ed|placebo|controlled (?:trial|study)|clinical trial|cohort|cross-sectional|case-control|participants?|volunteers?|respondents|surveyed)\b", re.I)
+
+
+def is_case(s):
+    if s.get("kind") == "case": return True
+    d = s.get("design") or {}
+    return s.get("kind") == "other" and s.get("read") != "page" and bool(CASES.search(" ".join([s.get("title") or "", d.get("text") or "", d.get("quote") or ""])))
+
+
+def described(s):
+    """What the But calls a paper: "review", "study", "case" or "other" (27 November 2026)."""
+    if is_case(s): return "case"
+    if s["kind"] in ("review", "study"): return "review" if s["kind"] == "review" else "study" if s["people"] else "other"
+    d = s.get("design") or {}
+    if REVIEWED.search(s.get("title") or ""): return "review"
+    said = " ".join([s.get("title") or "", d.get("quote") or ""])
+    return "study" if s["people"] and IN_PEOPLE.search(said) and not REVIEWED.search(said + " " + (d.get("text") or "")) else "other"
+
+
 def weight(s):
     """What a source counts for at the gate on sources: 2 is enough alone."""
-    if s["read"] == "full": return 2 if s["kind"] == "review" else 1 if s["kind"] != "case" and s["people"] else 0
+    if s["read"] == "full": return 2 if s["kind"] == "review" else 1 if not is_case(s) and s["people"] else 0
     if s["read"] == "page": return 2 if s.get("tier", 1) == 1 else 1
-    return 1 if s["kind"] == "review" or (s["kind"] != "case" and s["people"]) else 0       # read in summary only
+    return 1 if s["kind"] == "review" or (not is_case(s) and s["people"]) else 0       # read in summary only
 
 
 def counts(sources):
     full = [s for s in sources if s["read"] == "full"]
+    d = [described(s) for s in full]
     return {"papers": len(full), "summaries": sum(s["read"] == "summary" for s in sources), "official": sum(s["read"] == "page" for s in sources),
-            "reviews": sum(s["kind"] == "review" for s in full), "studies in people": sum(s["kind"] not in ("review", "case") and s["people"] for s in full), "case reports": sum(s["kind"] == "case" for s in full)}
+            "reviews": d.count("review"), "studies in people": d.count("study"), "case reports": d.count("case"), "other papers": d.count("other")}
 
 
 CLAIMS = ROOT / "data" / "claims"
@@ -1825,7 +1855,7 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
             for r, x in zip(every, (enc([f"{r['what']}, for {r['who']}: {r['show']}" for r in every]) @ QV.T).max(1)): r["near"] = round(float(x), 4)
         return make_amounts(item, rec, sources, chat, models, done, keep_sources, paper_name)
     # GATE 6: enough to rest on
-    said = lambda: f"{cn['reviews']} review(s) or meta-analyses, {cn['studies in people']} single studies in people, {cn['case reports']} case report(s) (which do not count), {cn['official']} official page(s), {cn['summaries']} paper(s) read in summary only"
+    said = lambda: f"{cn['reviews']} review(s) or meta-analyses, {cn['studies in people']} single studies in people, {cn['case reports']} case report(s) (which do not count), {cn['other papers']} other paper(s), {cn['official']} official page(s), {cn['summaries']} paper(s) read in summary only"
     rec["gates"]["sources"] = said()
     labels, n_f, n_l = {}, 0, 0
     for s in sources:
@@ -2699,6 +2729,19 @@ def selftest():
     script["writer"] = [W(ok_short)] * 3; script["checker"] = [dict(V(True, True, True, True), answers_question=False, but_fits=True, why="it says how it is treated")] * 3
     r = mk(); assert r["status"] == "none" and "it does not answer the question itself" in r["gates"]["check"], (r["status"], r["why"], r["gates"])
     assert own_but([{"read": "full", "kind": "review", "people": True}, {"read": "full", "kind": "study", "people": True}, {"read": "page", "kind": "official", "people": True}, {"read": "page", "kind": "official", "people": True}], True) == "This rests on 1 review, 1 study in people and 2 official pages."
+    # (27 November 2026) a paper Europe PMC tags with no type is no "study in people" in the But; one whose own words say it is case reports counts as
+    # case reports, and for nothing at the gate (au_w_a0028: a systematic review of studies mostly in animals; au_w_g0033: two case reports)
+    other = {"read": "full", "kind": "other", "people": True, "title": "Targeting the endocannabinoid system for HIV-associated neuropathic pain: A systematic review", "design": {"quote": "All original research articles that evaluated ..."}}
+    cases = {"read": "full", "kind": "other", "people": True, "title": "Phencyclidine false positive induced by lamotrigine on a rapid urine toxicology screen", "design": {"quote": "This report describes two cases with unexplained positive results for phencyclidine (PCP)."}}
+    assert own_but([{"read": "full", "kind": "review", "people": True}, other], True) == "This rests on 2 reviews."
+    assert own_but([{"read": "full", "kind": "review", "people": True}, dict(other, title="Phentermine, sibutramine and affective disorders", design={"text": "Review of phentermine's effects", "quote": "We performed a search of articles pertaining to phentermine."})], True) == "This rests on 1 review and 1 other paper."
+    assert own_but([{"read": "full", "kind": "review", "people": True}, dict(other, title="Proof-of-Concept Randomized Controlled Study of Cognition Effects of an extract", design={"quote": "We chose the randomized double-blind placebo-controlled cross-over design in our study."})], True) == "This rests on 1 review and 1 study in people."
+    assert own_but([{"read": "full", "kind": "review", "people": True}, cases], True) == "This rests on 1 review and 1 case report."
+    assert weight(other) == 1 and weight(cases) == 0 and weight(dict(cases, read="summary")) == 0 and weight({"read": "full", "kind": "case", "people": True}) == 0
+    assert not is_case({"read": "full", "kind": "other", "people": True, "title": "Emergency department visits for cannabis poisoning: 1,200 cases reported to poison centres"})
+    assert not is_case({"read": "full", "kind": "study", "people": True, "title": "We report two patients"}) and weight({"read": "full", "kind": "study", "people": True}) == 1
+    cn_ = counts([{"read": "full", "kind": "study", "people": False}, other, cases]); assert (cn_["other papers"], cn_["reviews"], cn_["case reports"], cn_["studies in people"]) == (1, 1, 1, 0), cn_
+    assert own_but([{"read": "full", "kind": "study", "people": False}], True) == "This rests on 1 other paper."
     # the choice of a team of models across two free services: keys, room, and never the same model twice in a row
     import tempfile
     tf = pathlib.Path(tempfile.mkdtemp()) / "models.json"
