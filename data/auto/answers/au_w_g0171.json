@@ -17,33 +17,39 @@
  "made": {
   "on": "2026-11-27",
   "models": {
-   "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-   "checker": "openrouter:openai/gpt-6-luna",
-   "planner": "groq:openai/gpt-oss-120b",
-   "team": "team B",
-   "reader_2": "groq:openai/gpt-oss-20b"
+   "reader": "gemini:gemini-3.1-flash-lite",
+   "writer": "gemini:gemma-4-26b-a4b-it",
+   "checker": "groq:openai/gpt-oss-120b",
+   "planner": "gemini:gemma-4-31b-it",
+   "also1": "gemini:gemini-3.5-flash-lite",
+   "also2": "gemini:gemini-3.6-flash",
+   "team": "team K",
+   "reader_2": "gemini:gemini-3.5-flash-lite",
+   "reader_3": "openrouter:meta-llama/llama-3.3-70b-instruct",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "45916725794",
-  "read_seconds": 17,
+  "run": "45998182174",
+  "read_by": {
+   "gemini-3.1-flash-lite": 8,
+   "gemini-3.5-flash-lite": 1
+  },
+  "read_seconds": 78,
   "from": {
    "papers": 1,
    "summaries": 0,
    "official": 0
   },
-  "neurons": 400.7,
-  "seconds": 39
+  "neurons": 0.0,
+  "seconds": 400
  },
- "status": "published",
- "why": "passed every gate",
+ "status": "none",
+ "why": "no draft passed: the form was wrong: no JSON",
  "gates": {
-  "read": "3 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.86, but 0.98, how1 0.67",
-  "check": "every sentence kept was accepted by the second reader (openrouter:openai/gpt-6-luna)",
-  "rules": "broken at try 2: short: the question can be answered with yes or no: begin the short answer with Yes, No, It can, Sometimes, It depends or Not known, then say why in plain words; written again, then nothing against it",
-  "but": "the writer's But was not accepted (it is about something else than the short answer): the code wrote the But itself, from what this answer rests on",
-  "checked": "set beside the checked claims of the same page: nothing against them"
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.1-flash-lite read from there",
+  "read": "1 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 5 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 0 official page(s), 0 paper(s) read in summary only",
+  "writer": "try 1: no JSON (how the reply ended: length; reasoned 0 characters, wrote 9167) try 2: no JSON (how the reply ended: length; reasoned 0 characters, wrote 9175)"
  },
  "sources": [
   {
@@ -111,86 +117,26 @@
    "design": {
     "passage": 1,
     "where": "Abstract",
-    "quote": "Although drugs such as barbiturates and benzodiazepines are often used for the treatment of insomnia, they are associated with various side effects such as habituations, tolerance and addiction.",
-    "text": "a research paper on natural products for insomnia"
+    "quote": "This review is, therefore, intended to bring pharmacological data regarding to the effects of natural products on sleep duration and quality, mainly through the activation of GABAA receptors.",
+    "text": "a review of pharmacological data on natural products for insomnia"
    },
    "findings": [
     {
      "passage": 1,
      "where": "Abstract",
-     "quote": "associated with various side effects such as habituations, tolerance and addiction",
-     "text": "Barbiturates are associated with tolerance.",
-     "id": "F3",
+     "quote": "Although drugs such as barbiturates and benzodiazepines are often used for the treatment of insomnia, they are associated with various side effects such as habituations, tolerance and addiction.",
+     "text": "Barbiturates are associated with side effects including tolerance in people who use them for the treatment of insomnia.",
+     "id": "F1",
      "second_hand": ""
     }
    ],
    "limits": [],
-   "tag": "B"
+   "tag": "A"
   }
  ],
- "parts": [
-  {
-   "part": "short",
-   "text": "Yes, barbiturates are associated with tolerance.",
-   "uses": [
-    "F3"
-   ],
-   "rests_on": [
-    {
-     "label": "F3",
-     "ref": "hu_2018",
-     "where": "Abstract",
-     "quote": "associated with various side effects such as habituations, tolerance and addiction",
-     "sha": "4d00485c826d6d85"
-    }
-   ]
-  },
-  {
-   "part": "but",
-   "text": "This rests on 1 review.",
-   "uses": [
-    "DB"
-   ],
-   "fixed": true,
-   "rests_on": [
-    {
-     "label": "DB",
-     "ref": "hu_2018",
-     "where": "Abstract",
-     "quote": "Although drugs such as barbiturates and benzodiazepines are often used for the treatment of insomnia, they are associated with various side effects such as habituations, tolerance and addiction.",
-     "sha": "4d00485c826d6d85"
-    }
-   ]
-  },
-  {
-   "part": "how1",
-   "text": "A 2018 review of natural products for insomnia found this.",
-   "uses": [
-    "DB",
-    "F3"
-   ],
-   "rests_on": [
-    {
-     "label": "DB",
-     "ref": "hu_2018",
-     "where": "Abstract",
-     "quote": "Although drugs such as barbiturates and benzodiazepines are often used for the treatment of insomnia, they are associated with various side effects such as habituations, tolerance and addiction.",
-     "sha": "4d00485c826d6d85"
-    },
-    {
-     "label": "F3",
-     "ref": "hu_2018",
-     "where": "Abstract",
-     "quote": "associated with various side effects such as habituations, tolerance and addiction",
-     "sha": "4d00485c826d6d85"
-    }
-   ],
-   "quote": "Although drugs such as barbiturates and benzodiazepines are often used for the treatment of insomnia",
-   "quote_ref": "hu_2018"
-  }
- ],
+ "parts": [],
  "complete": false,
- "missing": "a paper that stands nearer the question could not be read",
+ "missing": "",
  "wanted": [
   {
    "doi": "10.1016/0024-3205(96)00199-3",
@@ -231,6 +177,14 @@
    "why": "no draft passed: the form was wrong: no JSON",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-27",
+   "lane": 19,
+   "status": "published",
+   "why": "passed every gate",
+   "short": "Yes, barbiturates are associated with tolerance.",
+   "complete": false
   }
  ],
  "looked": [
@@ -247,7 +201,7 @@
    "read": "full",
    "kind": "review",
    "at": "10.7759/cureus.33695",
-   "kept": 2,
+   "kept": 0,
    "thrown": []
   },
   {
@@ -257,177 +211,106 @@
    "at": "10.4062/biomolther.2018.099",
    "kept": 1,
    "thrown": []
+  },
+  {
+   "title": "Comparing the effect of intermittent diazepam and continuous phenobarbital in preventing recurrent febrile seizures among children under 6 years old: A systematic review and meta-analysis",
+   "read": "full",
+   "kind": "review",
+   "at": "10.4103/jrms.jrms_1114_21",
+   "kept": 0,
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "A systematic review and meta-analysis of randomized clinical trials comparing diazepam and phenobarbital for preventing recurrent febrile seizures in children under 6 years old.",
+     "quote": "In this systematic review study, literature published in English language were carefully searched in biological databases (Cochrane Library, Medline, Scopus, CINHAL, Psycoinfo, and Proquest) by Februa",
+     "why": "a number of the sentence is not in its quote"
+    }
+   ]
+  },
+  {
+   "title": "What is the Best Predictor of Phenobarbital Pharmacokinetics to Use for Initial Dosing in Neonates?",
+   "read": "full",
+   "kind": "review",
+   "at": "10.3390/pharmaceutics13030301",
+   "kept": 0,
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "The development of tolerance and dependence limits the clinical utility of phenobarbital in all age groups of pediatric patients.",
+     "quote": "it still belongs among the most potent medications with relatively modest acute toxicity, however, its sedative effects, tendency to disturb behavior in children, and development of tolerance and depe",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
+  },
+  {
+   "title": "Levetiracetam versus phenobarbital as first-line therapy for neonatal seizures: a comprehensive systematic review and meta-analysis with meta-regression of 26 studies involving 9,854 neonates",
+   "read": "full",
+   "kind": "review",
+   "at": "10.1186/s12887-026-06539-6",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Efficacy and Safety of Levetiracetam vs. Phenobarbital for Neonatal Seizures: A Systematic Review and Meta-Analysis",
+   "read": "full",
+   "kind": "review",
+   "at": "10.3389/fneur.2021.747745",
+   "kept": 0,
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "A systematic review and meta-analysis comparing levetiracetam and phenobarbital for neonatal seizures.",
+     "quote": "To evaluate the efficacy and safety of LEV for neonatal seizures and to compare the efficacy, side effects, and neurological outcomes between LEV and PB in the treatment of neonatal seizures.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
+  },
+  {
+   "title": "Interventional cohort study of prolonged use (>72 hours) of paracetamol in neonates: protocol of the PARASHUTE study",
+   "read": "full",
+   "kind": "other",
+   "at": "10.1136/bmjpo-2018-000427",
+   "kept": 0,
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "An interventional cohort study of neonates receiving prolonged paracetamol treatment.",
+     "quote": "Interventional cohort study of prolonged use (>72 hours) of paracetamol in neonates: protocol of the PARASHUTE study",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
+  },
+  {
+   "title": "The Role of Toxicology Investigations in Overdose Deaths",
+   "read": "full",
+   "kind": "review",
+   "at": "10.7759/cureus.79352",
+   "kept": 0,
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "A literature review of overdose deaths and toxicology investigations",
+     "quote": "From the literature review, it emerged that the use of substances of abuse represents a growing social problem in several countries worldwide.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   }
  ],
  "plan": {
   "short": [
-   "F3"
+   "F1"
   ],
   "direct": "Yes",
   "but": [],
   "how": [
    [
-    "DB",
-    "F3"
+    "DA",
+    "F1"
    ]
   ],
   "unanswered": ""
  },
- "panel_gap": [],
- "own": {
-  "model": "pharmakon-check-0",
-  "threshold": 0.05,
-  "scores": {
-   "short": 0.8558,
-   "but": 0.984,
-   "how1": 0.6741
-  },
-  "scores_quotes_alone": {
-   "short": 0.1049,
-   "but": 0.1601,
-   "how1": 0.2617
-  }
- },
- "tries": [
-  {
-   "try": 1,
-   "why": "the short answer or the But was not accepted: written again",
-   "parts": [
-    {
-     "part": "short",
-     "text": "Yes, barbiturates are associated with tolerance.",
-     "rests_on": [
-      {
-       "label": "F3",
-       "ref": "hu_2018",
-       "where": "Abstract",
-       "quote": "associated with various side effects such as habituations, tolerance and addiction",
-       "sha": "4d00485c826d6d85"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "the word it opens with (“Yes”) is not the answer the passages bear out: The passages say barbiturates are “associated with” tolerance, which is less definite than “Yes” to whether people build up tolerance."
-    },
-    {
-     "part": "but",
-     "text": "But it is a review of natural products for insomnia.",
-     "rests_on": [
-      {
-       "label": "DB",
-       "ref": "hu_2018",
-       "where": "Abstract",
-       "quote": "Although drugs such as barbiturates and benzodiazepines are often used for the treatment of insomnia, they are associated with various side effects such as habituations, tolerance and addiction.",
-       "sha": "4d00485c826d6d85"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "it is about something else than the short answer (The passages say barbiturates are “associated with” tolerance, which is less definite than “Yes” to whether people build up tolerance.)"
-    },
-    {
-     "part": "how1",
-     "text": "A 2018 review of natural products for insomnia found this.",
-     "rests_on": [
-      {
-       "label": "DB",
-       "ref": "hu_2018",
-       "where": "Abstract",
-       "quote": "Although drugs such as barbiturates and benzodiazepines are often used for the treatment of insomnia, they are associated with various side effects such as habituations, tolerance and addiction.",
-       "sha": "4d00485c826d6d85"
-      },
-      {
-       "label": "F3",
-       "ref": "hu_2018",
-       "where": "Abstract",
-       "quote": "associated with various side effects such as habituations, tolerance and addiction",
-       "sha": "4d00485c826d6d85"
-      }
-     ],
-     "ok": true
-    }
-   ]
-  },
-  {
-   "try": 2,
-   "why": "a rule was broken: written again",
-   "parts": [
-    {
-     "part": "short",
-     "text": "Barbiturates are associated with tolerance.",
-     "rests_on": [
-      {
-       "label": "F3",
-       "ref": "hu_2018",
-       "where": "Abstract",
-       "quote": "associated with various side effects such as habituations, tolerance and addiction",
-       "sha": "4d00485c826d6d85"
-      }
-     ],
-     "ok": false,
-     "by": "a rule",
-     "said": "a rule: the question can be answered with yes or no: begin the short answer with Yes, No, It can, Sometimes, It depends or Not known, then say why in plain words"
-    },
-    {
-     "part": "but",
-     "text": "This is a review of natural products for insomnia.",
-     "rests_on": [
-      {
-       "label": "DB",
-       "ref": "hu_2018",
-       "where": "Abstract",
-       "quote": "Although drugs such as barbiturates and benzodiazepines are often used for the treatment of insomnia, they are associated with various side effects such as habituations, tolerance and addiction.",
-       "sha": "4d00485c826d6d85"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how1",
-     "text": "A 2018 review of natural products for insomnia found this.",
-     "rests_on": [
-      {
-       "label": "DB",
-       "ref": "hu_2018",
-       "where": "Abstract",
-       "quote": "Although drugs such as barbiturates and benzodiazepines are often used for the treatment of insomnia, they are associated with various side effects such as habituations, tolerance and addiction.",
-       "sha": "4d00485c826d6d85"
-      },
-      {
-       "label": "F3",
-       "ref": "hu_2018",
-       "where": "Abstract",
-       "quote": "associated with various side effects such as habituations, tolerance and addiction",
-       "sha": "4d00485c826d6d85"
-      }
-     ],
-     "ok": true
-    }
-   ]
-  }
- ],
- "dropped": [
-  {
-   "try": 3,
-   "part": "but",
-   "text": "But this is from a review of natural products for insomnia.",
-   "rests_on": [
-    {
-     "label": "DB",
-     "ref": "hu_2018",
-     "where": "Abstract",
-     "quote": "Although drugs such as barbiturates and benzodiazepines are often used for the treatment of insomnia, they are associated with various side effects such as habituations, tolerance and addiction.",
-     "sha": "4d00485c826d6d85"
-    }
-   ],
-   "by": "the second reader",
-   "said": "it is about something else than the short answer"
-  }
- ],
- "with_checked": {
-  "differs": [],
-  "same": []
- },
+ "soft": "the writer's reply was not in the form asked for",
  "place": {
   "home": "new:Barbiturates",
   "also": [
