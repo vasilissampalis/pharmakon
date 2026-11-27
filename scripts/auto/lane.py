@@ -1335,14 +1335,21 @@ SHARE_OF = re.compile(r"\bin\s+(half|some|a (?:third|quarter|minority|majority)|
 
 
 def hedge_dropped(ours, quotes):
-    """The source's hedge that our sentence drops, as the reason to give the writer; else None."""
+    """The source's hedge that our sentence drops, as the reason to give the writer; else None. quotes: the quotes, one by one (or joined)."""
+    each = [q for q in quotes if isinstance(q, str)] if isinstance(quotes, (list, tuple)) else [quotes or ""]
+    quotes = " ".join(each)
     for m in re.finditer(r"\b(?:is|are|was|were)\s+(?:very\s+|highly\s+|extremely\s+)?" + DANGER_WORD + r"\b", ours, re.I):
         w = m.group(1).lower(); q = re.search(r"\b(?:can|could|may|might)\s+(?:also\s+)?(?:be|become)\s+(?:very\s+|highly\s+|extremely\s+|potentially\s+)?" + re.escape(w) + r"\b", quotes, re.I)
         if q and not re.search(r"\b(?:is|are)\s+(?:very\s+|highly\s+|extremely\s+)?" + re.escape(w) + r"\b", quotes, re.I):
             return f"its source says “{q.group(0)}”, and the sentence says “{m.group(0)}”: say it as the source does"
-    q = re.search(r"\b(?:research|evidence|studies|data|findings)\s+(?:suggests?|indicates?|may suggest)\b", quotes, re.I)
-    if q and not re.search(r"\b(?:suggest\w*|research|studies|evidence|indicat\w*|may|might|could|possibl\w*|likely)\b", ours, re.I):
-        return f"its source says “{q.group(0)}”: keep the source's own hedge (that research suggests it), not as a thing known"
+    # (27 November 2026, reader 817's answers: a sentence about one finding was stopped for another quote's "findings indicate") the hedged words must be what
+    # the sentence says: two words of what follows the hedge stand in a sentence of ours that has no hedge of its own
+    for one in each:
+      for q in re.finditer(r"\b(?:research|evidence|studies|data|findings)\s+(?:suggests?|indicates?|may suggest)\b", one, re.I):
+        tail = {w.lower()[:6] for w in re.findall(r"[A-Za-z][A-Za-z-]{3,}", re.split(r"(?<=[.!?])\s", one[q.end():q.end() + 160])[0]) if w.lower() not in _REPUTE_STOP | {"that", "this"}}
+        for sent in re.split(r"(?<=[.!?])\s+", ours):
+            if not re.search(r"\b(?:suggest\w*|research|studies|evidence|indicat\w*|may|might|could|possibl\w*|likely)\b", sent, re.I) and sum(1 for w in tail if re.search(r"\b" + re.escape(w), sent, re.I)) >= 2:
+                return f"its source says “{q.group(0)}”: keep the source's own hedge (that research suggests it), not as a thing known"
     q = SHARE_OF.search(quotes)
     if q and not re.search(r"\b(?:half|some|third|quarter|minority|majority|one in|two in|\d+\s*%|\d+ of \d+|few|many|most|not all|percent)\b", ours, re.I):
         return f"its source gives this “{q.group(0)}”: say for how many it was so, not as true of everyone"
@@ -1382,7 +1389,7 @@ def says_more(parts, labels):
         if found: bad.append((p["part"], found[0][2])); continue
         w = as_was(p["text"], " ".join(labels[u]["quote"] for u in p["uses"]))
         if w: bad.append((p["part"], f"its source says “{w}”: that is what people perceived or said of themselves, not what was measured. Keep the word (“perceived”), or say that people said so")); continue
-        h = hedge_dropped(p["text"], " ".join(labels[u]["quote"] for u in p["uses"]))
+        h = hedge_dropped(p["text"], [labels[u]["quote"] for u in p["uses"]])
         if h: bad.append((p["part"], h)); continue
         r = repute_as_fact(p["text"], [labels[u]["quote"] for u in p["uses"]])
         if r: bad.append((p["part"], f"its source gives this as a reputation or a belief (“{r}”), and the sentence says it as what the drug does: say that it is a reputation, a traditional use or a belief, as the source does, or leave it out"))
@@ -3293,6 +3300,8 @@ def selftest():
     assert hedge_dropped("FRANK says people can become dependent.", "Research suggests that you can become dependent on synthetic cannabinoids.") and not hedge_dropped("FRANK says research suggests people can become dependent.", "Research suggests that you can become dependent.")
     assert hedge_dropped("2C-B can be found in saliva for up to 24 hours.", "could be detected in oral fluid up to 24 h in half of the volunteers.") and not hedge_dropped("In half of 16 volunteers, 2C-B was found in saliva up to 24 hours.", "could be detected in oral fluid up to 24 h in half of the volunteers.")
     assert not hedge_dropped("Higher doses can cause death.", "misuse can result in severe toxicity and even death in some cases.") and not hedge_dropped("It is dangerous.", "It can be dangerous, and in large amounts it is dangerous.")
+    assert not hedge_dropped("It can weaken the acute subjective effects of psychedelics. FRANK says mixing drugs is always risky.", ["the potential of ADs to attenuate the acute subjective effects of psychedelics", "The main findings indicate that this combination appears generally safe and tolerable with no robust evidence of increased risk for serotonin toxicity", "Mixing drugs is always risky but some mixtures are more dangerous than others."])
+    assert hedge_dropped("Yes, they can be addictive. FRANK says people can become dependent, especially with regular use.", ["Research suggests that you can become dependent on synthetic and semi-synthetic cannabinoids, especially if you use them regularly."])
     assert says_more([{"part": "how2", "text": "The NHS says taking more than the recommended dose is dangerous.", "uses": ["F1"]}], {"F1": {"quote": "Taking too much diphenhydramine can be dangerous.", "passage_text": ""}})
     # (27 November 2026) a reputation said as a fact
     rq = "Today, the plant has gained strong global attraction and reputation due to its capabilities to promote a sense of well‑being by relieving stress with calming effects."
