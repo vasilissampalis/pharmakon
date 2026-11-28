@@ -17,34 +17,38 @@
   "cannabis"
  ],
  "made": {
-  "on": "2026-11-25",
+  "on": "2026-11-28",
   "models": {
-   "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "writer": "groq:qwen/qwen3.8-27b",
-   "checker": "groq:openai/gpt-oss-120b",
-   "planner": "groq:openai/gpt-oss-120b",
-   "also1": "gemini:gemini-3.6-flash",
-   "team": "team H2",
-   "reader_2": "groq:openai/gpt-oss-20b",
-   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-   "also1_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
+   "reader": "gemini:gemini-3.5-flash-lite",
+   "writer": "openrouter:meta-llama/llama-3.3-70b-instruct",
+   "checker": "openrouter:openai/gpt-6-luna",
+   "planner": "openrouter:openai/gpt-oss-120b",
+   "team": "team R",
+   "reader_2": "openrouter:openai/gpt-oss-120b",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "45555419884",
-  "read_seconds": 34,
+  "run": "46145991204",
+  "read_by": {
+   "gemini-3.5-flash-lite": 7,
+   "gemini-3.1-flash-lite": 1
+  },
+  "read_seconds": 45,
   "from": {
    "papers": 2,
    "summaries": 0,
    "official": 0
   },
-  "neurons": 601.5,
-  "seconds": 98
+  "neurons": 0.0,
+  "seconds": 113
  },
  "status": "none",
- "why": "no draft passed: broken at try 3: short: it says what the sources do not say: only a part of each source was read. Let the But be a finding that says for whom or under what conditions the answer holds, or a limit a source states itself",
+ "why": "the second reader did not accept the answer",
  "gates": {
-  "read": "5 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 5 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 1 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only",
-  "rules": "broken at try 3: short: it says what the sources do not say: only a part of each source was read. Let the But be a finding that says for whom or under what conditions the answer holds, or a limit a source states itself"
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.5-flash-lite read from there",
+  "read": "3 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 1 case report(s) (which do not count), 0 other paper(s), 0 official page(s), 0 paper(s) read in summary only",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.97, but 0.23, how1 0.98",
+  "check": "short: NOT accepted: The passage says THC-COOH can remain in the body; it does not say cannabis itself remains there for that duration.; but: NOT accepted: The dose qualification applies to how long THC-COOH remains in the body, not to how long cannabis itself stays in the system.; how1: accepted"
  },
  "sources": [
   {
@@ -77,10 +81,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-25",
+     "verified_on": "2026-11-28",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-25"
+      "checked_on": "2026-11-28"
      }
     },
     "volume": "268",
@@ -101,40 +105,15 @@
    "design": null,
    "findings": [
     {
-     "passage": 8,
+     "passage": 9,
      "where": "Introduction",
-     "quote": "When inhaled, THC quickly enters the bloodstream via the lungs and is then metabolized to 11-hydroxy-Δ9-tetrahydrocannabinol (THC-OH) by the liver.",
-     "text": "THC is metabolized to THC-OH and then to THC-COOH.",
+     "quote": "While THC-COOH is not a psychoactive compound, it can remain in the body from several days to weeks, depending on the doses of the users.",
+     "text": "The non-psychoactive compound THC-COOH can remain in the body for several days to weeks, depending on the doses of the people who use cannabis.",
      "id": "F1",
      "second_hand": ""
-    },
-    {
-     "passage": 30,
-     "where": "Occurrence of cannabinoids in wastewater and the environment",
-     "quote": "The concentrations of THC, THC-OH, and THC-COOH in INF ranged from not detected to 2070, 90.9, and 2590 ng L−1, respectively (;;).",
-     "text": "The concentrations of THC, THC-OH, and THC-COOH were found in certain ranges.",
-     "id": "F2",
-     "second_hand": ""
-    },
-    {
-     "passage": 1,
-     "where": "Abstract",
-     "quote": "THC and its metabolites have been detected in wastewater, surface water, and drinking water.",
-     "text": "THC and its metabolites have been detected in wastewater, surface water, and drinking water.",
-     "id": "F3",
-     "second_hand": ""
     }
    ],
-   "limits": [
-    {
-     "passage": 30,
-     "where": "Occurrence of cannabinoids in wastewater and the environment",
-     "quote": "More samples from different natural water systems would be required to confirm the trend of THC and its metabolites in natural water systems.",
-     "text": "More samples are needed to confirm the trend in natural water systems.",
-     "id": "L1",
-     "second_hand": ""
-    }
-   ],
+   "limits": [],
    "tag": "A"
   },
   {
@@ -203,10 +182,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-25",
+     "verified_on": "2026-11-28",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-25"
+      "checked_on": "2026-11-28"
      }
     },
     "volume": "16",
@@ -227,34 +206,34 @@
    "design": {
     "passage": 1,
     "where": "Abstract",
-    "quote": "Accidental exposure to edible cannabis products in children is an increasing public health concern.",
-    "text": "case series of accidental cannabis intoxication in children"
+    "quote": "We report the toxicokinetic (TK) profiles of delta-9-tetrahydrocannabinol (THC) and cannabidiol (CBD) following unintentional ingestion of cannabis in two pediatric cases, aged 12 and 15 months, respectively.",
+    "text": "toxicokinetic profiles of cannabis in two pediatric cases following unintentional ingestion"
    },
    "findings": [
-    {
-     "passage": 8,
-     "where": "Toxicokinetic analysis",
-     "quote": "The estimated THC kel values were 0.013 h−1 for Case 1 and 0.031 h−1 for Case 2, corresponding to terminal half-lives (t½) of 52.5 and 21.7 h, respectively.",
-     "text": "The half-lives of THC were 52.5 h and 21.7 h in two children.",
-     "id": "F4",
-     "second_hand": ""
-    },
     {
      "passage": 1,
      "where": "Abstract",
      "quote": "The elimination rate constant (kel) was 0.013 h−1 in Case 1 and 0.031 h−1 in Case 2, corresponding to an half-life (t½) of 52.5 and 21.7 h, respectively.",
-     "text": "The elimination rate constants of THC were 0.013 h−1 and 0.031 h−1 in two children.",
-     "id": "F5",
+     "text": "The elimination rate constant was 0.013 h-1 in Case 1 and 0.031 h-1 in Case 2, corresponding to a half-life of 52.5 and 21.7 hours, respectively.",
+     "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 16,
+     "where": "Discussion",
+     "quote": "With regard to elimination kinetics, the estimated half-lives (52.5 h and 21.7 h) indicate markedly prolonged THC persistence compared with adult data, where half-lives typically range from 20 to 30 h.",
+     "text": "The estimated half-lives of 52.5 hours and 21.7 hours indicate markedly prolonged THC persistence compared with adult data, where half-lives typically range from 20 to 30 hours.",
+     "id": "F3",
      "second_hand": ""
     }
    ],
    "limits": [
     {
-     "passage": 17,
+     "passage": 18,
      "where": "Discussion",
-     "quote": "Due to limited information on the time interval between ingestion and blood collection, it was not possible to reliably assess the relationship between plasma THC concentrations and the severity of clinical manifestations.",
-     "text": "The relationship between plasma THC concentrations and the severity of clinical manifestations could not be reliably assessed due to limited information.",
-     "id": "L2",
+     "quote": "The toxicokinetic evaluation is further limited by the small number of samples (four per patient) and the inclusion of only two cases, which precludes broader generalization of the findings.",
+     "text": "The toxicokinetic evaluation is further limited by the small number of samples, which is four per patient, and the inclusion of only two cases, which precludes broader generalization of the findings.",
+     "id": "L1",
      "second_hand": ""
     }
    ],
@@ -263,7 +242,7 @@
  ],
  "parts": [],
  "complete": false,
- "missing": "detection windows for adults, chronic use, and different test matrices",
+ "missing": "detection windows for urine, blood, and hair tests",
  "wanted": [
   {
    "doi": "10.1097/00007691-200404000-00020",
@@ -296,6 +275,14 @@
    "why": "about pregnancy or children: written, and waiting for a person before it is published",
    "short": "In two children, weed stayed in the body for 21.7 to 52.5 hours. This is the time it takes for half the drug to leave.",
    "complete": false
+  },
+  {
+   "on": "2026-11-25",
+   "lane": 19,
+   "status": "none",
+   "why": "no draft passed: broken at try 3: short: it says what the sources do not say: only a part of each source was read. Let the But be a finding that says for whom or under what conditions the answer holds, or a limit a source states itself",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -304,24 +291,12 @@
    "read": "full",
    "kind": "review",
    "at": "10.1016/j.envpol.2020.115642",
-   "kept": 3,
+   "kept": 1,
    "thrown": [
     {
      "kind": "text",
-     "text": "A critical review on cannabinoids",
-     "quote": "Cannabinoids are a group of organic compounds found in cannabis.",
-     "why": "the sentence is not carried by its quote and passage"
-    },
-    {
-     "kind": "finding",
-     "text": "THC-COOH can remain in the body from several days to weeks.",
-     "quote": "THC-COOH can remain in the body from several days to weeks, depending on the doses of the users.",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
-    },
-    {
-     "kind": "limit",
-     "text": "More validation is needed for extraction from solid samples.",
-     "quote": "More validation and optimization on the extraction of cannabinoids from solid samples (sewage sludge, sediment, and suspended solids) would be required to improve the analysis of cannabinoids and thei",
+     "text": "a critical review of cannabinoids in the environment and water systems",
+     "quote": "A critical review on the detection, occurrence, fate, toxicity, and removal of cannabinoids in the water system and the environment (2021), Environmental pollution (Barking, Essex : 1987).",
      "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
     }
    ]
@@ -332,20 +307,7 @@
    "kind": "case",
    "at": "10.3389/fphar.2025.1695194",
    "kept": 2,
-   "thrown": [
-    {
-     "kind": "finding",
-     "text": "In one child, the THC concentration was 45.0 μg/L approximately 7 h after ingestion.",
-     "quote": "In Case 1, the ingestion of CCP was estimated to have occurred approximately 7 h prior to the first blood sample (THC concentration: 45.0 μg/L).",
-     "why": "it holds an amount or a time between uses"
-    },
-    {
-     "kind": "finding",
-     "text": "In one child, the THC concentration was 54.7 μg/L approximately 10 h after ingestion.",
-     "quote": "In Case 2, ingestion was presumed to have occurred approximately 10 h before the first sample was drawn (THC concentration: 54.7 μg/L).",
-     "why": "it holds an amount or a time between uses"
-    }
-   ]
+   "thrown": []
   },
   {
    "title": "Cannabis",
@@ -398,201 +360,161 @@
  ],
  "plan": {
   "short": [
-   "F4",
-   "F5"
+   "F1",
+   "F3"
   ],
   "direct": "",
-  "but": [],
+  "but": [
+   "L1"
+  ],
   "how": [
    [
-    "F4",
-    "F5"
+    "F1"
    ],
    [
-    "F1"
+    "F3",
+    "F2"
    ]
   ],
-  "unanswered": "detection windows for adults, chronic use, and different test matrices"
+  "unanswered": "detection windows for urine, blood, and hair tests"
+ },
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.9742,
+   "but": 0.2329,
+   "how1": 0.9798
+  },
+  "scores_quotes_alone": {
+   "short": 0.6511,
+   "but": 0.489,
+   "how1": 0.9056
+  }
  },
  "tries": [
   {
    "try": 1,
-   "why": "a rule was broken: written again",
+   "why": "the short answer or the But was not accepted: written again",
    "parts": [
     {
      "part": "short",
-     "text": "Not known. The sources do not say how long weed stays in the body of people who use it.",
+     "text": "It can stay for several days to weeks, depending on the doses of the people who use cannabis.",
      "rests_on": [
       {
        "label": "F1",
        "ref": "how_2021",
        "where": "Introduction",
-       "quote": "When inhaled, THC quickly enters the bloodstream via the lungs and is then metabolized to 11-hydroxy-Δ9-tetrahydrocannabinol (THC-OH) by the liver.",
-       "sha": "9f30ad6054ad8576"
-      },
-      {
-       "label": "F4",
-       "ref": "cafaro_2025",
-       "where": "Toxicokinetic analysis",
-       "quote": "The estimated THC kel values were 0.013 h−1 for Case 1 and 0.031 h−1 for Case 2, corresponding to terminal half-lives (t½) of 52.5 and 21.7 h, respectively.",
-       "sha": "144d4fc8868bc054"
-      },
-      {
-       "label": "F5",
-       "ref": "cafaro_2025",
-       "where": "Abstract",
-       "quote": "The elimination rate constant (kel) was 0.013 h−1 in Case 1 and 0.031 h−1 in Case 2, corresponding to an half-life (t½) of 52.5 and 21.7 h, respectively.",
-       "sha": "d661225744fada1f"
+       "quote": "While THC-COOH is not a psychoactive compound, it can remain in the body from several days to weeks, depending on the doses of the users.",
+       "sha": "89ef1a3f60d891cc"
       }
      ],
      "ok": false,
-     "by": "a rule",
-     "said": "a rule: it says what the sources do not say: only a part of each source was read. Let the But be a finding that says for whom or under what conditions the answer holds, or a limit a source states itself"
+     "by": "the second reader",
+     "said": "The passage says THC-COOH, a specific compound, can remain in the body for several days to weeks; it does not say that cannabis itself stays that long. This repeats the editor’s warned-against conflation."
     },
     {
      "part": "but",
-     "text": "The only data came from two young children, not people who use cannabis.",
+     "text": "The answer is limited by the small number of samples and only two cases.",
      "rests_on": [
       {
-       "label": "F4",
+       "label": "L1",
        "ref": "cafaro_2025",
-       "where": "Toxicokinetic analysis",
-       "quote": "The estimated THC kel values were 0.013 h−1 for Case 1 and 0.031 h−1 for Case 2, corresponding to terminal half-lives (t½) of 52.5 and 21.7 h, respectively.",
-       "sha": "144d4fc8868bc054"
-      },
-      {
-       "label": "F5",
-       "ref": "cafaro_2025",
-       "where": "Abstract",
-       "quote": "The elimination rate constant (kel) was 0.013 h−1 in Case 1 and 0.031 h−1 in Case 2, corresponding to an half-life (t½) of 52.5 and 21.7 h, respectively.",
-       "sha": "d661225744fada1f"
+       "where": "Discussion",
+       "quote": "The toxicokinetic evaluation is further limited by the small number of samples (four per patient) and the inclusion of only two cases, which precludes broader generalization of the findings.",
+       "sha": "80bc6921e5850a2d"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer (Sentence 1 concerns THC-COOH, not how long cannabis itself can be found in the body. Sentence 2 accurately describes a limitation of the pediatric toxicokinetic evaluation, but that limitation is about its own cases and does not qualify sen)"
     },
     {
      "part": "how1",
-     "text": "A 2025 case report of two children found THC half-lives of 52.5 and 21.7 hours.",
+     "text": "A 2021 review found that the non-psychoactive compound THC-COOH can remain in the body.",
      "rests_on": [
       {
-       "label": "F4",
-       "ref": "cafaro_2025",
-       "where": "Toxicokinetic analysis",
-       "quote": "The estimated THC kel values were 0.013 h−1 for Case 1 and 0.031 h−1 for Case 2, corresponding to terminal half-lives (t½) of 52.5 and 21.7 h, respectively.",
-       "sha": "144d4fc8868bc054"
-      },
-      {
-       "label": "F5",
-       "ref": "cafaro_2025",
-       "where": "Abstract",
-       "quote": "The elimination rate constant (kel) was 0.013 h−1 in Case 1 and 0.031 h−1 in Case 2, corresponding to an half-life (t½) of 52.5 and 21.7 h, respectively.",
-       "sha": "d661225744fada1f"
+       "label": "F1",
+       "ref": "how_2021",
+       "where": "Introduction",
+       "quote": "While THC-COOH is not a psychoactive compound, it can remain in the body from several days to weeks, depending on the doses of the users.",
+       "sha": "89ef1a3f60d891cc"
       }
      ],
      "ok": true
     },
     {
      "part": "how2",
-     "text": "A 2021 review says THC is metabolized to THC-OH and then to THC-COOH.",
+     "text": "A 2025 case report studied two young children and found varying half-lives.",
      "rests_on": [
       {
-       "label": "F1",
-       "ref": "how_2021",
-       "where": "Introduction",
-       "quote": "When inhaled, THC quickly enters the bloodstream via the lungs and is then metabolized to 11-hydroxy-Δ9-tetrahydrocannabinol (THC-OH) by the liver.",
-       "sha": "9f30ad6054ad8576"
+       "label": "F2",
+       "ref": "cafaro_2025",
+       "where": "Abstract",
+       "quote": "The elimination rate constant (kel) was 0.013 h−1 in Case 1 and 0.031 h−1 in Case 2, corresponding to an half-life (t½) of 52.5 and 21.7 h, respectively.",
+       "sha": "d661225744fada1f"
+      },
+      {
+       "label": "F3",
+       "ref": "cafaro_2025",
+       "where": "Discussion",
+       "quote": "With regard to elimination kinetics, the estimated half-lives (52.5 h and 21.7 h) indicate markedly prolonged THC persistence compared with adult data, where half-lives typically range from 20 to 30 h.",
+       "sha": "91467a81b46304a3"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "the second reader",
+     "said": "The source is a case series, not a case report. Also, as the editor warns, findings about half-lives in two young children do not answer how long cannabis can be found in a person’s body."
     }
    ]
   },
   {
    "try": 2,
-   "why": "a rule was broken: written again",
+   "why": "the short answer or the But was not accepted: written again",
    "parts": [
     {
      "part": "short",
-     "text": "Not known. The sources do not say how long weed stays in the system.",
+     "text": "It can stay in the body for several days to weeks, depending on the doses of the people who use cannabis.",
      "rests_on": [
       {
        "label": "F1",
        "ref": "how_2021",
        "where": "Introduction",
-       "quote": "When inhaled, THC quickly enters the bloodstream via the lungs and is then metabolized to 11-hydroxy-Δ9-tetrahydrocannabinol (THC-OH) by the liver.",
-       "sha": "9f30ad6054ad8576"
-      },
-      {
-       "label": "F4",
-       "ref": "cafaro_2025",
-       "where": "Toxicokinetic analysis",
-       "quote": "The estimated THC kel values were 0.013 h−1 for Case 1 and 0.031 h−1 for Case 2, corresponding to terminal half-lives (t½) of 52.5 and 21.7 h, respectively.",
-       "sha": "144d4fc8868bc054"
-      },
-      {
-       "label": "F5",
-       "ref": "cafaro_2025",
-       "where": "Abstract",
-       "quote": "The elimination rate constant (kel) was 0.013 h−1 in Case 1 and 0.031 h−1 in Case 2, corresponding to an half-life (t½) of 52.5 and 21.7 h, respectively.",
-       "sha": "d661225744fada1f"
+       "quote": "While THC-COOH is not a psychoactive compound, it can remain in the body from several days to weeks, depending on the doses of the users.",
+       "sha": "89ef1a3f60d891cc"
       }
      ],
      "ok": false,
-     "by": "a rule",
-     "said": "a rule: it says what the sources do not say: only a part of each source was read. Let the But be a finding that says for whom or under what conditions the answer holds, or a limit a source states itself"
+     "by": "the second reader",
+     "said": "The passage says THC-COOH can remain in the body for several days to weeks; it does not say cannabis itself stays that long. The sentence leaves out the specific compound."
     },
     {
      "part": "but",
-     "text": "The data comes from a case report of two children, not adults.",
+     "text": "The answer is limited by the small number of samples and only two cases.",
      "rests_on": [
       {
-       "label": "F4",
+       "label": "L1",
        "ref": "cafaro_2025",
-       "where": "Toxicokinetic analysis",
-       "quote": "The estimated THC kel values were 0.013 h−1 for Case 1 and 0.031 h−1 for Case 2, corresponding to terminal half-lives (t½) of 52.5 and 21.7 h, respectively.",
-       "sha": "144d4fc8868bc054"
-      },
-      {
-       "label": "F5",
-       "ref": "cafaro_2025",
-       "where": "Abstract",
-       "quote": "The elimination rate constant (kel) was 0.013 h−1 in Case 1 and 0.031 h−1 in Case 2, corresponding to an half-life (t½) of 52.5 and 21.7 h, respectively.",
-       "sha": "d661225744fada1f"
+       "where": "Discussion",
+       "quote": "The toxicokinetic evaluation is further limited by the small number of samples (four per patient) and the inclusion of only two cases, which precludes broader generalization of the findings.",
+       "sha": "80bc6921e5850a2d"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage limits the toxicokinetic evaluation of two pediatric cases, not the general answer about how long cannabis can be found in the body."
     },
     {
      "part": "how1",
-     "text": "A case report of two children found THC half-lives of 52.5 and 21.7 hours.",
-     "rests_on": [
-      {
-       "label": "F4",
-       "ref": "cafaro_2025",
-       "where": "Toxicokinetic analysis",
-       "quote": "The estimated THC kel values were 0.013 h−1 for Case 1 and 0.031 h−1 for Case 2, corresponding to terminal half-lives (t½) of 52.5 and 21.7 h, respectively.",
-       "sha": "144d4fc8868bc054"
-      },
-      {
-       "label": "F5",
-       "ref": "cafaro_2025",
-       "where": "Abstract",
-       "quote": "The elimination rate constant (kel) was 0.013 h−1 in Case 1 and 0.031 h−1 in Case 2, corresponding to an half-life (t½) of 52.5 and 21.7 h, respectively.",
-       "sha": "d661225744fada1f"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "A 2021 review says THC is metabolized to THC-OH and then to THC-COOH.",
+     "text": "A 2021 review found that the non-psychoactive compound THC-COOH can remain in the body for several days to weeks.",
      "rests_on": [
       {
        "label": "F1",
        "ref": "how_2021",
        "where": "Introduction",
-       "quote": "When inhaled, THC quickly enters the bloodstream via the lungs and is then metabolized to 11-hydroxy-Δ9-tetrahydrocannabinol (THC-OH) by the liver.",
-       "sha": "9f30ad6054ad8576"
+       "quote": "While THC-COOH is not a psychoactive compound, it can remain in the body from several days to weeks, depending on the doses of the users.",
+       "sha": "89ef1a3f60d891cc"
       }
      ],
      "ok": true
@@ -601,90 +523,50 @@
   },
   {
    "try": 3,
-   "why": "a rule was broken: written again",
+   "why": "the last draft: no answer",
    "parts": [
     {
      "part": "short",
-     "text": "Not known. The sources do not say how long weed stays in the system.",
+     "text": "It can remain in the body for several days to weeks, depending on the doses of the people who use cannabis.",
      "rests_on": [
       {
        "label": "F1",
        "ref": "how_2021",
        "where": "Introduction",
-       "quote": "When inhaled, THC quickly enters the bloodstream via the lungs and is then metabolized to 11-hydroxy-Δ9-tetrahydrocannabinol (THC-OH) by the liver.",
-       "sha": "9f30ad6054ad8576"
-      },
-      {
-       "label": "F4",
-       "ref": "cafaro_2025",
-       "where": "Toxicokinetic analysis",
-       "quote": "The estimated THC kel values were 0.013 h−1 for Case 1 and 0.031 h−1 for Case 2, corresponding to terminal half-lives (t½) of 52.5 and 21.7 h, respectively.",
-       "sha": "144d4fc8868bc054"
-      },
-      {
-       "label": "F5",
-       "ref": "cafaro_2025",
-       "where": "Abstract",
-       "quote": "The elimination rate constant (kel) was 0.013 h−1 in Case 1 and 0.031 h−1 in Case 2, corresponding to an half-life (t½) of 52.5 and 21.7 h, respectively.",
-       "sha": "d661225744fada1f"
+       "quote": "While THC-COOH is not a psychoactive compound, it can remain in the body from several days to weeks, depending on the doses of the users.",
+       "sha": "89ef1a3f60d891cc"
       }
      ],
      "ok": false,
-     "by": "a rule",
-     "said": "a rule: it says what the sources do not say: only a part of each source was read. Let the But be a finding that says for whom or under what conditions the answer holds, or a limit a source states itself"
+     "by": "the second reader",
+     "said": "The passage says THC-COOH can remain in the body; it does not say cannabis itself remains there for that duration."
     },
     {
      "part": "but",
-     "text": "The data comes from a case report of two children, not adults.",
-     "rests_on": [
-      {
-       "label": "F4",
-       "ref": "cafaro_2025",
-       "where": "Toxicokinetic analysis",
-       "quote": "The estimated THC kel values were 0.013 h−1 for Case 1 and 0.031 h−1 for Case 2, corresponding to terminal half-lives (t½) of 52.5 and 21.7 h, respectively.",
-       "sha": "144d4fc8868bc054"
-      },
-      {
-       "label": "F5",
-       "ref": "cafaro_2025",
-       "where": "Abstract",
-       "quote": "The elimination rate constant (kel) was 0.013 h−1 in Case 1 and 0.031 h−1 in Case 2, corresponding to an half-life (t½) of 52.5 and 21.7 h, respectively.",
-       "sha": "d661225744fada1f"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how1",
-     "text": "A case report of two children found THC half-lives of 52.5 and 21.7 hours.",
-     "rests_on": [
-      {
-       "label": "F4",
-       "ref": "cafaro_2025",
-       "where": "Toxicokinetic analysis",
-       "quote": "The estimated THC kel values were 0.013 h−1 for Case 1 and 0.031 h−1 for Case 2, corresponding to terminal half-lives (t½) of 52.5 and 21.7 h, respectively.",
-       "sha": "144d4fc8868bc054"
-      },
-      {
-       "label": "F5",
-       "ref": "cafaro_2025",
-       "where": "Abstract",
-       "quote": "The elimination rate constant (kel) was 0.013 h−1 in Case 1 and 0.031 h−1 in Case 2, corresponding to an half-life (t½) of 52.5 and 21.7 h, respectively.",
-       "sha": "d661225744fada1f"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "A 2021 review says THC is metabolized to THC-OH and then to THC-COOH.",
+     "text": "The answer is limited by the doses of the people who use cannabis.",
      "rests_on": [
       {
        "label": "F1",
        "ref": "how_2021",
        "where": "Introduction",
-       "quote": "When inhaled, THC quickly enters the bloodstream via the lungs and is then metabolized to 11-hydroxy-Δ9-tetrahydrocannabinol (THC-OH) by the liver.",
-       "sha": "9f30ad6054ad8576"
+       "quote": "While THC-COOH is not a psychoactive compound, it can remain in the body from several days to weeks, depending on the doses of the users.",
+       "sha": "89ef1a3f60d891cc"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The dose qualification applies to how long THC-COOH remains in the body, not to how long cannabis itself stays in the system."
+    },
+    {
+     "part": "how1",
+     "text": "A 2021 review found that the non-psychoactive compound THC-COOH can remain in the body.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "how_2021",
+       "where": "Introduction",
+       "quote": "While THC-COOH is not a psychoactive compound, it can remain in the body from several days to weeks, depending on the doses of the users.",
+       "sha": "89ef1a3f60d891cc"
       }
      ],
      "ok": true
