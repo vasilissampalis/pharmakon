@@ -17,32 +17,38 @@
   "ketamine"
  ],
  "made": {
-  "on": "2026-11-27",
+  "on": "2026-11-28",
   "models": {
-   "reader": "openrouter:openai/gpt-oss-120b",
+   "reader": "gemini:gemma-4-31b-it",
    "writer": "openrouter:meta-llama/llama-3.3-70b-instruct",
    "checker": "openrouter:openai/gpt-6-luna",
    "planner": "openrouter:openai/gpt-oss-120b",
    "team": "team R",
-   "reader_2": "openrouter:openai/gpt-oss-120b",
-   "reader_first": "gemini:gemma-4-31b-it"
+   "reader_2": "openrouter:openai/gpt-oss-120b"
   },
-  "run": "45946700535",
-  "read_seconds": 100,
+  "run": "46155448743",
+  "read_by": {
+   "gemini-3.5-flash-lite": 7,
+   "gemini-3.1-flash-lite": 6
+  },
+  "read_seconds": 48,
   "from": {
    "papers": 2,
-   "summaries": 0,
-   "official": 0
+   "summaries": 1,
+   "official": 1
   },
   "neurons": 0.0,
-  "seconds": 100
+  "seconds": 155
  },
- "status": "none",
- "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service",
+ "status": "published",
+ "why": "passed every gate",
  "gates": {
-  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-120b read from there",
-  "read": "4 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 5 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "0 review(s) or meta-analyses, 0 single studies in people, 2 case report(s) (which do not count), 0 other paper(s), 0 official page(s), 0 paper(s) read in summary only"
+  "read": "9 findings kept from 4 sources (2 papers read in full, 1 official pages, 1 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "0 review(s) or meta-analyses, 0 single studies in people, 2 case report(s) (which do not count), 0 other paper(s), 1 official page(s), 1 paper(s) read in summary only (the ones the answer rests on)",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.86, but 0.98, how1 0.96, how2 0.97, how3 0.98, how4 0.97",
+  "check": "every sentence kept was accepted by the second reader (openrouter:openai/gpt-6-luna); 1 How-do-we-know line(s) dropped; it also found that the short answer answers the question and that the But is about that answer",
+  "rules": "nothing against it",
+  "checked": "set beside the checked claims of the same page: nothing against them"
  },
  "sources": [
   {
@@ -83,10 +89,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-27",
+     "verified_on": "2026-11-28",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-27"
+      "checked_on": "2026-11-28"
      }
     },
     "volume": "8",
@@ -102,39 +108,43 @@
    "people": true,
    "near": 0.787,
    "money": [],
-   "design": {
-    "passage": 7,
-    "where": "CASE REPORT",
-    "quote": "A 31-year-old male with a history of chronic ketamine use, major depressive disorder, and chronic back pain presented to the emergency department (ED) with two days of increasingly severe back pain and chest tightness.",
-    "text": "case report of a single patient with chronic ketamine use"
-   },
+   "design": null,
    "findings": [
     {
-     "passage": 12,
-     "where": "CASE REPORT",
-     "quote": "Reddit users describe the pain as feeling like someone was squeezing their organs as hard as they could, pain that reaches down into the upper abdomen and creeps though the chest, and feeling like a hot knife was running through the back to the front of the stomach.",
-     "text": "K-cramps are severe abdominal pains described as a squeezing sensation on the organs, upper‑abdominal and chest pain, and a hot‑knife feeling across the back to the stomach.",
+     "passage": 13,
+     "where": "DISCUSSION",
+     "quote": "We report a case of recurrent abdominal pain associated with chronic high doses of ketamine, colloquially known as “K cramps.”",
+     "text": "K-cramps are recurrent abdominal pain associated with chronic high doses of ketamine.",
      "id": "F1",
+     "second_hand": ""
+    },
+    {
+     "passage": 15,
+     "where": "DISCUSSION",
+     "quote": "“K Cramps” is mentioned only one time in peer-reviewed literature, described as “severe abdominal pains” that “can feel like severe gas pains but much worse.”",
+     "text": "K-cramps are described as severe abdominal pains that can feel like severe gas pains but much worse.",
+     "id": "F2",
      "second_hand": ""
     },
     {
      "passage": 12,
      "where": "CASE REPORT",
      "quote": "After discontinuing ketamine, the pain improved within 24 hours.",
-     "text": "The pain of K-cramps improves within 24 hours after stopping ketamine.",
-     "id": "F2",
-     "second_hand": ""
-    },
-    {
-     "passage": 15,
-     "where": "DISCUSSION",
-     "quote": "The only reported treatment for ketamine-associated abdominal pain in the peer-reviewed literature is abstinence.",
-     "text": "Abstinence from ketamine is the only reported treatment for K-cramps.",
+     "text": "The pain goes away within 24 hours after discontinuing ketamine.",
      "id": "F3",
      "second_hand": ""
     }
    ],
-   "limits": [],
+   "limits": [
+    {
+     "passage": 18,
+     "where": "CONCLUSION",
+     "quote": "Further work is needed to understand the etiology and treatment of GI symptoms related to ketamine use, which should include being aware of the knowledge and perspectives of people who have used ketamine and testing the strategies they have developed to treat GI symptoms.",
+     "text": "Further work is needed to understand the etiology and treatment of gastrointestinal symptoms related to ketamine use.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
    "tag": "A"
   },
   {
@@ -183,10 +193,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-27",
+     "verified_on": "2026-11-28",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-27"
+      "checked_on": "2026-11-28"
      }
     },
     "PMCID": "PMC11881789"
@@ -204,33 +214,333 @@
     "Conflicts of interest: In compliance with the ICMJE uniform disclosure form, all authors declare the following:",
     "Payment/services info: All authors have declared that no financial support was received from any organization for the submitted work."
    ],
-   "design": null,
+   "design": {
+    "passage": 2,
+    "where": "Abstract",
+    "quote": "A 25-year-old woman with a history of anxiety, asthma, obsessive-compulsive disorder, and chronic high-dose (500-1000 milligrams weekly) ketamine use presented to the emergency department with severe abdominal pain",
+    "text": "A case report on a 25-year-old woman with chronic recreational ketamine use."
+   },
    "findings": [
     {
      "passage": 1,
      "where": "Abstract",
-     "quote": "ketamine-induced abdominal pain, nausea, vomiting, and dysuria, collectively and colloquially known as K-cramps",
-     "text": "K-cramps are ketamine-induced abdominal pain, nausea, vomiting, and dysuria.",
+     "quote": "The lack of emergency physician awareness regarding ketamine-induced abdominal pain, nausea, vomiting, and dysuria, collectively and colloquially known as K-cramps",
+     "text": "K-cramps is a term used to collectively describe ketamine-induced abdominal pain, nausea, vomiting, and dysuria.",
      "id": "F4",
+     "second_hand": ""
+    },
+    {
+     "passage": 2,
+     "where": "Abstract",
+     "quote": "Given the patient’s reported symptoms and frequent, chronic, and high-dose ketamine use, the diagnosis of ketamine-induced abdominal pain and dysuria, or K-cramps, was made. The patient was treated with intravenous fluids, antiemetics, and benzodiazepines. Upon reassessment, all symptoms resolved",
+     "text": "In one case, symptoms of K-cramps resolved after the patient was treated with intravenous fluids, antiemetics, and benzodiazepines.",
+     "id": "F5",
+     "second_hand": ""
+    },
+    {
+     "passage": 13,
+     "where": "Discussion",
+     "quote": "Therapeutic management for patients experiencing K-cramps includes discontinuation of ketamine use, fluid and electrolyte repletion for clinical signs of dehydration, antiemetics for nausea and vomiting",
+     "text": "Therapeutic management for people who use ketamine and experience K-cramps includes stopping ketamine use, replacing fluids and electrolytes, and using antiemetics.",
+     "id": "F6",
      "second_hand": ""
     }
    ],
    "limits": [
     {
-     "passage": 1,
-     "where": "Abstract",
-     "quote": "little is known regarding the side effects associated with chronic, frequent, and high-dose use",
-     "text": "Knowledge about side effects of chronic, frequent, high-dose ketamine use is limited.",
-     "id": "L1",
+     "passage": 14,
+     "where": "Conclusions",
+     "quote": "further research investigating the etiology of side effects from chronic, frequent, and high-dose use, specifically those related to the hepatobiliary, gastrointestinal, and genitourinary tracts, is warranted.",
+     "text": "Further research is needed to understand the causes of side effects from chronic, frequent, and high-dose ketamine use in the hepatobiliary, gastrointestinal, and genitourinary tracts.",
+     "id": "L2",
      "second_hand": ""
     }
    ],
    "tag": "B"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "frank_ketamine",
+    "type": "webpage",
+    "title": "Ketamine",
+    "author": [
+     {
+      "literal": "FRANK"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      []
+     ]
+    },
+    "URL": "https://www.talktofrank.com/drug/ketamine",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       28
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-28"
+    }
+   },
+   "title": "Ketamine",
+   "year": null,
+   "kind": "official",
+   "people": true,
+   "near": 0.688,
+   "name": "FRANK",
+   "short": "FRANK",
+   "tier": 1,
+   "address": "https://www.talktofrank.com/drug/ketamine",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 13,
+     "where": "Mixing ketamine with other drugs / Physical health risks",
+     "quote": "Abdominal pain, sometimes called ‘K cramps’, have been reported by people who have taken ketamine for a long time.",
+     "text": "People who have taken ketamine for a long time have reported abdominal pain, which is sometimes called K cramps.",
+     "id": "F7",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "C"
+  },
+  {
+   "read": "summary",
+   "ref": {
+    "id": "schep_2023",
+    "type": "article-journal",
+    "title": "The clinical toxicology of ketamine",
+    "author": [
+     {
+      "family": "Schep",
+      "given": "Leo J."
+     },
+     {
+      "family": "Slaughter",
+      "given": "Robin J."
+     },
+     {
+      "family": "Watts",
+      "given": "Martin"
+     },
+     {
+      "family": "Mackenzie",
+      "given": "Elliot"
+     },
+     {
+      "family": "Gee",
+      "given": "Paul"
+     }
+    ],
+    "container-title": "Clinical Toxicology",
+    "issued": {
+     "date-parts": [
+      [
+       2023
+      ]
+     ]
+    },
+    "DOI": "10.1080/15563650.2023.2212125",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-28",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-28"
+     }
+    },
+    "volume": "61",
+    "issue": "6",
+    "page": "415-428"
+   },
+   "doi": "10.1080/15563650.2023.2212125",
+   "title": "The clinical toxicology of ketamine",
+   "year": 2023,
+   "journal": "Clinical toxicology (Philadelphia, Pa.)",
+   "kind": "review",
+   "people": true,
+   "near": 0.629,
+   "money": [],
+   "design": {
+    "passage": 2,
+    "where": "Summary",
+    "quote": "185 articles (case reports, case series, pharmacokinetic studies, animal studies pertinent to pharmacology, and reviews) were considered relevant.",
+    "text": "A review of 185 articles including case reports, case series, pharmacokinetic studies, animal studies, and reviews regarding ketamine toxicity."
+   },
+   "findings": [
+    {
+     "passage": 5,
+     "where": "Summary",
+     "quote": "Chronic effects of ketamine toxicity can result in cholangiopathy and cystitis, which can be confirmed by endoscopic retrograde cholangiopancreatography and cystoscopy, respectively.",
+     "text": "Chronic effects of ketamine toxicity can result in cystitis and cholangiopathy.",
+     "id": "F8",
+     "second_hand": ""
+    },
+    {
+     "passage": 6,
+     "where": "Summary",
+     "quote": "Chronic effects of ketamine toxicity are typically reversible, with management focusing on abstinence.",
+     "text": "Chronic effects of ketamine toxicity are typically reversible.",
+     "id": "F9",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "D"
   }
  ],
- "parts": [],
+ "parts": [
+  {
+   "part": "short",
+   "text": "Yes, K-cramps are abdominal pain linked to ketamine use and can go away after stopping",
+   "uses": [
+    "F7",
+    "F1",
+    "F3",
+    "F9"
+   ],
+   "rests_on": [
+    {
+     "label": "F7",
+     "ref": "frank_ketamine",
+     "where": "Mixing ketamine with other drugs / Physical health risks",
+     "quote": "Abdominal pain, sometimes called ‘K cramps’, have been reported by people who have taken ketamine for a long time.",
+     "sha": "c182eb7b32f1b539"
+    },
+    {
+     "label": "F1",
+     "ref": "avra_2024",
+     "where": "DISCUSSION",
+     "quote": "We report a case of recurrent abdominal pain associated with chronic high doses of ketamine, colloquially known as “K cramps.”",
+     "sha": "fd39f907d67fd80d"
+    },
+    {
+     "label": "F3",
+     "ref": "avra_2024",
+     "where": "CASE REPORT",
+     "quote": "After discontinuing ketamine, the pain improved within 24 hours.",
+     "sha": "9e8b1e4bc36545c5"
+    },
+    {
+     "label": "F9",
+     "ref": "schep_2023",
+     "where": "Summary",
+     "quote": "Chronic effects of ketamine toxicity are typically reversible, with management focusing on abstinence.",
+     "sha": "c1a0eaddf3ea39af"
+    }
+   ]
+  },
+  {
+   "part": "but",
+   "text": "More research is needed to understand the cause and treatment",
+   "uses": [
+    "L1"
+   ],
+   "rests_on": [
+    {
+     "label": "L1",
+     "ref": "avra_2024",
+     "where": "CONCLUSION",
+     "quote": "Further work is needed to understand the etiology and treatment of GI symptoms related to ketamine use, which should include being aware of the knowledge and perspectives of people who have used ketamine and testing the strategies they have developed to treat GI symptoms.",
+     "sha": "f0662237a4e932f3"
+    }
+   ]
+  },
+  {
+   "part": "how1",
+   "text": "FRANK says people who use ketamine long-term report abdominal pain",
+   "uses": [
+    "F7"
+   ],
+   "rests_on": [
+    {
+     "label": "F7",
+     "ref": "frank_ketamine",
+     "where": "Mixing ketamine with other drugs / Physical health risks",
+     "quote": "Abdominal pain, sometimes called ‘K cramps’, have been reported by people who have taken ketamine for a long time.",
+     "sha": "c182eb7b32f1b539"
+    }
+   ],
+   "quote": "Abdominal pain, sometimes called 'K cramps', have been reported by people who have taken ketamine",
+   "quote_ref": "frank_ketamine"
+  },
+  {
+   "part": "how3",
+   "text": "A case report found abdominal pain improved after stopping ketamine",
+   "uses": [
+    "F1",
+    "F3"
+   ],
+   "rests_on": [
+    {
+     "label": "F1",
+     "ref": "avra_2024",
+     "where": "DISCUSSION",
+     "quote": "We report a case of recurrent abdominal pain associated with chronic high doses of ketamine, colloquially known as “K cramps.”",
+     "sha": "fd39f907d67fd80d"
+    },
+    {
+     "label": "F3",
+     "ref": "avra_2024",
+     "where": "CASE REPORT",
+     "quote": "After discontinuing ketamine, the pain improved within 24 hours.",
+     "sha": "9e8b1e4bc36545c5"
+    }
+   ],
+   "quote": "We report a case of recurrent abdominal pain associated with chronic high doses of ketamine",
+   "quote_ref": "avra_2024"
+  },
+  {
+   "part": "how4",
+   "text": "A case report on a 25-year-old woman found K-cramps symptoms resolved with treatment",
+   "uses": [
+    "DB",
+    "F4",
+    "F5"
+   ],
+   "rests_on": [
+    {
+     "label": "DB",
+     "ref": "boccio_2025",
+     "where": "Abstract",
+     "quote": "A 25-year-old woman with a history of anxiety, asthma, obsessive-compulsive disorder, and chronic high-dose (500-1000 milligrams weekly) ketamine use presented to the emergency department with severe abdominal pain",
+     "sha": "d8fb8c67a2f182c4"
+    },
+    {
+     "label": "F4",
+     "ref": "boccio_2025",
+     "where": "Abstract",
+     "quote": "The lack of emergency physician awareness regarding ketamine-induced abdominal pain, nausea, vomiting, and dysuria, collectively and colloquially known as K-cramps",
+     "sha": "74b050ae4cedafed"
+    },
+    {
+     "label": "F5",
+     "ref": "boccio_2025",
+     "where": "Abstract",
+     "quote": "Given the patient’s reported symptoms and frequent, chronic, and high-dose ketamine use, the diagnosis of ketamine-induced abdominal pain and dysuria, or K-cramps, was made. The patient was treated with intravenous fluids, antiemetics, and benzodiazepines. Upon reassessment, all symptoms resolved",
+     "sha": "d8fb8c67a2f182c4"
+    }
+   ],
+   "quote": "the diagnosis of ketamine-induced abdominal pain and dysuria, or K-cramps, was made",
+   "quote_ref": "boccio_2025"
+  }
+ ],
  "complete": false,
- "missing": "",
+ "missing": "1 paper(s) could be read in summary only",
  "wanted": [
   {
    "doi": "10.1002/da.22536",
@@ -263,6 +573,14 @@
    "why": "passed every gate",
    "short": "Yes, K-cramps are ketamine-induced abdominal pain, nausea, vomiting, and dysuria. In one case, the pain improved within 24 hours after the person stopped using ketamine.",
    "complete": true
+  },
+  {
+   "on": "2026-11-27",
+   "lane": 19,
+   "status": "none",
+   "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -274,16 +592,10 @@
    "kept": 3,
    "thrown": [
     {
-     "kind": "limit",
-     "text": "There is only a single peer‑reviewed mention of K‑cramps, indicating very limited published evidence.",
-     "quote": "K Cramps is mentioned only one time in peer-reviewed literature",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
-    },
-    {
-     "kind": "limit",
-     "text": "The underlying mechanism of K‑cramps has not been identified.",
-     "quote": "the mechanism is unknown",
-     "why": "the sentence is not carried by its quote and passage"
+     "kind": "text",
+     "text": "A case report of a 31-year-old male with chronic ketamine use presenting with recurrent abdominal pain",
+     "quote": "We report a case of recurrent abdominal pain associated with chronic high doses of ketamine, colloquially known as “K cramps.”",
+     "why": "a number of the sentence is not in its quote"
     }
    ]
   },
@@ -292,29 +604,474 @@
    "read": "full",
    "kind": "case",
    "at": "10.7759/cureus.78422",
+   "kept": 3,
+   "thrown": []
+  },
+  {
+   "title": "Ketamine",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.talktofrank.com/drug/ketamine",
    "kept": 1,
+   "thrown": []
+  },
+  {
+   "title": "Ketamine",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.canada.ca/en/health-canada/services/substance-use/controlled-illegal-drugs/ketamine.html",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Ketamine hydrochloride",
+   "read": "page",
+   "kind": "official",
+   "at": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=64a483f2-eb08-4993-84ce-9d8ddc757f2c",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Ketamine",
+   "read": "page",
+   "kind": "official",
+   "at": "https://adf.org.au/drug-facts/ketamine/",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Ketamine",
+   "read": "page",
+   "kind": "official",
+   "at": "https://thelevel.org.nz/drug-information/ketamine",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Ketamine",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.drugscience.org.uk/drugs/ketamine",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "20147 Ketamine",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.camh.ca/en/health-info/mental-illness-and-addiction-index/ketamine",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Methoxetamine (MXE)",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.talktofrank.com/drug/methoxetamine",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "A REVIEW OF KETAMINE ABUSE AND DIVERSION",
+   "read": "summary",
+   "kind": "review",
+   "at": "10.1002/da.22536",
+   "kept": 0,
    "thrown": [
     {
      "kind": "text",
-     "text": "Case report of a single patient with chronic recreational ketamine use",
-     "quote": "The diagnosis of ketamine-induced abdominal pain and dysuria, or K-cramps, was made.",
+     "text": "A review of ketamine abuse and diversion",
+     "quote": "A REVIEW OF KETAMINE ABUSE AND DIVERSION (2016), Depression and anxiety.",
      "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
+  },
+  {
+   "title": "Ketamine: an update on its abuse",
+   "read": "summary",
+   "kind": "review",
+   "at": "10.1177/0897190014525754",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "The clinical toxicology of ketamine",
+   "read": "summary",
+   "kind": "review",
+   "at": "10.1080/15563650.2023.2212125",
+   "kept": 2,
+   "thrown": []
+  }
+ ],
+ "plan": {
+  "short": [
+   "F7",
+   "F1",
+   "F3",
+   "F9"
+  ],
+  "direct": "Yes",
+  "but": [
+   "L1"
+  ],
+  "how": [
+   [
+    "F7"
+   ],
+   [
+    "DD",
+    "F9"
+   ],
+   [
+    "F1",
+    "F3"
+   ],
+   [
+    "DB",
+    "F4",
+    "F5"
+   ]
+  ],
+  "unanswered": ""
+ },
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.8582,
+   "but": 0.9785,
+   "how1": 0.9622,
+   "how2": 0.9652,
+   "how3": 0.9848,
+   "how4": 0.972
+  },
+  "scores_quotes_alone": {
+   "short": 0.9127,
+   "but": 0.9779,
+   "how1": 0.9583,
+   "how2": 0.3934,
+   "how3": 0.9836,
+   "how4": 0.982
+  }
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Yes, K-cramps are abdominal pain from chronic ketamine use and can go away after stopping",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "frank_ketamine",
+       "where": "Mixing ketamine with other drugs / Physical health risks",
+       "quote": "Abdominal pain, sometimes called ‘K cramps’, have been reported by people who have taken ketamine for a long time.",
+       "sha": "c182eb7b32f1b539"
+      },
+      {
+       "label": "F1",
+       "ref": "avra_2024",
+       "where": "DISCUSSION",
+       "quote": "We report a case of recurrent abdominal pain associated with chronic high doses of ketamine, colloquially known as “K cramps.”",
+       "sha": "fd39f907d67fd80d"
+      },
+      {
+       "label": "F3",
+       "ref": "avra_2024",
+       "where": "CASE REPORT",
+       "quote": "After discontinuing ketamine, the pain improved within 24 hours.",
+       "sha": "9e8b1e4bc36545c5"
+      },
+      {
+       "label": "F9",
+       "ref": "schep_2023",
+       "where": "Summary",
+       "quote": "Chronic effects of ketamine toxicity are typically reversible, with management focusing on abstinence.",
+       "sha": "c1a0eaddf3ea39af"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages describe K-cramps as abdominal pain reported after long-term ketamine use and as pain associated with chronic high-dose use; saying the pain is “from” ketamine makes the link more certain than stated. One case did improve after"
     },
     {
-     "kind": "finding",
-     "text": "In the reported case, the K-cramps resolved after treatment.",
-     "quote": "Upon reassessment, all symptoms resolved, and the patient passed an oral challenge.",
-     "why": "the sentence is not carried by its quote and passage"
+     "part": "but",
+     "text": "Further work is needed to understand the cause and treatment",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "avra_2024",
+       "where": "CONCLUSION",
+       "quote": "Further work is needed to understand the etiology and treatment of GI symptoms related to ketamine use, which should include being aware of the knowledge and perspectives of people who have used ketamine and testing the strategies they have developed to treat GI symptoms.",
+       "sha": "f0662237a4e932f3"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "Although the idea is supported, this closely copies the source’s opening wording (“Further work is needed to understand the…”), rather than putting it in your own words."
     },
     {
-     "kind": "limit",
-     "text": "More research is needed to understand the etiology of ketamine side effects.",
-     "quote": "further research investigating the etiology of side effects ... is warranted",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+     "part": "how1",
+     "text": "FRANK says people who use ketamine long-term report abdominal pain",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "frank_ketamine",
+       "where": "Mixing ketamine with other drugs / Physical health risks",
+       "quote": "Abdominal pain, sometimes called ‘K cramps’, have been reported by people who have taken ketamine for a long time.",
+       "sha": "c182eb7b32f1b539"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A review of 185 articles found chronic effects are typically reversible",
+     "rests_on": [
+      {
+       "label": "DD",
+       "ref": "schep_2023",
+       "where": "Summary",
+       "quote": "185 articles (case reports, case series, pharmacokinetic studies, animal studies pertinent to pharmacology, and reviews) were considered relevant.",
+       "sha": "f06374f47b078b9a"
+      },
+      {
+       "label": "F9",
+       "ref": "schep_2023",
+       "where": "Summary",
+       "quote": "Chronic effects of ketamine toxicity are typically reversible, with management focusing on abstinence.",
+       "sha": "c1a0eaddf3ea39af"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A case report found pain improved within 24 hours after stopping ketamine",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "avra_2024",
+       "where": "DISCUSSION",
+       "quote": "We report a case of recurrent abdominal pain associated with chronic high doses of ketamine, colloquially known as “K cramps.”",
+       "sha": "fd39f907d67fd80d"
+      },
+      {
+       "label": "F3",
+       "ref": "avra_2024",
+       "where": "CASE REPORT",
+       "quote": "After discontinuing ketamine, the pain improved within 24 hours.",
+       "sha": "9e8b1e4bc36545c5"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how4",
+     "text": "A case report on a 25-year-old woman described K-cramps as abdominal pain, nausea, vomiting, and dysuria",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "boccio_2025",
+       "where": "Abstract",
+       "quote": "A 25-year-old woman with a history of anxiety, asthma, obsessive-compulsive disorder, and chronic high-dose (500-1000 milligrams weekly) ketamine use presented to the emergency department with severe abdominal pain",
+       "sha": "d8fb8c67a2f182c4"
+      },
+      {
+       "label": "F4",
+       "ref": "boccio_2025",
+       "where": "Abstract",
+       "quote": "The lack of emergency physician awareness regarding ketamine-induced abdominal pain, nausea, vomiting, and dysuria, collectively and colloquially known as K-cramps",
+       "sha": "74b050ae4cedafed"
+      },
+      {
+       "label": "F5",
+       "ref": "boccio_2025",
+       "where": "Abstract",
+       "quote": "Given the patient’s reported symptoms and frequent, chronic, and high-dose ketamine use, the diagnosis of ketamine-induced abdominal pain and dysuria, or K-cramps, was made. The patient was treated with intravenous fluids, antiemetics, and benzodiazepines. Upon reassessment, all symptoms resolved",
+       "sha": "d8fb8c67a2f182c4"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Yes, K-cramps are abdominal pain from ketamine use, and they can go away after stopping",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "frank_ketamine",
+       "where": "Mixing ketamine with other drugs / Physical health risks",
+       "quote": "Abdominal pain, sometimes called ‘K cramps’, have been reported by people who have taken ketamine for a long time.",
+       "sha": "c182eb7b32f1b539"
+      },
+      {
+       "label": "F1",
+       "ref": "avra_2024",
+       "where": "DISCUSSION",
+       "quote": "We report a case of recurrent abdominal pain associated with chronic high doses of ketamine, colloquially known as “K cramps.”",
+       "sha": "fd39f907d67fd80d"
+      },
+      {
+       "label": "F3",
+       "ref": "avra_2024",
+       "where": "CASE REPORT",
+       "quote": "After discontinuing ketamine, the pain improved within 24 hours.",
+       "sha": "9e8b1e4bc36545c5"
+      },
+      {
+       "label": "F9",
+       "ref": "schep_2023",
+       "where": "Summary",
+       "quote": "Chronic effects of ketamine toxicity are typically reversible, with management focusing on abstinence.",
+       "sha": "c1a0eaddf3ea39af"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages describe abdominal pain reported after long-term use and a case associated with chronic, high-dose use; they do not establish that K-cramps are generally caused by ketamine use."
+    },
+    {
+     "part": "but",
+     "text": "Further work is needed to understand the cause and treatment",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "avra_2024",
+       "where": "CONCLUSION",
+       "quote": "Further work is needed to understand the etiology and treatment of GI symptoms related to ketamine use, which should include being aware of the knowledge and perspectives of people who have used ketamine and testing the strategies they have developed to treat GI symptoms.",
+       "sha": "f0662237a4e932f3"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "This closely copies the source’s wording, “Further work is needed to understand the,” instead of putting the point in your own words."
+    },
+    {
+     "part": "how1",
+     "text": "FRANK says people who use ketamine long-term report abdominal pain",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "frank_ketamine",
+       "where": "Mixing ketamine with other drugs / Physical health risks",
+       "quote": "Abdominal pain, sometimes called ‘K cramps’, have been reported by people who have taken ketamine for a long time.",
+       "sha": "c182eb7b32f1b539"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A review of 185 articles found chronic effects are typically reversible",
+     "rests_on": [
+      {
+       "label": "DD",
+       "ref": "schep_2023",
+       "where": "Summary",
+       "quote": "185 articles (case reports, case series, pharmacokinetic studies, animal studies pertinent to pharmacology, and reviews) were considered relevant.",
+       "sha": "f06374f47b078b9a"
+      },
+      {
+       "label": "F9",
+       "ref": "schep_2023",
+       "where": "Summary",
+       "quote": "Chronic effects of ketamine toxicity are typically reversible, with management focusing on abstinence.",
+       "sha": "c1a0eaddf3ea39af"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A case report found pain improved after stopping ketamine",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "avra_2024",
+       "where": "DISCUSSION",
+       "quote": "We report a case of recurrent abdominal pain associated with chronic high doses of ketamine, colloquially known as “K cramps.”",
+       "sha": "fd39f907d67fd80d"
+      },
+      {
+       "label": "F3",
+       "ref": "avra_2024",
+       "where": "CASE REPORT",
+       "quote": "After discontinuing ketamine, the pain improved within 24 hours.",
+       "sha": "9e8b1e4bc36545c5"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how4",
+     "text": "A case report on a 25-year-old woman described K-cramps as abdominal pain, nausea, and vomiting",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "boccio_2025",
+       "where": "Abstract",
+       "quote": "A 25-year-old woman with a history of anxiety, asthma, obsessive-compulsive disorder, and chronic high-dose (500-1000 milligrams weekly) ketamine use presented to the emergency department with severe abdominal pain",
+       "sha": "d8fb8c67a2f182c4"
+      },
+      {
+       "label": "F4",
+       "ref": "boccio_2025",
+       "where": "Abstract",
+       "quote": "The lack of emergency physician awareness regarding ketamine-induced abdominal pain, nausea, vomiting, and dysuria, collectively and colloquially known as K-cramps",
+       "sha": "74b050ae4cedafed"
+      },
+      {
+       "label": "F5",
+       "ref": "boccio_2025",
+       "where": "Abstract",
+       "quote": "Given the patient’s reported symptoms and frequent, chronic, and high-dose ketamine use, the diagnosis of ketamine-induced abdominal pain and dysuria, or K-cramps, was made. The patient was treated with intravenous fluids, antiemetics, and benzodiazepines. Upon reassessment, all symptoms resolved",
+       "sha": "d8fb8c67a2f182c4"
+      }
+     ],
+     "ok": true
     }
    ]
   }
  ],
+ "dropped": [
+  {
+   "try": 3,
+   "part": "how2",
+   "text": "A review of 185 articles found chronic effects of ketamine are typically reversible",
+   "rests_on": [
+    {
+     "label": "DD",
+     "ref": "schep_2023",
+     "where": "Summary",
+     "quote": "185 articles (case reports, case series, pharmacokinetic studies, animal studies pertinent to pharmacology, and reviews) were considered relevant.",
+     "sha": "f06374f47b078b9a"
+    },
+    {
+     "label": "F9",
+     "ref": "schep_2023",
+     "where": "Summary",
+     "quote": "Chronic effects of ketamine toxicity are typically reversible, with management focusing on abstinence.",
+     "sha": "c1a0eaddf3ea39af"
+    }
+   ],
+   "by": "the second reader",
+   "said": "It repeats the source wording “chronic effects of ketamine toxicity are typically reversible” without quotation marks, rather than putting the point in your own words."
+  }
+ ],
+ "with_checked": {
+  "differs": [],
+  "same": []
+ },
  "place": {
   "home": "ketamine",
   "also": [],
