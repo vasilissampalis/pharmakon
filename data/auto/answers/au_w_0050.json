@@ -19,36 +19,36 @@
  "made": {
   "on": "2026-11-28",
   "models": {
-   "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+   "reader": "gemini:gemma-4-31b-it",
+   "writer": "openrouter:meta-llama/llama-3.3-70b-instruct",
    "checker": "openrouter:openai/gpt-6-luna",
-   "planner": "@cf/openai/gpt-oss-120b",
-   "team": "team B",
-   "reader_2": "groq:openai/gpt-oss-20b",
-   "reader_3": "openrouter:openai/gpt-oss-120b"
+   "planner": "openrouter:openai/gpt-oss-120b",
+   "team": "team R",
+   "reader_2": "openrouter:openai/gpt-oss-120b",
+   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast"
   },
-  "run": "46090012494",
+  "run": "46137237355",
   "read_by": {
-   "llama-4-scout-17b-16e-instruct": 5,
-   "gemini-3.5-flash-lite": 5
+   "gpt-oss-20b": 1,
+   "gemini-3.5-flash-lite": 1
   },
-  "read_seconds": 46,
+  "read_seconds": 100,
   "from": {
    "papers": 2,
    "summaries": 0,
    "official": 0
   },
-  "neurons": 774.9,
-  "seconds": 98
+  "neurons": 144.7,
+  "seconds": 168
  },
  "status": "none",
  "why": "the second reader did not accept the answer",
  "gates": {
-  "read": "5 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "read": "6 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 3 thrown away (the quote was not in the passage, or a number was not in the quote)",
   "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 0 official page(s), 0 paper(s) read in summary only",
-  "told": "the writer was told what the readers said of the last draft that was not accepted: the short answer “Talking therapies can help people quit cannabis, and contingency management helps people with psychosis or depression stop”: It overstates the evidence for talking therapies: the passage reports modest reductions in frequency and quantity of use, not that they help people quit. It ",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.55, but 0.98, how1 0.96, how2 0.75",
-  "check": "short: NOT accepted: It reverses the editor’s requested order by leading with contingency management rather than the general talking-therapy finding. It also generalizes the contingency-management finding beyond the psychotic-spectrum and major depressive disor; but: accepted; how1: NOT accepted: The review reports abstinence findings among people with psychotic-spectrum or major depressive disorders; this sentence broadens the finding to people with mental health disorders generally.; how2: accepted"
+  "told": "the writer was told what the readers said of the last draft that was not accepted: the short answer “Contingency management helps people with mental health disorders stop cannabis, and motivational enhancement therapy and cognitive behavioral therapy lead to modest improvements.”: It reverses the editor’s requested order by leading with contingency management rather than the gener",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.40, but 0.99, how1 0.98, how2 0.66",
+  "check": "short: NOT accepted: It broadly says contingency management may help people with mental health disorders stop, but the review reports abstinence evidence for people with psychotic-spectrum disorders or major depressive disorder. It also repeats the editorially ; but: accepted; how1: NOT accepted: It generalizes the finding to people with mental health disorders. The review reports efficacy for cannabis-use reductions and abstinence among people with psychotic-spectrum disorders or major depressive disorder; the editorial note requir; how2: accepted"
  },
  "sources": [
   {
@@ -111,24 +111,32 @@
    "design": {
     "passage": 1,
     "where": "Abstract",
-    "quote": "A systematic search examining the effects of CM on cannabis use, clinical, cognitive, and psychosocial outcomes in patients with a mental health disorder on PubMed, PsycINFO, and EMBASE databases up to November 2022 was performed.",
-    "text": "A systematic review of research paper"
+    "quote": "Contingency management (CM), a method to specifically reinforce target behavior attainment (e.g., substance use abstinence), may provide an effective intervention in treating cannabis use in patients with a dual diagnosis of CUD and a mental health disorder.",
+    "text": "Systematic review of contingency management for cannabis use disorder in people with mental health disorders"
    },
    "findings": [
     {
-     "passage": 1,
-     "where": "Abstract",
-     "quote": "We found CM to be efficacious in producing cannabis use reductions and abstinence amongst individuals with a psychotic-spectrum or major depressive disorder.",
-     "text": "Contingency management helps people with psychotic-spectrum or major depressive disorder reduce or quit cannabis use.",
+     "passage": 15,
+     "where": "3. Results › 3.3. Major Depressive Disorder (MDD)",
+     "quote": "A recent open-label, single-arm study using monetary CM evaluated the cognitive and clinical effects of 28 days of cannabis abstinence among individuals with co-morbid MDD and CUD.",
+     "text": "In one study, 28 days of monetary contingency management led people who use cannabis to achieve abstinence and improve cognitive and depressive symptoms.",
      "id": "F1",
      "second_hand": ""
     },
     {
-     "passage": 17,
-     "where": "4. Discussion",
-     "quote": "With many patients achieving cannabis abstinence during the CM periods within the included studies, we provide strong evidence to support the efficacy of CM to promote cannabis abstinence in dually-diagnosed patients, with improvements in clinical symptomatology and some aspects of cognitive dysfunction in these disorders.",
-     "text": "Contingency management promotes cannabis abstinence in people with cannabis use disorder and a mental health disorder.",
+     "passage": 15,
+     "where": "3. Results › 3.3. Major Depressive Disorder (MDD)",
+     "quote": "Coinciding with abstinence and reductions in use, significant improvements in select cognitive domains, including visual search speed, visual sustained attention and response inhibition, and VSWM were found.",
+     "text": "In the same study, abstinence and reduced use were associated with significant improvements in visual search speed, sustained attention, response inhibition, and visual working memory.",
      "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 15,
+     "where": "3. Results › 3.3. Major Depressive Disorder (MDD)",
+     "quote": "Concerning clinical outcomes associated with cannabis abstinence, improvements in depressive symptomology and anhedonia were observed; cannabis abstinence led to non-significant improvements in anxiety symptomology.",
+     "text": "In that study, cannabis abstinence led to improvements in depressive symptoms and anhedonia, but not in anxiety symptoms.",
+     "id": "F3",
      "second_hand": ""
     }
    ],
@@ -137,7 +145,7 @@
      "passage": 19,
      "where": "5. Strengths and Limitations",
      "quote": "First, our sample size was small due to the limited number of studies exploring the efficacy of CM for CUD in psychiatric populations.",
-     "text": "The findings are based on a small sample size.",
+     "text": "The review’s findings are limited by the small sample size of the included studies.",
      "id": "L1",
      "second_hand": ""
     }
@@ -219,25 +227,25 @@
     {
      "passage": 22,
      "where": "Psychological interventions",
-     "quote": "overall, psychological interventions lead to modest reductions in the frequency and quantity of cannabis use",
+     "quote": "psychological interventions lead to modest reductions in the frequency and quantity of cannabis use",
      "text": "Psychological interventions lead to modest reductions in the frequency and quantity of cannabis use.",
-     "id": "F3",
+     "id": "F4",
      "second_hand": ""
     },
     {
      "passage": 23,
      "where": "Psychological interventions",
      "quote": "individually both MET and CBT lead to modest improvements in cannabis-related outcomes",
-     "text": "Individually both motivational enhancement therapy and cognitive behavioral therapy lead to modest improvements in cannabis-related outcomes.",
-     "id": "F4",
+     "text": "Individually both MET and CBT lead to modest improvements in cannabis-related outcomes.",
+     "id": "F5",
      "second_hand": ""
     },
     {
-     "passage": 25,
-     "where": "Psychological interventions",
-     "quote": "The addition of “booster” sessions after treatment may extend positive treatment effects.",
-     "text": "The addition of booster sessions after treatment may extend positive treatment effects.",
-     "id": "F5",
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "Although no pharmacological interventions are yet approved for CUD, we present the most promising pharmacological interventions being tested.",
+     "text": "No pharmacological interventions are yet approved for cannabis use disorder, though promising pharmacological interventions are being tested.",
+     "id": "F6",
      "second_hand": ""
     }
    ],
@@ -256,7 +264,7 @@
  ],
  "parts": [],
  "complete": false,
- "missing": "specific evidence for daily users",
+ "missing": "long‑term maintenance of abstinence",
  "wanted": [
   {
    "doi": "10.1159/000540193",
@@ -297,6 +305,14 @@
    "why": "the second reader did not accept the answer",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-28",
+   "lane": 19,
+   "status": "none",
+   "why": "the second reader did not accept the answer",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -305,12 +321,18 @@
    "read": "full",
    "kind": "review",
    "at": "10.3390/brainsci13010036",
-   "kept": 2,
+   "kept": 3,
    "thrown": [
     {
      "kind": "finding",
-     "text": "Eight out of eleven people with major depressive disorder and cannabis use disorder achieved cannabis abstinence.",
+     "text": "In that study, 8 of 11 participants achieved biochemically verified cannabis abstinence, and the others significantly reduced their use.",
      "quote": "Of eleven participants, eight obtained biochemically-verified cannabis abstinence while the remaining participants significantly reduced their cannabis use.",
+     "why": "a number of the sentence is not in its quote"
+    },
+    {
+     "kind": "limit",
+     "text": "The review’s findings are limited by the lack of control groups in most studies.",
+     "quote": "Second, most studies did not include a control (non-abstinence) group, making it difficult to assess the specificity of CM’s efficacy on clinical and cognitive outcome measures.",
      "why": "the sentence is not carried by its quote and passage"
     }
    ]
@@ -321,78 +343,21 @@
    "kind": "review",
    "at": "10.1172/jci172887",
    "kept": 3,
-   "thrown": []
-  },
-  {
-   "title": "Cannabis (Marijuana) and Cannabinoids: What You Need To Know",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.nccih.nih.gov/health/cannabis-marijuana-and-cannabinoids-what-you-need-to-know",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Understanding Your Risk for Cannabis Use Disorder",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.cdc.gov/cannabis/health-effects/cannabis-use-disorder.html",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Cannabis",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.ccsa.ca/en/guidance-tools-resources/substances/cannabis",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Research",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.ccsa.ca/en/guidance-tools-resources/substance-use-and-addiction/cannabis/research-cannabis",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Dronabinol",
-   "read": "page",
-   "kind": "official",
-   "at": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=fd8c5d57-0173-4f62-8ff0-d8147986a976",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Cannabis",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.canada.ca/en/health-canada/services/drugs-medication/cannabis.html",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "About cannabis",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.canada.ca/en/health-canada/services/drugs-medication/cannabis/about.html",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Cannabis (marijuana)",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.betterhealth.vic.gov.au/health/healthyliving/cannabis-marijuana",
-   "kept": 0,
-   "thrown": []
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "Interventions that combine elements of both MET and CBT are increasingly being recommended.",
+     "quote": "interventions that combine elements of both MET and CBT are increasingly being recommended",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
   }
  ],
  "plan": {
   "short": [
-   "F2",
-   "F4",
-   "F5"
+   "F1",
+   "F5",
+   "F4"
   ],
   "direct": "",
   "but": [
@@ -401,31 +366,31 @@
   "how": [
    [
     "DA",
-    "F2"
+    "F1"
    ],
    [
     "DB",
-    "F4",
-    "F5"
+    "F5",
+    "F4"
    ]
   ],
-  "unanswered": "specific evidence for daily users"
+  "unanswered": "long‑term maintenance of abstinence"
  },
  "panel_gap": [],
  "own": {
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.5526,
-   "but": 0.9844,
-   "how1": 0.9602,
-   "how2": 0.7547
+   "short": 0.3989,
+   "but": 0.9857,
+   "how1": 0.9826,
+   "how2": 0.6648
   },
   "scores_quotes_alone": {
-   "short": 0.1212,
-   "but": 0.9526,
-   "how1": 0.9388,
-   "how2": 0.1724
+   "short": 0.1537,
+   "but": 0.9788,
+   "how1": 0.9547,
+   "how2": 0.6402
   }
  },
  "tries": [
@@ -435,120 +400,33 @@
    "parts": [
     {
      "part": "short",
-     "text": "Contingency management helps people with mental health disorders stop cannabis, and motivational enhancement therapy and cognitive behavioral therapy lead to modest improvements.",
+     "text": "Talking therapies can lead to modest cuts in cannabis use, and contingency management may help people with mental health disorders stop",
      "rests_on": [
-      {
-       "label": "F2",
-       "ref": "rodas_2022",
-       "where": "4. Discussion",
-       "quote": "With many patients achieving cannabis abstinence during the CM periods within the included studies, we provide strong evidence to support the efficacy of CM to promote cannabis abstinence in dually-diagnosed patients, with improvements in clinical symptomatology and some aspects of cognitive dysfunction in these disorders.",
-       "sha": "0abd93f322d70b6d"
-      },
       {
        "label": "F4",
        "ref": "lefoll_2024",
        "where": "Psychological interventions",
-       "quote": "individually both MET and CBT lead to modest improvements in cannabis-related outcomes",
-       "sha": "6f64cb0aa2227abd"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The editor specifically requires leading with the general benefit of talking therapies, then describing contingency management as helping people with psychosis or depression stop. This sentence reverses that order and generalizes the contin"
-    },
-    {
-     "part": "but",
-     "text": "Continuous abstinence rates are typically low.",
-     "rests_on": [
-      {
-       "label": "L2",
-       "ref": "lefoll_2024",
-       "where": "Psychological interventions",
-       "quote": "continuous abstinence rates are typically low, suggesting that although treatments are helpful in reducing cannabis use, they are not optimal for promoting complete abstinence.",
-       "sha": "3f491c0dc671249f"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how1",
-     "text": "A systematic review of contingency management found it promotes cannabis abstinence in people with mental health disorders.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "rodas_2022",
-       "where": "Abstract",
-       "quote": "A systematic search examining the effects of CM on cannabis use, clinical, cognitive, and psychosocial outcomes in patients with a mental health disorder on PubMed, PsycINFO, and EMBASE databases up to November 2022 was performed.",
-       "sha": "a12294d5edc438d6"
-      },
-      {
-       "label": "F2",
-       "ref": "rodas_2022",
-       "where": "4. Discussion",
-       "quote": "With many patients achieving cannabis abstinence during the CM periods within the included studies, we provide strong evidence to support the efficacy of CM to promote cannabis abstinence in dually-diagnosed patients, with improvements in clinical symptomatology and some aspects of cognitive dysfunction in these disorders.",
-       "sha": "0abd93f322d70b6d"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The review reports abstinence among people with psychotic-spectrum or major depressive disorder, not people with mental health disorders broadly. It also repeats the editor-flagged general presentation of the contingency-management result r"
-    },
-    {
-     "part": "how2",
-     "text": "A review of cannabis use disorder found motivational enhancement therapy and cognitive behavioral therapy lead to modest improvements.",
-     "rests_on": [
-      {
-       "label": "DB",
-       "ref": "lefoll_2024",
-       "where": "Abstract",
-       "quote": "This Review will cover this topic from a variety of perspectives, with a particular emphasis on neurobiological findings and innovative treatment approaches that are being pursued.",
-       "sha": "3559539a5357fd33"
-      },
-      {
-       "label": "F4",
-       "ref": "lefoll_2024",
-       "where": "Psychological interventions",
-       "quote": "individually both MET and CBT lead to modest improvements in cannabis-related outcomes",
-       "sha": "6f64cb0aa2227abd"
+       "quote": "psychological interventions lead to modest reductions in the frequency and quantity of cannabis use",
+       "sha": "9807a1812ba4fa3a"
       },
       {
        "label": "F5",
        "ref": "lefoll_2024",
        "where": "Psychological interventions",
-       "quote": "The addition of “booster” sessions after treatment may extend positive treatment effects.",
-       "sha": "3f491c0dc671249f"
-      }
-     ],
-     "ok": true
-    }
-   ]
-  },
-  {
-   "try": 2,
-   "why": "the short answer or the But was not accepted: written again",
-   "parts": [
-    {
-     "part": "short",
-     "text": "Talking therapies can lead to modest improvements in cannabis use, and contingency management helps people with mental health disorders stop",
-     "rests_on": [
-      {
-       "label": "F2",
-       "ref": "rodas_2022",
-       "where": "4. Discussion",
-       "quote": "With many patients achieving cannabis abstinence during the CM periods within the included studies, we provide strong evidence to support the efficacy of CM to promote cannabis abstinence in dually-diagnosed patients, with improvements in clinical symptomatology and some aspects of cognitive dysfunction in these disorders.",
-       "sha": "0abd93f322d70b6d"
-      },
-      {
-       "label": "F4",
-       "ref": "lefoll_2024",
-       "where": "Psychological interventions",
        "quote": "individually both MET and CBT lead to modest improvements in cannabis-related outcomes",
        "sha": "6f64cb0aa2227abd"
+      },
+      {
+       "label": "F1",
+       "ref": "rodas_2022",
+       "where": "3. Results › 3.3. Major Depressive Disorder (MDD)",
+       "quote": "A recent open-label, single-arm study using monetary CM evaluated the cognitive and clinical effects of 28 days of cannabis abstinence among individuals with co-morbid MDD and CUD.",
+       "sha": "f98e42ff33052318"
       }
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "The passage supports contingency management for the included dual-diagnosis patients, while the abstract specifies psychotic-spectrum or major depressive disorder; it does not support the broader claim about people with mental health disord"
+     "said": "The sentence does not specify the modest reductions in frequency and quantity, as the editor requires, and it generalizes contingency management to people with mental health disorders rather than the cited group with major depressive disord"
     },
     {
      "part": "but",
@@ -566,30 +444,30 @@
     },
     {
      "part": "how1",
-     "text": "A systematic review found contingency management promotes cannabis abstinence in people with mental health disorders",
+     "text": "A systematic review of contingency management found it helped people with mental health disorders",
      "rests_on": [
       {
        "label": "DA",
        "ref": "rodas_2022",
        "where": "Abstract",
-       "quote": "A systematic search examining the effects of CM on cannabis use, clinical, cognitive, and psychosocial outcomes in patients with a mental health disorder on PubMed, PsycINFO, and EMBASE databases up to November 2022 was performed.",
+       "quote": "Contingency management (CM), a method to specifically reinforce target behavior attainment (e.g., substance use abstinence), may provide an effective intervention in treating cannabis use in patients with a dual diagnosis of CUD and a mental health disorder.",
        "sha": "a12294d5edc438d6"
       },
       {
-       "label": "F2",
+       "label": "F1",
        "ref": "rodas_2022",
-       "where": "4. Discussion",
-       "quote": "With many patients achieving cannabis abstinence during the CM periods within the included studies, we provide strong evidence to support the efficacy of CM to promote cannabis abstinence in dually-diagnosed patients, with improvements in clinical symptomatology and some aspects of cognitive dysfunction in these disorders.",
-       "sha": "0abd93f322d70b6d"
+       "where": "3. Results › 3.3. Major Depressive Disorder (MDD)",
+       "quote": "A recent open-label, single-arm study using monetary CM evaluated the cognitive and clinical effects of 28 days of cannabis abstinence among individuals with co-morbid MDD and CUD.",
+       "sha": "f98e42ff33052318"
       }
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "The review reports abstinence among people with psychotic-spectrum or major depressive disorder, not people with mental health disorders generally."
+     "said": "The review reports efficacy for people with psychotic-spectrum or major depressive disorder, not people with mental health disorders generally."
     },
     {
      "part": "how2",
-     "text": "A review found motivational enhancement therapy and cognitive behavioral therapy lead to modest improvements in cannabis-related outcomes",
+     "text": "A review of cannabis use disorder found psychological interventions lead to modest reductions",
      "rests_on": [
       {
        "label": "DB",
@@ -602,15 +480,15 @@
        "label": "F4",
        "ref": "lefoll_2024",
        "where": "Psychological interventions",
-       "quote": "individually both MET and CBT lead to modest improvements in cannabis-related outcomes",
-       "sha": "6f64cb0aa2227abd"
+       "quote": "psychological interventions lead to modest reductions in the frequency and quantity of cannabis use",
+       "sha": "9807a1812ba4fa3a"
       },
       {
        "label": "F5",
        "ref": "lefoll_2024",
        "where": "Psychological interventions",
-       "quote": "The addition of “booster” sessions after treatment may extend positive treatment effects.",
-       "sha": "3f491c0dc671249f"
+       "quote": "individually both MET and CBT lead to modest improvements in cannabis-related outcomes",
+       "sha": "6f64cb0aa2227abd"
       }
      ],
      "ok": true
@@ -618,35 +496,35 @@
    ]
   },
   {
-   "try": 3,
-   "why": "the last draft: no answer",
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
    "parts": [
     {
      "part": "short",
-     "text": "Contingency management helps people with mental health disorders stop cannabis, and motivational enhancement therapy and cognitive behavioral therapy lead to modest improvements.",
+     "text": "Talking therapies lead to modest cuts in cannabis use, and contingency management helped people with co-morbid major depressive disorder and cannabis use disorder stop",
      "rests_on": [
-      {
-       "label": "F2",
-       "ref": "rodas_2022",
-       "where": "4. Discussion",
-       "quote": "With many patients achieving cannabis abstinence during the CM periods within the included studies, we provide strong evidence to support the efficacy of CM to promote cannabis abstinence in dually-diagnosed patients, with improvements in clinical symptomatology and some aspects of cognitive dysfunction in these disorders.",
-       "sha": "0abd93f322d70b6d"
-      },
       {
        "label": "F4",
        "ref": "lefoll_2024",
        "where": "Psychological interventions",
-       "quote": "individually both MET and CBT lead to modest improvements in cannabis-related outcomes",
-       "sha": "6f64cb0aa2227abd"
+       "quote": "psychological interventions lead to modest reductions in the frequency and quantity of cannabis use",
+       "sha": "9807a1812ba4fa3a"
+      },
+      {
+       "label": "F1",
+       "ref": "rodas_2022",
+       "where": "3. Results › 3.3. Major Depressive Disorder (MDD)",
+       "quote": "A recent open-label, single-arm study using monetary CM evaluated the cognitive and clinical effects of 28 days of cannabis abstinence among individuals with co-morbid MDD and CUD.",
+       "sha": "f98e42ff33052318"
       }
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "It reverses the editor’s requested order by leading with contingency management rather than the general talking-therapy finding. It also generalizes the contingency-management finding beyond the psychotic-spectrum and major depressive disor"
+     "said": "The contingency-management claim is too broad: the MDD passage describes one open-label, single-arm study in which 8 of 11 participants achieved verified abstinence after 28 days and the others reduced use. The sentence omits those limits a"
     },
     {
      "part": "but",
-     "text": "Continuous abstinence rates are typically low.",
+     "text": "Continuous abstinence rates are typically low",
      "rests_on": [
       {
        "label": "L2",
@@ -660,30 +538,28 @@
     },
     {
      "part": "how1",
-     "text": "A systematic review of contingency management found it promotes cannabis abstinence in people with mental health disorders.",
+     "text": "A systematic review of contingency management found it helped people with co-morbid major depressive disorder and cannabis use disorder",
      "rests_on": [
       {
        "label": "DA",
        "ref": "rodas_2022",
        "where": "Abstract",
-       "quote": "A systematic search examining the effects of CM on cannabis use, clinical, cognitive, and psychosocial outcomes in patients with a mental health disorder on PubMed, PsycINFO, and EMBASE databases up to November 2022 was performed.",
+       "quote": "Contingency management (CM), a method to specifically reinforce target behavior attainment (e.g., substance use abstinence), may provide an effective intervention in treating cannabis use in patients with a dual diagnosis of CUD and a mental health disorder.",
        "sha": "a12294d5edc438d6"
       },
       {
-       "label": "F2",
+       "label": "F1",
        "ref": "rodas_2022",
-       "where": "4. Discussion",
-       "quote": "With many patients achieving cannabis abstinence during the CM periods within the included studies, we provide strong evidence to support the efficacy of CM to promote cannabis abstinence in dually-diagnosed patients, with improvements in clinical symptomatology and some aspects of cognitive dysfunction in these disorders.",
-       "sha": "0abd93f322d70b6d"
+       "where": "3. Results › 3.3. Major Depressive Disorder (MDD)",
+       "quote": "A recent open-label, single-arm study using monetary CM evaluated the cognitive and clinical effects of 28 days of cannabis abstinence among individuals with co-morbid MDD and CUD.",
+       "sha": "f98e42ff33052318"
       }
      ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The review reports abstinence findings among people with psychotic-spectrum or major depressive disorders; this sentence broadens the finding to people with mental health disorders generally."
+     "ok": true
     },
     {
      "part": "how2",
-     "text": "A review of cannabis use disorder found motivational enhancement therapy and cognitive behavioral therapy lead to modest improvements.",
+     "text": "A 2024 review found psychological interventions, including MET and CBT, lead to modest improvements",
      "rests_on": [
       {
        "label": "DB",
@@ -693,18 +569,119 @@
        "sha": "3559539a5357fd33"
       },
       {
-       "label": "F4",
+       "label": "F5",
        "ref": "lefoll_2024",
        "where": "Psychological interventions",
        "quote": "individually both MET and CBT lead to modest improvements in cannabis-related outcomes",
        "sha": "6f64cb0aa2227abd"
       },
       {
+       "label": "F4",
+       "ref": "lefoll_2024",
+       "where": "Psychological interventions",
+       "quote": "psychological interventions lead to modest reductions in the frequency and quantity of cannabis use",
+       "sha": "9807a1812ba4fa3a"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Talking therapies can lead to modest cuts in cannabis use, and contingency management may help people with mental health disorders stop",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "lefoll_2024",
+       "where": "Psychological interventions",
+       "quote": "psychological interventions lead to modest reductions in the frequency and quantity of cannabis use",
+       "sha": "9807a1812ba4fa3a"
+      },
+      {
        "label": "F5",
        "ref": "lefoll_2024",
        "where": "Psychological interventions",
-       "quote": "The addition of “booster” sessions after treatment may extend positive treatment effects.",
+       "quote": "individually both MET and CBT lead to modest improvements in cannabis-related outcomes",
+       "sha": "6f64cb0aa2227abd"
+      },
+      {
+       "label": "F1",
+       "ref": "rodas_2022",
+       "where": "3. Results › 3.3. Major Depressive Disorder (MDD)",
+       "quote": "A recent open-label, single-arm study using monetary CM evaluated the cognitive and clinical effects of 28 days of cannabis abstinence among individuals with co-morbid MDD and CUD.",
+       "sha": "f98e42ff33052318"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "It broadly says contingency management may help people with mental health disorders stop, but the review reports abstinence evidence for people with psychotic-spectrum disorders or major depressive disorder. It also repeats the editorially "
+    },
+    {
+     "part": "but",
+     "text": "Continuous abstinence rates are typically low",
+     "rests_on": [
+      {
+       "label": "L2",
+       "ref": "lefoll_2024",
+       "where": "Psychological interventions",
+       "quote": "continuous abstinence rates are typically low, suggesting that although treatments are helpful in reducing cannabis use, they are not optimal for promoting complete abstinence.",
        "sha": "3f491c0dc671249f"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "A systematic review of contingency management found it may help people with mental health disorders",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "rodas_2022",
+       "where": "Abstract",
+       "quote": "Contingency management (CM), a method to specifically reinforce target behavior attainment (e.g., substance use abstinence), may provide an effective intervention in treating cannabis use in patients with a dual diagnosis of CUD and a mental health disorder.",
+       "sha": "a12294d5edc438d6"
+      },
+      {
+       "label": "F1",
+       "ref": "rodas_2022",
+       "where": "3. Results › 3.3. Major Depressive Disorder (MDD)",
+       "quote": "A recent open-label, single-arm study using monetary CM evaluated the cognitive and clinical effects of 28 days of cannabis abstinence among individuals with co-morbid MDD and CUD.",
+       "sha": "f98e42ff33052318"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "It generalizes the finding to people with mental health disorders. The review reports efficacy for cannabis-use reductions and abstinence among people with psychotic-spectrum disorders or major depressive disorder; the editorial note requir"
+    },
+    {
+     "part": "how2",
+     "text": "A 2024 review found psychological interventions lead to modest reductions in cannabis use",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "lefoll_2024",
+       "where": "Abstract",
+       "quote": "This Review will cover this topic from a variety of perspectives, with a particular emphasis on neurobiological findings and innovative treatment approaches that are being pursued.",
+       "sha": "3559539a5357fd33"
+      },
+      {
+       "label": "F5",
+       "ref": "lefoll_2024",
+       "where": "Psychological interventions",
+       "quote": "individually both MET and CBT lead to modest improvements in cannabis-related outcomes",
+       "sha": "6f64cb0aa2227abd"
+      },
+      {
+       "label": "F4",
+       "ref": "lefoll_2024",
+       "where": "Psychological interventions",
+       "quote": "psychological interventions lead to modest reductions in the frequency and quantity of cannabis use",
+       "sha": "9807a1812ba4fa3a"
       }
      ],
      "ok": true
@@ -716,25 +693,25 @@
   {
    "try": 3,
    "part": "how1",
-   "text": "A systematic review of contingency management found it promotes cannabis abstinence in people with mental health disorders.",
+   "text": "A systematic review of contingency management found it may help people with mental health disorders",
    "rests_on": [
     {
      "label": "DA",
      "ref": "rodas_2022",
      "where": "Abstract",
-     "quote": "A systematic search examining the effects of CM on cannabis use, clinical, cognitive, and psychosocial outcomes in patients with a mental health disorder on PubMed, PsycINFO, and EMBASE databases up to November 2022 was performed.",
+     "quote": "Contingency management (CM), a method to specifically reinforce target behavior attainment (e.g., substance use abstinence), may provide an effective intervention in treating cannabis use in patients with a dual diagnosis of CUD and a mental health disorder.",
      "sha": "a12294d5edc438d6"
     },
     {
-     "label": "F2",
+     "label": "F1",
      "ref": "rodas_2022",
-     "where": "4. Discussion",
-     "quote": "With many patients achieving cannabis abstinence during the CM periods within the included studies, we provide strong evidence to support the efficacy of CM to promote cannabis abstinence in dually-diagnosed patients, with improvements in clinical symptomatology and some aspects of cognitive dysfunction in these disorders.",
-     "sha": "0abd93f322d70b6d"
+     "where": "3. Results › 3.3. Major Depressive Disorder (MDD)",
+     "quote": "A recent open-label, single-arm study using monetary CM evaluated the cognitive and clinical effects of 28 days of cannabis abstinence among individuals with co-morbid MDD and CUD.",
+     "sha": "f98e42ff33052318"
     }
    ],
    "by": "the second reader",
-   "said": "The review reports abstinence findings among people with psychotic-spectrum or major depressive disorders; this sentence broadens the finding to people with mental health disorders generally."
+   "said": "It generalizes the finding to people with mental health disorders. The review reports efficacy for cannabis-use reductions and abstinence among people with psychotic-spectrum disorders or major depressive disorder; the editorial note requir"
   }
  ],
  "place": {

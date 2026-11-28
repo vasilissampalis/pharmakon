@@ -17,18 +17,19 @@
  "made": {
   "on": "2026-11-28",
   "models": {
-   "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+   "reader": "gemini:gemini-3.5-flash-lite",
+   "writer": "openrouter:meta-llama/llama-3.3-70b-instruct",
    "checker": "openrouter:openai/gpt-6-luna",
-   "planner": "@cf/openai/gpt-oss-120b",
-   "team": "team B",
-   "reader_2": "groq:openai/gpt-oss-20b",
-   "reader_3": "openrouter:openai/gpt-oss-120b"
+   "planner": "openrouter:openai/gpt-oss-120b",
+   "team": "team R",
+   "reader_2": "openrouter:openai/gpt-oss-120b",
+   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "46090012494",
+  "run": "46137237355",
   "read_by": {
-   "llama-4-scout-17b-16e-instruct": 2,
-   "gemini-3.5-flash-lite": 1
+   "gemini-3.5-flash-lite": 2,
+   "gpt-oss-20b": 1
   },
   "read_seconds": 36,
   "from": {
@@ -36,16 +37,20 @@
    "summaries": 0,
    "official": 1
   },
-  "neurons": 543.5,
-  "seconds": 130
+  "neurons": 0.0,
+  "seconds": 93
  },
- "status": "none",
- "why": "the second reader did not accept the answer",
+ "status": "published",
+ "why": "passed every gate",
  "gates": {
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.5-flash-lite read from there",
   "read": "7 findings kept from 3 sources (2 papers read in full, 1 official pages, 0 papers read in summary); 5 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 1 official page(s), 0 paper(s) read in summary only",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.88, but 0.97, how1 0.90, how2 0.87, how3 0.54",
-  "check": "short: NOT accepted: The transporter-inhibition claim is stated in Drug Science, but the dopamine-reuptake claim is too certain and broad: the review says in vitro binding can prevent reuptake and boost extracellular dopamine. It omits that finding’s scope and ; but: accepted; how1: accepted; how2: NOT accepted: The review says in vitro binding can prevent dopamine reuptake, not that it unconditionally does. It also reports transporter blocking in animals and human brain; the sentence recasts that report as findings from studies and overstates the ; how3: accepted"
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 1 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
+  "told": "the writer was told what the readers said of the last draft that was not accepted: the short answer “Modafinil works primarily through noradrenaline and dopamine transporter inhibition. It prevents dopamine reuptake, boosting extracellular dopamine.”: The transporter-inhibition claim is stated in Drug Science, but the dopamine-reuptake claim is too certain and broad: the review sa",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.72, but 0.98, how1 0.96, how2 0.02, how3 0.53",
+  "check": "every sentence kept was accepted by the second reader (openrouter:openai/gpt-6-luna); 2 How-do-we-know line(s) dropped; it also found that the short answer answers the question and that the But is about that answer",
+  "rules": "nothing against it",
+  "checked": "set beside the checked claims of the same page: nothing against them"
  },
  "sources": [
   {
@@ -103,25 +108,17 @@
     {
      "passage": 1,
      "where": "Abstract",
-     "quote": "In vitro studies have demonstrated that binding of modafinil to the dopamine reuptake pump can prevent the reuptake of dopamine, resulting in a boost in extracellular dopamine.",
-     "text": "In vitro studies have demonstrated that binding of modafinil to the dopamine reuptake pump can prevent the reuptake of dopamine, resulting in a boost in extracellular dopamine.",
+     "quote": "binding of modafinil to the dopamine reuptake pump can prevent the reuptake of dopamine, resulting in a boost in extracellular dopamine.",
+     "text": "Modafinil binds the dopamine reuptake pump, preventing dopamine reuptake and increasing extracellular dopamine.",
      "id": "F1",
      "second_hand": ""
     },
     {
      "passage": 28,
      "where": "Modafinil tolerance",
-     "quote": "First, it has been reported that modafinil blocks dopamine transporter in animals and human brain resulted in inhibition of dopamine reuptake.",
-     "text": "It has been reported that modafinil blocks dopamine transporter in animals and human brain resulted in inhibition of dopamine reuptake.",
+     "quote": "modafinil blocks dopamine transporter in animals and human brain resulted in inhibition of dopamine reuptake.",
+     "text": "Modafinil blocks the dopamine transporter, inhibiting dopamine reuptake in animals and humans.",
      "id": "F2",
-     "second_hand": ""
-    },
-    {
-     "passage": 29,
-     "where": "Modafinil tolerance",
-     "quote": "In addition to dopamine, as one of the main chemicals influencing modafinil tolerance, modafinil can change norepinephrine levels in the brain, but not by adequate to induce addiction or euphoria.",
-     "text": "Modafinil can change norepinephrine levels in the brain, but not by adequate to induce addiction or euphoria.",
-     "id": "F3",
      "second_hand": ""
     }
    ],
@@ -130,7 +127,7 @@
      "passage": 1,
      "where": "Abstract",
      "quote": "The exact mechanism of action of modafinil is unclear.",
-     "text": "The exact mechanism of action of modafinil is unclear.",
+     "text": "The precise mechanism of action of modafinil remains unclear.",
      "id": "L1",
      "second_hand": ""
     }
@@ -188,22 +185,29 @@
     {
      "passage": 32,
      "where": "Conclusion",
-     "quote": "Modafinil elevates extracellular DA concentrations by binding to and disrupting the activity of the cell-membrane DAT.",
-     "text": "Modafinil increases extracellular dopamine concentrations by binding to and disrupting the dopamine transporter.",
+     "quote": "Modafinil elevates extracellular DA concentrations by binding to and disrupting the activity of the cell-membrane DAT. The resulting elevation of extracellular DA, through increased stimulation of dopaminergic and adrenergic receptors, results in wakefulness.",
+     "text": "Modafinil elevates extracellular dopamine concentrations by binding to and disrupting the activity of the cell-membrane dopamine transporter, and the resulting elevation of extracellular dopamine results in wakefulness through increased stimulation of dopaminergic and adrenergic receptors.",
+     "id": "F3",
+     "second_hand": ""
+    },
+    {
+     "passage": 13,
+     "where": "Putative Non-Dopaminergic Effects of Modafinil In vivo may be Secondary to DAT Binding",
+     "quote": "Additionally, modafinil elevates NE concentrations in both the prefrontal cortex and the hypothalamus.",
+     "text": "Modafinil elevates norepinephrine concentrations in both the prefrontal cortex and the hypothalamus.",
      "id": "F4",
      "second_hand": ""
-    }
-   ],
-   "limits": [
+    },
     {
-     "passage": 16,
+     "passage": 15,
      "where": "Putative Non-Dopaminergic Effects of Modafinil In vivo may be Secondary to DAT Binding",
-     "quote": "To do so, one would have to show that each of these hypothesized secondary responses is abolished in DAT-deficient animals and in wild-type animals treated with a panel of DA-receptor antagonists.",
-     "text": "It is not yet known if the secondary responses to modafinil are abolished in DAT-deficient animals and in wild-type animals treated with DA-receptor antagonists.",
-     "id": "L2",
+     "quote": "Modafinil promotes an increase in extracellular glutamate concentrations in the striatum and the hippocampus.",
+     "text": "Modafinil promotes an increase in extracellular glutamate concentrations in the striatum and the hippocampus.",
+     "id": "F5",
      "second_hand": ""
     }
    ],
+   "limits": [],
    "tag": "B"
   },
   {
@@ -254,44 +258,86 @@
     {
      "passage": 3,
      "where": "What is the science of Modafinil?",
-     "quote": "The exact way in which modafinil works in the brain is still relatively unknown as it has a complex mechanism of action.",
-     "text": "The exact way modafinil works in the brain is still relatively unknown.",
-     "id": "F5",
-     "second_hand": ""
-    },
-    {
-     "passage": 3,
-     "where": "What is the science of Modafinil?",
-     "quote": "However, it is known that it acts on a number of neurotransmitters.",
-     "text": "Modafinil acts on a number of neurotransmitters.",
+     "quote": "It has been shown that modafinil works primarily through noradrenaline and dopamine transporter inhibition. It also acts on serotonin, histamine, gamma-aminobutyric acid and glutamate.",
+     "text": "Modafinil works primarily through noradrenaline and dopamine transporter inhibition, and also acts on serotonin, histamine, gamma-aminobutyric acid and glutamate.",
      "id": "F6",
      "second_hand": ""
     },
     {
      "passage": 3,
      "where": "What is the science of Modafinil?",
-     "quote": "It has been shown that modafinil works primarily through noradrenaline and dopamine transporter inhibition.",
-     "text": "Modafinil works primarily through noradrenaline and dopamine transporter inhibition.",
+     "quote": "Increases in the hypothalamic release of histamine also occurs as a result of modafinil’s action on the orexin system.",
+     "text": "Increases in the hypothalamic release of histamine also occurs as a result of modafinil's action on the orexin system.",
      "id": "F7",
      "second_hand": ""
     }
    ],
-   "limits": [
-    {
-     "passage": 3,
-     "where": "What is the science of Modafinil?",
-     "quote": "The exact way in which modafinil works in the brain is still relatively unknown as it has a complex mechanism of action.",
-     "text": "The exact mechanism of modafinil in the brain is still relatively unknown.",
-     "id": "L3",
-     "second_hand": ""
-    }
-   ],
+   "limits": [],
    "tag": "C"
   }
  ],
- "parts": [],
- "complete": false,
- "missing": "possible involvement of orexin or histamine pathways",
+ "parts": [
+  {
+   "part": "short",
+   "text": "Modafinil works primarily through noradrenaline and dopamine transporter inhibition, and also acts on serotonin, histamine, gamma-aminobutyric acid and glutamate. It elevates extracellular dopamine concentrations by binding to the dopamine transporter.",
+   "uses": [
+    "F6",
+    "F3"
+   ],
+   "rests_on": [
+    {
+     "label": "F6",
+     "ref": "drugscience_modafinil",
+     "where": "What is the science of Modafinil?",
+     "quote": "It has been shown that modafinil works primarily through noradrenaline and dopamine transporter inhibition. It also acts on serotonin, histamine, gamma-aminobutyric acid and glutamate.",
+     "sha": "38badaa7e2e47768"
+    },
+    {
+     "label": "F3",
+     "ref": "wisor_2013",
+     "where": "Conclusion",
+     "quote": "Modafinil elevates extracellular DA concentrations by binding to and disrupting the activity of the cell-membrane DAT. The resulting elevation of extracellular DA, through increased stimulation of dopaminergic and adrenergic receptors, results in wakefulness.",
+     "sha": "d8e90ed932598cb1"
+    }
+   ]
+  },
+  {
+   "part": "but",
+   "text": "The precise mechanism of action of modafinil remains unclear.",
+   "uses": [
+    "L1"
+   ],
+   "rests_on": [
+    {
+     "label": "L1",
+     "ref": "hashemian_2020",
+     "where": "Abstract",
+     "quote": "The exact mechanism of action of modafinil is unclear.",
+     "sha": "0ae9b24bf7156379"
+    }
+   ]
+  },
+  {
+   "part": "how1",
+   "text": "Drug Science says modafinil works primarily through noradrenaline and dopamine transporter inhibition, and also acts on serotonin, histamine, gamma-aminobutyric acid and glutamate.",
+   "uses": [
+    "F6"
+   ],
+   "rests_on": [
+    {
+     "label": "F6",
+     "ref": "drugscience_modafinil",
+     "where": "What is the science of Modafinil?",
+     "quote": "It has been shown that modafinil works primarily through noradrenaline and dopamine transporter inhibition. It also acts on serotonin, histamine, gamma-aminobutyric acid and glutamate.",
+     "sha": "38badaa7e2e47768"
+    }
+   ],
+   "quote": "It has been shown that modafinil works primarily through noradrenaline and dopamine transporter inhibition",
+   "quote_ref": "drugscience_modafinil"
+  }
+ ],
+ "complete": true,
+ "missing": "",
  "wanted": [
   {
    "doi": "10.1021/acschemneuro.7b00374",
@@ -317,14 +363,6 @@
  ],
  "person": null,
  "history": [
-  {
-   "on": "2026-11-26",
-   "lane": 19,
-   "status": "waiting",
-   "why": "passed every reader that could be asked, but a further reader of its team could not be (gemini-3.6-flash): it is worked on again by itself when that reader can be asked",
-   "short": "Modafinil blocks the dopamine transporter, which stops dopamine reuptake and raises dopamine levels in the brain. It can also change norepinephrine levels, but not enough to cause addiction or euphoria.",
-   "complete": true
-  },
   {
    "on": "2026-11-26",
    "lane": 19,
@@ -364,6 +402,14 @@
    "why": "no draft passed: the form was wrong: no JSON",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-28",
+   "lane": 19,
+   "status": "none",
+   "why": "the second reader did not accept the answer",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -372,12 +418,12 @@
    "read": "full",
    "kind": "review",
    "at": "10.1080/21556660.2020.1745209",
-   "kept": 3,
+   "kept": 2,
    "thrown": [
     {
      "kind": "text",
-     "text": "A review of the characteristics, function, and use of modafinil in critical care.",
-     "quote": "A review on modafinil: the characteristics, function, and use in critical care (2020), Journal of drug assessment.",
+     "text": "Review paper on modafinil’s use in critical care",
+     "quote": "In critically ill patients, sleep is generally interrupted. ... The exact mechanism of action of modafinil is unclear.",
      "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
     }
    ]
@@ -387,31 +433,25 @@
    "read": "full",
    "kind": "review",
    "at": "10.3389/fneur.2013.00139",
-   "kept": 1,
+   "kept": 3,
    "thrown": [
     {
      "kind": "text",
-     "text": "research paper on modafinil",
-     "quote": "Modafinil as a catecholaminergic agent: empirical evidence and unanswered questions",
+     "text": "empirical evidence and unanswered questions on modafinil as a catecholaminergic agent",
+     "quote": "Modafinil as a catecholaminergic agent: empirical evidence and unanswered questions (2013), Frontiers in neurology.",
      "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
     },
     {
-     "kind": "finding",
-     "text": "Modafinil works in the brain by binding to the dopamine transporter and using catecholaminergic signaling for its wake-promoting effects.",
-     "quote": "Modafinil binds competitively to the cell-membrane dopamine (DA) transporter and is dependent on catecholaminergic (dopaminergic and adrenergic) signaling for its wake-promoting effects.",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+     "kind": "limit",
+     "text": "",
+     "quote": "To do so, one would have to show that each of these hypothesized secondary responses is abolished in DAT-deficient animals and in wild-type animals treated with a panel of DA-receptor antagonists.",
+     "why": "no sentence"
     },
     {
-     "kind": "finding",
-     "text": "Modafinil displaces DA-receptor and DAT ligands in the human brain.",
-     "quote": "Modafinil causes the displacement of the DA-receptor ligand raclopride and the DAT ligand cocaine in the human brain.",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
-    },
-    {
-     "kind": "finding",
-     "text": "Modafinil increases norepinephrine concentrations in the prefrontal cortex and hypothalamus.",
-     "quote": "Modafinil elevates NE concentrations in both the prefrontal cortex and the hypothalamus.",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+     "kind": "limit",
+     "text": "",
+     "quote": "Additional work might clarify the exact basis for these subtle distinctions among wake-promoting agents.",
+     "why": "no sentence"
     }
    ]
   },
@@ -420,52 +460,62 @@
    "read": "page",
    "kind": "official",
    "at": "https://www.drugscience.org.uk/drugs/modafinil",
-   "kept": 3,
-   "thrown": []
+   "kept": 2,
+   "thrown": [
+    {
+     "kind": "limit",
+     "text": "",
+     "quote": "The exact way in which modafinil works in the brain is still relatively unknown as it has a complex mechanism of action.",
+     "why": "no sentence"
+    }
+   ]
   }
  ],
  "plan": {
   "short": [
-   "F7",
-   "F1"
+   "F6",
+   "F3",
+   "F4",
+   "F5"
   ],
   "direct": "",
   "but": [
-   "L3"
+   "L1"
   ],
   "how": [
    [
-    "F7",
-    "F6"
+    "F6",
+    "F7"
    ],
    [
     "F1",
-    "F2",
-    "F3"
+    "F2"
    ],
    [
-    "F4"
+    "F3",
+    "F4",
+    "F5"
    ]
   ],
-  "unanswered": "possible involvement of orexin or histamine pathways"
+  "unanswered": "precise molecular mechanism linking neurotransmitter changes to wakefulness"
  },
  "panel_gap": [],
  "own": {
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.876,
-   "but": 0.9724,
-   "how1": 0.9019,
-   "how2": 0.8699,
-   "how3": 0.5417
+   "short": 0.7199,
+   "but": 0.9824,
+   "how1": 0.9601,
+   "how2": 0.0244,
+   "how3": 0.5283
   },
   "scores_quotes_alone": {
-   "short": 0.7888,
-   "but": 0.882,
-   "how1": 0.8118,
-   "how2": 0.8638,
-   "how3": 0.3977
+   "short": 0.6502,
+   "but": 0.9628,
+   "how1": 0.6604,
+   "how2": 0.1164,
+   "how3": 0.4222
   }
  },
  "tries": [
@@ -475,104 +525,104 @@
    "parts": [
     {
      "part": "short",
-     "text": "Modafinil works primarily through noradrenaline and dopamine transporter inhibition. It boosts extracellular dopamine by preventing reuptake.",
+     "text": "Modafinil works primarily through noradrenaline and dopamine transporter inhibition, and also acts on serotonin, histamine, gamma-aminobutyric acid and glutamate. It can prevent dopamine reuptake, boosting extracellular dopamine.",
      "rests_on": [
       {
-       "label": "F7",
+       "label": "F6",
        "ref": "drugscience_modafinil",
        "where": "What is the science of Modafinil?",
-       "quote": "It has been shown that modafinil works primarily through noradrenaline and dopamine transporter inhibition.",
+       "quote": "It has been shown that modafinil works primarily through noradrenaline and dopamine transporter inhibition. It also acts on serotonin, histamine, gamma-aminobutyric acid and glutamate.",
        "sha": "38badaa7e2e47768"
       },
       {
        "label": "F1",
        "ref": "hashemian_2020",
        "where": "Abstract",
-       "quote": "In vitro studies have demonstrated that binding of modafinil to the dopamine reuptake pump can prevent the reuptake of dopamine, resulting in a boost in extracellular dopamine.",
+       "quote": "binding of modafinil to the dopamine reuptake pump can prevent the reuptake of dopamine, resulting in a boost in extracellular dopamine.",
        "sha": "0ae9b24bf7156379"
       }
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "The first clause is supported, but the second drops the passage’s qualification: in vitro studies showed modafinil can prevent dopamine reuptake and boost extracellular dopamine; the sentence presents this as an unqualified effect."
+     "said": "The dopamine reuptake finding is specifically attributed to in vitro studies; the sentence omits that limitation."
     },
     {
      "part": "but",
-     "text": "The exact mechanism of modafinil in the brain is still relatively unknown.",
+     "text": "The precise mechanism of action of modafinil remains unclear.",
      "rests_on": [
       {
-       "label": "L3",
-       "ref": "drugscience_modafinil",
-       "where": "What is the science of Modafinil?",
-       "quote": "The exact way in which modafinil works in the brain is still relatively unknown as it has a complex mechanism of action.",
-       "sha": "38badaa7e2e47768"
+       "label": "L1",
+       "ref": "hashemian_2020",
+       "where": "Abstract",
+       "quote": "The exact mechanism of action of modafinil is unclear.",
+       "sha": "0ae9b24bf7156379"
       }
      ],
      "ok": true
     },
     {
      "part": "how1",
-     "text": "Drug Science, a UK charity of scientists says modafinil acts on neurotransmitters.",
+     "text": "Drug Science, a UK charity of scientists says modafinil works through noradrenaline and dopamine transporter inhibition.",
      "rests_on": [
-      {
-       "label": "F7",
-       "ref": "drugscience_modafinil",
-       "where": "What is the science of Modafinil?",
-       "quote": "It has been shown that modafinil works primarily through noradrenaline and dopamine transporter inhibition.",
-       "sha": "38badaa7e2e47768"
-      },
       {
        "label": "F6",
        "ref": "drugscience_modafinil",
        "where": "What is the science of Modafinil?",
-       "quote": "However, it is known that it acts on a number of neurotransmitters.",
+       "quote": "It has been shown that modafinil works primarily through noradrenaline and dopamine transporter inhibition. It also acts on serotonin, histamine, gamma-aminobutyric acid and glutamate.",
        "sha": "38badaa7e2e47768"
       }
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "The passage says modafinil acts on neurotransmitters, but does not identify Drug Science as a UK charity of scientists."
+     "said": "The passage supports the transporter-inhibition claim but does not say Drug Science is a UK charity of scientists."
     },
     {
      "part": "how2",
-     "text": "In vitro studies and animal and human brain studies found modafinil prevents dopamine reuptake.",
+     "text": "A 2020 review found modafinil binds the dopamine reuptake pump in animals and humans.",
      "rests_on": [
       {
        "label": "F1",
        "ref": "hashemian_2020",
        "where": "Abstract",
-       "quote": "In vitro studies have demonstrated that binding of modafinil to the dopamine reuptake pump can prevent the reuptake of dopamine, resulting in a boost in extracellular dopamine.",
+       "quote": "binding of modafinil to the dopamine reuptake pump can prevent the reuptake of dopamine, resulting in a boost in extracellular dopamine.",
        "sha": "0ae9b24bf7156379"
       },
       {
        "label": "F2",
        "ref": "hashemian_2020",
        "where": "Modafinil tolerance",
-       "quote": "First, it has been reported that modafinil blocks dopamine transporter in animals and human brain resulted in inhibition of dopamine reuptake.",
+       "quote": "modafinil blocks dopamine transporter in animals and human brain resulted in inhibition of dopamine reuptake.",
        "sha": "4a6599b47480c915"
-      },
-      {
-       "label": "F3",
-       "ref": "hashemian_2020",
-       "where": "Modafinil tolerance",
-       "quote": "In addition to dopamine, as one of the main chemicals influencing modafinil tolerance, modafinil can change norepinephrine levels in the brain, but not by adequate to induce addiction or euphoria.",
-       "sha": "5fa7d0983cdd9a25"
       }
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "The in-vitro finding is that modafinil can prevent reuptake, not an unqualified finding that it does. The other passage says it was reported to block the transporter in animals and human brain, not that animal and human brain studies found "
+     "said": "The sentence merges findings: the review says in vitro studies showed binding, while its tolerance section says transporter blocking was reported in animals and human brain. It changes “human brain” to “humans,” contrary to the editor’s not"
     },
     {
      "part": "how3",
-     "text": "A 2013 review found modafinil increases extracellular dopamine by disrupting the dopamine transporter.",
+     "text": "A 2013 review found modafinil elevates extracellular dopamine, norepinephrine, and glutamate concentrations in the brain.",
      "rests_on": [
+      {
+       "label": "F3",
+       "ref": "wisor_2013",
+       "where": "Conclusion",
+       "quote": "Modafinil elevates extracellular DA concentrations by binding to and disrupting the activity of the cell-membrane DAT. The resulting elevation of extracellular DA, through increased stimulation of dopaminergic and adrenergic receptors, results in wakefulness.",
+       "sha": "d8e90ed932598cb1"
+      },
       {
        "label": "F4",
        "ref": "wisor_2013",
-       "where": "Conclusion",
-       "quote": "Modafinil elevates extracellular DA concentrations by binding to and disrupting the activity of the cell-membrane DAT.",
-       "sha": "d8e90ed932598cb1"
+       "where": "Putative Non-Dopaminergic Effects of Modafinil In vivo may be Secondary to DAT Binding",
+       "quote": "Additionally, modafinil elevates NE concentrations in both the prefrontal cortex and the hypothalamus.",
+       "sha": "b5449f55c9fbe9ea"
+      },
+      {
+       "label": "F5",
+       "ref": "wisor_2013",
+       "where": "Putative Non-Dopaminergic Effects of Modafinil In vivo may be Secondary to DAT Binding",
+       "quote": "Modafinil promotes an increase in extracellular glutamate concentrations in the striatum and the hippocampus.",
+       "sha": "dbe791bb6440ebff"
       }
      ],
      "ok": true
@@ -585,167 +635,50 @@
    "parts": [
     {
      "part": "short",
-     "text": "Modafinil works primarily through noradrenaline and dopamine transporter inhibition. It can prevent dopamine reuptake and boost extracellular dopamine.",
-     "rests_on": [
-      {
-       "label": "F7",
-       "ref": "drugscience_modafinil",
-       "where": "What is the science of Modafinil?",
-       "quote": "It has been shown that modafinil works primarily through noradrenaline and dopamine transporter inhibition.",
-       "sha": "38badaa7e2e47768"
-      },
-      {
-       "label": "F1",
-       "ref": "hashemian_2020",
-       "where": "Abstract",
-       "quote": "In vitro studies have demonstrated that binding of modafinil to the dopamine reuptake pump can prevent the reuptake of dopamine, resulting in a boost in extracellular dopamine.",
-       "sha": "0ae9b24bf7156379"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The review attributes preventing dopamine reuptake and boosting extracellular dopamine to in vitro studies; the sentence omits that qualification, contrary to the editor’s note."
-    },
-    {
-     "part": "but",
-     "text": "The exact mechanism of modafinil in the brain is still relatively unknown.",
-     "rests_on": [
-      {
-       "label": "L3",
-       "ref": "drugscience_modafinil",
-       "where": "What is the science of Modafinil?",
-       "quote": "The exact way in which modafinil works in the brain is still relatively unknown as it has a complex mechanism of action.",
-       "sha": "38badaa7e2e47768"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how1",
-     "text": "Drug Science, a UK charity of scientists says modafinil acts on neurotransmitters.",
+     "text": "Modafinil works primarily through noradrenaline and dopamine transporter inhibition, and also acts on serotonin, histamine, gamma-aminobutyric acid and glutamate. It can prevent dopamine reuptake, boosting extracellular dopamine.",
      "rests_on": [
       {
        "label": "F6",
        "ref": "drugscience_modafinil",
        "where": "What is the science of Modafinil?",
-       "quote": "However, it is known that it acts on a number of neurotransmitters.",
+       "quote": "It has been shown that modafinil works primarily through noradrenaline and dopamine transporter inhibition. It also acts on serotonin, histamine, gamma-aminobutyric acid and glutamate.",
        "sha": "38badaa7e2e47768"
-      },
-      {
-       "label": "F7",
-       "ref": "drugscience_modafinil",
-       "where": "What is the science of Modafinil?",
-       "quote": "It has been shown that modafinil works primarily through noradrenaline and dopamine transporter inhibition.",
-       "sha": "38badaa7e2e47768"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passage says modafinil acts on neurotransmitters, but does not identify Drug Science as a UK charity of scientists."
-    },
-    {
-     "part": "how2",
-     "text": "In vitro studies and animal and human brain studies found modafinil blocks dopamine transporter.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "hashemian_2020",
-       "where": "Abstract",
-       "quote": "In vitro studies have demonstrated that binding of modafinil to the dopamine reuptake pump can prevent the reuptake of dopamine, resulting in a boost in extracellular dopamine.",
-       "sha": "0ae9b24bf7156379"
-      },
-      {
-       "label": "F2",
-       "ref": "hashemian_2020",
-       "where": "Modafinil tolerance",
-       "quote": "First, it has been reported that modafinil blocks dopamine transporter in animals and human brain resulted in inhibition of dopamine reuptake.",
-       "sha": "4a6599b47480c915"
       },
       {
        "label": "F3",
-       "ref": "hashemian_2020",
-       "where": "Modafinil tolerance",
-       "quote": "In addition to dopamine, as one of the main chemicals influencing modafinil tolerance, modafinil can change norepinephrine levels in the brain, but not by adequate to induce addiction or euphoria.",
-       "sha": "5fa7d0983cdd9a25"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The review says in vitro studies showed binding to the dopamine reuptake pump can prevent reuptake; it does not say those studies found that modafinil blocks the transporter. The transporter-blocking finding is attributed to animals and hum"
-    },
-    {
-     "part": "how3",
-     "text": "A review found modafinil elevates extracellular dopamine concentrations by disrupting the dopamine transporter.",
-     "rests_on": [
-      {
-       "label": "F4",
        "ref": "wisor_2013",
        "where": "Conclusion",
-       "quote": "Modafinil elevates extracellular DA concentrations by binding to and disrupting the activity of the cell-membrane DAT.",
+       "quote": "Modafinil elevates extracellular DA concentrations by binding to and disrupting the activity of the cell-membrane DAT. The resulting elevation of extracellular DA, through increased stimulation of dopaminergic and adrenergic receptors, results in wakefulness.",
        "sha": "d8e90ed932598cb1"
       }
      ],
-     "ok": true
-    }
-   ]
-  },
-  {
-   "try": 3,
-   "why": "the last draft: no answer",
-   "parts": [
-    {
-     "part": "short",
-     "text": "Modafinil works primarily through noradrenaline and dopamine transporter inhibition. It prevents dopamine reuptake, boosting extracellular dopamine.",
-     "rests_on": [
-      {
-       "label": "F7",
-       "ref": "drugscience_modafinil",
-       "where": "What is the science of Modafinil?",
-       "quote": "It has been shown that modafinil works primarily through noradrenaline and dopamine transporter inhibition.",
-       "sha": "38badaa7e2e47768"
-      },
-      {
-       "label": "F1",
-       "ref": "hashemian_2020",
-       "where": "Abstract",
-       "quote": "In vitro studies have demonstrated that binding of modafinil to the dopamine reuptake pump can prevent the reuptake of dopamine, resulting in a boost in extracellular dopamine.",
-       "sha": "0ae9b24bf7156379"
-      }
-     ],
      "ok": false,
      "by": "the second reader",
-     "said": "The transporter-inhibition claim is stated in Drug Science, but the dopamine-reuptake claim is too certain and broad: the review says in vitro binding can prevent reuptake and boost extracellular dopamine. It omits that finding’s scope and "
+     "said": "The passages support the transporter-inhibition and neurotransmitter claims, and say modafinil elevates extracellular dopamine by binding to DAT. They do not state that it can prevent dopamine reuptake."
     },
     {
      "part": "but",
-     "text": "The exact mechanism of modafinil in the brain is still relatively unknown.",
+     "text": "The precise mechanism of action of modafinil remains unclear.",
      "rests_on": [
       {
-       "label": "L3",
-       "ref": "drugscience_modafinil",
-       "where": "What is the science of Modafinil?",
-       "quote": "The exact way in which modafinil works in the brain is still relatively unknown as it has a complex mechanism of action.",
-       "sha": "38badaa7e2e47768"
+       "label": "L1",
+       "ref": "hashemian_2020",
+       "where": "Abstract",
+       "quote": "The exact mechanism of action of modafinil is unclear.",
+       "sha": "0ae9b24bf7156379"
       }
      ],
      "ok": true
     },
     {
      "part": "how1",
-     "text": "Drug Science says modafinil acts on neurotransmitters and works through inhibition.",
+     "text": "Drug Science says modafinil works primarily through noradrenaline and dopamine transporter inhibition, and also acts on serotonin, histamine, gamma-aminobutyric acid and glutamate.",
      "rests_on": [
-      {
-       "label": "F7",
-       "ref": "drugscience_modafinil",
-       "where": "What is the science of Modafinil?",
-       "quote": "It has been shown that modafinil works primarily through noradrenaline and dopamine transporter inhibition.",
-       "sha": "38badaa7e2e47768"
-      },
       {
        "label": "F6",
        "ref": "drugscience_modafinil",
        "where": "What is the science of Modafinil?",
-       "quote": "However, it is known that it acts on a number of neurotransmitters.",
+       "quote": "It has been shown that modafinil works primarily through noradrenaline and dopamine transporter inhibition. It also acts on serotonin, histamine, gamma-aminobutyric acid and glutamate.",
        "sha": "38badaa7e2e47768"
       }
      ],
@@ -753,47 +686,56 @@
     },
     {
      "part": "how2",
-     "text": "In vitro studies and studies in animals and human brain found modafinil prevents dopamine reuptake.",
+     "text": "A 2020 review found modafinil binds the dopamine reuptake pump, preventing dopamine reuptake and increasing extracellular dopamine in animals and humans.",
      "rests_on": [
       {
        "label": "F1",
        "ref": "hashemian_2020",
        "where": "Abstract",
-       "quote": "In vitro studies have demonstrated that binding of modafinil to the dopamine reuptake pump can prevent the reuptake of dopamine, resulting in a boost in extracellular dopamine.",
+       "quote": "binding of modafinil to the dopamine reuptake pump can prevent the reuptake of dopamine, resulting in a boost in extracellular dopamine.",
        "sha": "0ae9b24bf7156379"
       },
       {
        "label": "F2",
        "ref": "hashemian_2020",
        "where": "Modafinil tolerance",
-       "quote": "First, it has been reported that modafinil blocks dopamine transporter in animals and human brain resulted in inhibition of dopamine reuptake.",
+       "quote": "modafinil blocks dopamine transporter in animals and human brain resulted in inhibition of dopamine reuptake.",
        "sha": "4a6599b47480c915"
-      },
-      {
-       "label": "F3",
-       "ref": "hashemian_2020",
-       "where": "Modafinil tolerance",
-       "quote": "In addition to dopamine, as one of the main chemicals influencing modafinil tolerance, modafinil can change norepinephrine levels in the brain, but not by adequate to induce addiction or euphoria.",
-       "sha": "5fa7d0983cdd9a25"
       }
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "The review says in vitro binding can prevent dopamine reuptake, not that it unconditionally does. It also reports transporter blocking in animals and human brain; the sentence recasts that report as findings from studies and overstates the "
+     "said": "The review says the reuptake-pump finding came from in vitro studies. Its separate passage says DAT blockade was reported in animals and human brain, but does not say that the resulting increase in extracellular dopamine was found in both a"
     },
     {
      "part": "how3",
-     "text": "A review found modafinil increases extracellular dopamine by disrupting the dopamine transporter.",
+     "text": "A 2013 review found modafinil elevates extracellular dopamine concentrations, norepinephrine concentrations, and glutamate concentrations in the brain.",
      "rests_on": [
+      {
+       "label": "F3",
+       "ref": "wisor_2013",
+       "where": "Conclusion",
+       "quote": "Modafinil elevates extracellular DA concentrations by binding to and disrupting the activity of the cell-membrane DAT. The resulting elevation of extracellular DA, through increased stimulation of dopaminergic and adrenergic receptors, results in wakefulness.",
+       "sha": "d8e90ed932598cb1"
+      },
       {
        "label": "F4",
        "ref": "wisor_2013",
-       "where": "Conclusion",
-       "quote": "Modafinil elevates extracellular DA concentrations by binding to and disrupting the activity of the cell-membrane DAT.",
-       "sha": "d8e90ed932598cb1"
+       "where": "Putative Non-Dopaminergic Effects of Modafinil In vivo may be Secondary to DAT Binding",
+       "quote": "Additionally, modafinil elevates NE concentrations in both the prefrontal cortex and the hypothalamus.",
+       "sha": "b5449f55c9fbe9ea"
+      },
+      {
+       "label": "F5",
+       "ref": "wisor_2013",
+       "where": "Putative Non-Dopaminergic Effects of Modafinil In vivo may be Secondary to DAT Binding",
+       "quote": "Modafinil promotes an increase in extracellular glutamate concentrations in the striatum and the hippocampus.",
+       "sha": "dbe791bb6440ebff"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage reports NE increases in the prefrontal cortex and hypothalamus, and glutamate increases in the striatum and hippocampus, but the sentence does not say in whom those findings were made. The passage provided does not identify the "
     }
    ]
   }
@@ -802,34 +744,61 @@
   {
    "try": 3,
    "part": "how2",
-   "text": "In vitro studies and studies in animals and human brain found modafinil prevents dopamine reuptake.",
+   "text": "A 2013 review found modafinil elevates extracellular dopamine concentrations by binding to the dopamine transporter, and also elevates norepinephrine and glutamate concentrations.",
+   "rests_on": [
+    {
+     "label": "F3",
+     "ref": "wisor_2013",
+     "where": "Conclusion",
+     "quote": "Modafinil elevates extracellular DA concentrations by binding to and disrupting the activity of the cell-membrane DAT. The resulting elevation of extracellular DA, through increased stimulation of dopaminergic and adrenergic receptors, results in wakefulness.",
+     "sha": "d8e90ed932598cb1"
+    },
+    {
+     "label": "F4",
+     "ref": "wisor_2013",
+     "where": "Putative Non-Dopaminergic Effects of Modafinil In vivo may be Secondary to DAT Binding",
+     "quote": "Additionally, modafinil elevates NE concentrations in both the prefrontal cortex and the hypothalamus.",
+     "sha": "b5449f55c9fbe9ea"
+    },
+    {
+     "label": "F5",
+     "ref": "wisor_2013",
+     "where": "Putative Non-Dopaminergic Effects of Modafinil In vivo may be Secondary to DAT Binding",
+     "quote": "Modafinil promotes an increase in extracellular glutamate concentrations in the striatum and the hippocampus.",
+     "sha": "dbe791bb6440ebff"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The passages limit the norepinephrine finding to the prefrontal cortex and hypothalamus, and the glutamate finding to the striatum and hippocampus. The sentence drops those locations and generalizes the findings."
+  },
+  {
+   "try": 3,
+   "part": "how3",
+   "text": "A 2020 review found modafinil binds the dopamine reuptake pump, preventing dopamine reuptake and increasing extracellular dopamine in animals and humans.",
    "rests_on": [
     {
      "label": "F1",
      "ref": "hashemian_2020",
      "where": "Abstract",
-     "quote": "In vitro studies have demonstrated that binding of modafinil to the dopamine reuptake pump can prevent the reuptake of dopamine, resulting in a boost in extracellular dopamine.",
+     "quote": "binding of modafinil to the dopamine reuptake pump can prevent the reuptake of dopamine, resulting in a boost in extracellular dopamine.",
      "sha": "0ae9b24bf7156379"
     },
     {
      "label": "F2",
      "ref": "hashemian_2020",
      "where": "Modafinil tolerance",
-     "quote": "First, it has been reported that modafinil blocks dopamine transporter in animals and human brain resulted in inhibition of dopamine reuptake.",
+     "quote": "modafinil blocks dopamine transporter in animals and human brain resulted in inhibition of dopamine reuptake.",
      "sha": "4a6599b47480c915"
-    },
-    {
-     "label": "F3",
-     "ref": "hashemian_2020",
-     "where": "Modafinil tolerance",
-     "quote": "In addition to dopamine, as one of the main chemicals influencing modafinil tolerance, modafinil can change norepinephrine levels in the brain, but not by adequate to induce addiction or euphoria.",
-     "sha": "5fa7d0983cdd9a25"
     }
    ],
    "by": "the second reader",
-   "said": "The review says in vitro binding can prevent dopamine reuptake, not that it unconditionally does. It also reports transporter blocking in animals and human brain; the sentence recasts that report as findings from studies and overstates the "
+   "said": "The review says the dopamine reuptake finding was demonstrated in vitro, and separately reports transporter blocking in animals and human brain. It does not plainly say that increased extracellular dopamine was found in both animals and hum"
   }
  ],
+ "with_checked": {
+  "differs": [],
+  "same": []
+ },
  "place": {
   "home": "new:Modafinil and armodafinil",
   "also": [],
