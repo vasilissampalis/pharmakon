@@ -20,35 +20,36 @@
   "on": "2026-11-28",
   "models": {
    "reader": "gemini:gemini-3.5-flash-lite",
-   "writer": "openrouter:meta-llama/llama-3.3-70b-instruct",
+   "writer": "groq:qwen/qwen3.8-27b",
    "checker": "openrouter:openai/gpt-6-luna",
-   "planner": "openrouter:openai/gpt-oss-120b",
-   "team": "team R",
-   "reader_2": "openrouter:openai/gpt-oss-120b",
-   "reader_first": "gemini:gemma-4-31b-it"
+   "planner": "groq:openai/gpt-oss-120b",
+   "also1": "gemini:gemini-3.5-flash-lite",
+   "also2": "gemini:gemini-3.6-flash",
+   "team": "team I",
+   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "reader_3": "openrouter:openai/gpt-oss-120b",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "46145991204",
-  "read_by": {
-   "gemini-3.5-flash-lite": 7,
-   "gemini-3.1-flash-lite": 1
-  },
-  "read_seconds": 45,
+  "run": "46146766276",
+  "read_seconds": 48,
   "from": {
    "papers": 2,
    "summaries": 0,
    "official": 0
   },
   "neurons": 0.0,
-  "seconds": 113
+  "seconds": 112
  },
  "status": "none",
- "why": "the second reader did not accept the answer",
+ "why": "no draft passed: not accepted at try 2: a second reader did not accept short (The review says THC-COOH can remain for several days to weeks depending on users’ doses. The sentence omits that dose-dependence qualifier.); but (it is about something else than the short answer (Sentence 1 gives a duration for THC-COOH, which the passage identifies as a marker for cannabis consumption. Sentence 2 limits half-life findings from a different subject—the two pediatric cases—not the review’s THC-COOH duration claim in s)). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
  "gates": {
-  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.5-flash-lite read from there",
   "read": "3 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
   "sources": "1 review(s) or meta-analyses, 0 single studies in people, 1 case report(s) (which do not count), 0 other paper(s), 0 official page(s), 0 paper(s) read in summary only",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.97, but 0.23, how1 0.98",
-  "check": "short: NOT accepted: The passage says THC-COOH can remain in the body; it does not say cannabis itself remains there for that duration.; but: NOT accepted: The dose qualification applies to how long THC-COOH remains in the body, not to how long cannabis itself stays in the system.; how1: accepted"
+  "told": "the writer was told what the readers said of the last draft that was not accepted: the short answer “It can remain in the body for several days to weeks, depending on the doses of the people who use cannabis.”: The passage says THC-COOH can remain in the body; it does not say cannabis itself remains there for that duration. | the But “The answer is limited by the doses of the peop",
+  "mended": "the item that holds a number of a sentence was added to what the sentence rests on: but + F2 (half)",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.67, but 0.79, how1 0.88, how2 0.67",
+  "check": "not accepted at try 2: a second reader did not accept short (The review says THC-COOH can remain for several days to weeks depending on users’ doses. The sentence omits that dose-dependence qualifier.); but (it is about something else than the short answer (Sentence 1 gives a duration for THC-COOH, which the passage identifies as a marker for cannabis consumption. Sentence 2 limits half-life findings from a different subject—the two pediatric cases—not the review’s THC-COOH duration claim in s)). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
+  "rules": "broken at try 3: but: it says what the sources do not say: only a part of each source was read. Let the But be a finding that says for whom or under what conditions the answer holds, or a limit a source states itself"
  },
  "sources": [
   {
@@ -108,7 +109,7 @@
      "passage": 9,
      "where": "Introduction",
      "quote": "While THC-COOH is not a psychoactive compound, it can remain in the body from several days to weeks, depending on the doses of the users.",
-     "text": "The non-psychoactive compound THC-COOH can remain in the body for several days to weeks, depending on the doses of the people who use cannabis.",
+     "text": "While THC-COOH is not a psychoactive compound, it can remain in the body from several days to weeks, depending on the doses of the users.",
      "id": "F1",
      "second_hand": ""
     }
@@ -214,7 +215,7 @@
      "passage": 1,
      "where": "Abstract",
      "quote": "The elimination rate constant (kel) was 0.013 h−1 in Case 1 and 0.031 h−1 in Case 2, corresponding to an half-life (t½) of 52.5 and 21.7 h, respectively.",
-     "text": "The elimination rate constant was 0.013 h-1 in Case 1 and 0.031 h-1 in Case 2, corresponding to a half-life of 52.5 and 21.7 hours, respectively.",
+     "text": "The elimination rate constant was 0.013 h−1 in Case 1 and 0.031 h−1 in Case 2, corresponding to a half-life of 52.5 and 21.7 h, respectively.",
      "id": "F2",
      "second_hand": ""
     },
@@ -222,7 +223,7 @@
      "passage": 16,
      "where": "Discussion",
      "quote": "With regard to elimination kinetics, the estimated half-lives (52.5 h and 21.7 h) indicate markedly prolonged THC persistence compared with adult data, where half-lives typically range from 20 to 30 h.",
-     "text": "The estimated half-lives of 52.5 hours and 21.7 hours indicate markedly prolonged THC persistence compared with adult data, where half-lives typically range from 20 to 30 hours.",
+     "text": "The estimated half-lives of 52.5 h and 21.7 h indicate markedly prolonged THC persistence compared with adult data, where half-lives typically range from 20 to 30 h.",
      "id": "F3",
      "second_hand": ""
     }
@@ -232,7 +233,7 @@
      "passage": 18,
      "where": "Discussion",
      "quote": "The toxicokinetic evaluation is further limited by the small number of samples (four per patient) and the inclusion of only two cases, which precludes broader generalization of the findings.",
-     "text": "The toxicokinetic evaluation is further limited by the small number of samples, which is four per patient, and the inclusion of only two cases, which precludes broader generalization of the findings.",
+     "text": "The toxicokinetic evaluation is limited by the small number of samples and the inclusion of only two cases, which precludes broader generalization of the findings.",
      "id": "L1",
      "second_hand": ""
     }
@@ -242,7 +243,7 @@
  ],
  "parts": [],
  "complete": false,
- "missing": "detection windows for urine, blood, and hair tests",
+ "missing": "specific detection windows for urine, blood, hair",
  "wanted": [
   {
    "doi": "10.1097/00007691-200404000-00020",
@@ -283,6 +284,14 @@
    "why": "no draft passed: broken at try 3: short: it says what the sources do not say: only a part of each source was read. Let the But be a finding that says for whom or under what conditions the answer holds, or a limit a source states itself",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-28",
+   "lane": 19,
+   "status": "none",
+   "why": "the second reader did not accept the answer",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -295,8 +304,8 @@
    "thrown": [
     {
      "kind": "text",
-     "text": "a critical review of cannabinoids in the environment and water systems",
-     "quote": "A critical review on the detection, occurrence, fate, toxicity, and removal of cannabinoids in the water system and the environment (2021), Environmental pollution (Barking, Essex : 1987).",
+     "text": "A critical review on the detection, occurrence, fate, toxicity, and removal of cannabinoids in the water system and the environment",
+     "quote": "A critical review on the detection, occurrence, fate, toxicity, and removal of cannabinoids in the water system and the environment",
      "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
     }
    ]
@@ -372,25 +381,27 @@
     "F1"
    ],
    [
-    "F3",
-    "F2"
+    "F2",
+    "F3"
    ]
   ],
-  "unanswered": "detection windows for urine, blood, and hair tests"
+  "unanswered": "specific detection windows for urine, blood, hair"
  },
  "panel_gap": [],
  "own": {
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.9742,
-   "but": 0.2329,
-   "how1": 0.9798
+   "short": 0.6686,
+   "but": 0.7908,
+   "how1": 0.8762,
+   "how2": 0.6711
   },
   "scores_quotes_alone": {
-   "short": 0.6511,
-   "but": 0.489,
-   "how1": 0.9056
+   "short": 0.4572,
+   "but": 0.1915,
+   "how1": 0.6802,
+   "how2": 0.4837
   }
  },
  "tries": [
@@ -400,7 +411,7 @@
    "parts": [
     {
      "part": "short",
-     "text": "It can stay for several days to weeks, depending on the doses of the people who use cannabis.",
+     "text": "A 2021 review says THC-COOH, a breakdown product, can remain in the body for several days to weeks. Adult data typically show a half-life of 20 to 30 hours.",
      "rests_on": [
       {
        "label": "F1",
@@ -408,15 +419,22 @@
        "where": "Introduction",
        "quote": "While THC-COOH is not a psychoactive compound, it can remain in the body from several days to weeks, depending on the doses of the users.",
        "sha": "89ef1a3f60d891cc"
+      },
+      {
+       "label": "F3",
+       "ref": "cafaro_2025",
+       "where": "Discussion",
+       "quote": "With regard to elimination kinetics, the estimated half-lives (52.5 h and 21.7 h) indicate markedly prolonged THC persistence compared with adult data, where half-lives typically range from 20 to 30 h.",
+       "sha": "91467a81b46304a3"
       }
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "The passage says THC-COOH, a specific compound, can remain in the body for several days to weeks; it does not say that cannabis itself stays that long. This repeats the editor’s warned-against conflation."
+     "said": "The passages do not call THC-COOH a breakdown product, and the half-life passage discusses THC, not THC-COOH."
     },
     {
      "part": "but",
-     "text": "The answer is limited by the small number of samples and only two cases.",
+     "text": "The half-life data come from a case report of two young children, which limits broader generalization to other people.",
      "rests_on": [
       {
        "label": "L1",
@@ -424,15 +442,22 @@
        "where": "Discussion",
        "quote": "The toxicokinetic evaluation is further limited by the small number of samples (four per patient) and the inclusion of only two cases, which precludes broader generalization of the findings.",
        "sha": "80bc6921e5850a2d"
+      },
+      {
+       "label": "F2",
+       "ref": "cafaro_2025",
+       "where": "Abstract",
+       "quote": "The elimination rate constant (kel) was 0.013 h−1 in Case 1 and 0.031 h−1 in Case 2, corresponding to an half-life (t½) of 52.5 and 21.7 h, respectively.",
+       "sha": "d661225744fada1f"
       }
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "it is about something else than the short answer (Sentence 1 concerns THC-COOH, not how long cannabis itself can be found in the body. Sentence 2 accurately describes a limitation of the pediatric toxicokinetic evaluation, but that limitation is about its own cases and does not qualify sen)"
+     "said": "it is about something else than the short answer (Sentence 1 directly gives a duration for THC-COOH based on the review. Sentence 2 limits findings from the pediatric cases, not the review’s duration claim or the adult half-life claim in sentence 1.)"
     },
     {
      "part": "how1",
-     "text": "A 2021 review found that the non-psychoactive compound THC-COOH can remain in the body.",
+     "text": "A 2021 review of environmental and body data notes that THC-COOH can stay in the body for several days to weeks.",
      "rests_on": [
       {
        "label": "F1",
@@ -446,7 +471,7 @@
     },
     {
      "part": "how2",
-     "text": "A 2025 case report studied two young children and found varying half-lives.",
+     "text": "A 2025 case report of two young children found half-lives of 52.5 and 21.7 hours, compared to 20 to 30 hours in adults.",
      "rests_on": [
       {
        "label": "F2",
@@ -465,7 +490,7 @@
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "The source is a case series, not a case report. Also, as the editor warns, findings about half-lives in two young children do not answer how long cannabis can be found in a person’s body."
+     "said": "The source is a case series, and, as the editor warns, half-life data are not an answer to how long cannabis can be found in the body."
     }
    ]
   },
@@ -475,7 +500,53 @@
    "parts": [
     {
      "part": "short",
-     "text": "It can stay in the body for several days to weeks, depending on the doses of the people who use cannabis.",
+     "text": "A 2021 review says THC-COOH can remain in the body for several days to weeks. Adult data show THC half-lives typically range from 20 to 30 hours.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "how_2021",
+       "where": "Introduction",
+       "quote": "While THC-COOH is not a psychoactive compound, it can remain in the body from several days to weeks, depending on the doses of the users.",
+       "sha": "89ef1a3f60d891cc"
+      },
+      {
+       "label": "F3",
+       "ref": "cafaro_2025",
+       "where": "Discussion",
+       "quote": "With regard to elimination kinetics, the estimated half-lives (52.5 h and 21.7 h) indicate markedly prolonged THC persistence compared with adult data, where half-lives typically range from 20 to 30 h.",
+       "sha": "91467a81b46304a3"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The review says THC-COOH can remain for several days to weeks depending on users’ doses. The sentence omits that dose-dependence qualifier."
+    },
+    {
+     "part": "but",
+     "text": "The half-life data come from only two young children, which prevents broader generalization of the findings.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "cafaro_2025",
+       "where": "Discussion",
+       "quote": "The toxicokinetic evaluation is further limited by the small number of samples (four per patient) and the inclusion of only two cases, which precludes broader generalization of the findings.",
+       "sha": "80bc6921e5850a2d"
+      },
+      {
+       "label": "F2",
+       "ref": "cafaro_2025",
+       "where": "Abstract",
+       "quote": "The elimination rate constant (kel) was 0.013 h−1 in Case 1 and 0.031 h−1 in Case 2, corresponding to an half-life (t½) of 52.5 and 21.7 h, respectively.",
+       "sha": "d661225744fada1f"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer (Sentence 1 gives a duration for THC-COOH, which the passage identifies as a marker for cannabis consumption. Sentence 2 limits half-life findings from a different subject—the two pediatric cases—not the review’s THC-COOH duration claim in s)"
+    },
+    {
+     "part": "how1",
+     "text": "A 2021 review of cannabinoids in water and the environment notes THC-COOH can stay in the body for days to weeks.",
      "rests_on": [
       {
        "label": "F1",
@@ -487,27 +558,40 @@
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "The passage says THC-COOH can remain in the body for several days to weeks; it does not say cannabis itself stays that long. The sentence leaves out the specific compound."
+     "said": "The passage qualifies the duration as depending on users’ doses; the sentence leaves out that narrowing detail."
     },
     {
-     "part": "but",
-     "text": "The answer is limited by the small number of samples and only two cases.",
+     "part": "how2",
+     "text": "A 2025 case report of two young children found THC half-lives of 52.5 and 21.7 hours, compared to 20 to 30 hours in adults.",
      "rests_on": [
       {
-       "label": "L1",
+       "label": "F2",
+       "ref": "cafaro_2025",
+       "where": "Abstract",
+       "quote": "The elimination rate constant (kel) was 0.013 h−1 in Case 1 and 0.031 h−1 in Case 2, corresponding to an half-life (t½) of 52.5 and 21.7 h, respectively.",
+       "sha": "d661225744fada1f"
+      },
+      {
+       "label": "F3",
        "ref": "cafaro_2025",
        "where": "Discussion",
-       "quote": "The toxicokinetic evaluation is further limited by the small number of samples (four per patient) and the inclusion of only two cases, which precludes broader generalization of the findings.",
-       "sha": "80bc6921e5850a2d"
+       "quote": "With regard to elimination kinetics, the estimated half-lives (52.5 h and 21.7 h) indicate markedly prolonged THC persistence compared with adult data, where half-lives typically range from 20 to 30 h.",
+       "sha": "91467a81b46304a3"
       }
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "The passage limits the toxicokinetic evaluation of two pediatric cases, not the general answer about how long cannabis can be found in the body."
-    },
+     "said": "The editor’s note rules out using this two-child case series’ half-life estimates as an answer to how long cannabis stays in the body; a half-life is not the duration the drug stays."
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "a rule was broken: written again",
+   "parts": [
     {
-     "part": "how1",
-     "text": "A 2021 review found that the non-psychoactive compound THC-COOH can remain in the body for several days to weeks.",
+     "part": "short",
+     "text": "A 2021 review says THC-COOH, a marker for cannabis use, can remain in the body for several days to weeks, depending on the doses of the people who use it.",
      "rests_on": [
       {
        "label": "F1",
@@ -518,32 +602,10 @@
       }
      ],
      "ok": true
-    }
-   ]
-  },
-  {
-   "try": 3,
-   "why": "the last draft: no answer",
-   "parts": [
-    {
-     "part": "short",
-     "text": "It can remain in the body for several days to weeks, depending on the doses of the people who use cannabis.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "how_2021",
-       "where": "Introduction",
-       "quote": "While THC-COOH is not a psychoactive compound, it can remain in the body from several days to weeks, depending on the doses of the users.",
-       "sha": "89ef1a3f60d891cc"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passage says THC-COOH can remain in the body; it does not say cannabis itself remains there for that duration."
     },
     {
      "part": "but",
-     "text": "The answer is limited by the doses of the people who use cannabis.",
+     "text": "The review does not say how long the drug itself stays, only how long this marker can be found.",
      "rests_on": [
       {
        "label": "F1",
@@ -554,12 +616,12 @@
       }
      ],
      "ok": false,
-     "by": "the second reader",
-     "said": "The dose qualification applies to how long THC-COOH remains in the body, not to how long cannabis itself stays in the system."
+     "by": "a rule",
+     "said": "a rule: it says what the sources do not say: only a part of each source was read. Let the But be a finding that says for whom or under what conditions the answer holds, or a limit a source states itself"
     },
     {
      "part": "how1",
-     "text": "A 2021 review found that the non-psychoactive compound THC-COOH can remain in the body.",
+     "text": "A 2021 review of research says THC-COOH is not psychoactive but can stay in the body for days to weeks based on dose.",
      "rests_on": [
       {
        "label": "F1",
@@ -567,6 +629,27 @@
        "where": "Introduction",
        "quote": "While THC-COOH is not a psychoactive compound, it can remain in the body from several days to weeks, depending on the doses of the users.",
        "sha": "89ef1a3f60d891cc"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A 2025 report on two young children found THC half-lives of 52.5 and 21.7 hours, which is longer than the 20 to 30 hours typical in adults.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "cafaro_2025",
+       "where": "Abstract",
+       "quote": "The elimination rate constant (kel) was 0.013 h−1 in Case 1 and 0.031 h−1 in Case 2, corresponding to an half-life (t½) of 52.5 and 21.7 h, respectively.",
+       "sha": "d661225744fada1f"
+      },
+      {
+       "label": "F3",
+       "ref": "cafaro_2025",
+       "where": "Discussion",
+       "quote": "With regard to elimination kinetics, the estimated half-lives (52.5 h and 21.7 h) indicate markedly prolonged THC persistence compared with adult data, where half-lives typically range from 20 to 30 h.",
+       "sha": "91467a81b46304a3"
       }
      ],
      "ok": true
