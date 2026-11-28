@@ -20,42 +20,127 @@
   "on": "2026-11-28",
   "models": {
    "reader": "gemini:gemini-3.1-flash-lite",
-   "writer": "openrouter:meta-llama/llama-3.3-70b-instruct",
+   "writer": "gemini:gemma-4-26b-a4b-it",
    "checker": "openrouter:openai/gpt-6-luna",
-   "planner": "openrouter:openai/gpt-oss-120b",
-   "team": "team R",
-   "reader_2": "openrouter:openai/gpt-oss-120b",
+   "planner": "gemini:gemma-4-31b-it",
+   "also1": "gemini:gemini-3.5-flash-lite",
+   "also2": "gemini:gemini-3.6-flash",
+   "team": "team K",
+   "reader_2": "gemini:gemini-3.5-flash-lite",
+   "reader_3": "openrouter:openai/gpt-oss-120b",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
    "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "46144047930",
-  "read_by": {
-   "gemini-3.1-flash-lite": 1,
-   "gemini-3.5-flash-lite": 1
-  },
-  "read_seconds": 100,
+  "run": "46144983379",
+  "read_seconds": 45,
   "from": {
    "papers": 2,
    "summaries": 0,
-   "official": 0
+   "official": 2
   },
   "neurons": 0.0,
-  "seconds": 154
+  "seconds": 287
  },
  "status": "none",
- "why": "about dying: written, but it does not meet the stricter bar for such an answer (no further reader read it): no answer yet",
+ "why": "no draft passed: not accepted at try 2: a second reader did not accept but (it is about something else than the short answer (Sentence 1 directly describes what an MDMA overdose or bad reaction can look like. Sentence 2 concerns how other substance use complicates research interpretation, not a limit on the symptoms described in sentence 1.)). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
  "gates": {
   "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.1-flash-lite read from there",
-  "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "6 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 0 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
-  "told": "the writer was told what the readers said of the last draft that was not accepted: the But “There is no way to know what is inside an ecstasy pill or MDMA powder before taking it.”: it is about something else than the short answer (All sentences are fully reflected in their respective passages; sentence 1 directly describes overdose symptoms, while sentence 2 addresses a separate ",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.24, but 0.99, how1 0.96, how2 0.82",
-  "check": "every sentence kept was accepted by the second reader (openrouter:openai/gpt-6-luna); it also found that the short answer answers the question and that the But is about that answer",
-  "rules": "nothing against it",
-  "checked": "set beside the checked claims of the same page: nothing against them",
-  "stakes": "about dying: the stricter bar for such an answer: NOT met: no further reader read it"
+  "read": "11 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 2 official page(s), 0 paper(s) read in summary only",
+  "told": "the writer was told what the readers said of the last draft that was not accepted: the short answer “MDMA overdose or bad reaction can cause agitation, liver failure, seizures, coma, and death. Collapse, convulsions, or coma may be caused by MDMA.”: The passages list agitation and liver failure as MDMA adverse effects, but say seizures, coma, and death may follow hyponatraemia; th",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.13, but 0.98, how1 0.65, how2 0.82, how3 0.89, how4 0.89",
+  "check": "not accepted at try 2: a second reader did not accept but (it is about something else than the short answer (Sentence 1 directly describes what an MDMA overdose or bad reaction can look like. Sentence 2 concerns how other substance use complicates research interpretation, not a limit on the symptoms described in sentence 1.)). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
+  "writer": "try 3: no JSON (how the reply ended: length; reasoned 0 characters, wrote 9221)"
  },
  "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "meyer_2013",
+    "type": "article-journal",
+    "title": "3,4-methylenedioxymethamphetamine (MDMA): Current perspectives",
+    "author": [
+     {
+      "family": "Meyer",
+      "given": "Jerry"
+     }
+    ],
+    "container-title": "Substance Abuse and Rehabilitation",
+    "issued": {
+     "date-parts": [
+      [
+       2013
+      ]
+     ]
+    },
+    "DOI": "10.2147/sar.s37258",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-28",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-28"
+     }
+    },
+    "page": "83",
+    "PMCID": "PMC3931692"
+   },
+   "doi": "10.2147/sar.s37258",
+   "pmcid": "PMC3931692",
+   "title": "3,4-methylenedioxymethamphetamine (MDMA): current perspectives",
+   "year": 2013,
+   "journal": "Substance abuse and rehabilitation",
+   "kind": "review",
+   "people": true,
+   "near": 0.701,
+   "money": [],
+   "design": {
+    "passage": 22,
+    "where": "Effects of repeated or high-dose MDMA/ecstasy use",
+    "quote": "This section will review our current knowledge regarding the adverse effects of heavy exposure to MDMA produced either by many episodes of use or by binge use.",
+    "text": "A review of current perspectives on MDMA/ecstasy use and its effects."
+   },
+   "findings": [
+    {
+     "passage": 13,
+     "where": "Acute effects and aftereffects of MDMA/ecstasy use › Acute subjective and physiological effects",
+     "quote": "Along with the various positive effects associated with ecstasy, users report a number of adverse reactions, such as nausea, headache, agitation, tachycardia, dry mouth, bruxism, and trismus.",
+     "text": "People who use ecstasy report adverse reactions including nausea, headache, agitation, tachycardia, dry mouth, bruxism, and trismus.",
+     "id": "F1",
+     "second_hand": ""
+    },
+    {
+     "passage": 13,
+     "where": "Acute effects and aftereffects of MDMA/ecstasy use › Acute subjective and physiological effects",
+     "quote": "Increased anxiety may also be experienced, particularly in inexperienced users.",
+     "text": "People who use ecstasy may experience increased anxiety, especially if they are inexperienced.",
+     "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "some common adverse reactions are nausea, headache, tachycardia, bruxism, and trismus.",
+     "text": "Common adverse reactions to ecstasy include nausea, headache, tachycardia, bruxism, and trismus.",
+     "id": "F3",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "Most ecstasy users consume other substances as well, which complicates the interpretation of research in this field.",
+     "text": "Research interpretation is complicated because most people who use ecstasy also consume other substances.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "A"
+  },
   {
    "read": "full",
    "ref": {
@@ -125,7 +210,7 @@
      "where": "INTRODUCTION",
      "quote": "Besides its psychostimulant effects, adverse effects of MDMA include agitation, liver failure, rhabdomyolysis, dysrhythmias, myocardial infarction, disseminated intravascular coagulation, hyperthermia and hyponatraemia",
      "text": "Adverse effects of MDMA include agitation, liver failure, rhabdomyolysis, dysrhythmias, myocardial infarction, disseminated intravascular coagulation, hyperthermia and hyponatraemia.",
-     "id": "F1",
+     "id": "F4",
      "second_hand": ""
     },
     {
@@ -133,7 +218,7 @@
      "where": "INTRODUCTION",
      "quote": "hyponatraemia, with the latter condition not infrequently progressing to seizures, coma, cerebral oedema and ultimately death",
      "text": "Hyponatraemia can progress to seizures, coma, cerebral oedema and death.",
-     "id": "F2",
+     "id": "F5",
      "second_hand": ""
     },
     {
@@ -141,7 +226,7 @@
      "where": "CLINICAL PRESENTATION",
      "quote": "the clinical report describing the lowest serum sodium level following MDMA ingestion concerns a 26‐year‐old female who presented with severe hyponatraemia, seizures and pulmonary oedema.",
      "text": "One clinical report of a 26-year-old female following MDMA ingestion involved severe hyponatraemia, seizures and pulmonary oedema.",
-     "id": "F3",
+     "id": "F6",
      "second_hand": ""
     }
    ],
@@ -151,220 +236,163 @@
      "where": "CLINICAL PRESENTATION",
      "quote": "This case highlights the variability in clinical outcomes.",
      "text": "Clinical outcomes following MDMA ingestion are variable.",
-     "id": "L1",
+     "id": "L2",
      "second_hand": ""
     }
    ],
-   "tag": "A"
+   "tag": "B"
   },
   {
-   "read": "full",
+   "read": "page",
    "ref": {
-    "id": "devlin_2008",
-    "type": "article-journal",
-    "title": "Clinical review: Major consequences of illicit drug consumption",
+    "id": "adf_mdma",
+    "type": "webpage",
+    "title": "MDMA (ecstasy)",
     "author": [
      {
-      "family": "Devlin",
-      "given": "Robert J"
-     },
-     {
-      "family": "Henry",
-      "given": "John A"
+      "literal": "Alcohol and Drug Foundation"
      }
     ],
-    "container-title": "Critical Care",
     "issued": {
      "date-parts": [
       [
-       2008
+       2025,
+       9,
+       17
       ]
      ]
     },
-    "DOI": "10.1186/cc6166",
-    "verification": {
-     "status": "metadata-verified",
-     "metadata_source": "crossref",
-     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
-     "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-28",
-     "retraction_check": {
-      "status": "clear",
-      "checked_on": "2026-11-28"
-     }
+    "URL": "https://adf.org.au/drug-facts/mdma/",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       28
+      ]
+     ]
     },
-    "volume": "12",
-    "issue": "1",
-    "number": "202",
-    "PMCID": "PMC2374627"
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-28"
+    }
    },
-   "doi": "10.1186/cc6166",
-   "pmcid": "PMC2374627",
-   "title": "Clinical review: Major consequences of illicit drug consumption",
-   "year": 2008,
-   "journal": "Critical care (London, England)",
-   "kind": "review",
-   "people": false,
-   "near": 0.678,
-   "money": [
-    "The authors declare that they have no competing interests."
-   ],
-   "design": {
-    "passage": 1,
-    "where": "Abstract",
-    "quote": "Here, we review the problems associated with the different drugs from a systems-based viewpoint.",
-    "text": "A clinical review of problems associated with different illicit drugs from a systems-based viewpoint."
-   },
+   "title": "MDMA (ecstasy)",
+   "year": 2025,
+   "kind": "official",
+   "people": true,
+   "near": 0.76,
+   "name": "Alcohol and Drug Foundation",
+   "short": "Australia's Alcohol and Drug Foundation",
+   "tier": 2,
+   "address": "https://adf.org.au/drug-facts/mdma/",
+   "money": [],
+   "label": false,
+   "design": null,
    "findings": [
     {
-     "passage": 1,
-     "where": "Abstract",
-     "quote": "MDMA is a major cause of acute severe hyponatraemia and also has been linked with hepatic syndromes.",
-     "text": "MDMA is a major cause of acute severe hyponatraemia and has also been linked with hepatic syndromes.",
-     "id": "F4",
+     "passage": 11,
+     "where": "Overdose",
+     "quote": "Signs of an MDMA overdose can include: passed out and non-responsive; spasms or seizures; heart attack symptoms such as: difficulty breathing; sharp pain/discomfort in chest, arm, shoulder, back, neck, or jaw; severe agitation, confusion, or panic; racing heartbeat; very high body temperature (hyperthermia); hot, flushed (red), or sweaty skin; very large pupils.",
+     "text": "Signs of an MDMA overdose include being passed out and non-responsive, spasms or seizures, heart attack symptoms, severe agitation, confusion or panic, a racing heartbeat, very high body temperature, hot, flushed or sweaty skin, and very large pupils.",
+     "id": "F7",
      "second_hand": ""
     },
     {
-     "passage": 1,
-     "where": "Abstract",
-     "quote": "Collapse, convulsions, or coma may be caused in different circumstances by opioids, MDMA, or gamma hydroxybutyrate",
-     "text": "Collapse, convulsions, or coma may be caused in different circumstances by MDMA.",
-     "id": "F5",
-     "second_hand": ""
-    },
-    {
-     "passage": 9,
-     "where": "Cardiovascular complications",
-     "quote": "Other substances associated with cardiac arrhythmias and sudden death include 3,4-methylenedioxymethamphetamine (MDMA or 'ecstasy'), amphetamines, and cannabis, thought to be linked to sympathetic hyperstimulation in the case of MDMA and amphetamines.",
-     "text": "MDMA is associated with cardiac arrhythmias and sudden death, which is thought to be linked to sympathetic hyperstimulation.",
-     "id": "F6",
+     "passage": 7,
+     "where": "Effects of MDMA / Effects",
+     "quote": "If you take a large amount or have a strong batch of MDMA, you may also experience: floating sensations; perceptual changes, such as visual and auditory hallucinations; out-of-character or irrational behaviour; anxiety; irritability, paranoia and aggression; vomiting; high body temperature; racing heartbeat; convulsions.",
+     "text": "Taking a large amount or a strong batch of MDMA may cause floating sensations, hallucinations, irrational behavior, anxiety, irritability, paranoia, aggression, vomiting, high body temperature, a racing heartbeat, and convulsions.",
+     "id": "F8",
      "second_hand": ""
     }
    ],
    "limits": [],
-   "tag": "B"
+   "tag": "C"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "healthcanada_ecstasy",
+    "type": "webpage",
+    "title": "MDMA",
+    "author": [
+     {
+      "literal": "Health Canada"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      [
+       2023,
+       2,
+       8
+      ]
+     ]
+    },
+    "URL": "https://www.canada.ca/en/health-canada/services/substance-use/controlled-illegal-drugs/ecstasy.html",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       28
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-28"
+    },
+    "publisher": "Government of Canada"
+   },
+   "title": "MDMA",
+   "year": 2023,
+   "kind": "official",
+   "people": true,
+   "near": 0.726,
+   "name": "Health Canada",
+   "short": "Health Canada",
+   "tier": 1,
+   "address": "https://www.canada.ca/en/health-canada/services/substance-use/controlled-illegal-drugs/ecstasy.html",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 1,
+     "where": "Top of the page",
+     "quote": "It is even possible to die from complications that arise from using it.",
+     "text": "It is possible to die from complications that arise from using MDMA.",
+     "id": "F9",
+     "second_hand": ""
+    },
+    {
+     "passage": 5,
+     "where": "Short-term effects of MDMA / Mental effects",
+     "quote": "However, when the pleasurable effects start to wear off you can experience: fatigue; depression; confusion or paranoia; trouble concentrating; panic attacks or anxiety; delirium or hallucinations",
+     "text": "When the pleasurable effects of MDMA wear off, people who use MDMA can experience fatigue, depression, confusion, paranoia, trouble concentrating, panic attacks, anxiety, delirium, or hallucinations.",
+     "id": "F10",
+     "second_hand": ""
+    },
+    {
+     "passage": 7,
+     "where": "Long-term effects of MDMA / Mental effects",
+     "quote": "During or after taking MDMA you may experience: paranoia; depression; hallucinations; sleeplessness; mental confusion Delusions and other psychotic symptoms may last for several days.",
+     "text": "People who use MDMA may experience paranoia, depression, hallucinations, sleeplessness, and mental confusion, with delusions and psychotic symptoms potentially lasting for several days.",
+     "id": "F11",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "D"
   }
  ],
- "parts": [
-  {
-   "part": "short",
-   "text": "Collapse, convulsions, or coma may be caused by MDMA. Hyponatraemia can progress to seizures, coma, cerebral oedema and death.",
-   "uses": [
-    "F5",
-    "F1",
-    "F6"
-   ],
-   "rests_on": [
-    {
-     "label": "F5",
-     "ref": "devlin_2008",
-     "where": "Abstract",
-     "quote": "Collapse, convulsions, or coma may be caused in different circumstances by opioids, MDMA, or gamma hydroxybutyrate",
-     "sha": "13d0e40cc3197387"
-    },
-    {
-     "label": "F1",
-     "ref": "garcia_2026",
-     "where": "INTRODUCTION",
-     "quote": "Besides its psychostimulant effects, adverse effects of MDMA include agitation, liver failure, rhabdomyolysis, dysrhythmias, myocardial infarction, disseminated intravascular coagulation, hyperthermia and hyponatraemia",
-     "sha": "3533443a671fcba0"
-    },
-    {
-     "label": "F6",
-     "ref": "devlin_2008",
-     "where": "Cardiovascular complications",
-     "quote": "Other substances associated with cardiac arrhythmias and sudden death include 3,4-methylenedioxymethamphetamine (MDMA or 'ecstasy'), amphetamines, and cannabis, thought to be linked to sympathetic hyperstimulation in the case of MDMA and amphetamines.",
-     "sha": "1d9ac7664de058c3"
-    }
-   ]
-  },
-  {
-   "part": "but",
-   "text": "Clinical outcomes following MDMA ingestion are variable.",
-   "uses": [
-    "L1"
-   ],
-   "rests_on": [
-    {
-     "label": "L1",
-     "ref": "garcia_2026",
-     "where": "CLINICAL PRESENTATION",
-     "quote": "This case highlights the variability in clinical outcomes.",
-     "sha": "eb4e68469a04350c"
-    }
-   ]
-  },
-  {
-   "part": "how1",
-   "text": "A review of the clinical manifestations and prevalence of MDMA-induced hyponatraemia found adverse effects include agitation, liver failure, and hyperthermia.",
-   "uses": [
-    "DA",
-    "F1",
-    "F2"
-   ],
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "garcia_2026",
-     "where": "Abstract",
-     "quote": "The present review outlines the main clinical manifestations and prevalence of MDMA-induced hyponatraemia, its pathophysiological mechanisms and the therapeutical approaches to correct this electrolyte imbalance.",
-     "sha": "9104848812df2e61"
-    },
-    {
-     "label": "F1",
-     "ref": "garcia_2026",
-     "where": "INTRODUCTION",
-     "quote": "Besides its psychostimulant effects, adverse effects of MDMA include agitation, liver failure, rhabdomyolysis, dysrhythmias, myocardial infarction, disseminated intravascular coagulation, hyperthermia and hyponatraemia",
-     "sha": "3533443a671fcba0"
-    },
-    {
-     "label": "F2",
-     "ref": "garcia_2026",
-     "where": "INTRODUCTION",
-     "quote": "hyponatraemia, with the latter condition not infrequently progressing to seizures, coma, cerebral oedema and ultimately death",
-     "sha": "3533443a671fcba0"
-    }
-   ],
-   "quote": "Besides its psychostimulant effects, adverse effects of MDMA include agitation, liver failure, rhabdomyolysis, dysrhythmias",
-   "quote_ref": "garcia_2026"
-  },
-  {
-   "part": "how2",
-   "text": "A clinical review of problems associated with different illicit drugs found MDMA is associated with cardiac arrhythmias and sudden death.",
-   "uses": [
-    "DB",
-    "F5",
-    "F6"
-   ],
-   "rests_on": [
-    {
-     "label": "DB",
-     "ref": "devlin_2008",
-     "where": "Abstract",
-     "quote": "Here, we review the problems associated with the different drugs from a systems-based viewpoint.",
-     "sha": "13d0e40cc3197387"
-    },
-    {
-     "label": "F5",
-     "ref": "devlin_2008",
-     "where": "Abstract",
-     "quote": "Collapse, convulsions, or coma may be caused in different circumstances by opioids, MDMA, or gamma hydroxybutyrate",
-     "sha": "13d0e40cc3197387"
-    },
-    {
-     "label": "F6",
-     "ref": "devlin_2008",
-     "where": "Cardiovascular complications",
-     "quote": "Other substances associated with cardiac arrhythmias and sudden death include 3,4-methylenedioxymethamphetamine (MDMA or 'ecstasy'), amphetamines, and cannabis, thought to be linked to sympathetic hyperstimulation in the case of MDMA and amphetamines.",
-     "sha": "1d9ac7664de058c3"
-    }
-   ],
-   "quote": "convulsions, or coma may be caused in different circumstances by opioids, MDMA, or gamma hydroxybutyrate",
-   "quote_ref": "devlin_2008"
-  }
- ],
+ "parts": [],
  "complete": false,
- "missing": "a paper that stands nearer the question could not be read",
+ "missing": "",
  "wanted": [
   {
    "doi": "10.12968/bjon.2018.27.11.616",
@@ -405,6 +433,14 @@
    "why": "about overdose or an emergency: written, but it does not meet the stricter bar for such an answer (its short answer rests on no official body's page and on no review read in full; no further reader read it): no answer yet",
    "short": "An MDMA overdose can look like passing out, seizures, heart attack symptoms, severe agitation, racing heartbeat, high body temperature, and very large pupils.",
    "complete": true
+  },
+  {
+   "on": "2026-11-28",
+   "lane": 19,
+   "status": "none",
+   "why": "about dying: written, but it does not meet the stricter bar for such an answer (no further reader read it): no answer yet",
+   "short": "Collapse, convulsions, or coma may be caused by MDMA. Hyponatraemia can progress to seizures, coma, cerebral oedema and death.",
+   "complete": false
   }
  ],
  "looked": [
@@ -413,9 +449,15 @@
    "read": "full",
    "kind": "review",
    "at": "10.2147/sar.s37258",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 3,
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "Doses of MDMA higher than 180 mg produce only adverse responses in people who use ecstasy.",
+     "quote": "In fact, MDMA doses greater than 180 mg were found to produce only adverse responses in users.",
+     "why": "it holds an amount or a time between uses"
+    }
+   ]
   },
   {
    "title": "Rare but relevant: MDMA and hyponatraemia",
@@ -426,19 +468,28 @@
    "thrown": []
   },
   {
-   "title": "Clinical review: Major consequences of illicit drug consumption",
-   "read": "full",
-   "kind": "review",
-   "at": "10.1186/cc6166",
+   "title": "MDMA (ecstasy)",
+   "read": "page",
+   "kind": "official",
+   "at": "https://adf.org.au/drug-facts/mdma/",
+   "kept": 2,
+   "thrown": []
+  },
+  {
+   "title": "MDMA",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.canada.ca/en/health-canada/services/substance-use/controlled-illegal-drugs/ecstasy.html",
    "kept": 3,
    "thrown": []
   }
  ],
  "plan": {
   "short": [
-   "F5",
-   "F1",
-   "F6"
+   "F7",
+   "F8",
+   "F4",
+   "F5"
   ],
   "direct": "",
   "but": [
@@ -446,14 +497,18 @@
   ],
   "how": [
    [
-    "DA",
-    "F1",
-    "F2"
+    "F7",
+    "F8"
    ],
    [
     "DB",
-    "F5",
-    "F6"
+    "F4",
+    "F5"
+   ],
+   [
+    "DA",
+    "F1",
+    "F3"
    ]
   ],
   "unanswered": ""
@@ -463,16 +518,20 @@
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.2381,
-   "but": 0.9861,
-   "how1": 0.9596,
-   "how2": 0.8232
+   "short": 0.1291,
+   "but": 0.9844,
+   "how1": 0.6469,
+   "how2": 0.8211,
+   "how3": 0.8884,
+   "how4": 0.8904
   },
   "scores_quotes_alone": {
-   "short": 0.2439,
-   "but": 0.9236,
-   "how1": 0.685,
-   "how2": 0.6453
+   "short": 0.8246,
+   "but": 0.9817,
+   "how1": 0.2492,
+   "how2": 0.5317,
+   "how3": 0.4641,
+   "how4": 0.6674
   }
  },
  "tries": [
@@ -482,68 +541,24 @@
    "parts": [
     {
      "part": "short",
-     "text": "MDMA overdose or bad reaction can cause agitation, liver failure, seizures, coma, and death. Collapse, convulsions, or coma may be caused by MDMA.",
+     "text": "Signs of an MDMA overdose can include being passed out, seizures, a racing heartbeat, very high body temperature, and large pupils. Low salt levels can progress to coma or death.",
      "rests_on": [
+      {
+       "label": "F7",
+       "ref": "adf_mdma",
+       "where": "Overdose",
+       "quote": "Signs of an MDMA overdose can include: passed out and non-responsive; spasms or seizures; heart attack symptoms such as: difficulty breathing; sharp pain/discomfort in chest, arm, shoulder, back, neck, or jaw; severe agitation, confusion, or panic; racing heartbeat; very high body temperature (hyperthermia); hot, flushed (red), or sweaty skin; very large pupils.",
+       "sha": "157600d8e8c7f5de"
+      },
+      {
+       "label": "F8",
+       "ref": "adf_mdma",
+       "where": "Effects of MDMA / Effects",
+       "quote": "If you take a large amount or have a strong batch of MDMA, you may also experience: floating sensations; perceptual changes, such as visual and auditory hallucinations; out-of-character or irrational behaviour; anxiety; irritability, paranoia and aggression; vomiting; high body temperature; racing heartbeat; convulsions.",
+       "sha": "dad1119c9c8c9766"
+      },
       {
        "label": "F5",
-       "ref": "devlin_2008",
-       "where": "Abstract",
-       "quote": "Collapse, convulsions, or coma may be caused in different circumstances by opioids, MDMA, or gamma hydroxybutyrate",
-       "sha": "13d0e40cc3197387"
-      },
-      {
-       "label": "F1",
-       "ref": "garcia_2026",
-       "where": "INTRODUCTION",
-       "quote": "Besides its psychostimulant effects, adverse effects of MDMA include agitation, liver failure, rhabdomyolysis, dysrhythmias, myocardial infarction, disseminated intravascular coagulation, hyperthermia and hyponatraemia",
-       "sha": "3533443a671fcba0"
-      },
-      {
-       "label": "F6",
-       "ref": "devlin_2008",
-       "where": "Cardiovascular complications",
-       "quote": "Other substances associated with cardiac arrhythmias and sudden death include 3,4-methylenedioxymethamphetamine (MDMA or 'ecstasy'), amphetamines, and cannabis, thought to be linked to sympathetic hyperstimulation in the case of MDMA and amphetamines.",
-       "sha": "1d9ac7664de058c3"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passages list agitation and liver failure as MDMA adverse effects, but say seizures, coma, and death may follow hyponatraemia; the sentence omits that qualification and frames the list as effects of an MDMA overdose or bad reaction."
-    },
-    {
-     "part": "but",
-     "text": "Clinical outcomes following MDMA ingestion are variable.",
-     "rests_on": [
-      {
-       "label": "L1",
-       "ref": "garcia_2026",
-       "where": "CLINICAL PRESENTATION",
-       "quote": "This case highlights the variability in clinical outcomes.",
-       "sha": "eb4e68469a04350c"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how1",
-     "text": "A review of the clinical manifestations and prevalence of MDMA-induced hyponatraemia found adverse effects include agitation, liver failure, and hyponatraemia.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "garcia_2026",
-       "where": "Abstract",
-       "quote": "The present review outlines the main clinical manifestations and prevalence of MDMA-induced hyponatraemia, its pathophysiological mechanisms and the therapeutical approaches to correct this electrolyte imbalance.",
-       "sha": "9104848812df2e61"
-      },
-      {
-       "label": "F1",
-       "ref": "garcia_2026",
-       "where": "INTRODUCTION",
-       "quote": "Besides its psychostimulant effects, adverse effects of MDMA include agitation, liver failure, rhabdomyolysis, dysrhythmias, myocardial infarction, disseminated intravascular coagulation, hyperthermia and hyponatraemia",
-       "sha": "3533443a671fcba0"
-      },
-      {
-       "label": "F2",
        "ref": "garcia_2026",
        "where": "INTRODUCTION",
        "quote": "hyponatraemia, with the latter condition not infrequently progressing to seizures, coma, cerebral oedema and ultimately death",
@@ -553,29 +568,241 @@
      "ok": true
     },
     {
+     "part": "but",
+     "text": "Research interpretation is complicated because most people who use ecstasy also consume other substances.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "meyer_2013",
+       "where": "Abstract",
+       "quote": "Most ecstasy users consume other substances as well, which complicates the interpretation of research in this field.",
+       "sha": "88fb313ec6f049da"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer (Sentence 1 directly describes overdose signs and a possible progression of hyponatraemia. Sentence 2 concerns research interpretation, not a limit or doubt about those symptoms.)"
+    },
+    {
+     "part": "how1",
+     "text": "Australia's Alcohol and Drug Foundation says an overdose can include being non-responsive, confusion, panic, or heart attack symptoms like chest pain.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "adf_mdma",
+       "where": "Overdose",
+       "quote": "Signs of an MDMA overdose can include: passed out and non-responsive; spasms or seizures; heart attack symptoms such as: difficulty breathing; sharp pain/discomfort in chest, arm, shoulder, back, neck, or jaw; severe agitation, confusion, or panic; racing heartbeat; very high body temperature (hyperthermia); hot, flushed (red), or sweaty skin; very large pupils.",
+       "sha": "157600d8e8c7f5de"
+      },
+      {
+       "label": "F8",
+       "ref": "adf_mdma",
+       "where": "Effects of MDMA / Effects",
+       "quote": "If you take a large amount or have a strong batch of MDMA, you may also experience: floating sensations; perceptual changes, such as visual and auditory hallucinations; out-of-character or irrational behaviour; anxiety; irritability, paranoia and aggression; vomiting; high body temperature; racing heartbeat; convulsions.",
+       "sha": "dad1119c9c8c9766"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage supports the listed overdose symptoms, but does not say the Alcohol and Drug Foundation is Australia's."
+    },
+    {
      "part": "how2",
-     "text": "A clinical review of problems associated with illicit drugs found MDMA is associated with cardiac arrhythmias and sudden death.",
+     "text": "A review of clinical manifestations says adverse effects include liver failure, agitation, and low salt levels, which can lead to seizures or death.",
      "rests_on": [
       {
        "label": "DB",
-       "ref": "devlin_2008",
+       "ref": "garcia_2026",
        "where": "Abstract",
-       "quote": "Here, we review the problems associated with the different drugs from a systems-based viewpoint.",
-       "sha": "13d0e40cc3197387"
+       "quote": "The present review outlines the main clinical manifestations and prevalence of MDMA-induced hyponatraemia, its pathophysiological mechanisms and the therapeutical approaches to correct this electrolyte imbalance.",
+       "sha": "9104848812df2e61"
+      },
+      {
+       "label": "F4",
+       "ref": "garcia_2026",
+       "where": "INTRODUCTION",
+       "quote": "Besides its psychostimulant effects, adverse effects of MDMA include agitation, liver failure, rhabdomyolysis, dysrhythmias, myocardial infarction, disseminated intravascular coagulation, hyperthermia and hyponatraemia",
+       "sha": "3533443a671fcba0"
       },
       {
        "label": "F5",
-       "ref": "devlin_2008",
-       "where": "Abstract",
-       "quote": "Collapse, convulsions, or coma may be caused in different circumstances by opioids, MDMA, or gamma hydroxybutyrate",
-       "sha": "13d0e40cc3197387"
+       "ref": "garcia_2026",
+       "where": "INTRODUCTION",
+       "quote": "hyponatraemia, with the latter condition not infrequently progressing to seizures, coma, cerebral oedema and ultimately death",
+       "sha": "3533443a671fcba0"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A review of current perspectives says people who use ecstasy report nausea, headache, agitation, dry mouth, and jaw tightness.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "meyer_2013",
+       "where": "Effects of repeated or high-dose MDMA/ecstasy use",
+       "quote": "This section will review our current knowledge regarding the adverse effects of heavy exposure to MDMA produced either by many episodes of use or by binge use.",
+       "sha": "3df184822b9d7a76"
       },
       {
-       "label": "F6",
-       "ref": "devlin_2008",
-       "where": "Cardiovascular complications",
-       "quote": "Other substances associated with cardiac arrhythmias and sudden death include 3,4-methylenedioxymethamphetamine (MDMA or 'ecstasy'), amphetamines, and cannabis, thought to be linked to sympathetic hyperstimulation in the case of MDMA and amphetamines.",
-       "sha": "1d9ac7664de058c3"
+       "label": "F1",
+       "ref": "meyer_2013",
+       "where": "Acute effects and aftereffects of MDMA/ecstasy use › Acute subjective and physiological effects",
+       "quote": "Along with the various positive effects associated with ecstasy, users report a number of adverse reactions, such as nausea, headache, agitation, tachycardia, dry mouth, bruxism, and trismus.",
+       "sha": "6d01afba14fa36a4"
+      },
+      {
+       "label": "F3",
+       "ref": "meyer_2013",
+       "where": "Abstract",
+       "quote": "some common adverse reactions are nausea, headache, tachycardia, bruxism, and trismus.",
+       "sha": "88fb313ec6f049da"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage lists bruxism and trismus, but does not state “jaw tightness.”"
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Signs of an MDMA overdose can include being passed out, seizures, heart attack symptoms, severe agitation, confusion, a racing heartbeat, very high body temperature, and very large pupils. Hyponatraemia can progress to coma or death.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "adf_mdma",
+       "where": "Overdose",
+       "quote": "Signs of an MDMA overdose can include: passed out and non-responsive; spasms or seizures; heart attack symptoms such as: difficulty breathing; sharp pain/discomfort in chest, arm, shoulder, back, neck, or jaw; severe agitation, confusion, or panic; racing heartbeat; very high body temperature (hyperthermia); hot, flushed (red), or sweaty skin; very large pupils.",
+       "sha": "157600d8e8c7f5de"
+      },
+      {
+       "label": "F8",
+       "ref": "adf_mdma",
+       "where": "Effects of MDMA / Effects",
+       "quote": "If you take a large amount or have a strong batch of MDMA, you may also experience: floating sensations; perceptual changes, such as visual and auditory hallucinations; out-of-character or irrational behaviour; anxiety; irritability, paranoia and aggression; vomiting; high body temperature; racing heartbeat; convulsions.",
+       "sha": "dad1119c9c8c9766"
+      },
+      {
+       "label": "F4",
+       "ref": "garcia_2026",
+       "where": "INTRODUCTION",
+       "quote": "Besides its psychostimulant effects, adverse effects of MDMA include agitation, liver failure, rhabdomyolysis, dysrhythmias, myocardial infarction, disseminated intravascular coagulation, hyperthermia and hyponatraemia",
+       "sha": "3533443a671fcba0"
+      },
+      {
+       "label": "F5",
+       "ref": "garcia_2026",
+       "where": "INTRODUCTION",
+       "quote": "hyponatraemia, with the latter condition not infrequently progressing to seizures, coma, cerebral oedema and ultimately death",
+       "sha": "3533443a671fcba0"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "Research interpretation is complicated because most people who use ecstasy also consume other substances.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "meyer_2013",
+       "where": "Abstract",
+       "quote": "Most ecstasy users consume other substances as well, which complicates the interpretation of research in this field.",
+       "sha": "88fb313ec6f049da"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer (Sentence 1 directly describes what an MDMA overdose or bad reaction can look like. Sentence 2 concerns how other substance use complicates research interpretation, not a limit on the symptoms described in sentence 1.)"
+    },
+    {
+     "part": "how1",
+     "text": "Australia's Alcohol and Drug Foundation says overdose signs can include being non-responsive, spasms, heart attack symptoms, agitation, confusion, racing heartbeat, high body temperature, and large pupils.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "adf_mdma",
+       "where": "Overdose",
+       "quote": "Signs of an MDMA overdose can include: passed out and non-responsive; spasms or seizures; heart attack symptoms such as: difficulty breathing; sharp pain/discomfort in chest, arm, shoulder, back, neck, or jaw; severe agitation, confusion, or panic; racing heartbeat; very high body temperature (hyperthermia); hot, flushed (red), or sweaty skin; very large pupils.",
+       "sha": "157600d8e8c7f5de"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage specifies severe agitation, very high body temperature, and very large pupils; the sentence drops those narrowing qualifiers."
+    },
+    {
+     "part": "how2",
+     "text": "Taking a large amount or a strong batch may cause floating sensations, hallucinations, irrational behavior, anxiety, irritability, paranoia, aggression, vomiting, high body temperature, racing heartbeat, and convulsions.",
+     "rests_on": [
+      {
+       "label": "F8",
+       "ref": "adf_mdma",
+       "where": "Effects of MDMA / Effects",
+       "quote": "If you take a large amount or have a strong batch of MDMA, you may also experience: floating sensations; perceptual changes, such as visual and auditory hallucinations; out-of-character or irrational behaviour; anxiety; irritability, paranoia and aggression; vomiting; high body temperature; racing heartbeat; convulsions.",
+       "sha": "dad1119c9c8c9766"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A review of clinical manifestations of MDMA-induced hyponatraemia says adverse effects include agitation, liver failure, rhabdomyolysis, dysrhythmias, myocardial infarction, disseminated intravascular coagulation, hyperthermia, and hyponatraemia, which can progress to seizures, coma, cerebral oedema, and death.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "garcia_2026",
+       "where": "Abstract",
+       "quote": "The present review outlines the main clinical manifestations and prevalence of MDMA-induced hyponatraemia, its pathophysiological mechanisms and the therapeutical approaches to correct this electrolyte imbalance.",
+       "sha": "9104848812df2e61"
+      },
+      {
+       "label": "F4",
+       "ref": "garcia_2026",
+       "where": "INTRODUCTION",
+       "quote": "Besides its psychostimulant effects, adverse effects of MDMA include agitation, liver failure, rhabdomyolysis, dysrhythmias, myocardial infarction, disseminated intravascular coagulation, hyperthermia and hyponatraemia",
+       "sha": "3533443a671fcba0"
+      },
+      {
+       "label": "F5",
+       "ref": "garcia_2026",
+       "where": "INTRODUCTION",
+       "quote": "hyponatraemia, with the latter condition not infrequently progressing to seizures, coma, cerebral oedema and ultimately death",
+       "sha": "3533443a671fcba0"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how4",
+     "text": "A review of current perspectives on MDMA use says people who use ecstasy report adverse reactions including nausea, headache, agitation, tachycardia, dry mouth, bruxism, and trismus.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "meyer_2013",
+       "where": "Effects of repeated or high-dose MDMA/ecstasy use",
+       "quote": "This section will review our current knowledge regarding the adverse effects of heavy exposure to MDMA produced either by many episodes of use or by binge use.",
+       "sha": "3df184822b9d7a76"
+      },
+      {
+       "label": "F1",
+       "ref": "meyer_2013",
+       "where": "Acute effects and aftereffects of MDMA/ecstasy use › Acute subjective and physiological effects",
+       "quote": "Along with the various positive effects associated with ecstasy, users report a number of adverse reactions, such as nausea, headache, agitation, tachycardia, dry mouth, bruxism, and trismus.",
+       "sha": "6d01afba14fa36a4"
+      },
+      {
+       "label": "F3",
+       "ref": "meyer_2013",
+       "where": "Abstract",
+       "quote": "some common adverse reactions are nausea, headache, tachycardia, bruxism, and trismus.",
+       "sha": "88fb313ec6f049da"
       }
      ],
      "ok": true
@@ -583,11 +810,6 @@
    ]
   }
  ],
- "stakes": "dying",
- "with_checked": {
-  "differs": [],
-  "same": []
- },
  "place": {
   "home": "mdma",
   "also": [
