@@ -17,42 +17,34 @@
  "made": {
   "on": "2026-11-28",
   "models": {
-   "reader": "gemini:gemini-3.5-flash-lite",
-   "writer": "groq:qwen/qwen3.8-27b",
+   "reader": "groq:openai/gpt-oss-20b",
+   "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
    "checker": "openrouter:openai/gpt-6-luna",
    "planner": "groq:openai/gpt-oss-120b",
-   "also1": "gemini:gemini-3.5-flash-lite",
-   "also2": "gemini:gemini-3.6-flash",
-   "team": "team I",
+   "team": "team B",
    "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "reader_3": "openrouter:openai/gpt-oss-120b",
-   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
+   "reader_3": "openrouter:openai/gpt-oss-120b"
   },
-  "run": "46135719216",
+  "run": "46138667358",
   "read_by": {
-   "gemini-3.5-flash-lite": 4,
-   "gemini-3.1-flash-lite": 3,
-   "gpt-oss-20b": 1
+   "gemini-3.5-flash-lite": 5,
+   "gpt-oss-20b": 2,
+   "gemini-3.1-flash-lite": 1
   },
-  "read_seconds": 27,
+  "read_seconds": 23,
   "from": {
    "papers": 0,
-   "summaries": 1,
+   "summaries": 0,
    "official": 1
   },
   "neurons": 0.0,
-  "seconds": 91
+  "seconds": 23
  },
  "status": "none",
- "why": "no draft passed: not accepted at try 2: a second reader did not accept short (our own checker does not find it in the words it rests on (0.02): say only what those words say, in their own measure); but (a further reader (gemini-3.5-flash-lite) did not accept it: says what is not in the passage). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
+ "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service",
  "gates": {
-  "read": "3 findings kept from 2 sources (0 papers read in full, 1 official pages, 1 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "0 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 1 official page(s), 1 paper(s) read in summary only",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.02, but 0.02, how1 0.12, how2 0.94",
-  "check": "not accepted at try 2: a second reader did not accept short (our own checker does not find it in the words it rests on (0.02): say only what those words say, in their own measure); but (a further reader (gemini-3.5-flash-lite) did not accept it: says what is not in the passage). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
-  "panel": "further readers, each of which must accept every sentence too: gemini-3.5-flash-lite accepted 3 of 4",
-  "rules": "broken at try 3: but: it says “every”, and the words it rests on carry no such word: say what the source says, in its own measure, or leave the word out"
+  "read": "3 findings kept from 1 sources (0 papers read in full, 1 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "0 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 1 official page(s), 0 paper(s) read in summary only"
  },
  "sources": [
   {
@@ -108,7 +100,7 @@
      "passage": 18,
      "where": "Long-term effects / Tolerance",
      "quote": "Regularly taking nitazenes can lead to developing a tolerance, which means you need to take larger amounts to get the same effects.",
-     "text": "Regularly taking nitazenes can lead to developing a tolerance, which means people who use nitazenes need to take larger amounts to get the same effects.",
+     "text": "Regularly taking nitazenes can lead to developing a tolerance, meaning larger amounts are needed to get the same effects.",
      "id": "F1",
      "second_hand": ""
     },
@@ -116,84 +108,21 @@
      "passage": 18,
      "where": "Long-term effects / Tolerance",
      "quote": "Tolerance to nitazenes also affects other opioids (known as cross-tolerance). For example, tolerance to nitazenes will also result in a higher tolerance to oxycodone or fentanyl.",
-     "text": "Tolerance to nitazenes also results in a higher tolerance to other opioids like oxycodone or fentanyl.",
+     "text": "Tolerance to nitazenes also affects other opioids, resulting in a higher tolerance to oxycodone or fentanyl.",
      "id": "F2",
      "second_hand": ""
-    }
-   ],
-   "limits": [],
-   "tag": "A"
-  },
-  {
-   "read": "summary",
-   "ref": {
-    "id": "hong_2026",
-    "type": "article-journal",
-    "title": "Perioperative pain in the era of emerging and unregulated substances: Recognition, risk assessment, and management",
-    "author": [
-     {
-      "family": "Hong",
-      "given": "Abraham"
-     },
-     {
-      "family": "Okundaye",
-      "given": "Amanda"
-     },
-     {
-      "family": "Shapiro",
-      "given": "Fred E."
-     }
-    ],
-    "container-title": "Current Pain and Headache Reports",
-    "issued": {
-     "date-parts": [
-      [
-       2026
-      ]
-     ]
     },
-    "DOI": "10.1007/s11916-026-01564-7",
-    "verification": {
-     "status": "metadata-verified",
-     "metadata_source": "crossref",
-     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
-     "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-28",
-     "retraction_check": {
-      "status": "clear",
-      "checked_on": "2026-11-28"
-     }
-    },
-    "volume": "30",
-    "issue": "1",
-    "number": "126"
-   },
-   "doi": "10.1007/s11916-026-01564-7",
-   "title": "Perioperative Pain in the Era of Emerging and Unregulated Substances: Recognition, Risk Assessment, and Management",
-   "year": 2026,
-   "journal": "Current pain and headache reports",
-   "kind": "review",
-   "people": false,
-   "near": 0.377,
-   "money": [],
-   "design": {
-    "passage": 1,
-    "where": "Summary",
-    "quote": "This review examines the perioperative implications of selected substances in the contemporary unregulated drug supply and outlines a physiology-based approach to preoperative assessment, risk recognition, and postoperative pain management.",
-    "text": "a review of selected substances in the contemporary unregulated drug supply"
-   },
-   "findings": [
     {
-     "passage": 1,
-     "where": "Summary",
-     "quote": "Clinically important patterns include respiratory depression, prolonged sedation, bradycardia, hypotension, opioid tolerance, withdrawal, and difficult postoperative pain.",
-     "text": "Clinically important patterns include opioid tolerance.",
+     "passage": 18,
+     "where": "Long-term effects / Tolerance",
+     "quote": "Tolerance should return to normal within 1 – 2 weeks of not using opioids.",
+     "text": "Tolerance should return to normal within 1 to 2 weeks of not using opioids.",
      "id": "F3",
      "second_hand": ""
     }
    ],
    "limits": [],
-   "tag": "B"
+   "tag": "A"
   }
  ],
  "parts": [],
@@ -249,6 +178,14 @@
    "why": "no draft passed: the form was wrong: no JSON",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-28",
+   "lane": 19,
+   "status": "none",
+   "why": "no draft passed: not accepted at try 2: a second reader did not accept short (our own checker does not find it in the words it rests on (0.02): say only what those words say, in their own measure); but (a further reader (gemini-3.5-flash-lite) did not accept it: says what is not in the passage). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -266,14 +203,7 @@
    "kind": "review",
    "at": "10.3390/molecules30193890",
    "kept": 0,
-   "thrown": [
-    {
-     "kind": "text",
-     "text": "a perspective paper on the emergence and risks of nitazenes",
-     "quote": "This perspective paper highlights critical gaps in detection, clinical management, and regulatory controls regarding the emergence of nitazenes, a class of novel synthetic opioids",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
-    }
-   ]
+   "thrown": []
   },
   {
    "title": "A Comprehensive Narrative Review of Protonitazene: Pharmacological Characteristics, Detection Techniques, and Toxicology",
@@ -281,14 +211,7 @@
    "kind": "review",
    "at": "10.1111/bcpt.70078",
    "kept": 0,
-   "thrown": [
-    {
-     "kind": "text",
-     "text": "Narrative review of protonitazene pharmacology, detection, and toxicology",
-     "quote": "Protonitazene (PNZ) is a synthetic opioid emerging in Europe, Australia, North America and South America with a rapidly increasing number of intoxications.",
-     "why": "the sentence is not carried by its quote and passage"
-    }
-   ]
+   "thrown": []
   },
   {
    "title": "Naloxone dosing in the era of synthetic opioids: Applying the Goldilocks principle",
@@ -303,7 +226,7 @@
    "read": "page",
    "kind": "official",
    "at": "https://adf.org.au/drug-facts/nitazenes/",
-   "kept": 2,
+   "kept": 3,
    "thrown": []
   },
   {
@@ -327,286 +250,10 @@
    "read": "summary",
    "kind": "review",
    "at": "10.1007/s11916-026-01564-7",
-   "kept": 1,
+   "kept": 0,
    "thrown": []
   }
  ],
- "plan": {
-  "short": [
-   "F1",
-   "F3"
-  ],
-  "direct": "Yes",
-  "but": [
-   "F1"
-  ],
-  "how": [
-   [
-    "F1"
-   ],
-   [
-    "DB",
-    "F3"
-   ]
-  ],
-  "unanswered": ""
- },
- "panel_gap": [],
- "own": {
-  "model": "pharmakon-check-0",
-  "threshold": 0.05,
-  "scores": {
-   "short": 0.0165,
-   "but": 0.0213,
-   "how1": 0.1157,
-   "how2": 0.9361
-  },
-  "scores_quotes_alone": {
-   "short": 0.1063,
-   "but": 0.0131,
-   "how1": 0.3431,
-   "how2": 0.9599
-  }
- },
- "tries": [
-  {
-   "try": 1,
-   "why": "the short answer or the But was not accepted: written again",
-   "parts": [
-    {
-     "part": "short",
-     "text": "Yes. Australia's Alcohol and Drug Foundation says regularly taking nitazenes can lead to developing a tolerance, meaning people need larger amounts for the same effects.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "adf_nitazenes",
-       "where": "Long-term effects / Tolerance",
-       "quote": "Regularly taking nitazenes can lead to developing a tolerance, which means you need to take larger amounts to get the same effects.",
-       "sha": "20f973cc5baef11d"
-      }
-     ],
-     "ok": false,
-     "by": "our own checker",
-     "said": "our own checker does not find it in the words it rests on (0.02): say only what those words say, in their own measure"
-    },
-    {
-     "part": "but",
-     "text": "The page links this tolerance to regularly taking nitazenes, not to one-time use or other patterns.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "adf_nitazenes",
-       "where": "Long-term effects / Tolerance",
-       "quote": "Regularly taking nitazenes can lead to developing a tolerance, which means you need to take larger amounts to get the same effects.",
-       "sha": "20f973cc5baef11d"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passage says regularly taking nitazenes can lead to tolerance, but it does not say tolerance cannot develop with one-time use or other patterns."
-    },
-    {
-     "part": "how1",
-     "text": "Australia's Alcohol and Drug Foundation page says regular use can lead to tolerance, requiring larger amounts for the same effects.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "adf_nitazenes",
-       "where": "Long-term effects / Tolerance",
-       "quote": "Regularly taking nitazenes can lead to developing a tolerance, which means you need to take larger amounts to get the same effects.",
-       "sha": "20f973cc5baef11d"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "The summary of a 2026 review of unregulated substances lists opioid tolerance as a clinically important pattern.",
-     "rests_on": [
-      {
-       "label": "DB",
-       "ref": "hong_2026",
-       "where": "Summary",
-       "quote": "This review examines the perioperative implications of selected substances in the contemporary unregulated drug supply and outlines a physiology-based approach to preoperative assessment, risk recognition, and postoperative pain management.",
-       "sha": "1e654efa79b73310"
-      },
-      {
-       "label": "F3",
-       "ref": "hong_2026",
-       "where": "Summary",
-       "quote": "Clinically important patterns include respiratory depression, prolonged sedation, bradycardia, hypotension, opioid tolerance, withdrawal, and difficult postoperative pain.",
-       "sha": "1e654efa79b73310"
-      }
-     ],
-     "ok": true
-    }
-   ]
-  },
-  {
-   "try": 2,
-   "why": "the short answer or the But was not accepted: written again",
-   "parts": [
-    {
-     "part": "short",
-     "text": "Yes. Australia's Alcohol and Drug Foundation says regularly taking nitazenes can lead to developing a tolerance, meaning people need larger amounts for the same effects.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "adf_nitazenes",
-       "where": "Long-term effects / Tolerance",
-       "quote": "Regularly taking nitazenes can lead to developing a tolerance, which means you need to take larger amounts to get the same effects.",
-       "sha": "20f973cc5baef11d"
-      }
-     ],
-     "ok": false,
-     "by": "our own checker",
-     "said": "our own checker does not find it in the words it rests on (0.02): say only what those words say, in their own measure"
-    },
-    {
-     "part": "but",
-     "text": "The page says this happens with regular taking, but it does not say what happens with one-time use or other patterns.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "adf_nitazenes",
-       "where": "Long-term effects / Tolerance",
-       "quote": "Regularly taking nitazenes can lead to developing a tolerance, which means you need to take larger amounts to get the same effects.",
-       "sha": "20f973cc5baef11d"
-      }
-     ],
-     "ok": false,
-     "by": "a further reader",
-     "said": "a further reader (gemini-3.5-flash-lite) did not accept it: says what is not in the passage"
-    },
-    {
-     "part": "how1",
-     "text": "Australia's Alcohol and Drug Foundation page says regularly taking nitazenes can lead to developing a tolerance.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "adf_nitazenes",
-       "where": "Long-term effects / Tolerance",
-       "quote": "Regularly taking nitazenes can lead to developing a tolerance, which means you need to take larger amounts to get the same effects.",
-       "sha": "20f973cc5baef11d"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "A 2026 review of unregulated substances says opioid tolerance is a clinically important pattern.",
-     "rests_on": [
-      {
-       "label": "DB",
-       "ref": "hong_2026",
-       "where": "Summary",
-       "quote": "This review examines the perioperative implications of selected substances in the contemporary unregulated drug supply and outlines a physiology-based approach to preoperative assessment, risk recognition, and postoperative pain management.",
-       "sha": "1e654efa79b73310"
-      },
-      {
-       "label": "F3",
-       "ref": "hong_2026",
-       "where": "Summary",
-       "quote": "Clinically important patterns include respiratory depression, prolonged sedation, bradycardia, hypotension, opioid tolerance, withdrawal, and difficult postoperative pain.",
-       "sha": "1e654efa79b73310"
-      }
-     ],
-     "ok": true
-    }
-   ]
-  },
-  {
-   "try": 3,
-   "why": "a rule was broken: written again",
-   "parts": [
-    {
-     "part": "short",
-     "text": "Yes. Australia's Alcohol and Drug Foundation says regularly taking nitazenes can lead to developing a tolerance, meaning people need larger amounts for the same effects.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "adf_nitazenes",
-       "where": "Long-term effects / Tolerance",
-       "quote": "Regularly taking nitazenes can lead to developing a tolerance, which means you need to take larger amounts to get the same effects.",
-       "sha": "20f973cc5baef11d"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "but",
-     "text": "The page says this happens when people regularly take nitazenes, not for every person or every amount.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "adf_nitazenes",
-       "where": "Long-term effects / Tolerance",
-       "quote": "Regularly taking nitazenes can lead to developing a tolerance, which means you need to take larger amounts to get the same effects.",
-       "sha": "20f973cc5baef11d"
-      }
-     ],
-     "ok": false,
-     "by": "a rule",
-     "said": "a rule: it says “every”, and the words it rests on carry no such word: say what the source says, in its own measure, or leave the word out"
-    },
-    {
-     "part": "how1",
-     "text": "Australia's Alcohol and Drug Foundation page says regular use can lead to tolerance, requiring larger amounts for the same effects.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "adf_nitazenes",
-       "where": "Long-term effects / Tolerance",
-       "quote": "Regularly taking nitazenes can lead to developing a tolerance, which means you need to take larger amounts to get the same effects.",
-       "sha": "20f973cc5baef11d"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "A 2026 review of unregulated substances lists opioid tolerance as a clinically important pattern in perioperative care.",
-     "rests_on": [
-      {
-       "label": "DB",
-       "ref": "hong_2026",
-       "where": "Summary",
-       "quote": "This review examines the perioperative implications of selected substances in the contemporary unregulated drug supply and outlines a physiology-based approach to preoperative assessment, risk recognition, and postoperative pain management.",
-       "sha": "1e654efa79b73310"
-      },
-      {
-       "label": "F3",
-       "ref": "hong_2026",
-       "where": "Summary",
-       "quote": "Clinically important patterns include respiratory depression, prolonged sedation, bradycardia, hypotension, opioid tolerance, withdrawal, and difficult postoperative pain.",
-       "sha": "1e654efa79b73310"
-      }
-     ],
-     "ok": true
-    }
-   ]
-  }
- ],
- "panel": {
-  "gemini:gemini-3.5-flash-lite": {
-   "short": [
-    true,
-    ""
-   ],
-   "but": [
-    false,
-    "says what is not in the passage"
-   ],
-   "how1": [
-    true,
-    ""
-   ],
-   "how2": [
-    true,
-    ""
-   ]
-  }
- },
  "place": {
   "home": "new:Nitazenes and other new synthetic opioids",
   "also": [
