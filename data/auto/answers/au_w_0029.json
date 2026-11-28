@@ -17,38 +17,386 @@
   "kratom"
  ],
  "made": {
-  "on": "2026-11-25",
+  "on": "2026-11-28",
   "models": {
-   "reader": "groq:openai/gpt-oss-20b",
-   "writer": "groq:qwen/qwen3.8-27b",
-   "checker": "groq:openai/gpt-oss-120b",
-   "planner": "groq:openai/gpt-oss-120b",
-   "also1": "gemini:gemini-3.6-flash",
-   "team": "team H2",
-   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-   "also1_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
+   "reader": "gemini:gemma-4-31b-it",
+   "writer": "openrouter:meta-llama/llama-3.3-70b-instruct",
+   "checker": "openrouter:openai/gpt-6-luna",
+   "planner": "openrouter:openai/gpt-oss-120b",
+   "team": "team R",
+   "reader_2": "openrouter:openai/gpt-oss-120b"
   },
-  "run": "45562048901",
-  "read_seconds": 100,
+  "run": "46150984436",
+  "read_by": {
+   "gemini-3.1-flash-lite": 2,
+   "gemini-3.5-flash-lite": 2
+  },
+  "read_seconds": 12,
   "from": {
-   "papers": 0,
+   "papers": 2,
    "summaries": 0,
-   "official": 0
+   "official": 2
   },
   "neurons": 0.0,
-  "seconds": 100
+  "seconds": 81
  },
  "status": "none",
- "why": "no source that can be read gave a finding for this question (4 source(s) could not be fetched just now, 4 of them for want of time: tried again in the next run)",
+ "why": "the second reader did not accept the answer",
  "gates": {
-  "time": "4 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)"
+  "read": "11 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 2 official page(s), 0 paper(s) read in summary only",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.73, but 0.89, how1 0.97, how2 0.97, how3 0.96",
+  "check": "short: NOT accepted: The passages report seizures and liver problems as side effects, but the sentence states without qualification that kratom can cause them. It omits that seizures are described as rare and that serious liver problems may occur in some people; but: accepted; how1: accepted; how2: accepted; how3: accepted",
+  "rules": "broken at try 2: short: too long (56 words); how1: too long (41 words)"
  },
- "sources": [],
+ "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "fluyau_2017",
+    "type": "article-journal",
+    "title": "Biochemical benefits, diagnosis, and clinical risks evaluation of kratom",
+    "author": [
+     {
+      "family": "Fluyau",
+      "given": "Dimy",
+      "suffix": "Fluyau"
+     },
+     {
+      "family": "Revadigar",
+      "given": "Neelambika"
+     }
+    ],
+    "container-title": "Frontiers in Psychiatry",
+    "issued": {
+     "date-parts": [
+      [
+       2017
+      ]
+     ]
+    },
+    "DOI": "10.3389/fpsyt.2017.00062",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-28",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-28"
+     }
+    },
+    "volume": "8",
+    "number": "62",
+    "PMCID": "PMC5402527"
+   },
+   "doi": "10.3389/fpsyt.2017.00062",
+   "pmcid": "PMC5402527",
+   "title": "Biochemical Benefits, Diagnosis, and Clinical Risks Evaluation of Kratom",
+   "year": 2017,
+   "journal": "Frontiers in psychiatry",
+   "kind": "review",
+   "people": true,
+   "near": 0.822,
+   "money": [
+    "The authors declare that the research was conducted in the absence of any commercial or financial relationships that could be construed as a potential conflict of interest."
+   ],
+   "design": {
+    "passage": 2,
+    "where": "Abstract",
+    "quote": "Literature review using databases such as Embase, Medline, PubMed, Cochrane Library, and Mendeley from 2007 to 2017 were evaluated by all authors to analyze current state on benefits, risks, and diagnosis evaluation of kratom (M. speciosa).",
+    "text": "A literature review analyzing the benefits, risks, and diagnosis evaluation of kratom."
+   },
+   "findings": [
+    {
+     "passage": 19,
+     "where": "Diagnosis Evaluation",
+     "quote": "The negative symptoms are mostly extrapolated from kratom side effects or withdrawal symptoms that users describe as stomach ache, nausea and vomiting, dry mouth, polyuria, anorexia, weight loss and frequent constipation",
+     "text": "People who use kratom report side effects including stomach ache, nausea, vomiting, dry mouth, polyuria, anorexia, weight loss, and frequent constipation.",
+     "id": "F1",
+     "second_hand": ""
+    },
+    {
+     "passage": 19,
+     "where": "Diagnosis Evaluation",
+     "quote": "psychological symptoms such as hostility, aggression, anxiety, depressed mood, dysphoria, moodiness, annoyance, restlessness, visual alterations and unsteadiness, low sexual drive, and irritability",
+     "text": "People who use kratom report psychological side effects including hostility, aggression, anxiety, depressed mood, dysphoria, moodiness, annoyance, restlessness, visual alterations, unsteadiness, low sexual drive, and irritability.",
+     "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 19,
+     "where": "Diagnosis Evaluation",
+     "quote": "Some users also report symptoms like sweats, dizziness, vomiting, itching, mouth and throat numbness, and sedation.",
+     "text": "People who use kratom report symptoms including sweats, dizziness, vomiting, itching, mouth and throat numbness, and sedation.",
+     "id": "F3",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "The clinical manifestations of kratom effects are not well defined and the clinical studies are limited.",
+     "text": "The clinical manifestations of kratom are not well defined and clinical studies are limited.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "A"
+  },
+  {
+   "read": "full",
+   "ref": {
+    "id": "eastlack_2020",
+    "type": "article-journal",
+    "title": "Kratom—pharmacology, clinical implications, and outlook: A comprehensive review",
+    "author": [
+     {
+      "family": "Eastlack",
+      "given": "Steven C."
+     },
+     {
+      "family": "Cornett",
+      "given": "Elyse M."
+     },
+     {
+      "family": "Kaye",
+      "given": "Alan D."
+     }
+    ],
+    "container-title": "Pain and Therapy",
+    "issued": {
+     "date-parts": [
+      [
+       2020
+      ]
+     ]
+    },
+    "DOI": "10.1007/s40122-020-00151-x",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-28",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-28"
+     }
+    },
+    "volume": "9",
+    "issue": "1",
+    "page": "55-69",
+    "PMCID": "PMC7203303"
+   },
+   "doi": "10.1007/s40122-020-00151-x",
+   "pmcid": "PMC7203303",
+   "title": "Kratom-Pharmacology, Clinical Implications, and Outlook: A Comprehensive Review",
+   "year": 2020,
+   "journal": "Pain and therapy",
+   "kind": "review",
+   "people": false,
+   "near": 0.822,
+   "money": [
+    "AcknowledgementsFundingNo funding or sponsorship was received for this study or publication of this article.AuthorshipAll named authors meet the International Committee of Medical Journal Editors (ICMJE) criteria for authorship for this article, take responsibility for the integrity of the work as a whole, and have given their approval for this version to be published.DisclosuresSteven C. Eastlack and Elyse M. Cornett have nothing to disclose. Alan David Kaye is a member of the journal’s Editorial Board.Compliance with Ethics GuidelinesThis article is based on previously conducted studies and does not contain any studies with human participants or animals performed by any of the authors.Data AvailabilityData sharing is not applicable for this article, as no data sets were generated or analyzed during the current study."
+   ],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "This manuscript will discuss the most current epidemiology, pharmacology, toxicity, and management related to kratom, while seeking to provide a contemporary perspective on the issue and its role in the greater context of the opioid epidemic.",
+    "text": "A comprehensive review discussing epidemiology, pharmacology, toxicity, and management related to kratom"
+   },
+   "findings": [
+    {
+     "passage": 21,
+     "where": "Clinical Presentations of Kratom Abuse",
+     "quote": "Seeking to gauge the spectrum of possible symptoms associated with kratom toxicity, a 2019 retrospective review of cases reported to the National Poison Data System and New York City Office of the Chief Medical Examiner identified a wide variety of presenting symptoms, with agitation being the most common at 18.6%, followed by tachycardia at 16.9%, drowsiness at 13.6%, and confusion at 8.1%.",
+     "text": "Symptoms associated with kratom toxicity identified in a retrospective review include agitation at 18.6%, tachycardia at 16.9%, drowsiness at 13.6%, and confusion at 8.1%.",
+     "id": "F4",
+     "second_hand": "Seeking to gauge the spectrum of possible symptoms associated with kratom toxicity, a 2019 retrospective review of cases reported to the National Poison Data System and New York Ci"
+    },
+    {
+     "passage": 23,
+     "where": "Clinical Presentations of Kratom Abuse",
+     "quote": "In certain severe cases, kratom toxicities have resulted in death.",
+     "text": "In certain severe cases, kratom toxicities have resulted in death.",
+     "id": "F5",
+     "second_hand": ""
+    },
+    {
+     "passage": 29,
+     "where": "Conclusions",
+     "quote": "Patients should be made aware of the potential harm kratom poses, including predictable risks such as dependence and toxicity, and unpredictable risks related to product quality and contamination.",
+     "text": "Kratom poses predictable risks such as dependence and toxicity.",
+     "id": "F6",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 8,
+     "where": "Kratom: Background, Prevalence, and Legal Status",
+     "quote": "Large-scale epidemiological studies evaluating the prevalence of kratom use are scarce, but available evidence indicates that its prevalence is on the rise in the United States, Europe, and developed eastern countries such as Japan.",
+     "text": "Large-scale epidemiological studies evaluating the prevalence of kratom use are scarce.",
+     "id": "L2",
+     "second_hand": "Large-scale epidemiological studies evaluating the prevalence of kratom use are scarce, but available evidence indicates that its prevalence is on the rise in the United States, Eu"
+    }
+   ],
+   "tag": "B"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "drugscience_kratom",
+    "type": "webpage",
+    "title": "Kratom",
+    "author": [
+     {
+      "literal": "Drug Science"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      []
+     ]
+    },
+    "URL": "https://www.drugscience.org.uk/drugs/kratom",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       28
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-28"
+    }
+   },
+   "title": "Kratom",
+   "year": null,
+   "kind": "official",
+   "people": true,
+   "near": 0.816,
+   "name": "Drug Science",
+   "short": "Drug Science, a UK charity of scientists",
+   "tier": 2,
+   "address": "https://www.drugscience.org.uk/drugs/kratom",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 5,
+     "where": "What are the risks?",
+     "quote": "Similar to opioids, it can produce agitation, tachycardia, constipation, vomiting and nausea.",
+     "text": "Similar to opioids, kratom can produce agitation, tachycardia, constipation, vomiting and nausea.",
+     "id": "F7",
+     "second_hand": ""
+    },
+    {
+     "passage": 8,
+     "where": "Harm Reduction and Drug-Drug Interactions",
+     "quote": "Taking too much kratom can be unpleasant; nausea vomiting and dizziness are common side effects in such instances.",
+     "text": "Taking too much kratom can cause nausea, vomiting, and dizziness as common side effects.",
+     "id": "F8",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "C"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "nccih_kratom",
+    "type": "webpage",
+    "title": "Kratom",
+    "author": [
+     {
+      "literal": "National Center for Complementary and Integrative Health"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      []
+     ]
+    },
+    "URL": "https://www.nccih.nih.gov/health/kratom",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       28
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-28"
+    }
+   },
+   "title": "Kratom",
+   "year": null,
+   "kind": "official",
+   "people": true,
+   "near": 0.785,
+   "name": "National Center for Complementary and Integrative Health",
+   "short": "the US National Center for Complementary and Integrative Health",
+   "tier": 1,
+   "address": "https://www.nccih.nih.gov/health/kratom",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 5,
+     "where": "Safety",
+     "quote": "A variety of side effects of kratom have been reported. They include mild effects, such as nausea, constipation, dizziness, and drowsiness, and rare but serious effects such as seizures, high blood pressure, and liver problems.",
+     "text": "People who use kratom have reported mild side effects including nausea, constipation, dizziness, and drowsiness, as well as rare but serious effects such as seizures, high blood pressure, and liver problems.",
+     "id": "F9",
+     "second_hand": ""
+    },
+    {
+     "passage": 5,
+     "where": "Safety",
+     "quote": "There have been reports that long-term use of large doses of kratom may cause serious liver problems in some people.",
+     "text": "Reports indicate that long-term use of large doses of kratom may cause serious liver problems in some people.",
+     "id": "F10",
+     "second_hand": ""
+    },
+    {
+     "passage": 5,
+     "where": "Safety",
+     "quote": "The use of kratom in combination with other drugs has been linked to deaths and severe adverse effects such as liver problems.",
+     "text": "Using kratom in combination with other drugs has been linked to severe adverse effects like liver problems and deaths.",
+     "id": "F11",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 2,
+     "where": "Top of the page",
+     "quote": "Much remains to be learned about the short- and long-term effects of kratom in the body, its safety, and whether it may have therapeutic uses.",
+     "text": "The short- and long-term effects of kratom in the body and its safety are not yet fully understood.",
+     "id": "L3",
+     "second_hand": ""
+    }
+   ],
+   "tag": "D"
+  }
+ ],
  "parts": [],
  "complete": false,
- "missing": "",
+ "missing": "frequency of side effects",
  "wanted": [
   {
    "doi": "10.1002/phar.2280",
@@ -81,6 +429,14 @@
    "why": "about overdose or an emergency: written, and waiting for a person before it is published",
    "short": "Reported side effects include nausea, constipation, dizziness, and drowsiness. Rare but serious effects include seizures, high blood pressure, and liver problems.",
    "complete": true
+  },
+  {
+   "on": "2026-11-25",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question (4 source(s) could not be fetched just now, 4 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -89,39 +445,378 @@
    "read": "full",
    "kind": "review",
    "at": "10.3389/fpsyt.2017.00062",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 3,
+   "thrown": []
   },
   {
    "title": "Kratom-Pharmacology, Clinical Implications, and Outlook: A Comprehensive Review",
    "read": "full",
    "kind": "review",
    "at": "10.1007/s40122-020-00151-x",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 3,
+   "thrown": []
   },
   {
-   "title": "The acute adverse health effects of kratom: an evaluation of case reports",
-   "read": "full",
-   "kind": "review",
-   "at": "10.3389/fphar.2025.1620601",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "title": "Kratom",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.drugscience.org.uk/drugs/kratom",
+   "kept": 2,
+   "thrown": [
+    {
+     "kind": "limit",
+     "text": "",
+     "quote": "There have been a small number (this varies according to the source consulted) of fatalities internationally where kratom was implicated.",
+     "why": "no sentence"
+    }
+   ]
   },
   {
-   "title": "Kratom Toxicity: Pharmacologic Mechanisms, Clinical Risks, and Management Considerations",
-   "read": "full",
-   "kind": "review",
-   "at": "10.7759/cureus.113280",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "title": "Kratom",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.nccih.nih.gov/health/kratom",
+   "kept": 3,
+   "thrown": []
   }
  ],
- "soft": "a source could not be fetched",
+ "plan": {
+  "short": [
+   "F9",
+   "F4"
+  ],
+  "direct": "",
+  "but": [
+   "L3"
+  ],
+  "how": [
+   [
+    "F9"
+   ],
+   [
+    "DB",
+    "F4"
+   ],
+   [
+    "DA",
+    "F1"
+   ]
+  ],
+  "unanswered": "frequency of side effects"
+ },
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.7304,
+   "but": 0.8927,
+   "how1": 0.9704,
+   "how2": 0.9692,
+   "how3": 0.958
+  },
+  "scores_quotes_alone": {
+   "short": 0.6653,
+   "but": 0.9761,
+   "how1": 0.8859,
+   "how2": 0.5413,
+   "how3": 0.9804
+  }
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Kratom side effects include nausea, constipation, and drowsiness, as well as seizures and liver problems. Kratom toxicity symptoms include agitation, tachycardia, and confusion.",
+     "rests_on": [
+      {
+       "label": "F9",
+       "ref": "nccih_kratom",
+       "where": "Safety",
+       "quote": "A variety of side effects of kratom have been reported. They include mild effects, such as nausea, constipation, dizziness, and drowsiness, and rare but serious effects such as seizures, high blood pressure, and liver problems.",
+       "sha": "271286f7d50eb4ad"
+      },
+      {
+       "label": "F4",
+       "ref": "eastlack_2020",
+       "where": "Clinical Presentations of Kratom Abuse",
+       "quote": "Seeking to gauge the spectrum of possible symptoms associated with kratom toxicity, a 2019 retrospective review of cases reported to the National Poison Data System and New York City Office of the Chief Medical Examiner identified a wide variety of presenting symptoms, with agitation being the most common at 18.6%, followed by tachycardia at 16.9%, drowsiness at 13.6%, and confusion at 8.1%.",
+       "sha": "4a099596801c2c71"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages describe seizures and liver problems as rare but serious side effects; sentence 1 omits that narrowing qualifier."
+    },
+    {
+     "part": "but",
+     "text": "The short- and long-term effects of kratom are not yet fully understood.",
+     "rests_on": [
+      {
+       "label": "L3",
+       "ref": "nccih_kratom",
+       "where": "Top of the page",
+       "quote": "Much remains to be learned about the short- and long-term effects of kratom in the body, its safety, and whether it may have therapeutic uses.",
+       "sha": "695374ab00a7160d"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "The US National Center for Complementary and Integrative Health says kratom has side effects.",
+     "rests_on": [
+      {
+       "label": "F9",
+       "ref": "nccih_kratom",
+       "where": "Safety",
+       "quote": "A variety of side effects of kratom have been reported. They include mild effects, such as nausea, constipation, dizziness, and drowsiness, and rare but serious effects such as seizures, high blood pressure, and liver problems.",
+       "sha": "271286f7d50eb4ad"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A 2020 review reports a retrospective review of kratom toxicity symptoms.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "eastlack_2020",
+       "where": "Abstract",
+       "quote": "This manuscript will discuss the most current epidemiology, pharmacology, toxicity, and management related to kratom, while seeking to provide a contemporary perspective on the issue and its role in the greater context of the opioid epidemic.",
+       "sha": "ebd49b9d1775d58e"
+      },
+      {
+       "label": "F4",
+       "ref": "eastlack_2020",
+       "where": "Clinical Presentations of Kratom Abuse",
+       "quote": "Seeking to gauge the spectrum of possible symptoms associated with kratom toxicity, a 2019 retrospective review of cases reported to the National Poison Data System and New York City Office of the Chief Medical Examiner identified a wide variety of presenting symptoms, with agitation being the most common at 18.6%, followed by tachycardia at 16.9%, drowsiness at 13.6%, and confusion at 8.1%.",
+       "sha": "4a099596801c2c71"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2017 literature review analyzed kratom benefits and risks.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "fluyau_2017",
+       "where": "Abstract",
+       "quote": "Literature review using databases such as Embase, Medline, PubMed, Cochrane Library, and Mendeley from 2007 to 2017 were evaluated by all authors to analyze current state on benefits, risks, and diagnosis evaluation of kratom (M. speciosa).",
+       "sha": "44723a8f7598b3e0"
+      },
+      {
+       "label": "F1",
+       "ref": "fluyau_2017",
+       "where": "Diagnosis Evaluation",
+       "quote": "The negative symptoms are mostly extrapolated from kratom side effects or withdrawal symptoms that users describe as stomach ache, nausea and vomiting, dry mouth, polyuria, anorexia, weight loss and frequent constipation",
+       "sha": "2c1b853b4a997327"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "a rule was broken: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "People who use kratom report side effects including stomach ache, nausea, vomiting, and liver problems. The US National Center for Complementary and Integrative Health says people who use kratom have reported mild side effects including nausea, constipation, dizziness, and drowsiness, as well as rare but serious effects such as seizures, high blood pressure, and liver problems.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "fluyau_2017",
+       "where": "Diagnosis Evaluation",
+       "quote": "The negative symptoms are mostly extrapolated from kratom side effects or withdrawal symptoms that users describe as stomach ache, nausea and vomiting, dry mouth, polyuria, anorexia, weight loss and frequent constipation",
+       "sha": "2c1b853b4a997327"
+      },
+      {
+       "label": "F9",
+       "ref": "nccih_kratom",
+       "where": "Safety",
+       "quote": "A variety of side effects of kratom have been reported. They include mild effects, such as nausea, constipation, dizziness, and drowsiness, and rare but serious effects such as seizures, high blood pressure, and liver problems.",
+       "sha": "271286f7d50eb4ad"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: too long (56 words)"
+    },
+    {
+     "part": "but",
+     "text": "The short- and long-term effects of kratom in the body and its safety are not yet fully understood.",
+     "rests_on": [
+      {
+       "label": "L3",
+       "ref": "nccih_kratom",
+       "where": "Top of the page",
+       "quote": "Much remains to be learned about the short- and long-term effects of kratom in the body, its safety, and whether it may have therapeutic uses.",
+       "sha": "695374ab00a7160d"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "The US National Center for Complementary and Integrative Health says people who use kratom have reported mild side effects including nausea, constipation, dizziness, and drowsiness, as well as rare but serious effects such as seizures, high blood pressure, and liver problems.",
+     "rests_on": [
+      {
+       "label": "F9",
+       "ref": "nccih_kratom",
+       "where": "Safety",
+       "quote": "A variety of side effects of kratom have been reported. They include mild effects, such as nausea, constipation, dizziness, and drowsiness, and rare but serious effects such as seizures, high blood pressure, and liver problems.",
+       "sha": "271286f7d50eb4ad"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: too long (41 words)"
+    },
+    {
+     "part": "how2",
+     "text": "A 2020 review reports a retrospective review identified symptoms associated with kratom toxicity, including agitation, tachycardia, drowsiness, and confusion.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "eastlack_2020",
+       "where": "Abstract",
+       "quote": "This manuscript will discuss the most current epidemiology, pharmacology, toxicity, and management related to kratom, while seeking to provide a contemporary perspective on the issue and its role in the greater context of the opioid epidemic.",
+       "sha": "ebd49b9d1775d58e"
+      },
+      {
+       "label": "F4",
+       "ref": "eastlack_2020",
+       "where": "Clinical Presentations of Kratom Abuse",
+       "quote": "Seeking to gauge the spectrum of possible symptoms associated with kratom toxicity, a 2019 retrospective review of cases reported to the National Poison Data System and New York City Office of the Chief Medical Examiner identified a wide variety of presenting symptoms, with agitation being the most common at 18.6%, followed by tachycardia at 16.9%, drowsiness at 13.6%, and confusion at 8.1%.",
+       "sha": "4a099596801c2c71"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2017 literature review analyzed the benefits, risks, and diagnosis evaluation of kratom, and found people who use kratom report side effects including stomach ache, nausea, vomiting, dry mouth, polyuria, anorexia, weight loss, and frequent constipation.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "fluyau_2017",
+       "where": "Abstract",
+       "quote": "Literature review using databases such as Embase, Medline, PubMed, Cochrane Library, and Mendeley from 2007 to 2017 were evaluated by all authors to analyze current state on benefits, risks, and diagnosis evaluation of kratom (M. speciosa).",
+       "sha": "44723a8f7598b3e0"
+      },
+      {
+       "label": "F1",
+       "ref": "fluyau_2017",
+       "where": "Diagnosis Evaluation",
+       "quote": "The negative symptoms are mostly extrapolated from kratom side effects or withdrawal symptoms that users describe as stomach ache, nausea and vomiting, dry mouth, polyuria, anorexia, weight loss and frequent constipation",
+       "sha": "2c1b853b4a997327"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Kratom side effects include nausea, constipation, and drowsiness. It can also cause seizures and liver problems.",
+     "rests_on": [
+      {
+       "label": "F9",
+       "ref": "nccih_kratom",
+       "where": "Safety",
+       "quote": "A variety of side effects of kratom have been reported. They include mild effects, such as nausea, constipation, dizziness, and drowsiness, and rare but serious effects such as seizures, high blood pressure, and liver problems.",
+       "sha": "271286f7d50eb4ad"
+      },
+      {
+       "label": "F4",
+       "ref": "eastlack_2020",
+       "where": "Clinical Presentations of Kratom Abuse",
+       "quote": "Seeking to gauge the spectrum of possible symptoms associated with kratom toxicity, a 2019 retrospective review of cases reported to the National Poison Data System and New York City Office of the Chief Medical Examiner identified a wide variety of presenting symptoms, with agitation being the most common at 18.6%, followed by tachycardia at 16.9%, drowsiness at 13.6%, and confusion at 8.1%.",
+       "sha": "4a099596801c2c71"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages report seizures and liver problems as side effects, but the sentence states without qualification that kratom can cause them. It omits that seizures are described as rare and that serious liver problems may occur in some people"
+    },
+    {
+     "part": "but",
+     "text": "The short- and long-term effects of kratom are not yet fully understood.",
+     "rests_on": [
+      {
+       "label": "L3",
+       "ref": "nccih_kratom",
+       "where": "Top of the page",
+       "quote": "Much remains to be learned about the short- and long-term effects of kratom in the body, its safety, and whether it may have therapeutic uses.",
+       "sha": "695374ab00a7160d"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "The US National Center for Complementary and Integrative Health says kratom has side effects.",
+     "rests_on": [
+      {
+       "label": "F9",
+       "ref": "nccih_kratom",
+       "where": "Safety",
+       "quote": "A variety of side effects of kratom have been reported. They include mild effects, such as nausea, constipation, dizziness, and drowsiness, and rare but serious effects such as seizures, high blood pressure, and liver problems.",
+       "sha": "271286f7d50eb4ad"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A 2020 review reports kratom toxicity symptoms.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "eastlack_2020",
+       "where": "Abstract",
+       "quote": "This manuscript will discuss the most current epidemiology, pharmacology, toxicity, and management related to kratom, while seeking to provide a contemporary perspective on the issue and its role in the greater context of the opioid epidemic.",
+       "sha": "ebd49b9d1775d58e"
+      },
+      {
+       "label": "F4",
+       "ref": "eastlack_2020",
+       "where": "Clinical Presentations of Kratom Abuse",
+       "quote": "Seeking to gauge the spectrum of possible symptoms associated with kratom toxicity, a 2019 retrospective review of cases reported to the National Poison Data System and New York City Office of the Chief Medical Examiner identified a wide variety of presenting symptoms, with agitation being the most common at 18.6%, followed by tachycardia at 16.9%, drowsiness at 13.6%, and confusion at 8.1%.",
+       "sha": "4a099596801c2c71"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2017 review analyzed kratom benefits and risks.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "fluyau_2017",
+       "where": "Abstract",
+       "quote": "Literature review using databases such as Embase, Medline, PubMed, Cochrane Library, and Mendeley from 2007 to 2017 were evaluated by all authors to analyze current state on benefits, risks, and diagnosis evaluation of kratom (M. speciosa).",
+       "sha": "44723a8f7598b3e0"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  }
+ ],
  "place": {
   "home": "kratom",
   "also": [],
