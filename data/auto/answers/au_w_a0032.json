@@ -15,37 +15,123 @@
  ],
  "drugs": [],
  "made": {
-  "on": "2026-11-27",
+  "on": "2026-11-28",
   "models": {
    "reader": "gemini:gemini-3.5-flash-lite",
-   "writer": "openrouter:meta-llama/llama-3.3-70b-instruct",
+   "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
    "checker": "openrouter:openai/gpt-6-luna",
-   "planner": "openrouter:openai/gpt-oss-120b",
-   "team": "team R",
-   "reader_2": "openrouter:openai/gpt-oss-120b",
-   "reader_first": "gemini:gemma-4-31b-it"
+   "planner": "groq:openai/gpt-oss-120b",
+   "team": "team B",
+   "reader_2": "groq:openai/gpt-oss-20b",
+   "reader_3": "openrouter:openai/gpt-oss-120b",
+   "reader_first": "@cf/meta/llama-4-scout-17b-16e-instruct"
   },
-  "run": "46042662097",
+  "run": "46086806142",
   "read_by": {
-   "gemini-3.5-flash-lite": 19,
-   "gemini-3.1-flash-lite": 1
+   "gemini-3.5-flash-lite": 17,
+   "llama-4-scout-17b-16e-instruct": 3
   },
-  "read_seconds": 126,
+  "read_seconds": 98,
   "from": {
    "papers": 0,
    "summaries": 0,
-   "official": 0
+   "official": 1
   },
-  "neurons": 0.0,
-  "seconds": 126
+  "neurons": 393.4,
+  "seconds": 105
  },
  "status": "none",
- "why": "no source that can be read gave a finding for this question",
+ "why": "no draft passed: the form was wrong: short names no item it rests on",
  "gates": {
-  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.5-flash-lite read from there",
-  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)"
+  "reader": "llama-4-scout-17b-16e-instruct could not read on (the model service could not be reached: The read operation timed out): gemini-3.5-flash-lite read from there",
+  "read": "3 findings kept from 1 sources (0 papers read in full, 1 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "0 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 1 official page(s), 0 paper(s) read in summary only",
+  "writer": "try 1: short names no item it rests on (how the reply ended: stop; reasoned 0 characters, wrote 363) try 2: short names no item it rests on (how the reply ended: stop; reasoned 0 characters, wrote 355) try 3: short names no item it rests on (how the reply ended: stop; reasoned 0 characters, wrote 342)"
  },
- "sources": [],
+ "sources": [
+  {
+   "read": "page",
+   "ref": {
+    "id": "nccih_chelation-for-coronary-heart-disease-wha",
+    "type": "webpage",
+    "title": "Chelation for Coronary Heart Disease: What You Need To Know",
+    "author": [
+     {
+      "literal": "National Center for Complementary and Integrative Health"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      []
+     ]
+    },
+    "URL": "https://www.nccih.nih.gov/health/chelation-for-coronary-heart-disease-what-you-need-to-know",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       28
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-28"
+    }
+   },
+   "title": "Chelation for Coronary Heart Disease: What You Need To Know",
+   "year": null,
+   "kind": "official",
+   "people": true,
+   "near": 0.528,
+   "name": "National Center for Complementary and Integrative Health",
+   "short": "the US National Center for Complementary and Integrative Health",
+   "tier": 1,
+   "address": "https://www.nccih.nih.gov/health/chelation-for-coronary-heart-disease-what-you-need-to-know",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 5,
+     "where": "What has research shown about chelation for coronary heart disease? / Trial to Assess Chelation Therapy (TACT)",
+     "quote": "Overall, chelation therapy produced a modest reduction in cardiovascular events.",
+     "text": "Chelation therapy produced a modest reduction in cardiovascular events.",
+     "id": "F1",
+     "second_hand": ""
+    },
+    {
+     "passage": 8,
+     "where": "What has research shown about chelation for coronary heart disease? / Trial to Assess Chelation Therapy 2 (TACT2)",
+     "quote": "EDTA chelation reduced lead levels but did not reduce cardiovascular events in this study.",
+     "text": "EDTA chelation reduced lead levels but did not reduce cardiovascular events in this study.",
+     "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 6,
+     "where": "What has research shown about chelation for coronary heart disease? / Trial to Assess Chelation Therapy (TACT)",
+     "quote": "The high-dose vitamins and minerals didn’t reduce cardiovascular events, but they appeared to be safe.",
+     "text": "The high-dose vitamins and minerals didn’t reduce cardiovascular events.",
+     "id": "F3",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 6,
+     "where": "What has research shown about chelation for coronary heart disease? / Trial to Assess Chelation Therapy (TACT)",
+     "quote": "Since TACT was the first clinical trial to show a benefit of chelation, its results were not, by themselves, sufficient to support the routine use of chelation as a post–heart attack therapy in people with diabetes.",
+     "text": "The results of TACT were not sufficient to support the routine use of chelation as a post–heart attack therapy in people with diabetes.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "A"
+  }
+ ],
  "parts": [],
  "complete": false,
  "missing": "",
@@ -73,7 +159,16 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-27",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question",
+   "short": "",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "Cardiovascular Health in the Transition From Adolescence to Emerging Adulthood: A Scientific Statement From the American Heart Association",
@@ -97,14 +192,7 @@
    "kind": "review",
    "at": "10.1007/s00414-025-03439-9",
    "kept": 0,
-   "thrown": [
-    {
-     "kind": "text",
-     "text": "The provided passages do not mention harmaline.",
-     "quote": "Our review aims to discuss the complex relationship between illicit drugs and congenital cardiac disorders",
-     "why": "the sentence is not carried by its quote and passage"
-    }
-   ]
+   "thrown": []
   },
   {
    "title": "The Expanding Role of GLP-1 Receptor Agonists: Advancing Clinical Outcomes in Metabolic and Mental Health",
@@ -191,7 +279,7 @@
    "read": "page",
    "kind": "official",
    "at": "https://www.nccih.nih.gov/health/chelation-for-coronary-heart-disease-what-you-need-to-know",
-   "kept": 0,
+   "kept": 3,
    "thrown": []
   },
   {
@@ -232,7 +320,14 @@
    "kind": "review",
    "at": "10.1016/j.cardfail.2021.05.023",
    "kept": 0,
-   "thrown": []
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "not mentioned in the passages",
+     "quote": "Substance use is common among those with heart failure (HF) and is associated with worse clinical outcomes.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   },
   {
    "title": "Cardiovascular Health Promotion for US Veterans: Current State, Gaps, and Strategies: A Scientific Statement From the American Heart Association",
@@ -243,6 +338,7 @@
    "thrown": []
   }
  ],
+ "plan": "the planner gave no plan that could be used: the writer chose the items itself",
  "place": {
   "home": "dmt-ayahuasca",
   "also": [],

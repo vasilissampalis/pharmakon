@@ -15,36 +15,35 @@
  ],
  "drugs": [],
  "made": {
-  "on": "2026-11-27",
+  "on": "2026-11-28",
   "models": {
    "reader": "gemini:gemini-3.5-flash-lite",
-   "writer": "groq:qwen/qwen3.8-27b",
+   "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
    "checker": "openrouter:openai/gpt-6-luna",
    "planner": "groq:openai/gpt-oss-120b",
-   "also1": "gemini:gemini-3.5-flash-lite",
-   "also2": "gemini:gemini-3-flash-preview",
-   "team": "team I",
-   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-   "also2_else": "gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
+   "team": "team B",
+   "reader_2": "groq:openai/gpt-oss-20b",
+   "reader_3": "openrouter:openai/gpt-oss-120b",
+   "reader_first": "@cf/meta/llama-4-scout-17b-16e-instruct"
   },
-  "run": "45914912479",
+  "run": "46086806142",
   "read_by": {
    "gemini-3.5-flash-lite": 12,
-   "gpt-oss-20b": 2
+   "llama-4-scout-17b-16e-instruct": 2
   },
-  "read_seconds": 92,
+  "read_seconds": 85,
   "from": {
    "papers": 0,
    "summaries": 0,
    "official": 0
   },
-  "neurons": 0.0,
-  "seconds": 92
+  "neurons": 100.2,
+  "seconds": 85
  },
  "status": "none",
  "why": "no source that can be read gave a finding for this question",
  "gates": {
+  "reader": "llama-4-scout-17b-16e-instruct could not read on (the model service could not be reached: The read operation timed out): gemini-3.5-flash-lite read from there",
   "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 3 thrown away (the quote was not in the passage, or a number was not in the quote)"
  },
  "sources": [],
@@ -91,6 +90,14 @@
    "why": "no source that can be read gave a finding for this question",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-27",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -103,7 +110,7 @@
    "thrown": [
     {
      "kind": "text",
-     "text": "A research paper on major depression in comorbidity with substance use disorders",
+     "text": "A research paper discussing major depressive disorder in comorbidity with substance use disorders",
      "quote": "Major Depression in Comorbidity with Substance use Disorders: Patients' Features and Clinical-Neurobiological Rationale of Antidepressant Treatments",
      "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
     }
@@ -115,14 +122,7 @@
    "kind": "other",
    "at": "10.3390/jpm15030103",
    "kept": 0,
-   "thrown": [
-    {
-     "kind": "text",
-     "text": "GWAS meta‑meta‑analysis of comorbid anxiety, depression and ADHD in 18.5 million subjects",
-     "quote": "GWAS datasets were obtained for each comorbid phenotype, followed by a GWAS meta‑meta‑analysis using a significance threshold of p < 5E−8 to validate the rationale behind combining all GWAS phenotypes",
-     "why": "a number of the sentence is not in its quote"
-    }
-   ]
+   "thrown": []
   },
   {
    "title": "Drug-Drug Interactions Between Direct-Acting Antivirals and Psychoactive Medications",
@@ -130,7 +130,14 @@
    "kind": "review",
    "at": "10.1007/s40262-016-0407-2",
    "kept": 0,
-   "thrown": []
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "A review of drug interactions between direct-acting antivirals and psychoactive medications",
+     "quote": "The aim of this review is to provide an overview of the interaction mechanisms between DAAs and psychoactive agents.",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
   },
   {
    "title": "A real-world pharmacovigilance study of adverse events associated with esketamine: disproportionality analysis and detection of potential drug-drug interaction signals",
@@ -213,7 +220,7 @@
    "thrown": [
     {
      "kind": "text",
-     "text": "not mentioned in the passages",
+     "text": "not specified in the passages",
      "quote": "Psychotherapeutic drugs (antipsychotics and antidepressants) are widely used for treating anxiety.",
      "why": "the sentence is not carried by its quote and passage"
     }
