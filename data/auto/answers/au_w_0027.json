@@ -19,15 +19,17 @@
  "made": {
   "on": "2026-11-28",
   "models": {
-   "reader": "gemini:gemini-3.5-flash-lite",
-   "writer": "openrouter:meta-llama/llama-3.3-70b-instruct",
+   "reader": "gemini:gemma-4-31b-it",
+   "writer": "gemini:gemma-4-26b-a4b-it",
    "checker": "openrouter:openai/gpt-6-luna",
-   "planner": "openrouter:openai/gpt-oss-120b",
-   "team": "team R",
-   "reader_2": "openrouter:openai/gpt-oss-120b",
-   "reader_first": "gemini:gemma-4-31b-it"
+   "planner": "gemini:gemma-4-31b-it",
+   "also1": "gemini:gemini-3.1-flash-lite",
+   "team": "team Z",
+   "reader_2": "gemini:gemini-3.1-flash-lite",
+   "reader_3": "openrouter:openai/gpt-oss-120b",
+   "also1_else": "gemini:gemini-3.5-flash-lite|gemini:gemma-4-31b-it"
   },
-  "run": "46146766276",
+  "run": "46150091143",
   "read_seconds": 28,
   "from": {
    "papers": 2,
@@ -35,16 +37,15 @@
    "official": 2
   },
   "neurons": 0.0,
-  "seconds": 119
+  "seconds": 376
  },
  "status": "none",
- "why": "the second reader did not accept the answer",
+ "why": "no draft passed: the form was wrong: no JSON",
  "gates": {
-  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.5-flash-lite read from there",
-  "read": "9 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 6 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "read": "11 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
   "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 2 official page(s), 0 paper(s) read in summary only",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.33, but 0.87, how1 0.33, how2 0.97, how3 0.83",
-  "check": "short: NOT accepted: The passages describe poisoning, organ damage, and dependent drinking, but do not state that these cause death.; but: NOT accepted: it is about something else than the short answer (The passages do not establish outright that alcohol alone can cause death, so “Possibly” would be more cautious than “Yes.” Sentence 1 directly lists ways it claims alcohol can cause death, so it addresses the question, though its claim is ); how1: accepted; how2: accepted; how3: accepted"
+  "told": "the writer was told what the readers said of the last draft that was not accepted: the short answer “Yes, alcohol can cause death through poisoning, organ damage, and dependent drinking.”: The passages describe poisoning, organ damage, and dependent drinking, but do not state that these cause death. | the But “This may be stronger and more deadly when used with other drugs.”: it i",
+  "writer": "try 1: no JSON (how the reply ended: length; reasoned 0 characters, wrote 8914) try 2: no JSON (how the reply ended: length; reasoned 0 characters, wrote 9344)"
  },
  "sources": [
   {
@@ -101,14 +102,35 @@
     "GBD 2016 Alcohol CollaboratorsMax G Griswold, Nancy Fullman, Caitlin Hawley, Nicholas Arian, Stephanie R M Zimsen, Hayley D Tymeson, Vidhya Venkateswaran, Austin Douglas Tapp, Mohammad H Forouzanfar, Joseph S Salama, Kalkidan Hassen Abate, Degu Abate, Solomon M Abay, Cristiana Abbafati, Rizwan Suliankatchi Abdulkader, Zegeye Abebe, Victor Aboyans, Mohammed Mehdi Abrar, Pawan Acharya, Olatunji O Adetokunboh, Tara Ballav Adhikari, Jose C Adsuar, Mohsen Afarideh, Emilie Elisabet Agardh, Gina Agarwal, Sargis Aghasi Aghayan, Sutapa Agrawal, Muktar Beshir Ahmed, Mohammed Akibu, Tomi Akinyemiju, Nadia Akseer, Deena H Al Asfoor, Ziyad Al-Aly, Fares Alahdab, Khurshid Alam, Ammar Albujeer, Kefyalew Addis Alene, Raghib Ali, Syed Danish Ali, Mehran Alijanzadeh, Syed Mohamed Aljunid, Ala'a Alkerwi, Peter Allebeck, Nelson Alvis-Guzman, Azmeraw T Amare, Leopold N Aminde, Walid Ammar, Yaw Ampem Amoako, Gianna Gayle Herrera Amul, Catalina Liliana Andrei, Colin Angus, Mustafa Geleto Ansha, Carl Abelardo T Antonio, Olatunde Aremu, Johan Ärnlöv, Al Artaman, Krishna K Aryal, Reza Assadi, Marcel Ausloos, Leticia Avila-Burgos, Euripide F G A Avokpaho, Ashish Awasthi, Henok Tadesse Ayele, Rakesh Ayer, Tambe B Ayuk, Peter S Azzopardi, Hamid Badali, Alaa Badawi, Maciej Banach, Suzanne Lyn Barker-Collo, Lope H Barrero, Huda Basaleem, Estifanos Baye, Shahrzad Bazargan-Hejazi, Neeraj Bedi, Yannick Béjot, Abate Bekele Belachew, Saba Abraham Belay, Derrick A Bennett, Isabela M Bensenor, Eduardo Bernabe, Robert S Bernstein, Addisu Shunu Beyene, Tina Beyranvand, Soumyadeeep Bhaumik, Zulfiqar A Bhutta, Belete Biadgo, Ali Bijani, Nigus Bililign, Sait Mentes Birlik, Charles Birungi, Hailemichael Bizuneh, Peter Bjerregaard, Tone Bjørge, Guilherme Borges, Cristina Bosetti, Soufiane Boufous, Nicola Luigi Bragazzi, Hermann Brenner, Zahid A Butt, Lucero Cahuana-Hurtado, Bianca Calabria, Ismael R Campos-Nonato, Julio Cesar Campuzano Rincon, Giulia Carreras, Juan J Carrero, Félix Carvalho, Carlos A Castañeda-Orjuela, Jacqueline Castillo Rivas, Ferrán Catalá-López, Jung-Chen Chang, Fiona J Charlson, Aparajita Chattopadhyay, Pankaj Chaturvedi, Rajiv Chowdhury, Devasahayam J Christopher, Sheng-Chia Chung, Liliana G Ciobanu, Rafael M Claro, Sara Conti, Ewerton Cousin, Michael H Criqui, Berihun Assefa Dachew, Paul I Dargan, Ahmad Daryani, José Das Neves, Kairat Davletov, Filipa De Castro, Barbora De Courten, Jan-Walter De Neve, Louisa Degenhardt, Gebre Teklemariam Demoz, Don C Des Jarlais, Subhojit Dey, Rupinder Singh Dhaliwal, Samath Dhamminda Dharmaratne, Meghnath Dhimal, David Teye Doku, Kerrie E Doyle, Manisha Dubey, Eleonora Dubljanin, Bruce B Duncan, Hedyeh Ebrahimi, Dumessa Edessa, Maysaa El Sayed Zaki, Sergei Petrovich Ermakov, Holly E Erskine, Alireza Esteghamati, Mahbobeh Faramarzi, Andrea Farioli, Andre Faro, Maryam S Farvid, Farshad Farzadfar, Valery L Feigin, Mariana Santos Felisbino-Mendes, Eduarda Fernandes, Alize J Ferrari, Cleusa P Ferri, Daniel Obadare Fijabi, Irina Filip, Jonas David Finger, Florian Fischer, Abraham D Flaxman, Richard Charles Franklin, Neal D Futran, Silvano Gallus, Morsaleh Ganji, Fortune Gbetoho Gankpe, Gebremedhin Berhe Gebregergs, Tsegaye Tewelde Gebrehiwot, Johanna M Geleijnse, Reza Ghadimi, Lilian A Ghandour, Mamata Ghimire, Paramjit Singh Gill, Ibrahim Abdelmageed Ginawi, Ababi Zergaw Z Giref, Philimon N Gona, Sameer Vali Gopalani, Carolyn C Gotay, Alessandra C Goulart, Felix Greaves, Giuseppe Grosso, Yuming Guo, Rahul Gupta, Rajeev Gupta, Vipin Gupta, Reyna Alma Gutiérrez, Murthy Gvs, Nima Hafezi-Nejad, Tekleberhan Beyene Hagos, Gessessew Bugssa Hailu, Randah R Hamadeh, Samer Hamidi, Graeme J Hankey, Hilda L Harb, Sivadasanpillai Harikrishnan, Josep Maria Haro, Hamid Yimam Hassen, Rasmus Havmoeller, Simon I Hay, Behzad Heibati, Andualem Henok, Ileana Heredia-Pi, Norberto Francisco Hernández-Llanes, Claudiu Herteliu, Desalegn Ts Tsegaw Hibstu, Praveen Hoogar, Nobuyuki Horita, H Dean Hosgood, Mostafa Hosseini, Mihaela Hostiuc, Guoqing Hu, Hsiang Huang, Abdullatif Husseini, Bulat Idrisov, Bogdan Vasile Ileanu, Olayinka Stephen Ilesanmi, Seyed Sina Naghibi Irvani, Sheikh Mohammed Shariful Islam, Maria D Jackson, Mihajlo Jakovljevic, Achala Upendra Jayatilleke, Ravi Prakash Jha, Jost B Jonas, Jacek Jerzy Jozwiak, Zubair Kabir, Rajendra Kadel, Amaha Kahsay, Umesh Kapil, Amir Kasaeian, Tesfaye D Dessale Kassa, Srinivasa Vittal Katikireddi, Norito Kawakami, Seifu Kebede, Adane Teshome Kefale, Peter Njenga Keiyoro, Andre Pascal Kengne, Yousef Khader, Morteza Abdullatif Khafaie, Ibrahim A Khalil, Md Nuruzzaman Khan, Young-Ho Khang, Mona M Khater, Jagdish Khubchandani, Cho-Il Kim, Daniel Kim, Yun Jin Kim, Ruth W Kimokoti, Adnan Kisa, Mika Kivimäki, Sonali Kochhar, Soewarta Kosen, Parvaiz A Koul, Ai Koyanagi, Kewal Krishan, Barthelemy Kuate Defo, Burcu Kucuk Bicer, Veena S Kulkarni, Pushpendra Kumar, Alessandra Lafranconi, Arjun Lakshmana Balaji, Ratilal Lalloo, Tea Lallukka, Hilton Lam, Faris Hasan Lami, Qing Lan, Justin J Lang, Sonia Lansky, Anders O Larsson, Arman Latifi, Janet L Leasher, Paul H Lee, James Leigh, Mall Leinsalu, Janni Leung, Miriam Levi, Yichong Li, Lee-Ling Lim, Shai Linn, Shiwei Liu, Andrea Lobato-Cordero, Paulo A Lotufo, Erlyn Rachelle King Macarayan, Isis Eloah Machado, Fabiana Madotto, Hassan Magdy Abd El Razek, Muhammed Magdy Abd El Razek, Marek Majdan, Reza Majdzadeh, Azeem Majeed, Reza Malekzadeh, Deborah Carvalho Malta, Chabila Christopher Mapoma, Jose Martinez-Raga, Pallab K Maulik, Mohsen Mazidi, Martin Mckee, Varshil Mehta, Toni Meier, Tesfa Mekonen, Kidanu Gebremariam Meles, Addisu Melese, Peter T N Memiah, Walter Mendoza, Desalegn Tadese Mengistu, George A Mensah, Tuomo J Meretoja, Haftay Berhane Mezgebe, Tomasz Miazgowski, Ted R Miller, Gk Mini, Andreea Mirica, Erkin M Mirrakhimov, Babak Moazen, Karzan Abdulmuhsin Mohammad, Noushin Mohammadifard, Shafiu Mohammed, Lorenzo Monasta, Paula Moraga, Lidia Morawska, Moti Tolera Jalu, Seyyed Meysam Mousavi, Satinath Mukhopadhyay, Kamarul Imran Musa, Aliya Naheed, Gurudatta Naik, Farid Najafi, Vinay Nangia, Jobert Richie Nansseu, Mudavath Siva durga prasad Nayak, Chakib Nejjari, Subas Neupane, Sudan Prasad Neupane, Josephine W Ngunjiri, Cuong Tat Nguyen, Long Hoang Nguyen, Trang Huyen Nguyen, Dina Nur Anggraini Ningrum, Yirga Legesse Nirayo, Jean Jacques Noubiap, Richard Ofori-Asenso, Felix Akpojene Ogbo, In-Hwan Oh, Olanrewaju Oladimeji, Andrew T Olagunju, Pedro R Olivares, Bolajoko Olubukunola Olusanya, Jacob Olusegun Olusanya, Anu Mary Oommen, Eyal Oren, Heather M Orpana, Doris D V Ortega-Altamirano, Justin R Ortiz, Erika Ota, Mayowa Ojo Owolabi, Abayomi Samuel Oyekale, Mahesh P A, Adrian Pana, Eun-Kee Park, Charles D H Parry, Hadi Parsian, Ajay Patle, George C Patton, Deepak Paudel, Max Petzold, Michael R Phillips, Julian David Pillay, Maarten J Postma, Farshad Pourmalek, Dorairaj Prabhakaran, Mostafa Qorbani, Amir Radfar, Anwar Rafay, Alireza Rafiei, Fakher Rahim, Afarin Rahimi-Movaghar, Mahfuzar Rahman, Muhammad Aziz Rahman, Rajesh Kumar Rai, Sasa Rajsic, Sree Bhushan Raju, Usha Ram, Saleem M Rana, Chhabi Lal Ranabhat, David Laith Rawaf, Salman Rawaf, Robert C Reiner, Cesar Reis, Andre M N Renzaho, Mohammad Sadegh Rezai, Leonardo Roever, Luca Ronfani, Robin Room, Gholamreza Roshandel, Ali Rostami, Gregory A Roth, Ambuj Roy, Yogesh Damodar Sabde, Basema Saddik, Saeid Safiri, Amirhossein Sahebkar, Joseph S Salama, Zikria Saleem, Joshua A Salomon, Sundeep Santosh Salvi, Juan Sanabria, Maria Dolores Sanchez-Niño, Damian Francesco Santomauro, Itamar S Santos, Milena M M Santric Milicevic, Abdur Razzaque Sarker, Rodrigo Sarmiento-Suárez, Nizal Sarrafzadegan, Benn Sartorius, Maheswar Satpathy, Monika Sawhney, Sonia Saxena, Mete Saylan, Michael P Schaub, Maria Inês Schmidt, Ione J C Schneider, Ben Schöttker, Aletta Elisabeth Schutte, Falk Schwendicke, Sadaf G Sepanlou, Masood A Ali Shaikh, Mehdi Sharif, Jun She, Aziz Sheikh, Jiabin Shen, Mekonnen Sisay Shiferaw, Mika Shigematsu, Rahman Shiri, Kawkab Shishani, Ivy Shiue, Sharvari Rahul Shukla, Inga Dora Sigfusdottir, Diego Augusto Santos Silva, Natacha Torres Da Silva, Dayane Gabriele Alves Silveira, Dhirendra Narain Narain Sinha, Freddy Sitas, Adauto Martins Soares Filho, Moslem Soofi, Reed J D Sorensen, Joan B Soriano, Chandrashekhar T Sreeramareddy, Nadine Steckling, Dan J Stein, Mu'awiyyah Babale Sufiyan, Patrick J Sur, Bryan L Sykes, Rafael Tabarés-Seisdedos, Takahiro Tabuchi, Mohammad Tavakkoli, Arash Tehrani-Banihashemi, Merhawi Gebremedhin Tekle, Subash Thapa, Nihal Thomas, Roman Topor-Madry, Fotis Topouzis, Bach Xuan Tran, Christopher E Troeger, Thomas Clement Truelsen, Nikolaos Tsilimparis, Stefanos Tyrovolas, Kingsley Nnanna Ukwaja, Irfan Ullah, Olalekan A Uthman, Pascual R Valdez, Job F M Van Boven, Tommi Juhani Vasankari, Narayanaswamy Venketasubramanian, Francesco S Violante, Sergey Konstantinovitch Vladimirov, Vasily Vlassov, Stein Emil Vollset, Theo Vos, Fasil Wagnew Shiferaw Wagnew, Yasir Waheed, Yuan-Pang Wang, Elisabete Weiderpass, Fitsum Weldegebreal, Kidu Gidey Weldegwergs, Andrea Werdecker, Ronny Westerman, Harvey A Whiteford, Justyna Widecka, Tissa Wijeratne, Grant M A Wyper, Gelin Xu, Tomohide Yamada, Yuichiro Yano, Pengpeng Ye, Ebrahim M Yimer, Paul Yip, Biruck Desalegn Yirsaw, Engida Yisma, Naohiro Yonemoto, Seok-Jun Yoon, Marcel Yotebieng, Mustafa Z Younis, Geevar Zachariah, Zoubida Zaidi, Mohammad Zamani, Xueying Zhang, Sanjay Zodpey, Ali H Mokdad, Mohsen Naghavi, Christopher J L Murray, Emmanuela Gakidou.",
     "AffiliationsInstitute for Health Metrics and Evaluation (M G Griswold MA, N Fullman MPH, C Hawley MSPH, N Arian BS, S R M Zimsen MA, H D Tymeson BA, A D Tapp BS, J S Salama MS, Prof L Degenhardt PhD, S D Dharmaratne MD, Prof V L Feigin PhD, Prof A D Flaxman PhD, Prof S I Hay DSc, Prof M Jakovljevic PhD, I A Khalil MD, R C Reiner PhD, G A Roth MD, P J Sur BA, C E Troeger MPH, Prof S Vollset DrPH, Prof T Vos PhD, Prof H A Whiteford PhD, Prof A H Mokdad PhD, Prof M Naghavi PhD, Prof C J L Murray DPhil, Prof E Gakidou PhD), Department of Global Health (F J Charlson PhD, S Kochhar MD, Prof J R Ortiz MD, R J D Sorensen MPH), School of Medicine Department of Otolaryngology-Head and Neck Surgery (N D Futran MD), University of Washington, Seattle, WA, USA (Prof E Oren PhD); Department of Epidemiology (V Venkateswaran BDS), Department of Nutrition (M S Farvid PhD), Ariadne Labs (E K Macarayan PhD), BWH Division of General Internal Medicine and Primary Care (Prof A Sheikh MSc), Harvard University, Boston, MA, USA; Seattle Genetics, Seattle, WA, USA (M H Forouzanfar PhD); Department of Population and Family Health (Prof K H Abate PhD), Department of Epidemiology (M B Ahmed MPH, Prof T T Gebrehiwot MPH), Jimma University, Jimma, Ethiopia; School of Public Health (A S Beyene MPH, M G Tekle MPH), School of Pharmacy (D Edessa MSc, Prof M S Shiferaw MSc), Department of Medical Laboratory Science (Prof F Weldegebreal MSc), Haramaya University, Harar, Ethiopia (D Abate MSc, M T Jalu MPH); Department of Pharmacology and Clinical Pharmacy (S M Abay PhD), Department of Reproductive Health and Health Service Management (A Z Z Giref PhD), School of Alaide Health Sciences (Prof E Yisma MPH), Addis Ababa University, Addis Ababa, Ethiopia (M M Abrar MS, G T Demoz MSc); Department of Law Philosophy and Economic Studies, La Sapienza University, Rome, Italy (Prof C Abbafati PhD); Department of Public Health (R S Abdulkader MD), Office of the Undersecretary of Health Affairs (D H Al Asfoor MSc), Ministry of Health, Riyadh, Saudi Arabia; Human Nutrition (Z Abebe MSc), Institute of Public Health (Prof K A Alene MPH, Prof B A Dachew MPH), Department of Clinical Chemistry (B Biadgo BSc), University of Gondar, Gondar, Ethiopia; Department of Cardiology, Dupuytren University Hospital, Limoges, France (Prof V Aboyans MD); Institute of Epidemiology, University of Limoges, Limoges, France (Prof V Aboyans MD); Nepal Development Society, Nepal (P Acharya MPH); Department of Global Health (O O Adetokunboh MSc), Department of Psychiatry (Prof C D H Parry PhD), Stellenbosch University, Cape Town, South Africa; Cochrane South Africa (O O Adetokunboh MSc), Unit for Hypertension and Cardiovascular Disease (Prof A E Schutte PhD), South African Medical Research Council, Cape Town, South Africa (Prof D J Stein MD); Nepal Health Research Environment, Center for Social Science and Public Health Research Nepal, Nepal (T B Adhikari MPH); Unit for Health Promotion Research (T B Adhikari MPH), National Institute of Public Health (Prof P Bjerregaard DrPH), Department of Public Health (S Thapa PhD), University of Southern Denmark, Odense, Denmark; Faculty of Sport Science, University of Extremadura, Spain (J C Adsuar PhD); Endocrinology and Metabolism Research Center (M Afarideh MD, H Ebrahimi MD, Prof A Esteghamati MD, M Ganji MD), Digestive Disease Research Institute (H Ebrahimi MD), Non-Communicable Diseases Research Center (F Farzadfar MD, S N Irvani MD), School of Medicine (N Hafezi-Nejad MD), Hematologic Malignancies Research Center (A Kasaeian PhD), Hematology-Oncology and Stem Cell Transplantation Research Center (A Kasaeian PhD), Knowledge Utilization Research Center (KURC) (Prof R Majdzadeh PhD), Digestive Diseases Research Institute (Prof R Malekzadeh MD, G Roshandel PhD, S G Sepanlou MD), Department of Health Management and Economics, School of Public Health (S Mousavi PhD), Iranian National Center for Addiction Studies (INCAS) (Prof A Rahimi-Movaghar MD), Community-Based Participatory-Research Center (CBPR) (Prof R Majdzadeh PhD), Tehran University of Medical Sciences, Tehran, Iran (Prof M Hosseini PhD, Prof F Rahim PhD); Department of Public Health Sciences (Prof E E Agardh PhD, Prof P Allebeck MD), Department of Neurobiology (Prof J Ärnlöv PhD), Department of Medical Epidemiology and Biostatistics (Prof J J Carrero PhD, Prof E Weiderpass PhD), Karolinska Institute, Stockholm, Sweden; Department of Family Medicine, McMaster University, Hamilton, ON, Canada (G Agarwal MD); Chair of Zoology, Yerevan State University, Yerevan, Armenia (S A Aghayan PhD); Research Group of Molecular Parasitology, Scientific Center of Zoology and Hydroecology, Yerevan, Armenia (S A Aghayan PhD); Indian Institute of Public Health (Prof S Zodpey PhD), Public Health Foundation of India (PHFI), Gurugram, India (S Agrawal PhD, A Awasthi PhD, Prof D Prabhakaran DM); Vital Strategies, Gurugram, India (S Agrawal PhD); Department of Midwifery (M Akibu MSc), Department of Public Health, Lexington, KY, USA (M G Ansha MPH); Debre Berhan University, Debre Berhan, Ethiopia; Department of Epidemiology, University of Kentucky, USA (T Akinyemiju PhD); Nutritional Sciences, Faculty of Medicine (A Badawi PhD), Centre for Global Child Health, The Hospital for Sick Children, University of Toronto, Toronto, ON, Canada (N Akseer PhD, Prof Z A Bhutta PhD); Nuffield Department of Population Health, University of Oxford, Oxford, UK (D H Al Asfoor MSc, R Ali MPH, D A Bennett PhD); Department of Internal Medicine, Washington University in St. Louis, Saint Louis, MO, USA (Z Al-Aly MD); VA Saint Louis Health Care System, Clinical Epidemiology Center, Department of Veterans Affairs, Saint Louis, MO, USA (Z Al-Aly MD); Evidence Based Practice Center, Mayo Clinic Foundation for Medical Education and Research, Rochester, MN, USA (Prof F Alahdab MD); Research Committee, Education Committee, and Avicenna Journal of Medicine Editor, Syrian American Medical Society, Washington, Washington DC, USA (Prof F Alahdab MD); School of Population and Global Health (K Alam PhD), Medical School (Prof G J Hankey MD), University of Western Australia, Perth, WA, Australia; Nab'a Al-Hayat Foundation for Medical Sciences and Health Care, Iraq (A Albujeer DDS); Research School of Population Health (Prof K A Alene MPH), National Centre for Epidemiology and Population Health (B Calabria PhD), Australian National University, Canberra, ACT, Australia; Public Health Research Center, New York University Abu Dhabi, Abu Dhabi, United Arab Emirates (R Ali MPH); University of London, Pakistan (S Ali BA); Social Determinants of Health Research Center, Qazvin University of Medical Sciences, Qazvin, Iran (M Alijanzadeh PhD); Department of Health Policy and Management, Kuwait University, Safat, Kuwait (Prof S M Aljunid PhD); International Centre for Casemix and Clinical Coding, National University of Malaysia, Bandar Tun Razak, Malaysia (Prof S M Aljunid PhD); Department of Population Health, Luxembourg Institute of Health, Strassen, Luxembourg (A Alkerwi PhD); Swedish Research Council for Health, Working Life, and Welfare, Stockholm, Sweden (Prof P Allebeck MD); Research Group in Health Economics, University of Cartagena, Cartagena, Colombia (Prof N Alvis-Guzman PhD); Research Group in Hospital Management and Health Policies, University of the Coast, Barranquilla, Colombia (Prof N Alvis-Guzman PhD); Sansom Institute, University of South Australia (A Amare PhD); Wardliparingga Aboriginal Research Unit (P S Azzopardi PhD), South Australian Health and Medical Research Institute, Adelaide, SA, Australia; Psychiatry (Prof T Mekonen MSc), Bahir Dar University, Bahir Dar, Ethiopia (A Amare PhD); School of Public Health (L N Aminde MD, F J Charlson PhD, Prof B A Dachew MPH, H E Erskine PhD, A J Ferrari PhD, D F Santomauro PhD), School of Dentistry (Prof R Lalloo PhD), University of Queensland, Brisbane, QLD, Australia (J Leung PhD, Prof H A Whiteford PhD); Department of the Health Industrial Complex and Innovation in Health (Prof D A Silveira MSc), Department of Diseases and Non-Communicable Diseases and Health Promotion (A M Soares Filho DSc), Federal Ministry of Health, Brasilia, Brazil; Federal Ministry of Health, Beirut, Lebanon (Prof W Ammar PhD); Faculty of Health Sciences (Prof W Ammar PhD), Department of Epidemiology and Population Health (Prof L A Ghandour PhD), American University of Beirut, Beirut, Lebanon; Department of Internal Medicine, Komfo Anokye Teaching Hospital, Kumasi, Ghana (Y A Amoako MD); Lee Kuan Yew School of Public Policy (G G H Amul MSc), Yong Loo Lin School of Medicine (Prof N Venketasubramanian FRCP), National University of Singapore, Singapore, Singapore; Department of Legal Medicine and Bioethics (Prof M Hostiuc PhD), Carol Davila University of Medicine and Pharmacy, Bucharest, Romania (C Andrei PhD); School of Health and Related Research, University of Sheffield, Sheffield, UK (C Angus MSc); Department of Health Policy and Administration (C T Antonio MD), Development and Communication Studies (E K Macarayan PhD), University of the Philippines Manila, Manila, Philippines; School of Health Sciences, Birmingham City University, Birmingham, England (O Aremu PhD); School of Health and Social Studies, Dalarna University, Falun, Sweden (Prof J Ärnlöv PhD); Department of Community Health Sciences, University of Manitoba, Winnipeg, MB, Canada (A Artaman PhD); DFID Nepal Health Sector Programme 3, Monitoring Evaluation and Operational Research Project, ABT Associates Nepal, Lalitpur, Nepal (K K Aryal PhD); Education Development Center (Prof R Assadi PhD), Department of Medical Biotechnology (Prof A Sahebkar PhD), Mashhad University of Medical Sciences, Mashhad, Iran; School of Business, University of Leicester, Leicester, UK (Prof M Ausloos PhD); Center for Health Systems Research (L Avila-Burgos PhD, L Cahuana-Hurtado PhD, Prof I Heredia-Pi DipSocSc, D D V Ortega-Altamirano DrPH), National Institute of Public Health, Cuernavaca, Mexico (I R Campos-Nonato PhD, J Campuzano Rincon PhD, F De Castro PhD); Deworm3 Project, Bénin Clinical Research Institute (IRCB), Calavi, Benin (E F Avokpaho MD); Control of Infectious Diseases Project (E F Avokpaho MD), Non-Communicable Disease Department (F G Gankpe MD), Laboratory of Studies and Research-Action in Health (LERAS), Porto-Novo, Benin; Indian Institute of Public Health, Gandhinagar, India (A Awasthi PhD); Department of Epidemiology, Biostatistics, and Occupational Health, McGill University, Montreal, QC, Canada (H T Ayele PhD); Department of Public Health, Dilla University, Dilla, Ethiopia (H T Ayele PhD); Department of Community and Global Health (R Ayer MSc), Department of Mental Health (Prof N Kawakami PhD), Department of Diabetes and Metabolic Diseases (Prof T Yamada MD), University of Tokyo, Tokyo, Japan; Centre for Food and Nutrition Research, Institute of Medical Research and Plant Medicinal Studies, Yaounde, Cameroon (T B Ayuk PhD); Department of Health Studies, University of South Africa, Pretoria, South Africa (T B Ayuk PhD); Global Adolescent Health Group, Maternal and Child Health Program, Discipline of International Development, Burnet Institute, Melbourne, VIC, Australia (P S Azzopardi PhD); Department of Medical Mycology/Invasive Fungi Research Center (Prof H Badali PhD), Toxoplasmosis Research Center (Prof A Daryani PhD), Molecular and Cell Biology Research Center (Prof A Rafiei PhD), Department of Pediatrics (Prof M Rezai MD), Department of Immunology (Prof A Rafiei PhD), Mazandaran University of Medical Sciences, Sari, Iran; Public Health Risk Sciences Division (A Badawi PhD), Health Promotion and Chronic Disease Prevention Branch (J J Lang PhD), Applied Research Division (H M Orpana PhD), Public Health Agency of Canada, Toronto, ON, Canada; Department of Hypertension, Medical University of Lodz, Lodz, Poland (Prof M Banach PhD); Polish Mother's Memorial Hospital Research Institute (PMMHRI), Lodz, Poland (Prof M Banach PhD); School of Psychology, University of Auckland, Auckland, New Zealand (Prof S L Barker-Collo PhD); Department of Industrial Engineering, Pontificia Universidad Javeriana, Bogota, Colombia (Prof L H Barrero DSc); University of Aden, Aden, Yemen (Prof H Basaleem PhD); Department of Public Health, Wollo University, Dessie, Ethiopia (E Baye MPH); Department of Psychiatry, Charles R. Drew University of Medicine and Science, Los Angeles, CA, USA (Prof S Bazargan-Hejazi BEP); Department of Psychiatry and Biobehavioral Sciences, University of California Los Angeles, Los Angeles, CA, USA (Prof S Bazargan-Hejazi BEP); Department of Community Medicine, Gandhi Medical College Bhopal, Bhopal, India (Prof N Bedi MD); Jazan University, Saudi Arabia (Prof N Bedi MD); Department of Neurology, University Hospital of Dijon, Dijon, France (Prof Y Béjot PhD); Dijon Stroke Registry, Faculty of Health Sciences, University of Burgundy, Dijon, France (Prof Y Béjot PhD); School of Public Health (A B Belachew MSc, G B Gebregergs MPH), Institute of Biomedical Sciences, Department of Anatomy and Embryology, College of Health Sciences (T B Hagos MS), Biomedical Sciences Division, School of Medicine (Prof G B Hailu MSc, D T Mengistu MSc), Nutrition and Dietetics (A Kahsay MPH), Clinical Pharmacy Unit (T D D Kassa MSc, Y L Nirayo MSc, K G Weldegwergs MSc), School of Pharmacy (E Yimer MSc), Mekelle University, Mekelle, Ethiopia (Prof K G Meles MPH); Dr. Tewelde Legesse Health Sciences College, Mekelle, Ethiopia (S A Belay MPH); Department of Internal Medicine (I M Bensenor PhD, Prof P A Lotufo DrPH, Prof I S Santos PhD), Center for Clinical and Epidemiological Research (A C Goulart PhD), Department of Psychiatry (Y Wang PhD), University of São Paulo, São Paulo, Brazil; Dental Institute (E Bernabe PhD), Faculty of Life Sciences and Medicine (Prof P I Dargan MB), King's College London, London, UK; Hubert Department of Global Health, Emory University, Atlanta, GA, USA (R S Bernstein MD); Department of Global Health, University of South Florida, Tampa, Florida, USA (R S Bernstein MD); School of Public Health and Medicine, University of Newcastle, Newcastle, NSW, Australia (A S Beyene MPH, M Khan MSc); Air Pollution Research Center (B Heibati PhD), Community Medicine Department (Prof A Tehrani-Banihashemi PhD), Preventive Medicine and Public Health Research Center (Prof A Tehrani-Banihashemi PhD), Iran University of Medical Sciences, Tehran, Iran (T Beyranvand PhD); Research (Prof P K Maulik PhD), The George Institute for Global Health, New Delhi, India (S Bhaumik MBBS); Center of Excellence in Women and Child Health, Aga Khan University, Karachi, Pakistan (Prof Z A Bhutta PhD); Social Determinants of Health Research Center (A Bijani PhD), Health Research Institute (Prof R Ghadimi PhD, A Bijani PhD, A Rostami PhD), Department of Clinical Biochemistry (Prof H Parsian PhD), Infectious Diseases and Tropical Medicine Research Center (A Rostami PhD), Student Research Committee (M Zamani MD), Babol University of Medical Sciences, Babol, Iran (Prof M Faramarzi PhD); Woldia University, Woldia, Ethiopia (N Bililign BHlthSci); Department of Medical and Surgical Sciences (A Farioli PhD, Prof F S Violante MD), University of Bologna, Bologna, Italy (S M Birlik MBA); GBS/CIDP Foundation International, Conshohocken, PA, USA (S M Birlik MBA); The UCL Centre for Global Health Economics (C Birungi MSc), Department of Health Informatics (S Chung PhD), Department of Epidemiology and Public Health (Prof M Kivimäki PhD), University College London, London, UK; Fast-Track Implementation Department, United Nations Programme on HIV/AIDS (UNAIDS), Gaborone, Botswana (C Birungi MSc); Public Health, St Paul's Hospital Millennium Medical College, Addis Ababa, Ethiopia (H Bizuneh MPH); Department of Global Public Health and Primary Care, University of Bergen, Bergen, Norway (Prof T Bjørge PhD); Department of Research (Prof E Weiderpass PhD), Cancer Registry of Norway, Oslo, Norway (Prof T Bjørge PhD); Department of Epidemiology and Psychosocial Research, National Institute of Psychiatry Ramón de la Fuente Muñiz, Mexico City, Mexico (Prof G Borges DSc, R A Gutiérrez PhD); Department of Oncology (C Bosetti PhD), Department of Environmental Health Science (S Gallus DSc), Mario Negri Institute for Pharmacological Research (IRCCS), Milan, Italy; Transport and Road Safety (TARS) Research (S Boufous PhD), National Drug and Alcohol Research Centre (B Calabria PhD, Prof L Degenhardt PhD), School of Medicine (Prof P K Maulik PhD), School of Public Health and Community Medicine (Prof F Sitas PhD), University of New South Wales, Sydney, NSW, Australia; University of Genoa, Italy (N L Bragazzi PhD); Division of Clinical Epidemiology and Aging Research, German Cancer Research Center, Heidelberg, Germany (Prof H Brenner MD, B Schöttker PhD); School of Population and Public Health (Z A Butt PhD, F Pourmalek PhD, Prof N Sarrafzadegan MD), University of British Columbia, Vancouver, BC, Canada (C C Gotay PhD); Al Shifa School of Public Health, Al Shifa Trust Eye Hospital, Rawalpindi, Pakistan (Z A Butt PhD); School of Medicine, University of the Valley of Cuernavaca, Cuernavaca, Mexico (J Campuzano Rincon PhD); Institute for Cancer Research, Prevention and Clinical Network (ISPRO), Florence, Italy (G Carreras PhD); Applied Molecular Biosciences Unit (Prof F Carvalho PhD), Institute of Biomedical Engineering (INEB), (J Das Neves PhD), Department of Chemistry (Prof E Fernandes PhD), Institute for Research and Innovation in Health (i3s) (J Das Neves PhD), University of Porto, Porto, Portugal; Colombian National Health Observatory, National Institute of Health, Bogota, Colombia (C A Castañeda-Orjuela MSc); Epidemiology and Public Health Evaluation Group, National University of Colombia, Bogota, Colombia (C A Castañeda-Orjuela MSc); Costa Rican Department of Social Security, San Jose, Costa Rica (Prof J Castillo Rivas MSc); School of Dentistry, University of Costa Rica, San Pedro, Costa Rica (Prof J Castillo Rivas MSc); Department of Health Planning and Economics, National School of Public Health, Institute of Health Carlos III, Madrid, Spain (F Catalá-López PhD); College of Medicine, National Taiwan University, Taipei, Taiwan (Prof J Chang PhD); Department of Development Studies (Prof A Chattopadhyay PhD), Department of Public Health & Mortality Studies (Prof U Ram PhD), International Institute for Population Sciences, Mumbai, India (P Kumar PhD, A Patle MPH); Tata Memorial Hospital, Mumbai, India (Prof P Chaturvedi MD); Department of Public Health and Primary Care, University of Cambridge, UK (Prof R Chowdhury PhD); Department of Pulmonary Medicine (Prof D J Christopher FRCP), Department of Community Health (Prof A M Oommen MD), Department of Endocrinology (Prof N Thomas PhD), Christian Medical College and Hospital (CMC), Vellore, India; Health Data Research UK, London, UK (S Chung PhD); School of Medicine (L G Ciobanu PhD), University of Adelaide, Adelaide, SA, Australia (A T Olagunju MD); Department of Nutrition (Prof R M Claro PhD), Department of Maternal and Child Nursing and Public Health (Prof M S Felisbino-Mendes PhD, Prof D C Malta PhD), School of Nursing (I E Machado PhD), Federal University of Minas Gerais, Belo Horizonte, Brazil; Department of Medicine and Surgery, University of Milan-Bicocca, Monza, Italy (S Conti PhD, A Lafranconi MD, F Madotto PhD); Postgraduate Program in Epidemiology, Federal University of Rio Grande do Sul, Porto Alegre, Brazil (E Cousin MSc, B B Duncan MD, Prof M I Schmidt PhD); Department of Family Medicine and Public Health, University of California San Diego, La Jolla, CA, USA (Prof M H Criqui MD); Clinical Toxicology Service, Guy's and St. Thomas' NHS Foundation Trust, London, UK (Prof P I Dargan MB); Kazakh National Medical University, Almaty, Kazakhstan (Prof K Davletov PhD); Monash Centre for Health Research and Implementation (Prof B de Courten PhD), School of Public Health and Preventive Medicine (Prof Y Guo PhD), Centre of Cardiovascular Research and Education in Therapeutics (R Ofori-Asenso MSc), Monash University, Melbourne, VIC, Australia; Monash Health, Melbourne, VIC, Australia (Prof B de Courten PhD); Institute of Public Health (Prof J De Neve MD, B Moazen MSc, S Mohammed PhD), Department of Ophthalmology, Medical Faculty Mannheim (Prof J B Jonas MD), Heidelberg University, Heidelberg, Germany; Department of Clinical Pharmacy, Aksum University, Aksum, Ethiopia (G T Demoz MSc); Department of Psychiatry, Icahn School of Medicine at Mount Sinai, New York, NY, USA (Prof D C Des Jarlais PhD); Disha Foundation, Gurgaon, India (S Dey PhD); Indian Council of Medical Research, New Delhi, India (R S Dhaliwal MD); Department of Community Medicine, University of Peradeniya, Peradeniya, Sri Lanka (S D Dharmaratne MD); Health Research Section, Nepal Health Research Council, Kathmandu, Nepal (M Dhimal PhD); Department of Population and Health, University of Cape Coast, Cape Coast, Ghana (D T Doku PhD); School of Health Sciences, University of Tampere, Tampere, Finland (D T Doku PhD, S Neupane PhD); School of Health and Biomedical Sciences, Royal Melbourne Institute of Technology (RMIT) University, Bundoora, VIC, Australia (Prof K E Doyle PhD); United Nations World Food Programme, New Delhi, India (M Dubey PhD); Faculty of Medicine, University of Belgrade, Serbia (E Dubljanin PhD); Department of Clinical Pathology, Mansoura University, Mansoura, Egypt (Prof M El Sayed Zaki PhD); Laboratory for Socio-Economic Issues of Human Development and Quality of Life, Russian Academy of Sciences, Moscow, Russia (Prof S P Ermakov DSc); Department of Medical Statistics and Documentary (Prof S P Ermakov DSc), Federal Research Institute for Health Organization and Informatics of the Ministry of Health (FRIHOI), Moscow, Russia (S K Vladimirov PhD); Policy and Epidemiology Group (D F Santomauro PhD), Queensland Centre for Mental Health Research, Brisbane, QLD, Australia (H E Erskine PhD, A J Ferrari PhD); Department of Psychology, Federal University of Sergipe, Sao Cristovao, Brazil (Prof A Faro PhD); National Institute for Stroke and Applied Neurosciences, Auckland University of Technology, Auckland, New Zealand (Prof V L Feigin PhD); Federal University of São Paulo, São Paulo, Brazil (C P Ferri PhD); Heller School for Social Policy and Management, Brandeis University, Waltham, MA, USA (D O Fijabi MS); School of Public Health, University of Memphis, Memphis, Tennessee, USA (D O Fijabi MS); Kaiser Permanente, Fontana, CA, USA (I Filip MD); Department of Health Sciences (I Filip MD), A.T. Still University, Mesa, Arizona, USA (A Radfar MD); Department of Epidemiology and Health Monitoring, Robert Koch Institute, Berlin, Germany (J D Finger PhD); Department of Public Health Medicine, Bielefeld University, Bielefeld, Germany (F Fischer PhD); College of Public Health, Medical and Veterinary Science, James Cook University, Townsville, QLD, Australia (Prof R C Franklin PhD); Neurosurgery Department, Sidi Mohamed Ben Abdellah University, Fez, Morocco (F G Gankpe MD); Division of Human Nutrition and Health, Wageningen University & Research, Wageningen, Netherlands (Prof J M Geleijnse PhD); Department of Health Care Policy & Management, University of Tsukuba, Tsukuba, Japan (M Ghimire MA); Unit of Academic Primary Care (Prof P S Gill DM), Division of Health Sciences (Prof O A Uthman PhD), University of Warwick, Coventry, UK; Department of Family and Community Medicine, University of Hail, Hail, Saudi Arabia (Prof I A Ginawi MD); College of Nursing and Health Sciences, University of Massachusetts Boston, Boston, MA, USA (Prof P N Gona PhD); Department of Biostatistics and Epidemiology, University of Oklahoma, Oklahoma City, OK, USA (S V Gopalani MPH); Department of Health and Social Affairs, Government of the Federated States of Micronesia, Palikir, Federated States of Micronesia (S V Gopalani MPH); Department of Primary Care and Public Health (F Greaves PhD, Prof A Majeed MD, Prof S Rawaf PhD), WHO Collaborating Centre for Public Health Education & Training (D L Rawaf MD), School of Public Health (Prof S Saxena MD), Imperial College London, London, UK; Health Improvement Directorate (F Greaves PhD), Public Health England, London, UK (Prof S Rawaf PhD); Integrated Tumor Registry, University-Hospital Polyclinic Vittorio Emanuele, Catania, Italy (G Grosso PhD); Commissioner of Public Health, West Virginia Bureau for Public Health, Charleston, WV, USA (Prof R Gupta MD); Department of Health Policy, Management & Leadership, West Virginia University, Morgantown, WV, USA (Prof R Gupta MD); Rajasthan University of Health Sciences, Jaipur, India (Prof R Gupta MD); Department of Preventive Cardiology, Eternal Heart Care Centre & Research Institute, Jaipur, India (Prof R Gupta MD); Department of Anthropology, University of Delhi, Delhi, India (V Gupta PhD); Indian Institute of Public Health, Public Health Foundation of India, Hyderabad, Hyderabad, India (Prof M GVS MD); Department of Radiology, Johns Hopkins University, Baltimore, MD, USA (N Hafezi-Nejad MD); Department of Family and Community Medicine, Arabian Gulf University, Manama, Bahrain (Prof R R Hamadeh DPhil); School of Health and Environmental Studies, Hamdan Bin Mohammed Smart University, Dubai, United Arab Emirates (Prof S Hamidi DrPH); Neurology Department, Sir Charles Gairdner Hospital, Perth, WA, Australia (Prof G J Hankey MD); Department of Vital and Health Statistics (H L Harb MPH), Department of Disease, Epidemics and Pandemics Control (J Nansseu MD), Ministry of Public Health, Beirut, Lebanon; Cardiology Department (Prof S Harikrishnan MD), Sree Chitra Tirunal Institute for Medical Sciences and Technology, Trivandrum, India (G Mini PhD); Research and Development Unit, Parc Sanitari Sant Joan de Déu (CIBERSAM), Sant Boi de Llobregat, Spain (Prof J M Haro MD, A Koyanagi MD, S Tyrovolas PhD); Department of Medicine (Prof J M Haro MD), University of Barcelona, Barcelona, Spain (S Tyrovolas PhD); Public Health Department (H Y Hassen MPH), Pharmacy Department (A T Kefale MSc), Mizan-Tepi University, Mizan Teferi, Ethiopia (Prof A Henok MPH); Unit of Epidemiology and Social Medicine, University Hospital Antwerp, Wilrijk, Belgium (H Y Hassen MPH); Karolinska University Hospital, Stockholm, Sweden (R Havmoeller PhD); Subdirectorate of Regulations, Guidelines and Technical Procedures, Secretary of Health, National Commission Against Addiction, Mexico City, Mexico (Prof N F Hernández-Llanes MPH); Department of Statistics and Econometrics (Prof C Herteliu PhD, Prof A Mirica PhD, A Pana MD), Bucharest University of Economic Studies, Bucharest, Romania (B V Ileanu PhD); Department of Reproductive Health, Hawassa University, Hawassa Ethiopia (D T T Hibstu MPH); Transdisciplinary Centre for Qualitative Methods, Manipal University, Manipal, India (P Hoogar PhD); Department of Pulmonology, Yokohama City University, Yokohama, Japan (N Horita MD); National Human Genome Research Institute (NHGRI), National Institutes of Health, Bethesda, MD, USA (N Horita MD); Department of Epidemiology and Population Health, Albert Einstein College of Medicine, Bronx, NY, USA (Prof H Hosgood PhD); Department of Internal Medicine, Emergency Hospital of Bucharest, Bucharest, Romania (Prof M Hostiuc PhD); Department of Epidemiology and Health Statistics, Xiangya School of Public Health, Central South University, Changsha, China (Prof G Hu PhD); Department of Psychiatry, Cambridge Health Alliance, Cambridge, MA, USA (H Huang MD); Institute of Community and Public Health, Birzeit University, Birzeit, Palestine (Prof A Husseini PhD); Qatar University, Doha, Qatar (Prof A Husseini PhD); Infectious Diseases Department, Bashkir State Medical University, Ufa, Russia (B Idrisov MD); Department of Public Health and Community Medicine, University of Liberia, Monrovia, Liberia (O S Ilesanmi PhD); Research Institute for Endocrine Sciences, Shahid Beheshti University of Medical Sciences, Tehran, Iran (S N Irvani MD); Institute for Physical Activity and Nutrition (S Islam PhD), National Centre for Farmer Health, School of Medicine (M Rahman PhD), Deakin University, Waurn Ponds, VIC, Australia; Department of Community Health and Psychiatry, University of the West Indies, Mona, Jamaica (Prof M D Jackson PhD); Faculty of Medical Sciences, University of Kragujevac, Kragujevac, Serbia (Prof M Jakovljevic PhD); Faculty of Graduate Studies (A U Jayatilleke PhD), Postgraduate Institute of Medicine (A U Jayatilleke PhD), University of Colombo, Colombo, Sri Lanka; Department of Community Medicine, Institute of Medical Sciences, Banaras Hindu University, Varanasi, India (R P Jha MSc); Capital Medical University, Beijing Institute of Ophthalmology, Beijing, China (Prof J B Jonas MD); Institution of Health and Nutrition Sciences, Czestochowa University of Technology, Czestochowa, Poland (Prof J J Jozwiak PhD); Faculty of Medicine and Health Sciences, University of Opole, Opole, Poland (Prof J J Jozwiak PhD); School of Public Health, University College Cork, Cork, Ireland (Z Kabir PhD); Department of Health Policy, Personal Social Services Research Unit, London School of Economics and Political Science, London, UK (R Kadel MPH); A.C.S. Medical College and Hospital, New Delhi, India (Prof U Kapil MD, Prof Z Zaidi DrPH); MRC/CSO Social & Public Health Sciences Unit, University of Glasgow, Glasgow, UK (S V Katikireddi PhD); Midwifery Program, Salale University, Fiche, Ethiopia (S Kebede MSc); Odel Campus, University of Nairobi, Nairobi, Kenya (Prof P N Keiyoro PhD); Non-Communicable Diseases Research Unit (Prof A P Kengne PhD), Alcohol, Tobacco & Other Drug Use Research Unit (Prof C D H Parry PhD), Medical Research Council South Africa, Cape Town, South Africa; Department of Medicine (Prof A P Kengne PhD, J Noubiap MD), Groote Schuur Hospital (G A Mensah MD), Department of Psychiatry and Mental Health (Prof D J Stein MD), University of Cape Town, Cape Town, South Africa; Department of Public Health and Community Medicine, Jordan University of Science and Technology, Alramtha, Jordan (Prof Y Khader PhD); Department of Public Health (Prof M A Khafaie PhD), Health Research Institute, Thalassemia and Hemoglobinopathy Research Center (Prof F Rahim PhD), Ahvaz Jundishapur University of Medical Sciences, Ahvaz, Iran; Department of Population Sciences, Jatiya Kabi Kazi Nazrul Islam University, Mymensingh, Bangladesh (M Khan MSc); Institute of Health Policy and Management, SNU Medical Research Center (Prof Y Khang MD), Department of Health Policy and Management (Prof Y Khang MD), Seoul National University, Seoul, South Korea; Department of Medical Parasitology, Cairo University, Cairo, Egypt (M M Khater MD); Department of Nutrition and Health Science, Ball State University, Muncie, IN, USA (Prof J Khubchandani PhD); Korea Health Industry Development Institute, Cheongju-Si, South Korea (C Kim PhD); Department of Health Sciences, Northeastern University, Boston, MA, USA (Prof D Kim DrPH); School of Medicine, Xiamen University Malaysia, Sepang, Malaysia (Prof Y Kim PhD); Department of Nutrition, Simmons College, Boston, MA, USA (R W Kimokoti MD); Department of Health Management and Health Economics (Prof A Kisa PhD), Norwegian Center for Addiction Research (SERAF), (S P Neupane PhD), University of Oslo, Oslo, Norway; Department of Global Community Health and Behavioral Sciences, Tulane University, New Orleans, LA, USA (Prof A Kisa PhD); Department of Public Health (Prof M Kivimäki PhD, T Lallukka PhD), University of Helsinki, Helsinki, Finland (T J Meretoja MD); Department of Public Health, Erasmus University Medical Center Rotterdam, The Netherlands, Erasmus University Medical Center, Netherlands (S Kochhar MD); International Institute of Health Management Research, New Delhi, India (A Patle MPH); Independent Consultant, Jakarta, Indonesia (S Kosen MD); Department of Internal and Pulmonary Medicine, Sheri Kashmir Institute of Medical Sciences, Srinagar, India (Prof P A Koul MD); Department of Anthropology, Panjab University, Chandigarh, India (Prof K Krishan PhD); Department of Social and Preventive Medicine (Prof B Kuate Defo PhD), Department of Demography (Prof B Kuate Defo PhD), University of Montreal, Montreal, QC, Canada; Faculty of Medicine, Department of Public Health, Yuksek Ihtisas University, Ankara, Turkey (Prof B Kucuk Bicer BEP); Faculty of Medicine, Department of Public Health, Hacettepe University, Ankara, Turkey (Prof B Kucuk Bicer BEP); Arkansas State University, USA (V S Kulkarni PhD); Department of Paediatrics (Prof G C Patton MD), Australian Institute of Muscular Skeletal Sciences, Department of Medicine and Neurology (Prof T Wijeratne MD), University of Melbourne, Melbourne, VIC, Australia; Department of Community Medicine (M S Nayak MD), Rajiv Gandhi University of Health Sciences, Bangalore, India (A Lakshmana Balaji MPH); Population and Work Ability Program (T Lallukka PhD), Finnish Institute of Occupational Health, Helsinki, Finland (R Shiri PhD); Institute of Health Policy and Development Studies, National Institutes of Health, Manila, Philippines (Prof H Lam PhD); Department of Community and Family Medicine (Prof F H Lami PhD), Academy of Medical Science, Baghdad, Iraq; Division of Cancer Epidemiology & Genetics, National Cancer Institute, Rockville, MD, USA (Q Lan PhD); Belo Horizonte City Hall, Municipal Health Department of Belo Horizonte, Belo Horizonte, Brazil (Prof S Lansky PhD); Department of Medical Sciences, Uppsala University, Uppsala, Sweden (Prof A O Larsson PhD); Department of Clinical Chemistry and Pharmacology, Akademiska Sjukhuset, Uppsala, Sweden (Prof A O Larsson PhD); Managerial Epidemiology Research Center, Department of Public Health, School of Nursing and Midwifery (S Safiri PhD), Department of Public Health, School of Public Health, (A Latifi PhD), Maragheh University of Medical Sciences, Maragheh, Iran; College of Optometry, Nova Southeastern University, Fort Lauderdale, FL, USA (J L Leasher OD); School of Nursing, Hong Kong Polytechnic University, Hong Kong, China (P H Lee PhD); Asbestos Diseases Research Institute (J Leigh MD), School of Public Health (Prof F Sitas PhD), University of Sydney, Sydney, NSW, Australia; Scohost, Södertörn University, Huddinge, Sweden (Prof M Leinsalu PhD); Department of Epidemiology and Biostatistics, National Institute for Health Development, Tallinn, Estonia (Prof M Leinsalu PhD); CERIMP, Local Health Unit Tuscany Centre, Florence, Italy (M Levi PhD); Department of Health Sciences, University of Florence, Florence, Italy (M Levi PhD); Department of Clinical and Epidemiological Research, Shenzen Institute of Cardiovascular Disease, Shenzhen, China (Prof Y Li PhD); Department of Medicine, University of Malaya, Kuala Lumpur, Malaysia (L Lim MRCP); Department of Medicine and Therapeutics, The Chinese University of Hong Kong, Shatin, China (L Lim MRCP); School of Public Health, University of Haifa, Haifa, Israel (Prof S Linn DrPH); Centre for Chronic Disease Control, China (Prof S Liu PhD); National Institute of Energy Efficiency and Renewable Energies (INER), Quito, Ecuador (A Lobato-Cordero MSc); Damietta University, Damietta, Egypt (H Magdy Abd El Razek MD); Opthamology Department, Aswan Faculty of Medicine, Aswan, Egypt (M Magdy Abd El Razek MB); Department of Public Health, Trnava University, Trnava, Slovakia (Prof M Majdan PhD); Non-Communicable Diseases Research Center, Shiraz University of Medical Sciences, Shiraz, Iran (Prof R Malekzadeh MD, S G Sepanlou MD); Department of Population Studies, University of Zambia, Lusaka, Zambia (C Mapoma PhD); Psychiatry Department, Doctor Peset University Hospital, Valencia, Spain (J Martinez-Raga MD); Department of Medicine (J Martinez-Raga MD, Prof R Tabarés-Seisdedos PhD), University of Valencia, Valencia, Spain; Department of Biology and Biological Engineering, Chalmers University of Technology, Gothenburg, Sweden (M Mazidi PhD); Department of Health Services Research & Policy (Prof M McKee DSc), Department of Non-communicable Disease Epidemiology (Prof D Prabhakaran DM), London School of Hygiene & Tropical Medicine, London, UK; Department of Internal Medicine, Sevenhills Hospital, Mumbai, India (V Mehta MD); Institute for Agricultural and Nutritional Sciences (T Meier PhD), Institute of Epidemiology, Biostatistics and Informatics (I Shiue PhD), Martin Luther University Halle-Wittenberg, Halle, Germany; Innovation Office Nutricard, Competence Cluster for Nutrition and Cardiovascular Health (NUTRICARD), Halle, Germany (T Meier PhD); College of Health Sciences, Debre Tabor University, Debre Tabor, Ethiopia (A Melese MSc); Department of Public Health, University of West Florida, Pensacola, FL, USA (Prof P T N Memiah DrPH); Peru Country Office of the UNFPA, United Nations Population Fund (UNFPA), Lima, Peru (W Mendoza MD); Center for Translation Research and Implementation Science, National Heart, Lung, and Blood Institute, Bethesda, MD, USA (G A Mensah MD); Comprehensive Cancer Center, Breast Surgery Unit, Helsinki University Hospital, Helsinki, Finland (T J Meretoja MD); Ethiopian Academy of Medical Science, Mekelle, Ethiopia (Prof H B Mezgebe MSc); Department of Hypertension & Internal Medicine (Prof T Miazgowski MD), Zdroje Hospital (J Widecka PhD), Pomeranian Medical University, Szczecin, Poland; Pacific Institute for Research & Evaluation, Calverton, MD, USA (T R Miller PhD); School of Public Health, Curtin University, Perth, WA, Australia (T R Miller PhD); Department of Public Health, Amrita Institute of Medical Sciences, Kochi, India (G Mini PhD); President's Office, National Institute of Statistics Romania, Bucharest, Romania (Prof A Mirica PhD); Kyrgyz State Medical Academy, Bishkek, Kyrgyzstan (Prof E M Mirrakhimov MD); Department of Atherosclerosis and Coronary Heart Disease, National Center of Cardiology and Internal Disease, Bishkek, Kyrgyzstan (Prof E M Mirrakhimov MD); Department of Health and Social Work, Institute of Addiction Research (ISFF), Frankfurt University of Applied Sciences, Frankfurt Am Main, Germany (B Moazen MSc); Department of Biology, Salahaddin University, Erbil, Iraq (K A Mohammad PhD); Nutrition and Cohort Studies Department, Isfahan Cardiovascular Research Institute (N Mohammadifard PhD), Cardiovascular Research Institute (Prof N Sarrafzadegan MD), Isfahan University of Medical Sciences, Isfahan, Iran; Health Systems and Policy Research Unit (S Mohammed PhD), Department of Community Medicine (M B Sufiyan MD), Ahmadu Bello University, Zaria, Nigeria; Clinical Epidemiology and Public Health Research Unit, Institute for Maternal and Child Health, IRCCS Burlo Garofolo, Trieste, Italy (L Monasta DSc, L Ronfani PhD); Lancaster University, UK (P Moraga PhD); International Laboratory for Air Quality and Health, Science and Engineering Faculty, Queensland University of Technology, Brisbane, QLD, Australia (Prof L Morawska PhD); St. Paul's Hospital Millennium Medical College, Addis Ababa, Ethiopia (M T Jalu MPH); Department of Endocrinology & Metabolism, Institute of Postgraduate Medical Education and Research, Kolkata, Kolkata, India (Prof S Mukhopadhyay MD); School of Medical Sciences, University Sains Malaysia, Kubang Kerian, Malaysia (Prof K Musa PhD); Initiative for Non Communicable Diseases, International Centre for Diarrhoeal Disease Research, Bangladesh, Dhaka, Bangladesh (A Naheed PhD); Department of Epidemiology, University of Alabama at Birmingham, Birmingham, AL, USA (G Naik MPH); Epidemiology Department (Prof F Najafi PhD), Research Center for Environmental Determinants of Health (M Soofi PhD), Kermanshah University of Medical Sciences, Kermanshah, Iran; Suraj Eye Institute, Nagpur, India (V Nangia MD); Department of Public Heath, Faculty of Medicine and Biomedical Sciences, University of Yaoundé, Yaoundé, Cameroon (J Nansseu MD); Department of Epidemiology and Public Health, University Sidi Mohammed Ben Abdellah, Fez, Morocco (Prof C Nejjari PhD); International School of Public Health, Mohammed Vi University of Health Science, Casablanca, Morocco (Prof C Nejjari PhD); Norwegian National Advisory Unit on Concurrent Substance Abuse and Mental Health Disorders, Innlandet Hospital Trust, Brumunddal, Norway (S P Neupane PhD); Department of Biological Sciences, University of Embu, Embu, Kenya (J W Ngunjiri DrPH); Institute for Global Health Innovations, Duy Tan University, Hanoi, Vietnam (C T Nguyen MPH, L H Nguyen MPH, T H Nguyen BMedSc); Public Health Department, Semarang State University, Kota Semarang, Indonesia (D N A Ningrum MPH); Graduate Institute of Biomedical Informatics, Taipei Medical University, Taipei City, Taiwan (D N A Ningrum MPH); Research Unit, Health Policy Consult, Accra, Ghana (R Ofori-Asenso MSc); School of Social Sciences and Psychology Department (Prof A M N Renzaho PhD), Western Sydney University, Penrith, NSW, Australia (F A Ogbo PhD); Dept. of Preventive Medicine, School of Medicine, Kyung Hee University, Dongdaemun-Gu, South Korea (Prof I Oh PhD); HIV/AIDS, STIs & TB (HAST) Programme, Human Sciences Research Council (HSRC), Durban, South Africa (O Oladimeji MD); School of Public Health, Faculty of Health Sciences, University of Namibia, Osakhati, Namibia (O Oladimeji MD); Department of Psychiatry, University of Lagos, Lagos, Nigeria (A T Olagunju MD); Autonomous University of Chile, Chile (Prof P R Olivares PhD); Executive Director (B O Olusanya PhD), Centre for Healthy Start Initiative, Ikoyi, Nigeria (J O Olusanya MBA); Graduate School of Public Health, San Diego State University, San Diego, CA, USA (Prof E Oren PhD); School of Psychology, University of Ottawa, Ottawa, ON, Canada (H M Orpana PhD); Center for Vaccine Development, University of Maryland, Baltimore, MD, USA (Prof J R Ortiz MD); Global Health Nursing, St. Luke's International University, Chuo-Ku, Japan (Prof E Ota PhD); College of Medicine, University of Ibadan, Ibadan, Nigeria (Prof M O Owolabi DrM); Agricultural Economics Group (Prof A S Oyekale PhD), Hypertension in Africa Research Team (HART), (Prof A E Schutte PhD), North-West University, Mafikeng, South Africa; Department of TB and Respiratory Medicine, Jagadguru Sri Shivarathreeswara University, Mysore, India (Prof M P A DNB); Center for Health Outcomes & Evaluation, Bucharest, Romania (A Pana MD); Department of Medical Humanities and Social Medicine, Kosin University, Busan, South Korea (Prof E Park PhD); Population Health Group, Murdoch Children's Research Institute, Melbourne, VIC, Australia (Prof G C Patton MD); Health, Nutrition and HIV AIDS Program, Save the Children, Kathmandu, Nepal (D Paudel PhD); Center for International Health, Ludwig Maximilians University, Munich, Germany (D Paudel PhD); Institute of Medicine, University of Gothenburg, Gothenburg, Sweden (Prof M Petzold PhD); School of Public Health, University of Witwatersrand, Johannesburg, South Africa (Prof M Petzold PhD); Shanghai Mental Health Center, Shanghai Jiao Tong University, Shanghai, China (Prof M R Phillips MD); Basic Medical Sciences Department, Durban University of Technology, Durban, South Africa (Prof J D Pillay PhD); Department of Economics & Business (Prof M J Postma PhD), University Medical Center Groningen (Prof J F M Van Boven PhD, Prof M J Postma PhD), University of Groningen, Groningen, Netherlands; Non-Communicable Diseases Research Center, Alborz University of Medical Sciences, Karaj, Iran (M Qorbani PhD); Medichem, Spain (A Radfar MD); Contech School of Public Health, Lahore, Pakistan (A Rafay MS, Prof S M Rana PhD); Research and Evaluation Division, BRAC, Dhaka, Bangladesh (M Rahman PhD); Austin Clinical School of Nursing (M Rahman PhD), Centre for Alcohol Policy Research (Prof R Room PhD), Department of Psychology and Counselling (Prof T Wijeratne MD), La Trobe University, Heidelberg, VIC, Australia; Society for Health and Demographic Surveillance, Suri, India (R Rai MPH); Department of Economics, University of Göttingen, Göttingen, Germany (R Rai MPH); Medical University Innsbruck, Austria (S Rajsic MD); Department of Nephrology, Nizam's Institute of Medical Sciences, Hyderabad, India (Prof S Raju MD); Public Health Department, University of Health Sciences, Lahore, Pakistan (Prof S M Rana PhD); Institute for Poverty Alleviation and International Development (C L Ranabhat PhD), Yonsei University, Nepal; University College London Hospitals, UK (D L Rawaf MD); Department of Preventive Medicine and Occupational Medicine, Loma Linda University Medical Center, Loma Linda, CA, USA (C Reis MD); Department of Clinical Research, University of Uberlândia, Uberlândia, Brazil (L Roever PhD); Centre for Social Research on Alcohol and Drugs, Department of Public Health Science, Stockholm University, Stockholm, Sweden (Prof R Room PhD); Golestan Research Center of Gastroenterology and Hepatology, Golestan University of Medical Sciences, Gorgan, Iran (G Roshandel PhD); Department of Cardiology, All India Institute of Medical Sciences (AIIMS), New Delhi, India (Prof A Roy MD); National Institute for Research in Environmental Health, Indian Council of Medical Research, Bhopal, India (Y D Sabde MD); College of Medicine, University of Sharjah, Sharjah, United Arab Emirates (Prof B Saddik PhD); Punjab University College of Pharmacy, Pakistan (Z Saleem PharmD); Center for Health Policy & Center for Primary Care and Outcomes Research, Stanford University, Stanford, CA, USA (Prof J A Salomon PhD); Clinical Research Division, Chest Research Foundation, Pune, India (Prof S S Salvi MD); Department of Surgery, Marshall University, Huntington, WV, USA (Prof J Sanabria MD); Department of Nutrition and Preventive Medicine, Case Western Reserve University, Cleveland, OH, USA (Prof J Sanabria MD); Nephrology Group, LIS-Fundación Jimenez Diaz, Madrid, Spain (M Sanchez-Niño PhD); Faculty of Medicine, Institute of Social Medicine, Centre School of Public Health and Health Management, University of Belgrade, Belgrade, Serbia (Prof M M M Santric Milicevic PhD); Health Economics and Financing Research Group, International Centre for Diarrhoeal Disease Research, Bangladesh, Dhaka, Bangladesh (A R Sarker MSc); Department of Health and Society, Faculty of Medicine, University of Applied and Environmental Sciences, Bogotá, Colombia (Prof R Sarmiento-Suárez MPH); Department of Public Health Medicine, Howard College Campus, University of Kwazulu-Natal, Durban, South Africa (Prof B Sartorius PhD); UGC Centre of Advanced Study in Psychology, Utkal University, Bhubaneswar, India (Prof M Satpathy PhD); Udyam-Global Association for Sustainable Development, Bhubaneswar, India (Prof M Satpathy PhD); Department of Public Health Sciences, University of North Carolina at Charlotte, Charlotte, NC, USA (M Sawhney PhD); Market Access, Bayer, Istanbul, Turkey (M Saylan MD); Swiss Research Institute for Public Health and Addiction, University of Zürich, Zürich, Switzerland (M P Schaub PhD); Health Sciences Department, Federal University of Santa Catarina, Florianopolis, Brazil (Prof I J C Schneider PhD, Prof D A S Silva PhD); Department of Operative and Preventive Dentistry, Charity University Medical Center - Berlin, Berlin, Germany (Prof F Schwendicke MPH); Independent Consultant, Karachi, Pakistan (M A A Shaikh MD); Department of Laboratory Sciences (Prof M Sharif PhD), Department of Basic Sciences (Prof M Sharif PhD), Islamic Azad University, Sari, Iran; Department of Pulmonary Medicine, Fudan University, Shanghai, China (J She MD); Usher Institute of Population Health Sciences and Informatics, University of Edinburgh, Edinburgh, UK (Prof A Sheikh MSc); The Research Institute at Nationwide Children's Hospital, Columbus, OH, USA (J Shen PhD); National Institute of Infectious Diseases, Tokyo, Japan (M Shigematsu PhD); Washington State University, Pullman, WA, USA (Prof K Shishani PhD); Symbiosis Institute of Health Sciences, Symbiosis International University, Pune, India (Prof S R Shukla PhD); Department of Psychology, Reykjavik University, Reykjavik, Iceland (Prof I D Sigfusdottir PhD); Department of Health and Behavior Studies, Columbia University, New York, New York, USA (Prof I D Sigfusdottir PhD); Portuguese Institute of Sport and Youth, Lisbon, Portugal (N T da Silva MPsych); Brasília University, Brasília, Brazil (Prof D A Silveira MSc); School of Preventive Oncology, Patna, India (D N N Sinha PhD); Department of Epidemiology, Healis Sekhsaria Institute for Public Health, Mumbai, India (D N N Sinha PhD); Pneumology Service, Research Institute of the University Hospital of the Princess (IISP), Madrid, Spain (Prof J B Soriano MD); Pneumology Service, Autonomous University of Madrid, Madrid, Spain (Prof J B Soriano MD); Division of Community Medicine, International Medical University, Kuala Lumpur, Malaysia (Prof C T Sreeramareddy MD); Institute and Outpatient Clinic for Occupational, Social and Environmental Medicine, University Hospital Munich, Munich, Germany (N Steckling DrPH); Department of Public Health, Health Services Research and Health Technology Assessment, University for Health Sciences, Medical Informatics and Technology, Hall I.T., Austria (N Steckling DrPH); Department of Criminology, Law and Society, University of California Irvine, Irvine, CA, USA (Prof B L Sykes PhD); Carlos III Health Institute, CIBERSAM, Madrid, Spain (Prof R Tabarés-Seisdedos PhD); Cancer Control Center, Osaka International Cancer Institute, Osaka, Japan (T Tabuchi MD); Department of Psychiatry and Behavioral Sciences, New York Medical College, Valhalla, NY, USA (M Tavakkoli MD); Institute of Public Health, Jagiellonian University Medical College, Krakow, Poland (R Topor-Madry PhD); Department of Ophthalmology, Medical School, Aristotle University of Thessaloniki, Thessaloniki, Greece (Prof F Topouzis PhD); Department of Health Economics, Hanoi Medical University, Hanoi, Vietnam (Prof B X Tran PhD); Department of Neurology, University of Copenhagen, Copenhagen, Denmark (T C Truelsen PhD); Department of Vascular Medicine, University Heart Center of Hamburg, Hamburg, Germany (Prof N Tsilimparis PhD); Department of Internal Medicine, Federal Teaching Hospital, Abakaliki, Nigeria (K N Ukwaja MSc); Gomal Centre of Biochemistry and Biotechnology, Gomal University, Dera Ismail Khan, Pakistan (I Ullah PhD); Programmatic Management of Drug Resistant TB Unit, TB Culture Laboratory, Mufti Mehmood Memorial Teaching Hospital, Dera Ismail Khan, Pakistan (I Ullah PhD); Argentine Society of Medicine, Buenos Aires, Argentina (Prof P R Valdez MEd); Intensive Care Unit, Hospital Velez Sarsfield, Buenos Aires, Argentina (Prof P R Valdez MEd); UKK Institute, Tampere, Finland (Prof T J Vasankari MD); Raffles Neuroscience Centre, Raffles Hospital, Singapore, Singapore (Prof N Venketasubramanian FRCP); Department of Information and Internet Technologies, I.M. Sechenov First Moscow State Medical University, Moscow, Russia (S K Vladimirov PhD); Department of Health Care Administration and Economy, National Research University Higher School of Economics, Moscow, Russia (Prof V Vlassov MD); Center for Disease Burden, Norwegian Institute of Public Health, Bergen, Norway (Prof S Vollset DrPH); Department of Nursing, Debre Markos University, Debremarkos, Ethiopia (F W S Wagnew MSc); Foundation University Medical College, Foundation University, Rawalpindi, Pakistan (Prof Y Waheed PhD); Demographic Change and Ageing Research Area (A Werdecker PhD), Competence Center of Mortality-Follow-Up, German National Cohort (R Westerman DSc), Federal Institute for Population Research, Wiesbaden, Germany; Independent Consultant, Satufenberg, Germany (A Werdecker PhD); Information Services Division, NHS Scotland, Edinburgh, Scotland (G M A Wyper MSc); University of Strathclyde, Glasgow, Scotland (G M A Wyper MSc); School of Medicine, Nanjing University, Nanjing, China (Prof G Xu MD); Department of Preventive Medicine, University of Mississippi Medical Center, Jackson, MS, USA (Prof Y Yano MD); Division of Injury Prevention and Mental Health Improvement, Chinese Center for Disease Control and Prevention, Beijing, China (P Ye MPH); Centre for Suicide Research and Prevention, University of Hong Kong, Hong Kong, China (Prof P Yip PhD); University of South Australia, Adelaide, Australia (B D Yirsaw PhD); Department of Biostatistics, School of Public Health, Kyoto University, Kyoto, Japan (Prof N Yonemoto MPH); Department of Preventive Medicine, Korea University, Seoul, South Korea (Prof S Yoon PhD); College of Public Health, Ohio State University, Columbus, OH, USA (Prof M Yotebieng PhD); School of Public Health, University of Kinshasa, Kinshasa, Democratic Republic of the Congo (Prof M Yotebieng PhD); Department of Health Policy and Management, Jackson State University, Jackson, MS, USA (Prof M Z Younis DrPH); Tsinghua University, Beijing, China (Prof M Z Younis DrPH); Department of Cardiology, Mother Hospital, Thrissur, India (G Zachariah MD); University of Texas, Houston, TX, USA (X Zhang PhD)."
    ],
-   "design": null,
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "With our comprehensive approach to health accounting within the Global Burden of Diseases, Injuries, and Risk Factors Study 2016, we generated improved estimates of alcohol use and alcohol-attributable deaths and disability-adjusted life-years (DALYs) for 195 locations from 1990 to 2016",
+    "text": "a systematic analysis of alcohol use and burden for 195 locations from 1990 to 2016"
+   },
    "findings": [
     {
      "passage": 6,
      "where": "Introduction",
      "quote": "Determination of harm due to alcohol use is complicated further by the multiple mechanisms through which alcohol use affects health: through cumulative consumption leading to adverse effects on organs and tissues; by acute intoxication leading to injuries or poisoning; and by dependent drinking leading to impairments and potentially self-harm or violence.",
-     "text": "Alcohol use affects health through multiple mechanisms, including cumulative consumption leading to adverse effects on organs and tissues, acute intoxication leading to injuries or poisoning, and dependent drinking leading to impairments and potentially self-harm or violence.",
+     "text": "Alcohol affects health through cumulative consumption causing adverse effects on organs and tissues, acute intoxication leading to injuries or poisoning, and dependent drinking causing impairments and potentially self-harm or violence.",
      "id": "F1",
+     "second_hand": ""
+    },
+    {
+     "passage": 30,
+     "where": "Results › Global patterns in alcohol-attributable deaths and disease burden",
+     "quote": "In 2016, 2·8 million deaths (95% UI 2·4–3·3) were attributed to alcohol use.",
+     "text": "In 2016, 2·8 million deaths were attributed to alcohol use.",
+     "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 42,
+     "where": "Conclusion",
+     "quote": "Alcohol use contributes to health loss from many causes and exacts its toll across the lifespan, particularly among men.",
+     "text": "Alcohol use contributes to health loss from many causes and exacts its toll across the lifespan, particularly among men.",
+     "id": "F3",
      "second_hand": ""
     }
    ],
@@ -176,31 +198,31 @@
     "passage": 1,
     "where": "Abstract",
     "quote": "This review summarizes current evidence on ethanol–drug interactions, particularly human crossover studies, phenotyping studies, cohort analyses and appropriate case reports.",
-    "text": "a review summarizing evidence on ethanol-drug interactions"
+    "text": "a review summarizing current evidence on ethanol–drug interactions"
    },
    "findings": [
     {
-     "passage": 40,
-     "where": "4. Adverse Effects of Acute Ethanol–Drug Co-Exposure › 4.4. Acute Organ-Level Toxicity",
-     "quote": "For some ethanol–drug pairs, the main clinical outcome is organ injury resulting from overlapping pharmacodynamic, pharmacokinetic and patient-specific vulnerability factors.",
-     "text": "For some ethanol-drug pairs, the main clinical outcome is organ injury resulting from overlapping pharmacodynamic, pharmacokinetic, and patient-specific vulnerability factors.",
-     "id": "F2",
+     "passage": 23,
+     "where": "4. Adverse Effects of Acute Ethanol–Drug Co-Exposure › 4.3. Acute Pharmacodynamic Interactions",
+     "quote": "During acute co-exposure, ethanol may exert convergent pharmacodynamic effects with drugs. These can affect alertness, psychomotor performance, respiratory drive, glucose homeostasis, autonomic compensation and vascular tone.",
+     "text": "During acute co-exposure, ethanol may exert convergent pharmacodynamic effects with drugs that can affect alertness, psychomotor performance, respiratory drive, glucose homeostasis, autonomic compensation and vascular tone.",
+     "id": "F4",
      "second_hand": ""
     },
     {
      "passage": 40,
      "where": "4. Adverse Effects of Acute Ethanol–Drug Co-Exposure › 4.4. Acute Organ-Level Toxicity",
-     "quote": "Alcohol is supported by epidemiological data and biological evidence as a cofactor in NSAID- or aspirin-associated upper gastrointestinal bleeding.",
-     "text": "Alcohol is supported by epidemiological data and biological evidence as a cofactor in NSAID- or aspirin-associated upper gastrointestinal bleeding.",
-     "id": "F3",
+     "quote": "For some ethanol–drug pairs, the main clinical outcome is organ injury resulting from overlapping pharmacodynamic, pharmacokinetic and patient-specific vulnerability factors.",
+     "text": "For some ethanol–drug pairs, the main clinical outcome is organ injury resulting from overlapping pharmacodynamic, pharmacokinetic and patient-specific vulnerability factors.",
+     "id": "F5",
      "second_hand": ""
     },
     {
      "passage": 40,
      "where": "4. Adverse Effects of Acute Ethanol–Drug Co-Exposure › 4.4. Acute Organ-Level Toxicity",
      "quote": "Ethanol may increase tissue susceptibility, alter drug exposure or reactive-metabolite burden, and reduce the capacity to compensate for oxidative, inflammatory or hemodynamic stress. This can result in upper gastrointestinal bleeding, drug-induced liver injury (DILI), or acute kidney injury (AKI).",
-     "text": "Ethanol may increase tissue susceptibility, alter drug exposure or reactive-metabolite burden, and reduce the capacity to compensate for oxidative, inflammatory, or hemodynamic stress, which can result in upper gastrointestinal bleeding, drug-induced liver injury, or acute kidney injury.",
-     "id": "F4",
+     "text": "Ethanol may increase tissue susceptibility, alter drug exposure or reactive-metabolite burden, and reduce the capacity to compensate for oxidative, inflammatory or hemodynamic stress, which can result in upper gastrointestinal bleeding, drug-induced liver injury, or acute kidney injury.",
+     "id": "F6",
      "second_hand": ""
     }
    ],
@@ -257,7 +279,7 @@
      "where": "Top of the page",
      "quote": "Alcohol poisoning happens when you have too much alcohol in your blood and your normal bodily functions begin to shut down.",
      "text": "Alcohol poisoning occurs when excessive alcohol in the blood causes normal bodily functions to start shutting down.",
-     "id": "F5",
+     "id": "F7",
      "second_hand": ""
     },
     {
@@ -265,7 +287,7 @@
      "where": "What happens in hospital",
      "quote": "This can help prevent complications, such as liver and heart failure. These can be fatal.",
      "text": "Complications from alcohol poisoning like liver and heart failure can be fatal.",
-     "id": "F6",
+     "id": "F8",
      "second_hand": ""
     }
    ],
@@ -326,15 +348,15 @@
      "where": "Health effects / Fact",
      "quote": "Drinking alcohol at the same time or within a few hours of using other drugs like opioids or benzodiazepines can cause serious harm. It can make it hard to breathe, which can damage your brain and other organs. This can also lead to early death.",
      "text": "Drinking alcohol at the same time or within a few hours of using other drugs like opioids or benzodiazepines can make it hard to breathe, damage your brain and other organs, and lead to early death.",
-     "id": "F7",
+     "id": "F9",
      "second_hand": ""
     },
     {
      "passage": 1,
      "where": "Key points",
      "quote": "If you drink alcohol while using other drugs, the effects may be stronger and more deadly than using either one alone.",
-     "text": "The effects of drinking alcohol while using other drugs may be stronger and more deadly than using either one alone.",
-     "id": "F8",
+     "text": "If you drink alcohol while using other drugs, the effects may be stronger and more deadly than using either one alone.",
+     "id": "F10",
      "second_hand": ""
     },
     {
@@ -342,7 +364,7 @@
      "where": "Health effects / Fact",
      "quote": "Using alcohol together with other drugs can increase your risk of: Overdose.",
      "text": "Using alcohol together with other drugs can increase your risk of overdose.",
-     "id": "F9",
+     "id": "F11",
      "second_hand": ""
     }
    ],
@@ -352,7 +374,7 @@
  ],
  "parts": [],
  "complete": false,
- "missing": "chronic liver disease (cirrhosis) from long‑term use",
+ "missing": "",
  "wanted": [
   {
    "doi": "10.1001/jama.291.10.1238",
@@ -409,6 +431,14 @@
    "why": "no source that can be read gave a finding for this question (2 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-28",
+   "lane": 19,
+   "status": "none",
+   "why": "the second reader did not accept the answer",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -417,32 +447,8 @@
    "read": "full",
    "kind": "review",
    "at": "10.1016/s0140-6736(18)31310-2",
-   "kept": 1,
+   "kept": 3,
    "thrown": [
-    {
-     "kind": "text",
-     "text": "A systematic analysis of alcohol use and its burden across 195 countries and territories from 1990 to 2016.",
-     "quote": "Alcohol use and burden for 195 countries and territories, 1990-2016: a systematic analysis for the Global Burden of Disease Study 2016 (2018), Lancet (London, England).",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
-    },
-    {
-     "kind": "finding",
-     "text": "In 2016, 2.8 million deaths were attributed to alcohol use.",
-     "quote": "In 2016, 2·8 million deaths (95% UI 2·4–3·3) were attributed to alcohol use.",
-     "why": "a number of the sentence is not in its quote"
-    },
-    {
-     "kind": "finding",
-     "text": "Among the population aged 15-49 years, 3.8% of female deaths and 12.2% of male deaths were attributable to alcohol use.",
-     "quote": "Among the population aged 15–49 years, 3·8% (95% UI 3·2–4·3) of female deaths and 12·2% (10·8–13·6) of male deaths were attributable to alcohol use.",
-     "why": "a number of the sentence is not in its quote"
-    },
-    {
-     "kind": "finding",
-     "text": "In 2016, alcohol use led to 2.8 million deaths and was the leading risk factor for premature death and disability among people aged 15-49 years.",
-     "quote": "In 2016, alcohol use led to 2·8 million deaths and was the leading risk factor for premature death and disability among people aged 15–49 years, with nearly 9% of all attributable DALYs for men and mo",
-     "why": "a number of the sentence is not in its quote"
-    },
     {
      "kind": "limit",
      "text": "",
@@ -485,318 +491,39 @@
  ],
  "plan": {
   "short": [
-   "F5",
-   "F1"
+   "F7",
+   "F8",
+   "F1",
+   "F9"
   ],
-  "direct": "Yes",
+  "direct": "It can",
   "but": [
-   "F8"
+   "F3"
   ],
   "how": [
    [
-    "F5",
-    "F6"
+    "F7",
+    "F8"
    ],
    [
+    "F9",
+    "F10",
+    "F11"
+   ],
+   [
+    "DA",
     "F1"
    ],
    [
-    "F8"
+    "DB",
+    "F4",
+    "F5",
+    "F6"
    ]
   ],
-  "unanswered": "chronic liver disease (cirrhosis) from long‑term use"
+  "unanswered": ""
  },
- "panel_gap": [],
- "own": {
-  "model": "pharmakon-check-0",
-  "threshold": 0.05,
-  "scores": {
-   "short": 0.3272,
-   "but": 0.8727,
-   "how1": 0.3304,
-   "how2": 0.9681,
-   "how3": 0.8333
-  },
-  "scores_quotes_alone": {
-   "short": 0.2336,
-   "but": 0.8184,
-   "how1": 0.631,
-   "how2": 0.9673,
-   "how3": 0.6923
-  }
- },
- "tries": [
-  {
-   "try": 1,
-   "why": "the short answer or the But was not accepted: written again",
-   "parts": [
-    {
-     "part": "short",
-     "text": "Yes, alcohol can cause death through poisoning, organ damage, and dependent drinking. Ireland's health service says excessive alcohol can shut down bodily functions.",
-     "rests_on": [
-      {
-       "label": "F5",
-       "ref": "hse_alcohol-poisoning",
-       "where": "Top of the page",
-       "quote": "Alcohol poisoning happens when you have too much alcohol in your blood and your normal bodily functions begin to shut down.",
-       "sha": "5ac9c740aafa14a1"
-      },
-      {
-       "label": "F1",
-       "ref": "griswold_2018",
-       "where": "Introduction",
-       "quote": "Determination of harm due to alcohol use is complicated further by the multiple mechanisms through which alcohol use affects health: through cumulative consumption leading to adverse effects on organs and tissues; by acute intoxication leading to injuries or poisoning; and by dependent drinking leading to impairments and potentially self-harm or violence.",
-       "sha": "3073d9bc157d510c"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passages describe poisoning, organ damage, and harms associated with dependent drinking, but they do not state that these routes cause death. The HSE passage says bodily functions can begin to shut down; it does not say that this is fat"
-    },
-    {
-     "part": "but",
-     "text": "This may be stronger and more deadly when combined with other drugs.",
-     "rests_on": [
-      {
-       "label": "F8",
-       "ref": "cdc_other-drug-use",
-       "where": "Key points",
-       "quote": "If you drink alcohol while using other drugs, the effects may be stronger and more deadly than using either one alone.",
-       "sha": "e936af6adcec14bc"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "it is about something else than the short answer (The passages support serious alcohol-related harms but do not establish the stated routes to death; “Possibly” would be more cautious than “Yes.” Sentence 2 concerns combining alcohol with other drugs, not a limit on sentence 1’s claims abo)"
-    },
-    {
-     "part": "how1",
-     "text": "Ireland's health service says alcohol poisoning can cause liver and heart failure.",
-     "rests_on": [
-      {
-       "label": "F5",
-       "ref": "hse_alcohol-poisoning",
-       "where": "Top of the page",
-       "quote": "Alcohol poisoning happens when you have too much alcohol in your blood and your normal bodily functions begin to shut down.",
-       "sha": "5ac9c740aafa14a1"
-      },
-      {
-       "label": "F6",
-       "ref": "hse_alcohol-poisoning",
-       "where": "What happens in hospital",
-       "quote": "This can help prevent complications, such as liver and heart failure. These can be fatal.",
-       "sha": "d17954f9059ee72a"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "A 2018 review found alcohol affects health through multiple mechanisms.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "griswold_2018",
-       "where": "Introduction",
-       "quote": "Determination of harm due to alcohol use is complicated further by the multiple mechanisms through which alcohol use affects health: through cumulative consumption leading to adverse effects on organs and tissues; by acute intoxication leading to injuries or poisoning; and by dependent drinking leading to impairments and potentially self-harm or violence.",
-       "sha": "3073d9bc157d510c"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how3",
-     "text": "The US Centers for Disease Control and Prevention says drinking with other drugs can be deadly.",
-     "rests_on": [
-      {
-       "label": "F8",
-       "ref": "cdc_other-drug-use",
-       "where": "Key points",
-       "quote": "If you drink alcohol while using other drugs, the effects may be stronger and more deadly than using either one alone.",
-       "sha": "e936af6adcec14bc"
-      }
-     ],
-     "ok": true
-    }
-   ]
-  },
-  {
-   "try": 2,
-   "why": "the short answer or the But was not accepted: written again",
-   "parts": [
-    {
-     "part": "short",
-     "text": "Yes, alcohol can cause death through poisoning, organ damage, and dependent drinking.",
-     "rests_on": [
-      {
-       "label": "F5",
-       "ref": "hse_alcohol-poisoning",
-       "where": "Top of the page",
-       "quote": "Alcohol poisoning happens when you have too much alcohol in your blood and your normal bodily functions begin to shut down.",
-       "sha": "5ac9c740aafa14a1"
-      },
-      {
-       "label": "F1",
-       "ref": "griswold_2018",
-       "where": "Introduction",
-       "quote": "Determination of harm due to alcohol use is complicated further by the multiple mechanisms through which alcohol use affects health: through cumulative consumption leading to adverse effects on organs and tissues; by acute intoxication leading to injuries or poisoning; and by dependent drinking leading to impairments and potentially self-harm or violence.",
-       "sha": "3073d9bc157d510c"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passages describe poisoning, organ damage, and harms linked to dependent drinking, but do not state that these cause death."
-    },
-    {
-     "part": "but",
-     "text": "This can be stronger and more deadly when drinking with other drugs.",
-     "rests_on": [
-      {
-       "label": "F8",
-       "ref": "cdc_other-drug-use",
-       "where": "Key points",
-       "quote": "If you drink alcohol while using other drugs, the effects may be stronger and more deadly than using either one alone.",
-       "sha": "e936af6adcec14bc"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The CDC passage says the effects of using alcohol with other drugs may be stronger and more deadly than using either alone. It does not say that the death mechanisms in sentence 1 become stronger or more deadly, and the sentence omits the c"
-    },
-    {
-     "part": "how1",
-     "text": "Ireland's health service says alcohol poisoning can shut down bodily functions.",
-     "rests_on": [
-      {
-       "label": "F5",
-       "ref": "hse_alcohol-poisoning",
-       "where": "Top of the page",
-       "quote": "Alcohol poisoning happens when you have too much alcohol in your blood and your normal bodily functions begin to shut down.",
-       "sha": "5ac9c740aafa14a1"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passage says normal bodily functions begin to shut down; it does not say they shut down completely."
-    },
-    {
-     "part": "how2",
-     "text": "Alcohol use affects health through multiple mechanisms, including cumulative consumption and dependent drinking.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "griswold_2018",
-       "where": "Introduction",
-       "quote": "Determination of harm due to alcohol use is complicated further by the multiple mechanisms through which alcohol use affects health: through cumulative consumption leading to adverse effects on organs and tissues; by acute intoxication leading to injuries or poisoning; and by dependent drinking leading to impairments and potentially self-harm or violence.",
-       "sha": "3073d9bc157d510c"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how3",
-     "text": "The US Centers for Disease Control and Prevention says drinking with other drugs can be deadly.",
-     "rests_on": [
-      {
-       "label": "F8",
-       "ref": "cdc_other-drug-use",
-       "where": "Key points",
-       "quote": "If you drink alcohol while using other drugs, the effects may be stronger and more deadly than using either one alone.",
-       "sha": "e936af6adcec14bc"
-      }
-     ],
-     "ok": true
-    }
-   ]
-  },
-  {
-   "try": 3,
-   "why": "the last draft: no answer",
-   "parts": [
-    {
-     "part": "short",
-     "text": "Yes, alcohol can cause death through poisoning, organ damage, and dependent drinking.",
-     "rests_on": [
-      {
-       "label": "F5",
-       "ref": "hse_alcohol-poisoning",
-       "where": "Top of the page",
-       "quote": "Alcohol poisoning happens when you have too much alcohol in your blood and your normal bodily functions begin to shut down.",
-       "sha": "5ac9c740aafa14a1"
-      },
-      {
-       "label": "F1",
-       "ref": "griswold_2018",
-       "where": "Introduction",
-       "quote": "Determination of harm due to alcohol use is complicated further by the multiple mechanisms through which alcohol use affects health: through cumulative consumption leading to adverse effects on organs and tissues; by acute intoxication leading to injuries or poisoning; and by dependent drinking leading to impairments and potentially self-harm or violence.",
-       "sha": "3073d9bc157d510c"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passages describe poisoning, organ damage, and dependent drinking, but do not state that these cause death."
-    },
-    {
-     "part": "but",
-     "text": "This may be stronger and more deadly when used with other drugs.",
-     "rests_on": [
-      {
-       "label": "F8",
-       "ref": "cdc_other-drug-use",
-       "where": "Key points",
-       "quote": "If you drink alcohol while using other drugs, the effects may be stronger and more deadly than using either one alone.",
-       "sha": "e936af6adcec14bc"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "it is about something else than the short answer (The passages do not establish outright that alcohol alone can cause death, so “Possibly” would be more cautious than “Yes.” Sentence 1 directly lists ways it claims alcohol can cause death, so it addresses the question, though its claim is )"
-    },
-    {
-     "part": "how1",
-     "text": "Ireland's health service says alcohol poisoning can shut down bodily functions.",
-     "rests_on": [
-      {
-       "label": "F5",
-       "ref": "hse_alcohol-poisoning",
-       "where": "Top of the page",
-       "quote": "Alcohol poisoning happens when you have too much alcohol in your blood and your normal bodily functions begin to shut down.",
-       "sha": "5ac9c740aafa14a1"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "Alcohol use affects health through multiple mechanisms, including cumulative consumption and dependent drinking.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "griswold_2018",
-       "where": "Introduction",
-       "quote": "Determination of harm due to alcohol use is complicated further by the multiple mechanisms through which alcohol use affects health: through cumulative consumption leading to adverse effects on organs and tissues; by acute intoxication leading to injuries or poisoning; and by dependent drinking leading to impairments and potentially self-harm or violence.",
-       "sha": "3073d9bc157d510c"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how3",
-     "text": "The US Centers for Disease Control and Prevention says drinking alcohol with other drugs may be more deadly.",
-     "rests_on": [
-      {
-       "label": "F8",
-       "ref": "cdc_other-drug-use",
-       "where": "Key points",
-       "quote": "If you drink alcohol while using other drugs, the effects may be stronger and more deadly than using either one alone.",
-       "sha": "e936af6adcec14bc"
-      }
-     ],
-     "ok": true
-    }
-   ]
-  }
- ],
+ "soft": "the writer's reply was not in the form asked for",
  "place": {
   "home": "alcohol",
   "also": [],
