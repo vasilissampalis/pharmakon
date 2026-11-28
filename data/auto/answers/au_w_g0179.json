@@ -17,35 +17,43 @@
   "salvia-divinorum"
  ],
  "made": {
-  "on": "2026-11-27",
+  "on": "2026-11-28",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
-   "writer": "gemini:gemma-4-26b-a4b-it",
-   "checker": "groq:openai/gpt-oss-120b",
-   "planner": "gemini:gemma-4-31b-it",
+   "reader": "gemini:gemini-3.5-flash-lite",
+   "writer": "groq:qwen/qwen3.8-27b",
+   "checker": "openrouter:openai/gpt-6-luna",
+   "planner": "groq:openai/gpt-oss-120b",
    "also1": "gemini:gemini-3.5-flash-lite",
    "also2": "gemini:gemini-3.6-flash",
-   "team": "team K",
-   "reader_2": "gemini:gemini-3.5-flash-lite",
-   "reader_3": "openrouter:meta-llama/llama-3.3-70b-instruct",
+   "team": "team I",
+   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "reader_3": "openrouter:openai/gpt-oss-120b",
+   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
    "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "46021134581",
-  "read_seconds": 24,
+  "run": "46134977439",
+  "read_by": {
+   "gemini-3.5-flash-lite": 3,
+   "gpt-oss-20b": 1,
+   "gemini-3.1-flash-lite": 1
+  },
+  "read_seconds": 12,
   "from": {
    "papers": 2,
    "summaries": 0,
    "official": 2
   },
   "neurons": 0.0,
-  "seconds": 303
+  "seconds": 87
  },
  "status": "none",
- "why": "no draft passed: the form was wrong: no JSON",
+ "why": "the second reader did not accept the answer",
  "gates": {
-  "read": "6 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "read": "8 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
   "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 1 other paper(s), 2 official page(s), 0 paper(s) read in summary only",
-  "writer": "try 1: no JSON (how the reply ended: length; reasoned 0 characters, wrote 9295) try 2: no JSON (how the reply ended: length; reasoned 0 characters, wrote 9259)"
+  "rules": "1 How-do-we-know line(s) left out for a rule (how1: its source gives this as a reputation or a belief (“anecdotal”), and the sentence says it as what the drug does: say that it is a reputation, a traditional use or a belief, as the source does, or leave it out)",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.58, but 0.61, how2 0.96, how3 0.29",
+  "check": "short: NOT accepted: The review’s addiction-risk statement is specifically about salvinorins and their analogues as possible therapeutic alternatives, based on a finding about S. divinorum administration. Calling it a general claim that salvia’s chemicals may n; but: NOT accepted: it is about something else than the short answer (“Not known” is fair because the official passages say salvia is not known to be addictive or to cause dependence. Sentence 2 concerns whether long-term effects have been studied enough to understand their risks; it does not specifically lim); how2: accepted; how3: NOT accepted: This generalizes the finding that S. divinorum administration did not increase dopamine release in the Nacc, and presents the addiction-risk implication outside the review’s context of salvinorins and analogues as possible therapeutic alter"
  },
  "sources": [
   {
@@ -90,10 +98,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-27",
+     "verified_on": "2026-11-28",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-27"
+      "checked_on": "2026-11-28"
      }
     },
     "page": "53",
@@ -109,17 +117,17 @@
    "near": 0.748,
    "money": [],
    "design": {
-    "passage": 53,
-    "where": "Discussion › Limitations and strengths",
-    "quote": "NSDUH is the first national United States survey to add S. divinorum use questions to the assessment beginning in 2006.",
-    "text": "a national survey of substance use and mental health in the United States"
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "Epidemiological data are lacking on the trends, prevalence, and correlates of S. divinorum use in large representative samples, as well as the extent of substance use and mental health problems among S. divinorum users.",
+    "text": "an epidemiological study examining national trends in the prevalence of Salvia divinorum use and profiles of users in large representative samples"
    },
    "findings": [
     {
      "passage": 55,
      "where": "Discussion › Conclusion and implications",
-     "quote": "The high prevalence of past-year substance use disorders among recent S. divinorum users emphasizes the need for research to address several open issues for S. divinorum use, including its addictive potential",
-     "text": "The high prevalence of past-year substance use disorders among recent people who use Salvia divinorum highlights the need for research into its addictive potential.",
+     "quote": "The high prevalence of past-year substance use disorders among recent S. divinorum users emphasizes the need for research to address several open issues for S. divinorum use, including its addictive potential, its influence on continuance of drug-use behaviors or escalation to addiction",
+     "text": "The high prevalence of past-year substance use disorders among recent Salvia divinorum users emphasizes the need for research to address its addictive potential and its influence on escalation to addiction.",
      "id": "F1",
      "second_hand": ""
     },
@@ -127,7 +135,7 @@
      "passage": 51,
      "where": "Discussion › What this study adds",
      "quote": "the vast majority of S. divinorum users were affected by symptoms and consequences indicative of substance use problems (eg, role interference, use in hazardous conditions that increase risk for injuries, physical dependence on substances, compulsive drug use or seeking behaviors, repeated substance use despite having substance-related health problems).",
-     "text": "In one survey, the vast majority of people who use Salvia divinorum were affected by symptoms and consequences indicative of substance use problems, such as physical dependence on substances and compulsive drug use or seeking behaviors.",
+     "text": "The vast majority of Salvia divinorum users were affected by symptoms and consequences indicative of substance use problems such as physical dependence on substances and compulsive drug use or seeking behaviors.",
      "id": "F2",
      "second_hand": ""
     }
@@ -137,7 +145,7 @@
      "passage": 52,
      "where": "Discussion › Limitations and strengths",
      "quote": "In addition, NSDUH assessments of substance-use disorders and major depression are based on standardized questions designed to operationalize DSM-IV criteria for these disorders. These results are self-reported, survey-based estimates and not clinical diagnoses (ie, not being validated by clinicians).",
-     "text": "The assessments of substance-use disorders are based on survey questions rather than clinical diagnoses validated by clinicians.",
+     "text": "Assessments of substance-use disorders and major depression are self-reported, survey-based estimates and not clinical diagnoses validated by clinicians.",
      "id": "L1",
      "second_hand": ""
     }
@@ -174,10 +182,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-27",
+     "verified_on": "2026-11-28",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-27"
+      "checked_on": "2026-11-28"
      }
     },
     "volume": "Volume 12",
@@ -247,14 +255,14 @@
       [
        2026,
        11,
-       27
+       28
       ]
      ]
     },
     "verification": {
      "status": "made by code",
      "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-27"
+     "verified_on": "2026-11-28"
     }
    },
    "title": "Salvia",
@@ -277,6 +285,22 @@
      "text": "Salvia is not known to cause physical or psychological dependence.",
      "id": "F4",
      "second_hand": ""
+    },
+    {
+     "passage": 19,
+     "where": "Long-term effects / Tolerance",
+     "quote": "Salvia is not known to cause tolerance.",
+     "text": "Salvia is not known to cause tolerance.",
+     "id": "F5",
+     "second_hand": ""
+    },
+    {
+     "passage": 19,
+     "where": "Long-term effects / Tolerance",
+     "quote": "However, as the effects of saliva can be very intense, most people choose not to use it regularly.",
+     "text": "Because salvia effects can be very intense, most people choose not to use it regularly.",
+     "id": "F6",
+     "second_hand": ""
     }
    ],
    "limits": [
@@ -284,7 +308,7 @@
      "passage": 16,
      "where": "Long-term effects",
      "quote": "The long term effects of salvia haven’t been studied enough to understand what the risks might be.",
-     "text": "The long-term risks of salvia are not fully understood because they have not been studied enough.",
+     "text": "The long term effects of salvia have not been studied enough to understand what the risks might be.",
      "id": "L3",
      "second_hand": ""
     }
@@ -313,14 +337,14 @@
       [
        2026,
        11,
-       27
+       28
       ]
      ]
     },
     "verification": {
      "status": "made by code",
      "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-27"
+     "verified_on": "2026-11-28"
     }
    },
    "title": "Salvia",
@@ -341,28 +365,19 @@
      "where": "Mixing salvia with other drugs / Can you get addicted?",
      "quote": "Salvia is not known to be either physically addictive or to cause psychological dependence.",
      "text": "Salvia is not known to be physically addictive or to cause psychological dependence.",
-     "id": "F5",
+     "id": "F7",
      "second_hand": ""
     },
     {
      "passage": 5,
      "where": "Common risks",
-     "quote": "You might do something that could put you at risk when under the influence. Not known to be addictive.",
-     "text": "Salvia is not known to be addictive.",
-     "id": "F6",
+     "quote": "Not known to be addictive.",
+     "text": "It is not known to be addictive.",
+     "id": "F8",
      "second_hand": ""
     }
    ],
-   "limits": [
-    {
-     "passage": 7,
-     "where": "Mixing salvia with other drugs / How does it make you feel?",
-     "quote": "Although salvia has been around for hundreds of years, there has been very little research carried out into its effects.",
-     "text": "There has been very little research conducted on the effects of salvia.",
-     "id": "L4",
-     "second_hand": ""
-    }
-   ],
+   "limits": [],
    "tag": "D"
   }
  ],
@@ -400,6 +415,14 @@
    "status": "published",
    "why": "passed every gate",
    "short": "Not known. Salvia is not known to cause dependence, and lab work suggests it may not lead to addiction.",
+   "complete": false
+  },
+  {
+   "on": "2026-11-27",
+   "lane": 19,
+   "status": "none",
+   "why": "no draft passed: the form was wrong: no JSON",
+   "short": "",
    "complete": false
   }
  ],
@@ -440,7 +463,7 @@
    "read": "page",
    "kind": "official",
    "at": "https://adf.org.au/drug-facts/salvia/",
-   "kept": 1,
+   "kept": 3,
    "thrown": []
   },
   {
@@ -454,31 +477,424 @@
  ],
  "plan": {
   "short": [
-   "F6",
-   "F5",
    "F4",
+   "F7",
    "F3"
   ],
-  "direct": "Not known",
+  "direct": "No",
   "but": [
-   "L4"
+   "L3"
   ],
   "how": [
    [
+    "F4",
     "F5",
     "F6"
    ],
    [
-    "F4"
+    "F7",
+    "F8"
    ],
    [
-    "DB",
     "F3"
    ]
   ],
   "unanswered": ""
  },
- "soft": "the writer's reply was not in the form asked for",
+ "dropped": [
+  {
+   "try": 1,
+   "part": "how1",
+   "text": "Australia's Alcohol and Drug Foundation says salvia is not known to cause physical or psychological dependence or tolerance. It notes most people choose not to use it regularly because effects can be very intense.",
+   "rests_on": [
+    {
+     "label": "F4",
+     "ref": "adf_salvia",
+     "where": "Long-term effects / Dependence",
+     "quote": "Salvia is not known to cause physical or psychological dependence.",
+     "sha": "bf921b6cb9ee2082"
+    },
+    {
+     "label": "F5",
+     "ref": "adf_salvia",
+     "where": "Long-term effects / Tolerance",
+     "quote": "Salvia is not known to cause tolerance.",
+     "sha": "4353541cd8bb5934"
+    },
+    {
+     "label": "F6",
+     "ref": "adf_salvia",
+     "where": "Long-term effects / Tolerance",
+     "quote": "However, as the effects of saliva can be very intense, most people choose not to use it regularly.",
+     "sha": "4353541cd8bb5934"
+    }
+   ],
+   "by": "a rule",
+   "said": "a rule: its source gives this as a reputation or a belief (“anecdotal”), and the sentence says it as what the drug does: say that it is a reputation, a traditional use or a belief, as the source does, or leave it out"
+  },
+  {
+   "try": 2,
+   "part": "how1",
+   "text": "Australia's Alcohol and Drug Foundation says salvia is not known to cause dependence or tolerance. Most people choose not to use it regularly because effects can be very intense.",
+   "rests_on": [
+    {
+     "label": "F4",
+     "ref": "adf_salvia",
+     "where": "Long-term effects / Dependence",
+     "quote": "Salvia is not known to cause physical or psychological dependence.",
+     "sha": "bf921b6cb9ee2082"
+    },
+    {
+     "label": "F5",
+     "ref": "adf_salvia",
+     "where": "Long-term effects / Tolerance",
+     "quote": "Salvia is not known to cause tolerance.",
+     "sha": "4353541cd8bb5934"
+    },
+    {
+     "label": "F6",
+     "ref": "adf_salvia",
+     "where": "Long-term effects / Tolerance",
+     "quote": "However, as the effects of saliva can be very intense, most people choose not to use it regularly.",
+     "sha": "4353541cd8bb5934"
+    }
+   ],
+   "by": "a rule",
+   "said": "a rule: its source gives this as a reputation or a belief (“anecdotal”), and the sentence says it as what the drug does: say that it is a reputation, a traditional use or a belief, as the source does, or leave it out"
+  },
+  {
+   "try": 3,
+   "part": "how1",
+   "text": "Australia's Alcohol and Drug Foundation says salvia is not known to cause dependence or tolerance, and most people choose not to use it regularly.",
+   "rests_on": [
+    {
+     "label": "F4",
+     "ref": "adf_salvia",
+     "where": "Long-term effects / Dependence",
+     "quote": "Salvia is not known to cause physical or psychological dependence.",
+     "sha": "bf921b6cb9ee2082"
+    },
+    {
+     "label": "F5",
+     "ref": "adf_salvia",
+     "where": "Long-term effects / Tolerance",
+     "quote": "Salvia is not known to cause tolerance.",
+     "sha": "4353541cd8bb5934"
+    },
+    {
+     "label": "F6",
+     "ref": "adf_salvia",
+     "where": "Long-term effects / Tolerance",
+     "quote": "However, as the effects of saliva can be very intense, most people choose not to use it regularly.",
+     "sha": "4353541cd8bb5934"
+    }
+   ],
+   "by": "a rule",
+   "said": "a rule: its source gives this as a reputation or a belief (“anecdotal”), and the sentence says it as what the drug does: say that it is a reputation, a traditional use or a belief, as the source does, or leave it out"
+  },
+  {
+   "try": 3,
+   "part": "how3",
+   "text": "A 2019 review says salvia does not increase dopamine release in the Nacc, suggesting its chemicals may not carry an addiction risk.",
+   "rests_on": [
+    {
+     "label": "F3",
+     "ref": "coffeen_2019",
+     "where": "Final remarks",
+     "quote": "the fact that S divinorum administration does not increase the release of dopamine in the Nacc suggests that salvinorins and their analogues can be a suitable therapeutic alternative without the risk of producing addiction.",
+     "sha": "3f8a68f7e08b6cd0"
+    }
+   ],
+   "by": "the second reader",
+   "said": "This generalizes the finding that S. divinorum administration did not increase dopamine release in the Nacc, and presents the addiction-risk implication outside the review’s context of salvinorins and analogues as possible therapeutic alter"
+  }
+ ],
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.5763,
+   "but": 0.6124,
+   "how2": 0.9569,
+   "how3": 0.2858
+  },
+  "scores_quotes_alone": {
+   "short": 0.2389,
+   "but": 0.7303,
+   "how2": 0.7478,
+   "how3": 0.532
+  }
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "No. Salvia is not known to be physically addictive or to cause psychological dependence. A 2019 review says its chemicals may not carry a risk of producing addiction.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "adf_salvia",
+       "where": "Long-term effects / Dependence",
+       "quote": "Salvia is not known to cause physical or psychological dependence.",
+       "sha": "bf921b6cb9ee2082"
+      },
+      {
+       "label": "F7",
+       "ref": "frank_salvia",
+       "where": "Mixing salvia with other drugs / Can you get addicted?",
+       "quote": "Salvia is not known to be either physically addictive or to cause psychological dependence.",
+       "sha": "30e3eab6804df88d"
+      },
+      {
+       "label": "F3",
+       "ref": "coffeen_2019",
+       "where": "Final remarks",
+       "quote": "the fact that S divinorum administration does not increase the release of dopamine in the Nacc suggests that salvinorins and their analogues can be a suitable therapeutic alternative without the risk of producing addiction.",
+       "sha": "3f8a68f7e08b6cd0"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The review’s finding is framed around S. divinorum administration and says salvinorins and their analogues can be a suitable therapeutic alternative without the risk of addiction. This sentence omits that context and recasts the finding as "
+    },
+    {
+     "part": "but",
+     "text": "The long term effects of salvia have not been studied enough to understand what the risks might be.",
+     "rests_on": [
+      {
+       "label": "L3",
+       "ref": "adf_salvia",
+       "where": "Long-term effects",
+       "quote": "The long term effects of salvia haven’t been studied enough to understand what the risks might be.",
+       "sha": "4fe8c197bd19cada"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer (“Not known to be” is fairer than the categorical “No.” The long-term-effects passage does not specifically limit the claim about addiction or dependence.)"
+    },
+    {
+     "part": "how2",
+     "text": "FRANK says salvia is not known to be physically addictive or to cause psychological dependence. It states it is not known to be addictive.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "frank_salvia",
+       "where": "Mixing salvia with other drugs / Can you get addicted?",
+       "quote": "Salvia is not known to be either physically addictive or to cause psychological dependence.",
+       "sha": "30e3eab6804df88d"
+      },
+      {
+       "label": "F8",
+       "ref": "frank_salvia",
+       "where": "Common risks",
+       "quote": "Not known to be addictive.",
+       "sha": "aee6f0d87223c91a"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2019 review found that salvia does not increase dopamine release in the Nacc. This suggests salvinorins and their analogues may not carry a risk of producing addiction.",
+     "rests_on": [
+      {
+       "label": "F3",
+       "ref": "coffeen_2019",
+       "where": "Final remarks",
+       "quote": "the fact that S divinorum administration does not increase the release of dopamine in the Nacc suggests that salvinorins and their analogues can be a suitable therapeutic alternative without the risk of producing addiction.",
+       "sha": "3f8a68f7e08b6cd0"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage says S. divinorum administration does not increase dopamine release in the Nacc, not that salvia generally does not. It also presents the addiction-related statement as part of a finding about salvinorins and their analogues as "
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "No. Salvia is not known to cause physical or psychological dependence. A review says salvinorins may not carry a risk of producing addiction.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "adf_salvia",
+       "where": "Long-term effects / Dependence",
+       "quote": "Salvia is not known to cause physical or psychological dependence.",
+       "sha": "bf921b6cb9ee2082"
+      },
+      {
+       "label": "F7",
+       "ref": "frank_salvia",
+       "where": "Mixing salvia with other drugs / Can you get addicted?",
+       "quote": "Salvia is not known to be either physically addictive or to cause psychological dependence.",
+       "sha": "30e3eab6804df88d"
+      },
+      {
+       "label": "F3",
+       "ref": "coffeen_2019",
+       "where": "Final remarks",
+       "quote": "the fact that S divinorum administration does not increase the release of dopamine in the Nacc suggests that salvinorins and their analogues can be a suitable therapeutic alternative without the risk of producing addiction.",
+       "sha": "3f8a68f7e08b6cd0"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The review frames the claim as salvinorins and analogues being suitable therapeutic alternatives without addiction risk. The sentence drops that qualification, contrary to the editor’s note."
+    },
+    {
+     "part": "but",
+     "text": "The long term effects of salvia have not been studied enough to understand what the risks might be.",
+     "rests_on": [
+      {
+       "label": "L3",
+       "ref": "adf_salvia",
+       "where": "Long-term effects",
+       "quote": "The long term effects of salvia haven’t been studied enough to understand what the risks might be.",
+       "sha": "4fe8c197bd19cada"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer (“No” is too definite: the passages say salvia is “not known to be” addictive or to cause dependence. “Not known” would be fair. Sentence 2 concerns the uncertainty around salvia’s long-term effects generally, not specifically addiction or d)"
+    },
+    {
+     "part": "how2",
+     "text": "FRANK says salvia is not known to be physically addictive or to cause psychological dependence. It is not known to be addictive.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "frank_salvia",
+       "where": "Mixing salvia with other drugs / Can you get addicted?",
+       "quote": "Salvia is not known to be either physically addictive or to cause psychological dependence.",
+       "sha": "30e3eab6804df88d"
+      },
+      {
+       "label": "F8",
+       "ref": "frank_salvia",
+       "where": "Common risks",
+       "quote": "Not known to be addictive.",
+       "sha": "aee6f0d87223c91a"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2019 review notes that salvia administration does not increase dopamine release in the Nacc. This suggests salvinorins and analogues may not carry a risk of producing addiction.",
+     "rests_on": [
+      {
+       "label": "F3",
+       "ref": "coffeen_2019",
+       "where": "Final remarks",
+       "quote": "the fact that S divinorum administration does not increase the release of dopamine in the Nacc suggests that salvinorins and their analogues can be a suitable therapeutic alternative without the risk of producing addiction.",
+       "sha": "3f8a68f7e08b6cd0"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage says S. divinorum administration does not increase dopamine release, not salvia generally. It also frames the addiction-risk statement as part of the compounds’ potential as therapeutic alternatives; the sentence drops that qual"
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Not known. Salvia is not known to be addictive or to cause dependence. A review says its chemicals may not carry an addiction risk.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "adf_salvia",
+       "where": "Long-term effects / Dependence",
+       "quote": "Salvia is not known to cause physical or psychological dependence.",
+       "sha": "bf921b6cb9ee2082"
+      },
+      {
+       "label": "F7",
+       "ref": "frank_salvia",
+       "where": "Mixing salvia with other drugs / Can you get addicted?",
+       "quote": "Salvia is not known to be either physically addictive or to cause psychological dependence.",
+       "sha": "30e3eab6804df88d"
+      },
+      {
+       "label": "F3",
+       "ref": "coffeen_2019",
+       "where": "Final remarks",
+       "quote": "the fact that S divinorum administration does not increase the release of dopamine in the Nacc suggests that salvinorins and their analogues can be a suitable therapeutic alternative without the risk of producing addiction.",
+       "sha": "3f8a68f7e08b6cd0"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The review’s addiction-risk statement is specifically about salvinorins and their analogues as possible therapeutic alternatives, based on a finding about S. divinorum administration. Calling it a general claim that salvia’s chemicals may n"
+    },
+    {
+     "part": "but",
+     "text": "Long term effects have not been studied enough to understand what the risks might be.",
+     "rests_on": [
+      {
+       "label": "L3",
+       "ref": "adf_salvia",
+       "where": "Long-term effects",
+       "quote": "The long term effects of salvia haven’t been studied enough to understand what the risks might be.",
+       "sha": "4fe8c197bd19cada"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer (“Not known” is fair because the official passages say salvia is not known to be addictive or to cause dependence. Sentence 2 concerns whether long-term effects have been studied enough to understand their risks; it does not specifically lim)"
+    },
+    {
+     "part": "how2",
+     "text": "FRANK says salvia is not known to be physically addictive or to cause psychological dependence.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "frank_salvia",
+       "where": "Mixing salvia with other drugs / Can you get addicted?",
+       "quote": "Salvia is not known to be either physically addictive or to cause psychological dependence.",
+       "sha": "30e3eab6804df88d"
+      },
+      {
+       "label": "F8",
+       "ref": "frank_salvia",
+       "where": "Common risks",
+       "quote": "Not known to be addictive.",
+       "sha": "aee6f0d87223c91a"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2019 review says salvia does not increase dopamine release in the Nacc, suggesting its chemicals may not carry an addiction risk.",
+     "rests_on": [
+      {
+       "label": "F3",
+       "ref": "coffeen_2019",
+       "where": "Final remarks",
+       "quote": "the fact that S divinorum administration does not increase the release of dopamine in the Nacc suggests that salvinorins and their analogues can be a suitable therapeutic alternative without the risk of producing addiction.",
+       "sha": "3f8a68f7e08b6cd0"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "This generalizes the finding that S. divinorum administration did not increase dopamine release in the Nacc, and presents the addiction-risk implication outside the review’s context of salvinorins and analogues as possible therapeutic alter"
+    }
+   ]
+  }
+ ],
  "place": {
   "home": "salvia-divinorum",
   "also": [],
