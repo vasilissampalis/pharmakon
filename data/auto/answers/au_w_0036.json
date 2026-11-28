@@ -19,32 +19,39 @@
  "made": {
   "on": "2026-11-28",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
-   "writer": "gemini:gemma-4-26b-a4b-it",
+   "reader": "gemini:gemini-3.5-flash-lite",
+   "writer": "groq:qwen/qwen3.8-27b",
    "checker": "openrouter:openai/gpt-6-luna",
-   "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3.1-flash-lite",
-   "team": "team Z",
-   "reader_2": "gemini:gemini-3.1-flash-lite",
+   "planner": "groq:openai/gpt-oss-120b",
+   "also1": "gemini:gemini-3.5-flash-lite",
+   "also2": "gemini:gemini-3.6-flash",
+   "team": "team I",
+   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
    "reader_3": "openrouter:openai/gpt-oss-120b",
-   "also1_else": "gemini:gemini-3.5-flash-lite|gemini:gemma-4-31b-it"
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "46156370978",
-  "read_seconds": 28,
+  "run": "46157323079",
+  "read_by": {
+   "gemini-3.5-flash-lite": 3,
+   "gpt-oss-20b": 1,
+   "gemini-3.1-flash-lite": 1
+  },
+  "read_seconds": 14,
   "from": {
    "papers": 2,
    "summaries": 0,
    "official": 1
   },
   "neurons": 0.0,
-  "seconds": 194
+  "seconds": 97
  },
  "status": "none",
- "why": "no draft passed: the form was wrong: no JSON",
+ "why": "the second reader did not accept the answer",
  "gates": {
-  "read": "7 findings kept from 3 sources (2 papers read in full, 1 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "read": "9 findings kept from 3 sources (2 papers read in full, 1 official pages, 0 papers read in summary); 4 thrown away (the quote was not in the passage, or a number was not in the quote)",
   "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 1 official page(s), 0 paper(s) read in summary only",
-  "writer": "try 1: no JSON (how the reply ended: length; reasoned 0 characters, wrote 9493) try 2: no JSON (how the reply ended: length; reasoned 0 characters, wrote 9317)"
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.88, but 0.96, how1 0.16, how2 0.67, how3 0.04",
+  "check": "short: NOT accepted: The passage says regular use may increase the risk of psychosis, not that it may cause psychosis.; but: accepted; how1: NOT accepted: The passage says effects last around six hours, not exactly six hours.; how2: accepted; how3: NOT accepted: The review describes a tendency toward chronicity and says polydrug use was inconsistently reported. It does not establish that chronic DXM psychosis often involved polydrug use with alcohol and cannabis."
  },
  "sources": [
   {
@@ -103,36 +110,31 @@
    "money": [
     "This research received no external funding."
    ],
-   "design": {
-    "passage": 1,
-    "where": "Abstract",
-    "quote": "The focus of the present review concerns the current stage of knowledge about DXM psychotic potency as well as the management of DXM-related psychoses with a special emphasis on atypical antipsychotic drugs (i.e., olanzapine, risperidone, quetiapine, and haloperidol).",
-    "text": "a review of the current stage of knowledge about DXM psychotic potency and the management of DXM-related psychoses"
-   },
+   "design": null,
    "findings": [
     {
      "passage": 1,
      "where": "Abstract",
      "quote": "DXM, a widely used antitussive drug, is a commonly abused drug because of its euphoric, hallucinogenic, and dissociative properties.",
-     "text": "DXM is commonly used for recreation due to its euphoric, hallucinogenic, and dissociative properties.",
+     "text": "DXM produces euphoria, hallucinations, and dissociative sensations.",
      "id": "F1",
      "second_hand": ""
     },
     {
-     "passage": 6,
-     "where": "1. Introduction",
-     "quote": "Recreational use of high-dose DXM is known as robotripping (from Robo—DXM street name and Robitussin—a cough syrup brand name). Indeed, some of the effects observed by subjects who abused DXM are described as follows: “I walk like … a robot. Identically. I feel relaxed, but I walk like some handicapped cyborg.",
-     "text": "Recreational use of high-dose DXM is called robotripping, and subjects report feeling relaxed while walking like a robot or handicapped cyborg.",
+     "passage": 15,
+     "where": "3. Treatment of DXM Toxicity—Role of Antipsychotics › 3.1. DXM Toxicity",
+     "quote": "DXM exerted infrequent and usually mild adverse reactions, whereas Logan and co‑workers together with other researchers demonstrated serious long‑term sequelae for DXM, such as assault, suicide, and homicide.",
+     "text": "In some cases, DXM use is associated with serious long‑term sequelae such as assault, suicide, and homicide.",
      "id": "F2",
-     "second_hand": ""
+     "second_hand": "However, numerous data have shown that DXM exerted infrequent and usually mild adverse reactions, whereas Logan and co-workers together with other researchers demonstrated serious "
     },
     {
-     "passage": 32,
-     "where": "6. Conclusions",
-     "quote": "Noteworthy, DXM is safe only when it is used properly, according to the officially approved summary of the medicinal product (SmPC). However, its recreational or repeated use, especially by teenagers and young adults, should be considered as the main risk of psychotic symptoms (i.e., mania, psychosis, or hallucinations).",
-     "text": "DXM is safe when used properly according to the approved summary of the medicinal product, but its recreational or repeated use carries a risk of psychotic symptoms like mania, psychosis, or hallucinations.",
+     "passage": 15,
+     "where": "3. Treatment of DXM Toxicity—Role of Antipsychotics › 3.1. DXM Toxicity",
+     "quote": "It is important to consider that the risk of psychosis may be the result of drug interactions, even greater when DXM is combined with other CNS depressants (e.g., benzodiazepine, non‑benzodiazepine sedatives/hypnotics, anxiolytics, tranquilizers, muscle relaxants, general anesthetics, opioids, and alcohol‑containing products).",
+     "text": "The risk of psychosis increases when DXM is combined with other CNS depressants.",
      "id": "F3",
-     "second_hand": "Noteworthy, DXM is safe only when it is used properly, according to the officially approved summary of the medicinal product (SmPC)."
+     "second_hand": ""
     }
    ],
    "limits": [],
@@ -234,15 +236,31 @@
     "passage": 2,
     "where": "Abstract",
     "quote": "A systematic literature review was carried out using Pubmed, Scopus and Web of Science databases through the following search strategy",
-    "text": "a systematic literature review on the misuse of over-the-counter medicines and the risk of developing psychotic symptoms"
+    "text": "A systematic review of the misuse of over-the-counter medicines and the risk of developing psychosis"
    },
    "findings": [
     {
      "passage": 16,
      "where": "DISCUSSION",
-     "quote": "dextromethorphan stood out as the only substance associated with cases of psychotic onset with a tendency toward chronicity",
+     "quote": "dextromethorphan stood out as the only substance associated with cases of psychotic onset with a tendency toward chronicity.",
      "text": "Dextromethorphan was the only substance associated with cases of psychotic onset with a tendency toward chronicity.",
      "id": "F4",
+     "second_hand": ""
+    },
+    {
+     "passage": 17,
+     "where": "DISCUSSION",
+     "quote": "Polydrug use, although inconsistently reported, emerged as a significant factor in several cases. Concomitant use of other OTC drugs was noted in some cases",
+     "text": "Polydrug use emerged as a significant factor in several cases, and concomitant use of other over-the-counter drugs was noted in some cases.",
+     "id": "F5",
+     "second_hand": ""
+    },
+    {
+     "passage": 17,
+     "where": "DISCUSSION",
+     "quote": "alcohol and cannabis were frequently reported as substances used in conjunction with OTC drugs, indicating potential synergistic effects or patterns of polysubstance abuse.",
+     "text": "Alcohol and cannabis were frequently reported as substances used in conjunction with over-the-counter drugs.",
+     "id": "F6",
      "second_hand": ""
     }
    ],
@@ -250,8 +268,8 @@
     {
      "passage": 16,
      "where": "DISCUSSION",
-     "quote": "We do not have sufficient information to determine whether chronic psychoses induced by dextromethorphan were actual psychopathological onsets or exogenous SREP",
-     "text": "There is insufficient information to determine whether chronic psychoses induced by dextromethorphan were actual psychopathological onsets or exogenous SREP.",
+     "quote": "We do not have sufficient information to determine whether chronic psychoses induced by dextromethorphan were actual psychopathological onsets or exogenous SREP.",
+     "text": "There is not sufficient information to determine whether chronic psychoses induced by dextromethorphan were actual psychopathological onsets or exogenous substance-related exogenous psychosis.",
      "id": "L1",
      "second_hand": ""
     }
@@ -311,24 +329,24 @@
      "passage": 2,
      "where": "What is DXM?",
      "quote": "When taken in high doses, DXM acts as a dissociative, which means it can cause people to feel separated or detached from their body or physical environment.",
-     "text": "When taken in high doses, DXM acts as a dissociative, causing people to feel separated or detached from their body or physical environment.",
-     "id": "F5",
+     "text": "When taken in high doses, DXM acts as a dissociative, which can cause people to feel separated or detached from their body or physical environment.",
+     "id": "F7",
      "second_hand": ""
     },
     {
-     "passage": 6,
-     "where": "Overdose",
-     "quote": "If you take a large amount, or have a strong batch, you could overdose. DXM can cause death.",
-     "text": "Taking a large amount or a strong batch can lead to an overdose, and DXM can cause death.",
-     "id": "F6",
+     "passage": 4,
+     "where": "Effects of DXM",
+     "quote": "Effects start within 30-60 minutes and last for around six hours,5 and may include: euphoria; increase in positive mood; reduced or increased anxiety; sweating; itchiness; tingling sensation; increased heart rate and blood pressure; confusion and clumsiness; fatigue; difficulty urinating; visual and auditory hallucinations; feeling detached from your body; constipation; difficulty speaking.",
+     "text": "Effects of DXM start within 30-60 minutes, last for around six hours, and may include euphoria, mood changes, physical sensations, hallucinations, and difficulty speaking.",
+     "id": "F8",
      "second_hand": ""
     },
     {
      "passage": 8,
      "where": "Overdose / Long-term effects",
      "quote": "Regular use of DXM may eventually cause: tolerance; psychological dependence; craving and withdrawal feelings; damage to thinking and memory; increased risk of psychosis; liver damage.",
-     "text": "Regular use of DXM may eventually cause tolerance, psychological dependence, cravings and withdrawal feelings, damage to thinking and memory, an increased risk of psychosis, and liver damage.",
-     "id": "F7",
+     "text": "Regular use of DXM may eventually cause tolerance, psychological dependence, withdrawal feelings, damage to thinking and memory, increased risk of psychosis, and liver damage.",
+     "id": "F9",
      "second_hand": ""
     }
    ],
@@ -337,7 +355,7 @@
      "passage": 1,
      "where": "Top of the page",
      "quote": "Due to the lack of formal research about the use and effects of dextromethorphan, some of the information provided below is based on anecdotal user reports.",
-     "text": "Due to a lack of formal research about the use and effects of dextromethorphan, some of the provided information is based on anecdotal user reports.",
+     "text": "Some information is based on anecdotal reports because there is a lack of formal research regarding the use and effects of dextromethorphan.",
      "id": "L2",
      "second_hand": ""
     }
@@ -388,6 +406,14 @@
    "why": "no draft passed: broken at try 3: but: words that are not person-first (“user”)",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-28",
+   "lane": 19,
+   "status": "none",
+   "why": "no draft passed: the form was wrong: no JSON",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -397,14 +423,39 @@
    "kind": "review",
    "at": "10.3390/biomedicines11010123",
    "kept": 3,
-   "thrown": []
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "Review article on dextromethorphan‑induced psychosis",
+     "quote": "DXM, a widely used antitussive drug, is a commonly abused drug because of its euphoric, hallucinogenic, and dissociative properties.",
+     "why": "the sentence is not carried by its quote and passage"
+    },
+    {
+     "kind": "finding",
+     "text": "People who use DXM may feel relaxed and experience a robotic, slightly stiff gait with small, alternating steps.",
+     "quote": "I walk like … a robot. Identically. I feel relaxed, but I walk like some handicapped cyborg. My legs are a bit straightened, slightly bent at the knees, and walking is done on the principle of lifting",
+     "why": "the sentence is not carried by its quote and passage"
+    },
+    {
+     "kind": "limit",
+     "text": "The paper does not report respiratory depression or dependence at therapeutic doses of DXM.",
+     "quote": "Thus, DXM does not appear to induce typical opioid‑related side effects, such as dependence and respiratory depression, at therapeutically active concentrations.",
+     "why": "the sentence is not carried by its quote and passage"
+    },
+    {
+     "kind": "limit",
+     "text": "The severity of DXM toxicity varies with dose, and the paper does not specify exact dose thresholds for each symptom.",
+     "quote": "Depending on the ingested dose, DXM toxicity can have a wide range of symptoms.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   },
   {
    "title": "Over-the-counter Psychosis: A Systematic Review of the Misuse of Antihistamines, Cough Medicines, and Decongestants and the Risk of Developing Psychosis",
    "read": "full",
    "kind": "review",
    "at": "10.2174/011570159x344365250114064248",
-   "kept": 1,
+   "kept": 3,
    "thrown": []
   },
   {
@@ -413,14 +464,7 @@
    "kind": "official",
    "at": "https://adf.org.au/drug-facts/dxm/",
    "kept": 3,
-   "thrown": [
-    {
-     "kind": "finding",
-     "text": "Effects start within 30 to 60 minutes, last for around six hours, and may include euphoria, mood changes, physical sensations, hallucinations, and feeling detached from your body.",
-     "quote": "Effects start within 30-60 minutes and last for around six hours, and may include: euphoria; increase in positive mood; reduced or increased anxiety; sweating; itchiness; tingling sensation; increased",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
-    }
-   ]
+   "thrown": []
   },
   {
    "title": "Walgreen Adult Cough Plus Chest Congestion Dm (dextromethorphan hydrobromide)",
@@ -441,10 +485,10 @@
  ],
  "plan": {
   "short": [
-   "F5",
-   "F1",
-   "F6",
-   "F7"
+   "F7",
+   "F8",
+   "F9",
+   "F2"
   ],
   "direct": "",
   "but": [
@@ -452,24 +496,554 @@
   ],
   "how": [
    [
-    "F5",
-    "F6",
-    "F7"
+    "F7",
+    "F8",
+    "F9"
    ],
    [
-    "DA",
     "F1",
     "F2",
     "F3"
    ],
    [
     "DB",
-    "F4"
+    "F4",
+    "F5",
+    "F6"
    ]
   ],
   "unanswered": ""
  },
- "soft": "the writer's reply was not in the form asked for",
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.8791,
+   "but": 0.9642,
+   "how1": 0.1601,
+   "how2": 0.6731,
+   "how3": 0.0409
+  },
+  "scores_quotes_alone": {
+   "short": 0.7717,
+   "but": 0.9438,
+   "how1": 0.3653,
+   "how2": 0.915,
+   "how3": 0.5247
+  }
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "DXM can feel like euphoria, hallucinations, and feeling detached from your body. Regular use may cause dependence, memory damage, and psychosis.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "adf_dxm",
+       "where": "What is DXM?",
+       "quote": "When taken in high doses, DXM acts as a dissociative, which means it can cause people to feel separated or detached from their body or physical environment.",
+       "sha": "aa1f5920c8e3758d"
+      },
+      {
+       "label": "F8",
+       "ref": "adf_dxm",
+       "where": "Effects of DXM",
+       "quote": "Effects start within 30-60 minutes and last for around six hours,5 and may include: euphoria; increase in positive mood; reduced or increased anxiety; sweating; itchiness; tingling sensation; increased heart rate and blood pressure; confusion and clumsiness; fatigue; difficulty urinating; visual and auditory hallucinations; feeling detached from your body; constipation; difficulty speaking.",
+       "sha": "26bd8df0d7cb07f8"
+      },
+      {
+       "label": "F9",
+       "ref": "adf_dxm",
+       "where": "Overdose / Long-term effects",
+       "quote": "Regular use of DXM may eventually cause: tolerance; psychological dependence; craving and withdrawal feelings; damage to thinking and memory; increased risk of psychosis; liver damage.",
+       "sha": "ef91aad6b28702f9"
+      },
+      {
+       "label": "F2",
+       "ref": "zaremba_2023",
+       "where": "3. Treatment of DXM Toxicity—Role of Antipsychotics › 3.1. DXM Toxicity",
+       "quote": "DXM exerted infrequent and usually mild adverse reactions, whereas Logan and co‑workers together with other researchers demonstrated serious long‑term sequelae for DXM, such as assault, suicide, and homicide.",
+       "sha": "a1adc4f292817bdf"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage says regular use may increase the risk of psychosis, not that it may cause psychosis. It specifies psychological dependence, too."
+    },
+    {
+     "part": "but",
+     "text": "Some information is based on anecdotal reports because there is a lack of formal research on DXM use and effects.",
+     "rests_on": [
+      {
+       "label": "L2",
+       "ref": "adf_dxm",
+       "where": "Top of the page",
+       "quote": "Due to the lack of formal research about the use and effects of dextromethorphan, some of the information provided below is based on anecdotal user reports.",
+       "sha": "076b2b22a99acc54"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "Australia's Alcohol and Drug Foundation says DXM effects start in 30-60 minutes, last about six hours, and may include hallucinations and feeling detached.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "adf_dxm",
+       "where": "What is DXM?",
+       "quote": "When taken in high doses, DXM acts as a dissociative, which means it can cause people to feel separated or detached from their body or physical environment.",
+       "sha": "aa1f5920c8e3758d"
+      },
+      {
+       "label": "F8",
+       "ref": "adf_dxm",
+       "where": "Effects of DXM",
+       "quote": "Effects start within 30-60 minutes and last for around six hours,5 and may include: euphoria; increase in positive mood; reduced or increased anxiety; sweating; itchiness; tingling sensation; increased heart rate and blood pressure; confusion and clumsiness; fatigue; difficulty urinating; visual and auditory hallucinations; feeling detached from your body; constipation; difficulty speaking.",
+       "sha": "26bd8df0d7cb07f8"
+      },
+      {
+       "label": "F9",
+       "ref": "adf_dxm",
+       "where": "Overdose / Long-term effects",
+       "quote": "Regular use of DXM may eventually cause: tolerance; psychological dependence; craving and withdrawal feelings; damage to thinking and memory; increased risk of psychosis; liver damage.",
+       "sha": "ef91aad6b28702f9"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The timing and listed effects are supported, but the passages do not say that the Alcohol and Drug Foundation is Australia's."
+    },
+    {
+     "part": "how2",
+     "text": "A 2023 review says DXM causes euphoria and dissociation. It reports that other researchers found serious long-term outcomes like suicide and assault.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "zaremba_2023",
+       "where": "Abstract",
+       "quote": "DXM, a widely used antitussive drug, is a commonly abused drug because of its euphoric, hallucinogenic, and dissociative properties.",
+       "sha": "cdc911bb6e1357c2"
+      },
+      {
+       "label": "F2",
+       "ref": "zaremba_2023",
+       "where": "3. Treatment of DXM Toxicity—Role of Antipsychotics › 3.1. DXM Toxicity",
+       "quote": "DXM exerted infrequent and usually mild adverse reactions, whereas Logan and co‑workers together with other researchers demonstrated serious long‑term sequelae for DXM, such as assault, suicide, and homicide.",
+       "sha": "a1adc4f292817bdf"
+      },
+      {
+       "label": "F3",
+       "ref": "zaremba_2023",
+       "where": "3. Treatment of DXM Toxicity—Role of Antipsychotics › 3.1. DXM Toxicity",
+       "quote": "It is important to consider that the risk of psychosis may be the result of drug interactions, even greater when DXM is combined with other CNS depressants (e.g., benzodiazepine, non‑benzodiazepine sedatives/hypnotics, anxiolytics, tranquilizers, muscle relaxants, general anesthetics, opioids, and alcohol‑containing products).",
+       "sha": "a1adc4f292817bdf"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The review describes euphoric and dissociative properties; it does not explicitly say that DXM causes euphoria and dissociation."
+    },
+    {
+     "part": "how3",
+     "text": "A 2025 systematic review found DXM was the only over-the-counter drug linked to chronic psychosis. Polydrug use, including alcohol and cannabis, was a factor in some cases.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "mosca_2025",
+       "where": "Abstract",
+       "quote": "A systematic literature review was carried out using Pubmed, Scopus and Web of Science databases through the following search strategy",
+       "sha": "66c615ef77777785"
+      },
+      {
+       "label": "F4",
+       "ref": "mosca_2025",
+       "where": "DISCUSSION",
+       "quote": "dextromethorphan stood out as the only substance associated with cases of psychotic onset with a tendency toward chronicity.",
+       "sha": "9656917b273bd4b9"
+      },
+      {
+       "label": "F5",
+       "ref": "mosca_2025",
+       "where": "DISCUSSION",
+       "quote": "Polydrug use, although inconsistently reported, emerged as a significant factor in several cases. Concomitant use of other OTC drugs was noted in some cases",
+       "sha": "57165a2f09f4d06d"
+      },
+      {
+       "label": "F6",
+       "ref": "mosca_2025",
+       "where": "DISCUSSION",
+       "quote": "alcohol and cannabis were frequently reported as substances used in conjunction with OTC drugs, indicating potential synergistic effects or patterns of polysubstance abuse.",
+       "sha": "57165a2f09f4d06d"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The review describes cases with a tendency toward chronicity, not established chronic psychosis. It also reports alcohol and cannabis alongside OTC drugs, but does not say they were factors in those chronicity cases."
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "DXM can cause euphoria, hallucinations, and feeling detached. Regular use may cause psychological dependence, withdrawal, and increased risk of psychosis.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "adf_dxm",
+       "where": "What is DXM?",
+       "quote": "When taken in high doses, DXM acts as a dissociative, which means it can cause people to feel separated or detached from their body or physical environment.",
+       "sha": "aa1f5920c8e3758d"
+      },
+      {
+       "label": "F8",
+       "ref": "adf_dxm",
+       "where": "Effects of DXM",
+       "quote": "Effects start within 30-60 minutes and last for around six hours,5 and may include: euphoria; increase in positive mood; reduced or increased anxiety; sweating; itchiness; tingling sensation; increased heart rate and blood pressure; confusion and clumsiness; fatigue; difficulty urinating; visual and auditory hallucinations; feeling detached from your body; constipation; difficulty speaking.",
+       "sha": "26bd8df0d7cb07f8"
+      },
+      {
+       "label": "F9",
+       "ref": "adf_dxm",
+       "where": "Overdose / Long-term effects",
+       "quote": "Regular use of DXM may eventually cause: tolerance; psychological dependence; craving and withdrawal feelings; damage to thinking and memory; increased risk of psychosis; liver damage.",
+       "sha": "ef91aad6b28702f9"
+      },
+      {
+       "label": "F2",
+       "ref": "zaremba_2023",
+       "where": "3. Treatment of DXM Toxicity—Role of Antipsychotics › 3.1. DXM Toxicity",
+       "quote": "DXM exerted infrequent and usually mild adverse reactions, whereas Logan and co‑workers together with other researchers demonstrated serious long‑term sequelae for DXM, such as assault, suicide, and homicide.",
+       "sha": "a1adc4f292817bdf"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage says feeling detached can occur when DXM is taken in high doses, and regular use may eventually cause craving and withdrawal feelings. The sentence omits those qualifications."
+    },
+    {
+     "part": "but",
+     "text": "Some information is based on anecdotal reports because there is a lack of formal research on DXM use and effects.",
+     "rests_on": [
+      {
+       "label": "L2",
+       "ref": "adf_dxm",
+       "where": "Top of the page",
+       "quote": "Due to the lack of formal research about the use and effects of dextromethorphan, some of the information provided below is based on anecdotal user reports.",
+       "sha": "076b2b22a99acc54"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "Australia's Alcohol and Drug Foundation says DXM effects start in 30-60 minutes, last around six hours, and may include euphoria and hallucinations.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "adf_dxm",
+       "where": "What is DXM?",
+       "quote": "When taken in high doses, DXM acts as a dissociative, which means it can cause people to feel separated or detached from their body or physical environment.",
+       "sha": "aa1f5920c8e3758d"
+      },
+      {
+       "label": "F8",
+       "ref": "adf_dxm",
+       "where": "Effects of DXM",
+       "quote": "Effects start within 30-60 minutes and last for around six hours,5 and may include: euphoria; increase in positive mood; reduced or increased anxiety; sweating; itchiness; tingling sensation; increased heart rate and blood pressure; confusion and clumsiness; fatigue; difficulty urinating; visual and auditory hallucinations; feeling detached from your body; constipation; difficulty speaking.",
+       "sha": "26bd8df0d7cb07f8"
+      },
+      {
+       "label": "F9",
+       "ref": "adf_dxm",
+       "where": "Overdose / Long-term effects",
+       "quote": "Regular use of DXM may eventually cause: tolerance; psychological dependence; craving and withdrawal feelings; damage to thinking and memory; increased risk of psychosis; liver damage.",
+       "sha": "ef91aad6b28702f9"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A 2023 review says DXM has euphoric and dissociative properties. It reports that serious long-term sequelae like suicide have been demonstrated in other work.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "zaremba_2023",
+       "where": "Abstract",
+       "quote": "DXM, a widely used antitussive drug, is a commonly abused drug because of its euphoric, hallucinogenic, and dissociative properties.",
+       "sha": "cdc911bb6e1357c2"
+      },
+      {
+       "label": "F2",
+       "ref": "zaremba_2023",
+       "where": "3. Treatment of DXM Toxicity—Role of Antipsychotics › 3.1. DXM Toxicity",
+       "quote": "DXM exerted infrequent and usually mild adverse reactions, whereas Logan and co‑workers together with other researchers demonstrated serious long‑term sequelae for DXM, such as assault, suicide, and homicide.",
+       "sha": "a1adc4f292817bdf"
+      },
+      {
+       "label": "F3",
+       "ref": "zaremba_2023",
+       "where": "3. Treatment of DXM Toxicity—Role of Antipsychotics › 3.1. DXM Toxicity",
+       "quote": "It is important to consider that the risk of psychosis may be the result of drug interactions, even greater when DXM is combined with other CNS depressants (e.g., benzodiazepine, non‑benzodiazepine sedatives/hypnotics, anxiolytics, tranquilizers, muscle relaxants, general anesthetics, opioids, and alcohol‑containing products).",
+       "sha": "a1adc4f292817bdf"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2025 systematic review found DXM was the only substance linked to psychotic onset with a tendency toward chronicity. Polydrug use was a significant factor in several cases.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "mosca_2025",
+       "where": "Abstract",
+       "quote": "A systematic literature review was carried out using Pubmed, Scopus and Web of Science databases through the following search strategy",
+       "sha": "66c615ef77777785"
+      },
+      {
+       "label": "F4",
+       "ref": "mosca_2025",
+       "where": "DISCUSSION",
+       "quote": "dextromethorphan stood out as the only substance associated with cases of psychotic onset with a tendency toward chronicity.",
+       "sha": "9656917b273bd4b9"
+      },
+      {
+       "label": "F5",
+       "ref": "mosca_2025",
+       "where": "DISCUSSION",
+       "quote": "Polydrug use, although inconsistently reported, emerged as a significant factor in several cases. Concomitant use of other OTC drugs was noted in some cases",
+       "sha": "57165a2f09f4d06d"
+      },
+      {
+       "label": "F6",
+       "ref": "mosca_2025",
+       "where": "DISCUSSION",
+       "quote": "alcohol and cannabis were frequently reported as substances used in conjunction with OTC drugs, indicating potential synergistic effects or patterns of polysubstance abuse.",
+       "sha": "57165a2f09f4d06d"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "High doses can cause feeling detached from your body. Regular use may cause dependence, withdrawal, and psychosis.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "adf_dxm",
+       "where": "What is DXM?",
+       "quote": "When taken in high doses, DXM acts as a dissociative, which means it can cause people to feel separated or detached from their body or physical environment.",
+       "sha": "aa1f5920c8e3758d"
+      },
+      {
+       "label": "F9",
+       "ref": "adf_dxm",
+       "where": "Overdose / Long-term effects",
+       "quote": "Regular use of DXM may eventually cause: tolerance; psychological dependence; craving and withdrawal feelings; damage to thinking and memory; increased risk of psychosis; liver damage.",
+       "sha": "ef91aad6b28702f9"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage says regular use may increase the risk of psychosis, not that it may cause psychosis."
+    },
+    {
+     "part": "but",
+     "text": "Some information is based on anecdotal reports because there is a lack of formal research on DXM use and effects.",
+     "rests_on": [
+      {
+       "label": "L2",
+       "ref": "adf_dxm",
+       "where": "Top of the page",
+       "quote": "Due to the lack of formal research about the use and effects of dextromethorphan, some of the information provided below is based on anecdotal user reports.",
+       "sha": "076b2b22a99acc54"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "Australia's Alcohol and Drug Foundation says high doses can cause detachment, effects last six hours, and regular use may cause dependence.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "adf_dxm",
+       "where": "What is DXM?",
+       "quote": "When taken in high doses, DXM acts as a dissociative, which means it can cause people to feel separated or detached from their body or physical environment.",
+       "sha": "aa1f5920c8e3758d"
+      },
+      {
+       "label": "F8",
+       "ref": "adf_dxm",
+       "where": "Effects of DXM",
+       "quote": "Effects start within 30-60 minutes and last for around six hours,5 and may include: euphoria; increase in positive mood; reduced or increased anxiety; sweating; itchiness; tingling sensation; increased heart rate and blood pressure; confusion and clumsiness; fatigue; difficulty urinating; visual and auditory hallucinations; feeling detached from your body; constipation; difficulty speaking.",
+       "sha": "26bd8df0d7cb07f8"
+      },
+      {
+       "label": "F9",
+       "ref": "adf_dxm",
+       "where": "Overdose / Long-term effects",
+       "quote": "Regular use of DXM may eventually cause: tolerance; psychological dependence; craving and withdrawal feelings; damage to thinking and memory; increased risk of psychosis; liver damage.",
+       "sha": "ef91aad6b28702f9"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage says effects last around six hours, not exactly six hours."
+    },
+    {
+     "part": "how2",
+     "text": "A 2023 review says DXM causes euphoria and hallucinations, and reports that serious long-term sequelae like suicide have been demonstrated.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "zaremba_2023",
+       "where": "Abstract",
+       "quote": "DXM, a widely used antitussive drug, is a commonly abused drug because of its euphoric, hallucinogenic, and dissociative properties.",
+       "sha": "cdc911bb6e1357c2"
+      },
+      {
+       "label": "F2",
+       "ref": "zaremba_2023",
+       "where": "3. Treatment of DXM Toxicity—Role of Antipsychotics › 3.1. DXM Toxicity",
+       "quote": "DXM exerted infrequent and usually mild adverse reactions, whereas Logan and co‑workers together with other researchers demonstrated serious long‑term sequelae for DXM, such as assault, suicide, and homicide.",
+       "sha": "a1adc4f292817bdf"
+      },
+      {
+       "label": "F3",
+       "ref": "zaremba_2023",
+       "where": "3. Treatment of DXM Toxicity—Role of Antipsychotics › 3.1. DXM Toxicity",
+       "quote": "It is important to consider that the risk of psychosis may be the result of drug interactions, even greater when DXM is combined with other CNS depressants (e.g., benzodiazepine, non‑benzodiazepine sedatives/hypnotics, anxiolytics, tranquilizers, muscle relaxants, general anesthetics, opioids, and alcohol‑containing products).",
+       "sha": "a1adc4f292817bdf"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2025 systematic review found DXM was the only substance linked to chronic psychosis, often with polydrug use including alcohol and cannabis.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "mosca_2025",
+       "where": "Abstract",
+       "quote": "A systematic literature review was carried out using Pubmed, Scopus and Web of Science databases through the following search strategy",
+       "sha": "66c615ef77777785"
+      },
+      {
+       "label": "F4",
+       "ref": "mosca_2025",
+       "where": "DISCUSSION",
+       "quote": "dextromethorphan stood out as the only substance associated with cases of psychotic onset with a tendency toward chronicity.",
+       "sha": "9656917b273bd4b9"
+      },
+      {
+       "label": "F5",
+       "ref": "mosca_2025",
+       "where": "DISCUSSION",
+       "quote": "Polydrug use, although inconsistently reported, emerged as a significant factor in several cases. Concomitant use of other OTC drugs was noted in some cases",
+       "sha": "57165a2f09f4d06d"
+      },
+      {
+       "label": "F6",
+       "ref": "mosca_2025",
+       "where": "DISCUSSION",
+       "quote": "alcohol and cannabis were frequently reported as substances used in conjunction with OTC drugs, indicating potential synergistic effects or patterns of polysubstance abuse.",
+       "sha": "57165a2f09f4d06d"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The review describes a tendency toward chronicity and says polydrug use was inconsistently reported. It does not establish that chronic DXM psychosis often involved polydrug use with alcohol and cannabis."
+    }
+   ]
+  }
+ ],
+ "dropped": [
+  {
+   "try": 3,
+   "part": "how1",
+   "text": "Australia's Alcohol and Drug Foundation says high doses can cause detachment, effects last six hours, and regular use may cause dependence.",
+   "rests_on": [
+    {
+     "label": "F7",
+     "ref": "adf_dxm",
+     "where": "What is DXM?",
+     "quote": "When taken in high doses, DXM acts as a dissociative, which means it can cause people to feel separated or detached from their body or physical environment.",
+     "sha": "aa1f5920c8e3758d"
+    },
+    {
+     "label": "F8",
+     "ref": "adf_dxm",
+     "where": "Effects of DXM",
+     "quote": "Effects start within 30-60 minutes and last for around six hours,5 and may include: euphoria; increase in positive mood; reduced or increased anxiety; sweating; itchiness; tingling sensation; increased heart rate and blood pressure; confusion and clumsiness; fatigue; difficulty urinating; visual and auditory hallucinations; feeling detached from your body; constipation; difficulty speaking.",
+     "sha": "26bd8df0d7cb07f8"
+    },
+    {
+     "label": "F9",
+     "ref": "adf_dxm",
+     "where": "Overdose / Long-term effects",
+     "quote": "Regular use of DXM may eventually cause: tolerance; psychological dependence; craving and withdrawal feelings; damage to thinking and memory; increased risk of psychosis; liver damage.",
+     "sha": "ef91aad6b28702f9"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The passage says effects last around six hours, not exactly six hours."
+  },
+  {
+   "try": 3,
+   "part": "how3",
+   "text": "A 2025 systematic review found DXM was the only substance linked to chronic psychosis, often with polydrug use including alcohol and cannabis.",
+   "rests_on": [
+    {
+     "label": "DB",
+     "ref": "mosca_2025",
+     "where": "Abstract",
+     "quote": "A systematic literature review was carried out using Pubmed, Scopus and Web of Science databases through the following search strategy",
+     "sha": "66c615ef77777785"
+    },
+    {
+     "label": "F4",
+     "ref": "mosca_2025",
+     "where": "DISCUSSION",
+     "quote": "dextromethorphan stood out as the only substance associated with cases of psychotic onset with a tendency toward chronicity.",
+     "sha": "9656917b273bd4b9"
+    },
+    {
+     "label": "F5",
+     "ref": "mosca_2025",
+     "where": "DISCUSSION",
+     "quote": "Polydrug use, although inconsistently reported, emerged as a significant factor in several cases. Concomitant use of other OTC drugs was noted in some cases",
+     "sha": "57165a2f09f4d06d"
+    },
+    {
+     "label": "F6",
+     "ref": "mosca_2025",
+     "where": "DISCUSSION",
+     "quote": "alcohol and cannabis were frequently reported as substances used in conjunction with OTC drugs, indicating potential synergistic effects or patterns of polysubstance abuse.",
+     "sha": "57165a2f09f4d06d"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The review describes a tendency toward chronicity and says polydrug use was inconsistently reported. It does not establish that chronic DXM psychosis often involved polydrug use with alcohol and cannabis."
+  }
+ ],
  "place": {
   "home": "dxm",
   "also": [],

@@ -19,79 +19,75 @@
  "made": {
   "on": "2026-11-28",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
-   "writer": "openrouter:meta-llama/llama-3.3-70b-instruct",
+   "reader": "gemini:gemini-3.1-flash-lite",
+   "writer": "gemini:gemma-4-26b-a4b-it",
    "checker": "openrouter:openai/gpt-6-luna",
-   "planner": "openrouter:openai/gpt-oss-120b",
-   "team": "team R",
-   "reader_2": "openrouter:openai/gpt-oss-120b"
+   "planner": "gemini:gemma-4-31b-it",
+   "also1": "gemini:gemini-3.5-flash-lite",
+   "also2": "gemini:gemini-3.6-flash",
+   "team": "team K",
+   "reader_2": "gemini:gemini-3.5-flash-lite",
+   "reader_3": "openrouter:openai/gpt-oss-120b",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "46156370978",
+  "run": "46157323079",
   "read_by": {
-   "gemini-3.5-flash-lite": 2,
-   "gemini-3.1-flash-lite": 2
+   "gemini-3.1-flash-lite": 10,
+   "gpt-oss-20b": 1
   },
-  "read_seconds": 100,
+  "read_seconds": 58,
   "from": {
    "papers": 2,
    "summaries": 0,
    "official": 0
   },
   "neurons": 0.0,
-  "seconds": 174
+  "seconds": 209
  },
  "status": "none",
- "why": "the second reader did not accept the answer",
+ "why": "no draft passed: the form was wrong: no JSON",
  "gates": {
-  "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.1-flash-lite read from there",
   "read": "5 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
   "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 0 official page(s), 0 paper(s) read in summary only",
-  "told": "the writer was told what the readers said of the last draft that was not accepted: the short answer “It depends. In one survey, 61% of people who use methamphetamine went back within a year. The NZ Drug Foundation says it is highly addictive and hard to stop.”: the word it opens with (“It depends”) is not the answer the passages bear out: A more accurate opening would give the spe",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.97, but 0.98, how1 0.11, how2 0.96",
-  "check": "short: NOT accepted: it does not answer the question itself (Sentence 1 says relapse likelihood varies with abstinence duration, but it does not say how many people relapse or whether staying off gets easier with time. Sentence 2 concerns exercise research, not a limit or doubt about sentence 1.); but: NOT accepted: it is about something else than the short answer (Sentence 1 says relapse likelihood varies with abstinence duration, but it does not say how many people relapse or whether staying off gets easier with time. Sentence 2 concerns exercise research, not a limit or doubt about sentence 1.); how1: NOT accepted: The passage says psychological craving is a key factor leading to eventual relapse after abstinence; the sentence leaves out the condition “after abstinence.”; how2: accepted"
+  "told": "the writer was told what the readers said of the last draft that was not accepted: the short answer “Methamphetamine has a higher relapse rate than other drugs, and the likelihood of relapse changes depending on how long a person has been abstinent.”: it does not answer the question itself (Sentence 1 says relapse likelihood varies with abstinence duration, but it does not say how",
+  "writer": "try 1: no JSON (how the reply ended: length; reasoned 0 characters, wrote 9390) try 2: no JSON (how the reply ended: length; reasoned 0 characters, wrote 8791)"
  },
  "sources": [
   {
    "read": "full",
    "ref": {
-    "id": "li_2025",
+    "id": "young_2024",
     "type": "article-journal",
-    "title": "Exercise as a promising adjunct treatment for methamphetamine addiction: Advances in understanding neuroplasticity and clinical applications",
+    "title": "Novel therapeutics in development for the treatment of stimulant-use disorder",
     "author": [
      {
-      "family": "Li",
-      "given": "Yongting"
+      "family": "Young",
+      "given": "Erica J."
      },
      {
-      "family": "Chen",
-      "given": "Xiaolong"
+      "family": "Radnai",
+      "given": "Laszlo"
      },
      {
-      "family": "Wang",
-      "given": "Tingting"
+      "family": "Prikhodko",
+      "given": "Victor"
      },
      {
-      "family": "Zou",
-      "given": "Wanlin"
-     },
-     {
-      "family": "Tang",
-      "given": "Yong"
-     },
-     {
-      "family": "Li",
-      "given": "Zhigang"
+      "family": "Miller",
+      "given": "Courtney A."
      }
     ],
-    "container-title": "Brain Sciences",
+    "container-title": "Current Opinion in Neurobiology",
     "issued": {
      "date-parts": [
       [
-       2025
+       2024
       ]
      ]
     },
-    "DOI": "10.3390/brainsci15121339",
+    "DOI": "10.1016/j.conb.2024.102898",
     "verification": {
      "status": "metadata-verified",
      "metadata_source": "crossref",
@@ -103,87 +99,82 @@
       "checked_on": "2026-11-28"
      }
     },
-    "volume": "15",
-    "issue": "12",
-    "number": "1339",
-    "PMCID": "PMC12730288"
+    "volume": "87",
+    "number": "102898",
+    "PMCID": "PMC13034452"
    },
-   "doi": "10.3390/brainsci15121339",
-   "pmcid": "PMC12730288",
-   "title": "Exercise as a Promising Adjunct Treatment for Methamphetamine Addiction: Advances in Understanding Neuroplasticity and Clinical Applications",
-   "year": 2025,
-   "journal": "Brain sciences",
+   "doi": "10.1016/j.conb.2024.102898",
+   "pmcid": "PMC13034452",
+   "title": "Novel therapeutics in development for the treatment of stimulant-use disorder",
+   "year": 2024,
+   "journal": "Current opinion in neurobiology",
    "kind": "review",
    "people": false,
-   "near": 0.759,
+   "near": 0.788,
    "money": [
-    "Funder: Luzhou Social Science Federation; Grant number: 25TYC01; Funding Program: Luzhou Key Research Base of Philosophy and Social Sciences: Research Centre for Sports Culture and Industry Development.",
-    "AcknowledgmentsWe would like to express our heartfelt gratitude to Zhigang Li for his guidance on the overall concept of the thesis and for his revisions to the framework. We also extend our thanks to the Department of Sports Rehabilitation, School of Physical Education, Southwest Medical University, and the Centre for Exercise and Health Promotion for granting us access to their resources and facilities, which were essential for completing this study. Xiaolong Chen provided technical support during the writing of the paper. Tingting Wang, Wanlin Zou, and Yong Tang for their assistance with the image beautification and formatting modifications. In future research, we will uphold the teachings of all faculty members and continue to work hard to achieve more valuable results in the field. We will continue to work diligently to achieve even more valuable results in this field and meet the expectations of everyone involved."
+    "AcknowledgementsThe writing of this review was supported by R01DA049544 and UH3NS096833 to CAM and R44DA055420 to EJY. The graphical abstract was created using.",
+    "Declaration of Competing InterestErica Young, Victor Pridhoko and Courtney Miller have an equity interest in Myosin Therapeutics. Laszlo Radnai has nothing to disclose."
    ],
-   "design": {
-    "passage": 1,
-    "where": "Abstract",
-    "quote": "A narrative synthesis of 84 studies (up to March 2025) from PubMed, Web of Science, and CNKI was conducted, focusing on the neurobiological basis and clinical application of exercise interventions.",
-    "text": "a narrative synthesis of 84 studies on the neurobiological basis and clinical application of exercise interventions for Meth use disorder"
-   },
+   "design": null,
    "findings": [
     {
-     "passage": 2,
-     "where": "1. Introduction",
-     "quote": "The chronic and relapsing nature of Meth use disorder stems from complex neuroadaptations that disrupt brain homeostasis, presenting a formidable obstacle to sustained recovery.",
-     "text": "The chronic and relapsing nature of Meth use disorder creates a significant barrier to maintaining recovery.",
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "The high rate of relapse among this population highlights the insufficiency of current treatment options, which are limited to abstinence support programs and behavioral modification therapies.",
+     "text": "There is a high rate of relapse among people who use stimulants, and current treatment options are limited to abstinence support and behavioral modification.",
      "id": "F1",
      "second_hand": ""
     },
     {
-     "passage": 20,
-     "where": "4. Exercise Interventions for Meth Use Disorder › 4.2. Effect of Exercise Type on Craving in Meth Use Disorder",
-     "quote": "Psychological craving in individuals with Meth use disorder is a key factor leading to drug-seeking behaviour and eventual relapse after abstinence.",
-     "text": "Psychological craving in people who use Meth is a primary factor that leads to drug-seeking behavior and relapse after they stop using.",
+     "passage": 7,
+     "where": "Stimulant-use disorder treatments in the clinical development pipeline",
+     "quote": "While treatment with CM and CBT have yielded short-term and moderate effects in reducing use relapse, the addition of medications, similar to treatment methods utilized for opioid use disorder, has the potential to yield even better outcomes.",
+     "text": "Contingency management and cognitive behavioral therapy have yielded short-term and moderate effects in reducing relapse for people who use stimulants.",
      "id": "F2",
      "second_hand": ""
     }
    ],
-   "limits": [],
+   "limits": [
+    {
+     "passage": 18,
+     "where": "Conclusion",
+     "quote": "This is no simple task, particularly given the complications introduced to clinical testing by the high rate of polydrug use, as well as the rate of failure inherent to any drug development program.",
+     "text": "The high rate of polydrug use and the inherent rate of failure in drug development programs complicate clinical testing for stimulant-use disorder treatments.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
    "tag": "A"
   },
   {
    "read": "full",
    "ref": {
-    "id": "chen_2023",
+    "id": "may_2020",
     "type": "article-journal",
-    "title": "Challenges and future trends in wearable closed-loop neuromodulation to efficiently treat methamphetamine addiction",
+    "title": "Dark times: The role of negative reinforcement in methamphetamine addiction",
     "author": [
      {
-      "family": "Chen",
-      "given": "Yun-Hsuan"
+      "family": "May",
+      "given": "April C."
      },
      {
-      "family": "Yang",
-      "given": "Jie"
+      "family": "Aupperle",
+      "given": "Robin L."
      },
      {
-      "family": "Wu",
-      "given": "Hemmings"
-     },
-     {
-      "family": "Beier",
-      "given": "Kevin T."
-     },
-     {
-      "family": "Sawan",
-      "given": "Mohamad"
+      "family": "Stewart",
+      "given": "Jennifer L."
      }
     ],
     "container-title": "Frontiers in Psychiatry",
     "issued": {
      "date-parts": [
       [
-       2023
+       2020
       ]
      ]
     },
-    "DOI": "10.3389/fpsyt.2023.1085036",
+    "DOI": "10.3389/fpsyt.2020.00114",
     "verification": {
      "status": "metadata-verified",
      "metadata_source": "crossref",
@@ -195,61 +186,70 @@
       "checked_on": "2026-11-28"
      }
     },
-    "volume": "14",
-    "number": "1085036",
-    "PMCID": "PMC9995819"
+    "volume": "11",
+    "number": "114",
+    "PMCID": "PMC7090143"
    },
-   "doi": "10.3389/fpsyt.2023.1085036",
-   "pmcid": "PMC9995819",
-   "title": "Challenges and future trends in wearable closed-loop neuromodulation to efficiently treat methamphetamine addiction",
-   "year": 2023,
+   "doi": "10.3389/fpsyt.2020.00114",
+   "pmcid": "PMC7090143",
+   "title": "Dark Times: The Role of Negative Reinforcement in Methamphetamine Addiction",
+   "year": 2020,
    "journal": "Frontiers in psychiatry",
    "kind": "review",
    "people": true,
-   "near": 0.666,
+   "near": 0.646,
    "money": [
-    "This study was supported by the Westlake University (No. 041030080118) and Zhejiang Key R&D Program (No. 2021C03002).",
+    "This work was supported by The William K. Warren Foundation and the National Institute on Alcohol Abuse and Alcoholism (F31AA027169).",
     "The authors declare that the research was conducted in the absence of any commercial or financial relationships that could be construed as a potential conflict of interest."
    ],
    "design": {
     "passage": 1,
     "where": "Abstract",
-    "quote": "This review summarizes the essential modules required for a wearable system to treat addiction efficiently. First, the advantages of neuroimaging over conventional techniques such as analysis of sweat, saliva, or urine for addiction detection are discussed.",
-    "text": "A review of research on wearable closed-loop neuromodulation systems for treating methamphetamine addiction."
+    "quote": "this review highlights the current evidence for negative reinforcement mechanisms in methamphetamine use disorder by integrating studies of subjective experience, behavior, functional magnetic resonance imaging, positron emission tomography, and event-related potentials",
+    "text": "a review of evidence regarding negative reinforcement mechanisms in methamphetamine use disorder"
    },
    "findings": [
     {
-     "passage": 4,
-     "where": "1. Introduction",
-     "quote": "During the treatment process and the follow-up stages after abstinence has been achieved, the most serious challenge in treating METH addiction is relapse. Once relapse occurs, abstinence becomes more difficult.",
-     "text": "Relapse is the most serious challenge during treatment and follow-up, and once it occurs, achieving abstinence becomes more difficult.",
+     "passage": 11,
+     "where": "Subjective, Behavioral, and Physiological Evidence for Negative Reinforcement",
+     "quote": "with continued abstinence from methamphetamine (ranging from 6 days to 1 year), self-reported emotional symptoms of depression and anxiety appear to decrease among a cross-sectional sample of MUD.",
+     "text": "In a cross-sectional sample of people who use methamphetamine, self-reported symptoms of depression and anxiety appear to decrease with continued abstinence ranging from 6 days to 1 year.",
      "id": "F3",
      "second_hand": ""
     },
     {
      "passage": 1,
      "where": "Abstract",
-     "quote": "Achieving abstinence from drugs is a long journey and can be particularly challenging in the case of methamphetamine, which has a higher relapse rate than other drugs.",
-     "text": "Methamphetamine has a higher relapse rate than other drugs.",
+     "quote": "Abstinence from methamphetamine can then result in a return to previous aversive emotional states linked to withdrawal and craving, often contributing to an increased likelihood for relapse.",
+     "text": "Abstinence from methamphetamine can lead to a return of aversive emotional states related to withdrawal and craving, which often contributes to an increased likelihood of relapse.",
      "id": "F4",
      "second_hand": ""
     },
     {
-     "passage": 42,
-     "where": "4. Biomarkers of neuroimaging techniques › 4.2. Biomarkers of EEG and fNIRS in METH addiction",
-     "quote": "It has been demonstrated that brain activity changes with abstinence duration, and that the propensity for relapse varies as a function of abstinence duration.",
-     "text": "The likelihood of relapse changes depending on how long a person has been abstinent.",
+     "passage": 41,
+     "where": "Implications for the Treatment of Methamphetamine Addiction",
+     "quote": "the experience of negative or uncomfortable sensations and emotions often contributes to methamphetamine use and maintenance; leaving these symptoms untreated may place individuals at greater risk for relapse.",
+     "text": "The experience of negative or uncomfortable sensations and emotions often contributes to methamphetamine use and maintenance, and leaving these symptoms untreated may increase the risk of relapse.",
      "id": "F5",
      "second_hand": ""
     }
    ],
-   "limits": [],
+   "limits": [
+    {
+     "passage": 34,
+     "where": "Brain-Based Evidence for Negative Reinforcement Mechanisms › Conclusions for MRI Findings",
+     "quote": "only one of the studies presented here examines whether the observed deficits predict relapse or other treatment-related outcomes.",
+     "text": "Only one of the studies presented examines whether the observed deficits predict relapse or other treatment-related outcomes.",
+     "id": "L2",
+     "second_hand": "Further, only one of the studies presented here examines whether the observed deficits predict relapse or other treatment-related outcomes."
+    }
+   ],
    "tag": "B"
   }
  ],
  "parts": [],
  "complete": false,
- "missing": "specific percentage of people who relapse",
+ "missing": "The specific number or percentage of people who relapse",
  "wanted": [
   {
    "doi": "10.1136/heartjnl-2022-321610",
@@ -282,6 +282,14 @@
    "why": "the second reader did not accept the answer",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-28",
+   "lane": 19,
+   "status": "none",
+   "why": "the second reader did not accept the answer",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -290,21 +298,28 @@
    "read": "full",
    "kind": "review",
    "at": "10.1016/j.conb.2024.102898",
-   "kept": 0,
-   "thrown": []
+   "kept": 2,
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "a review of therapeutics in development for stimulant-use disorder",
+     "quote": "This review highlights just how troublingly thin the therapeutics pipeline is for StUD. This is particularly true when contrasted against efforts focused on opioid treatments.",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
   },
   {
    "title": "Exercise as a Promising Adjunct Treatment for Methamphetamine Addiction: Advances in Understanding Neuroplasticity and Clinical Applications",
    "read": "full",
    "kind": "review",
    "at": "10.3390/brainsci15121339",
-   "kept": 2,
+   "kept": 0,
    "thrown": [
     {
-     "kind": "limit",
-     "text": "Current psychological treatments for Meth use disorder are long-term and have inconsistent effectiveness.",
-     "quote": "Current treatments remain inadequate: opioid-based therapies risk iatrogenic dependence, while psychological interventions are protracted and variably effective.",
-     "why": "the sentence is not carried by its quote and passage"
+     "kind": "text",
+     "text": "Review of exercise interventions for methamphetamine addiction",
+     "quote": "Exercise as a Promising Adjunct Treatment for Methamphetamine Addiction: Advances in Understanding Neuroplasticity and Clinical Applications",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
     }
    ]
   },
@@ -321,39 +336,79 @@
    "read": "full",
    "kind": "review",
    "at": "10.3389/fpsyt.2020.00114",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 3,
+   "thrown": []
   },
   {
-   "title": "Challenges and future trends in wearable closed-loop neuromodulation to efficiently treat methamphetamine addiction",
-   "read": "full",
-   "kind": "review",
-   "at": "10.3389/fpsyt.2023.1085036",
-   "kept": 3,
-   "thrown": [
-    {
-     "kind": "limit",
-     "text": "There is limited information on how long people in recovery have been abstinent and the amount of methamphetamine they previously used.",
-     "quote": "However, limited studies have reported how long that those in recovery from METH addiction had been abstinent, and the amount of METH taken has been seldom reported in a systematic fashion.",
-     "why": "the sentence is not carried by its quote and passage"
-    }
-   ]
+   "title": "Methamphetamine",
+   "read": "page",
+   "kind": "official",
+   "at": "https://thelevel.org.nz/drug-information/methamphetamine",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Methamphetamine",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.canada.ca/en/health-canada/services/substance-use/controlled-illegal-drugs/methamphetamine.html",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Methamphetamine",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.drugscience.org.uk/drugs/methamphetamine",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Methamphetamine",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.talktofrank.com/drug/methamphetamine",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "20150 Methamphetamines",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.camh.ca/en/health-info/mental-illness-and-addiction-index/methamphetamines",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Methamphetamine Hydrochloride",
+   "read": "page",
+   "kind": "official",
+   "at": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=d0905e2c-a02f-ec4f-59a3-6f7ad0acbbf6",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Methamphetamine",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.ccsa.ca/en/guidance-tools-resources/substances/methamphetamine",
+   "kept": 0,
+   "thrown": []
   }
  ],
  "plan": {
   "short": [
-   "F4",
-   "F5",
-   "F1"
+   "F1",
+   "F3",
+   "F4"
   ],
   "direct": "",
-  "but": [],
+  "but": [
+   "L2"
+  ],
   "how": [
    [
-    "DA",
-    "F1",
-    "F2"
+    "F1"
    ],
    [
     "DB",
@@ -362,389 +417,9 @@
     "F5"
    ]
   ],
-  "unanswered": "specific percentage of people who relapse"
+  "unanswered": "The specific number or percentage of people who relapse"
  },
- "panel_gap": [],
- "own": {
-  "model": "pharmakon-check-0",
-  "threshold": 0.05,
-  "scores": {
-   "short": 0.9695,
-   "but": 0.9793,
-   "how1": 0.1135,
-   "how2": 0.9624
-  },
-  "scores_quotes_alone": {
-   "short": 0.9437,
-   "but": 0.9133,
-   "how1": 0.3937,
-   "how2": 0.9716
-  }
- },
- "tries": [
-  {
-   "try": 1,
-   "why": "the short answer or the But was not accepted: written again",
-   "parts": [
-    {
-     "part": "short",
-     "text": "Methamphetamine has a higher relapse rate than other drugs, and the likelihood of relapse changes with abstinence duration",
-     "rests_on": [
-      {
-       "label": "F4",
-       "ref": "chen_2023",
-       "where": "Abstract",
-       "quote": "Achieving abstinence from drugs is a long journey and can be particularly challenging in the case of methamphetamine, which has a higher relapse rate than other drugs.",
-       "sha": "6a32665d25b31cf0"
-      },
-      {
-       "label": "F5",
-       "ref": "chen_2023",
-       "where": "4. Biomarkers of neuroimaging techniques › 4.2. Biomarkers of EEG and fNIRS in METH addiction",
-       "quote": "It has been demonstrated that brain activity changes with abstinence duration, and that the propensity for relapse varies as a function of abstinence duration.",
-       "sha": "7b1128fe5a3029ee"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "it does not answer the question itself (Sentence 1 gives no number of people who relapse and says only that relapse propensity varies with abstinence duration, not whether staying off gets easier. Sentence 2 describes a synthesis of studies and is not a limit or doubt about sente)"
-    },
-    {
-     "part": "but",
-     "text": "This is a narrative synthesis of 84 studies",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "li_2025",
-       "where": "Abstract",
-       "quote": "A narrative synthesis of 84 studies (up to March 2025) from PubMed, Web of Science, and CNKI was conducted, focusing on the neurobiological basis and clinical application of exercise interventions.",
-       "sha": "8a32a7e604ab43cd"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "it is about something else than the short answer (Sentence 1 gives no number of people who relapse and says only that relapse propensity varies with abstinence duration, not whether staying off gets easier. Sentence 2 describes a synthesis of studies and is not a limit or doubt about sente)"
-    },
-    {
-     "part": "how1",
-     "text": "A review of 84 studies on the neurobiological basis and clinical application of exercise interventions for Meth use disorder found psychological craving leads to relapse",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "li_2025",
-       "where": "Abstract",
-       "quote": "A narrative synthesis of 84 studies (up to March 2025) from PubMed, Web of Science, and CNKI was conducted, focusing on the neurobiological basis and clinical application of exercise interventions.",
-       "sha": "8a32a7e604ab43cd"
-      },
-      {
-       "label": "F1",
-       "ref": "li_2025",
-       "where": "1. Introduction",
-       "quote": "The chronic and relapsing nature of Meth use disorder stems from complex neuroadaptations that disrupt brain homeostasis, presenting a formidable obstacle to sustained recovery.",
-       "sha": "0f5f43700ad8c17c"
-      },
-      {
-       "label": "F2",
-       "ref": "li_2025",
-       "where": "4. Exercise Interventions for Meth Use Disorder › 4.2. Effect of Exercise Type on Craving in Meth Use Disorder",
-       "quote": "Psychological craving in individuals with Meth use disorder is a key factor leading to drug-seeking behaviour and eventual relapse after abstinence.",
-       "sha": "f0444240567a2455"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passage limits the claim to people with Meth use disorder and relapse after abstinence; the sentence omits the after-abstinence qualification."
-    },
-    {
-     "part": "how2",
-     "text": "A review of research on wearable closed-loop neuromodulation systems for treating methamphetamine addiction found relapse is the most serious challenge",
-     "rests_on": [
-      {
-       "label": "DB",
-       "ref": "chen_2023",
-       "where": "Abstract",
-       "quote": "This review summarizes the essential modules required for a wearable system to treat addiction efficiently. First, the advantages of neuroimaging over conventional techniques such as analysis of sweat, saliva, or urine for addiction detection are discussed.",
-       "sha": "6a32665d25b31cf0"
-      },
-      {
-       "label": "F3",
-       "ref": "chen_2023",
-       "where": "1. Introduction",
-       "quote": "During the treatment process and the follow-up stages after abstinence has been achieved, the most serious challenge in treating METH addiction is relapse. Once relapse occurs, abstinence becomes more difficult.",
-       "sha": "1b706a32e821a8c6"
-      },
-      {
-       "label": "F4",
-       "ref": "chen_2023",
-       "where": "Abstract",
-       "quote": "Achieving abstinence from drugs is a long journey and can be particularly challenging in the case of methamphetamine, which has a higher relapse rate than other drugs.",
-       "sha": "6a32665d25b31cf0"
-      },
-      {
-       "label": "F5",
-       "ref": "chen_2023",
-       "where": "4. Biomarkers of neuroimaging techniques › 4.2. Biomarkers of EEG and fNIRS in METH addiction",
-       "quote": "It has been demonstrated that brain activity changes with abstinence duration, and that the propensity for relapse varies as a function of abstinence duration.",
-       "sha": "7b1128fe5a3029ee"
-      }
-     ],
-     "ok": true
-    }
-   ]
-  },
-  {
-   "try": 2,
-   "why": "the short answer or the But was not accepted: written again",
-   "parts": [
-    {
-     "part": "short",
-     "text": "Methamphetamine has a higher relapse rate than other drugs, and the likelihood of relapse changes with abstinence duration.",
-     "rests_on": [
-      {
-       "label": "F4",
-       "ref": "chen_2023",
-       "where": "Abstract",
-       "quote": "Achieving abstinence from drugs is a long journey and can be particularly challenging in the case of methamphetamine, which has a higher relapse rate than other drugs.",
-       "sha": "6a32665d25b31cf0"
-      },
-      {
-       "label": "F5",
-       "ref": "chen_2023",
-       "where": "4. Biomarkers of neuroimaging techniques › 4.2. Biomarkers of EEG and fNIRS in METH addiction",
-       "quote": "It has been demonstrated that brain activity changes with abstinence duration, and that the propensity for relapse varies as a function of abstinence duration.",
-       "sha": "7b1128fe5a3029ee"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "it does not answer the question itself (Sentence 1 says relapse likelihood varies with abstinence duration, but does not say how many people relapse or whether staying off gets easier. Sentence 2 is about an exercise-intervention review, not a limit or doubt about sentence 1.)"
-    },
-    {
-     "part": "but",
-     "text": "This is a narrative synthesis of 84 studies on the neurobiological basis and clinical application of exercise interventions.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "li_2025",
-       "where": "Abstract",
-       "quote": "A narrative synthesis of 84 studies (up to March 2025) from PubMed, Web of Science, and CNKI was conducted, focusing on the neurobiological basis and clinical application of exercise interventions.",
-       "sha": "8a32a7e604ab43cd"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "it is about something else than the short answer (Sentence 1 says relapse likelihood varies with abstinence duration, but does not say how many people relapse or whether staying off gets easier. Sentence 2 is about an exercise-intervention review, not a limit or doubt about sentence 1.)"
-    },
-    {
-     "part": "how1",
-     "text": "A narrative synthesis of 84 studies on the neurobiological basis and clinical application of exercise interventions for Meth use disorder found that psychological craving is a primary factor leading to relapse.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "li_2025",
-       "where": "Abstract",
-       "quote": "A narrative synthesis of 84 studies (up to March 2025) from PubMed, Web of Science, and CNKI was conducted, focusing on the neurobiological basis and clinical application of exercise interventions.",
-       "sha": "8a32a7e604ab43cd"
-      },
-      {
-       "label": "F1",
-       "ref": "li_2025",
-       "where": "1. Introduction",
-       "quote": "The chronic and relapsing nature of Meth use disorder stems from complex neuroadaptations that disrupt brain homeostasis, presenting a formidable obstacle to sustained recovery.",
-       "sha": "0f5f43700ad8c17c"
-      },
-      {
-       "label": "F2",
-       "ref": "li_2025",
-       "where": "4. Exercise Interventions for Meth Use Disorder › 4.2. Effect of Exercise Type on Craving in Meth Use Disorder",
-       "quote": "Psychological craving in individuals with Meth use disorder is a key factor leading to drug-seeking behaviour and eventual relapse after abstinence.",
-       "sha": "f0444240567a2455"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passage calls psychological craving a key factor, but does not say it is the primary factor."
-    },
-    {
-     "part": "how2",
-     "text": "A review of research on wearable closed-loop neuromodulation systems for treating methamphetamine addiction found that relapse is the most serious challenge during treatment and follow-up.",
-     "rests_on": [
-      {
-       "label": "DB",
-       "ref": "chen_2023",
-       "where": "Abstract",
-       "quote": "This review summarizes the essential modules required for a wearable system to treat addiction efficiently. First, the advantages of neuroimaging over conventional techniques such as analysis of sweat, saliva, or urine for addiction detection are discussed.",
-       "sha": "6a32665d25b31cf0"
-      },
-      {
-       "label": "F3",
-       "ref": "chen_2023",
-       "where": "1. Introduction",
-       "quote": "During the treatment process and the follow-up stages after abstinence has been achieved, the most serious challenge in treating METH addiction is relapse. Once relapse occurs, abstinence becomes more difficult.",
-       "sha": "1b706a32e821a8c6"
-      },
-      {
-       "label": "F4",
-       "ref": "chen_2023",
-       "where": "Abstract",
-       "quote": "Achieving abstinence from drugs is a long journey and can be particularly challenging in the case of methamphetamine, which has a higher relapse rate than other drugs.",
-       "sha": "6a32665d25b31cf0"
-      },
-      {
-       "label": "F5",
-       "ref": "chen_2023",
-       "where": "4. Biomarkers of neuroimaging techniques › 4.2. Biomarkers of EEG and fNIRS in METH addiction",
-       "quote": "It has been demonstrated that brain activity changes with abstinence duration, and that the propensity for relapse varies as a function of abstinence duration.",
-       "sha": "7b1128fe5a3029ee"
-      }
-     ],
-     "ok": true
-    }
-   ]
-  },
-  {
-   "try": 3,
-   "why": "the last draft: no answer",
-   "parts": [
-    {
-     "part": "short",
-     "text": "Methamphetamine has a higher relapse rate than other drugs, and the likelihood of relapse changes depending on how long a person has been abstinent.",
-     "rests_on": [
-      {
-       "label": "F4",
-       "ref": "chen_2023",
-       "where": "Abstract",
-       "quote": "Achieving abstinence from drugs is a long journey and can be particularly challenging in the case of methamphetamine, which has a higher relapse rate than other drugs.",
-       "sha": "6a32665d25b31cf0"
-      },
-      {
-       "label": "F5",
-       "ref": "chen_2023",
-       "where": "4. Biomarkers of neuroimaging techniques › 4.2. Biomarkers of EEG and fNIRS in METH addiction",
-       "quote": "It has been demonstrated that brain activity changes with abstinence duration, and that the propensity for relapse varies as a function of abstinence duration.",
-       "sha": "7b1128fe5a3029ee"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "it does not answer the question itself (Sentence 1 says relapse likelihood varies with abstinence duration, but it does not say how many people relapse or whether staying off gets easier with time. Sentence 2 concerns exercise research, not a limit or doubt about sentence 1.)"
-    },
-    {
-     "part": "but",
-     "text": "This is a narrative synthesis of 84 studies on the neurobiological basis and clinical application of exercise interventions.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "li_2025",
-       "where": "Abstract",
-       "quote": "A narrative synthesis of 84 studies (up to March 2025) from PubMed, Web of Science, and CNKI was conducted, focusing on the neurobiological basis and clinical application of exercise interventions.",
-       "sha": "8a32a7e604ab43cd"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "it is about something else than the short answer (Sentence 1 says relapse likelihood varies with abstinence duration, but it does not say how many people relapse or whether staying off gets easier with time. Sentence 2 concerns exercise research, not a limit or doubt about sentence 1.)"
-    },
-    {
-     "part": "how1",
-     "text": "A review of 84 studies on exercise interventions for Meth use disorder found psychological craving leads to relapse.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "li_2025",
-       "where": "Abstract",
-       "quote": "A narrative synthesis of 84 studies (up to March 2025) from PubMed, Web of Science, and CNKI was conducted, focusing on the neurobiological basis and clinical application of exercise interventions.",
-       "sha": "8a32a7e604ab43cd"
-      },
-      {
-       "label": "F1",
-       "ref": "li_2025",
-       "where": "1. Introduction",
-       "quote": "The chronic and relapsing nature of Meth use disorder stems from complex neuroadaptations that disrupt brain homeostasis, presenting a formidable obstacle to sustained recovery.",
-       "sha": "0f5f43700ad8c17c"
-      },
-      {
-       "label": "F2",
-       "ref": "li_2025",
-       "where": "4. Exercise Interventions for Meth Use Disorder › 4.2. Effect of Exercise Type on Craving in Meth Use Disorder",
-       "quote": "Psychological craving in individuals with Meth use disorder is a key factor leading to drug-seeking behaviour and eventual relapse after abstinence.",
-       "sha": "f0444240567a2455"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passage says psychological craving is a key factor leading to eventual relapse after abstinence; the sentence leaves out the condition “after abstinence.”"
-    },
-    {
-     "part": "how2",
-     "text": "A review of research on wearable closed-loop neuromodulation systems found relapse is the most serious challenge during treatment.",
-     "rests_on": [
-      {
-       "label": "DB",
-       "ref": "chen_2023",
-       "where": "Abstract",
-       "quote": "This review summarizes the essential modules required for a wearable system to treat addiction efficiently. First, the advantages of neuroimaging over conventional techniques such as analysis of sweat, saliva, or urine for addiction detection are discussed.",
-       "sha": "6a32665d25b31cf0"
-      },
-      {
-       "label": "F3",
-       "ref": "chen_2023",
-       "where": "1. Introduction",
-       "quote": "During the treatment process and the follow-up stages after abstinence has been achieved, the most serious challenge in treating METH addiction is relapse. Once relapse occurs, abstinence becomes more difficult.",
-       "sha": "1b706a32e821a8c6"
-      },
-      {
-       "label": "F4",
-       "ref": "chen_2023",
-       "where": "Abstract",
-       "quote": "Achieving abstinence from drugs is a long journey and can be particularly challenging in the case of methamphetamine, which has a higher relapse rate than other drugs.",
-       "sha": "6a32665d25b31cf0"
-      },
-      {
-       "label": "F5",
-       "ref": "chen_2023",
-       "where": "4. Biomarkers of neuroimaging techniques › 4.2. Biomarkers of EEG and fNIRS in METH addiction",
-       "quote": "It has been demonstrated that brain activity changes with abstinence duration, and that the propensity for relapse varies as a function of abstinence duration.",
-       "sha": "7b1128fe5a3029ee"
-      }
-     ],
-     "ok": true
-    }
-   ]
-  }
- ],
- "dropped": [
-  {
-   "try": 3,
-   "part": "how1",
-   "text": "A review of 84 studies on exercise interventions for Meth use disorder found psychological craving leads to relapse.",
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "li_2025",
-     "where": "Abstract",
-     "quote": "A narrative synthesis of 84 studies (up to March 2025) from PubMed, Web of Science, and CNKI was conducted, focusing on the neurobiological basis and clinical application of exercise interventions.",
-     "sha": "8a32a7e604ab43cd"
-    },
-    {
-     "label": "F1",
-     "ref": "li_2025",
-     "where": "1. Introduction",
-     "quote": "The chronic and relapsing nature of Meth use disorder stems from complex neuroadaptations that disrupt brain homeostasis, presenting a formidable obstacle to sustained recovery.",
-     "sha": "0f5f43700ad8c17c"
-    },
-    {
-     "label": "F2",
-     "ref": "li_2025",
-     "where": "4. Exercise Interventions for Meth Use Disorder › 4.2. Effect of Exercise Type on Craving in Meth Use Disorder",
-     "quote": "Psychological craving in individuals with Meth use disorder is a key factor leading to drug-seeking behaviour and eventual relapse after abstinence.",
-     "sha": "f0444240567a2455"
-    }
-   ],
-   "by": "the second reader",
-   "said": "The passage says psychological craving is a key factor leading to eventual relapse after abstinence; the sentence leaves out the condition “after abstinence.”"
-  }
- ],
+ "soft": "the writer's reply was not in the form asked for",
  "place": {
   "home": "methamphetamine",
   "also": [
