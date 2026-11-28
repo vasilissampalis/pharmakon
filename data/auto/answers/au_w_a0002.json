@@ -17,37 +17,119 @@
  "made": {
   "on": "2026-11-28",
   "models": {
-   "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+   "reader": "gemini:gemma-4-31b-it",
+   "writer": "openrouter:meta-llama/llama-3.3-70b-instruct",
    "checker": "openrouter:openai/gpt-6-luna",
-   "planner": "@cf/openai/gpt-oss-120b",
-   "team": "team B",
-   "reader_2": "groq:openai/gpt-oss-20b",
-   "reader_3": "openrouter:openai/gpt-oss-120b"
+   "planner": "openrouter:openai/gpt-oss-120b",
+   "team": "team R",
+   "reader_2": "openrouter:openai/gpt-oss-120b",
+   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast"
   },
-  "run": "46085458053",
+  "run": "46086806142",
   "read_by": {
-   "gemini-3.5-flash-lite": 2,
-   "llama-4-scout-17b-16e-instruct": 2
+   "llama-4-scout-17b-16e-instruct": 1,
+   "gemini-3.5-flash-lite": 1
   },
-  "read_seconds": 32,
+  "read_seconds": 24,
   "from": {
    "papers": 2,
    "summaries": 0,
    "official": 0
   },
-  "neurons": 668.9,
-  "seconds": 57
+  "neurons": 178.2,
+  "seconds": 95
  },
- "status": "none",
- "why": "no draft passed: broken at try 3: short: its source gives this as a reputation or a belief (“traditional use”), and the sentence says it as what the drug does: say that it is a reputation, a traditional use or a belief, as the source does, or leave it out",
+ "status": "published",
+ "why": "passed every gate",
  "gates": {
-  "read": "6 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "0 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 1 other paper(s), 0 official page(s), 0 paper(s) read in summary only",
-  "told": "the writer was told what the readers said of the last draft that was not accepted: the short answer “Yes, kanna can change mood and sleep. In one study, people felt positive changes, but the results are preliminary.”: The study reports preliminary positive mood and sleep changes with Zembrin, not that kanna generally can change mood and sleep; it does not say people felt the chang",
-  "rules": "broken at try 3: short: its source gives this as a reputation or a belief (“traditional use”), and the sentence says it as what the drug does: say that it is a reputation, a traditional use or a belief, as the source does, or leave it out"
+  "read": "3 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 7 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 0 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
+  "mended": "the item that holds a number of a sentence was added to what the sentence rests on: short + DB (16)",
+  "rules": "1 How-do-we-know line(s) left out for a rule (how2: its source says “subjective mood effects”: that is what people perceived or said of themselves, not what was measured. Keep the word (“perceived”), or say that people said so)",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.32, but 0.69, how1 0.97",
+  "check": "every sentence kept was accepted by the second reader (openrouter:openai/gpt-6-luna); it also found that the short answer answers the question and that the But is about that answer",
+  "checked": "set beside the checked claims of the same page: nothing against them"
  },
  "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "manganyi_2021",
+    "type": "article-journal",
+    "title": "A chewable cure “kanna”: Biological and pharmaceutical properties of sceletium tortuosum",
+    "author": [
+     {
+      "family": "Manganyi",
+      "given": "Madira Coutlyne"
+     },
+     {
+      "family": "Bezuidenhout",
+      "given": "Cornelius Carlos"
+     },
+     {
+      "family": "Regnier",
+      "given": "Thierry"
+     },
+     {
+      "family": "Ateba",
+      "given": "Collins Njie"
+     }
+    ],
+    "container-title": "Molecules",
+    "issued": {
+     "date-parts": [
+      [
+       2021
+      ]
+     ]
+    },
+    "DOI": "10.3390/molecules26092557",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-28",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-28"
+     }
+    },
+    "volume": "26",
+    "issue": "9",
+    "number": "2557",
+    "PMCID": "PMC8124331"
+   },
+   "doi": "10.3390/molecules26092557",
+   "pmcid": "PMC8124331",
+   "title": "A Chewable Cure \"Kanna\": Biological and Pharmaceutical Properties of Sceletium tortuosum",
+   "year": 2021,
+   "journal": "Molecules (Basel, Switzerland)",
+   "kind": "review",
+   "people": true,
+   "near": 0.654,
+   "money": [
+    "AcknowledgmentsThe authors acknowledge their respective universities or research niche, Department of Biological and Environmental Sciences, Walter Sisulu University (M.C.M.), the Unit for Environmental Sciences and Management, Faculty of Natural and Agricultural Sciences, North-West University (C.C.B.), the Department of Biotechnology and Food Technology, Tshwane University of Technology, (T.R.), and the Food Security and Safety Niche Area, Faculty of Natural and Agricultural Sciences, North-West University (C.N.A.)."
+   ],
+   "design": {
+    "passage": 36,
+    "where": "6. Conclusions and Future Prospects",
+    "quote": "In this review, we examined the uncharted territories of S. tortuosum research",
+    "text": "A review of Sceletium tortuosum research"
+   },
+   "findings": [
+    {
+     "passage": 19,
+     "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.2. Anti-Stress Properties of Sceletium Plants",
+     "quote": "Behavior assessments showed reduced stress on lower dose Sceletium",
+     "text": "Sceletium reduced stress in rats",
+     "id": "F1",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "A"
+  },
   {
    "read": "full",
    "ref": {
@@ -128,170 +210,92 @@
     "passage": 1,
     "where": "Abstract",
     "quote": "In a double-blind, placebo-controlled, cross-over design, 16 healthy participants were scanned during performance in a perceptual-load and an emotion-matching task.",
-    "text": "pharmaco-fMRI study in healthy participants"
+    "text": "a double-blind, placebo-controlled, cross-over design study of 16 healthy participants"
    },
    "findings": [
     {
-     "passage": 28,
-     "where": "DISCUSSION",
-     "quote": "amygdala reactivity to facial fear under low-load conditions was significantly attenuated after Zembrin administration",
-     "text": "Zembrin attenuated amygdala reactivity to facial fear in healthy participants under low-load conditions.",
-     "id": "F1",
-     "second_hand": ""
-    },
-    {
-     "passage": 29,
-     "where": "DISCUSSION",
-     "quote": "a decrease in functional connectivity of the amygdala and hypothalamus was observed after Zembrin administration",
-     "text": "Zembrin decreased functional connectivity of the amygdala and hypothalamus in healthy participants.",
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "These results demonstrate, for the first time, the attenuating effects of S. tortuosum on the threat circuitry of the human brain a",
+     "text": "S. tortuosum has attenuating effects on the threat circuitry of the human brain.",
      "id": "F2",
      "second_hand": ""
     },
     {
-     "passage": 1,
-     "where": "Abstract",
-     "quote": "The South African endemic plant Sceletium tortuosum has a long history of traditional use as a masticatory and medicine by San and Khoikhoi people and subsequently by European colonial farmers as a psychotropic in tincture form",
-     "text": "Sceletium tortuosum has been traditionally used as a psychotropic by San and Khoikhoi people and European colonial farmers.",
+     "passage": 28,
+     "where": "DISCUSSION",
+     "quote": "Although we did not observe general subjective mood effects, the effects noted here arguably reflect a reduction of responsivity of the threat system related to the anxiolytic properties of S. tortuosum",
+     "text": "General subjective mood effects were not observed, though the effects noted arguably reflect a reduction of responsivity of the threat system related to the anxiolytic properties of S. tortuosum.",
      "id": "F3",
      "second_hand": ""
     }
    ],
-   "limits": [
-    {
-     "passage": 28,
-     "where": "DISCUSSION",
-     "quote": "Most likely this is due to a ceiling effect in performance in the low-load condition, as the error rate in the current study (∼3%) was only half of the error rate in the earlier study (∼6%)",
-     "text": "The study may have had a ceiling effect in performance in the low-load condition.",
-     "id": "L1",
-     "second_hand": ""
-    }
-   ],
-   "tag": "A"
-  },
-  {
-   "read": "full",
-   "ref": {
-    "id": "luo_2022",
-    "type": "article-journal",
-    "title": "A network pharmacology-based approach to explore the therapeutic potential of sceletium tortuosum in the treatment of neurodegenerative disorders",
-    "author": [
-     {
-      "family": "Luo",
-      "given": "Yangwen"
-     },
-     {
-      "family": "Shan",
-      "given": "Luchen"
-     },
-     {
-      "family": "Xu",
-      "given": "Lipeng"
-     },
-     {
-      "family": "Patnala",
-      "given": "Srinivas"
-     },
-     {
-      "family": "Kanfer",
-      "given": "Isadore"
-     },
-     {
-      "family": "Li",
-      "given": "Jiahao"
-     },
-     {
-      "family": "Yu",
-      "given": "Pei"
-     },
-     {
-      "family": "Jun",
-      "given": "Xu"
-     }
-    ],
-    "container-title": "PLOS ONE",
-    "issued": {
-     "date-parts": [
-      [
-       2022
-      ]
-     ]
-    },
-    "DOI": "10.1371/journal.pone.0273583",
-    "verification": {
-     "status": "metadata-verified",
-     "metadata_source": "crossref",
-     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
-     "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-28",
-     "retraction_check": {
-      "status": "clear",
-      "checked_on": "2026-11-28"
-     }
-    },
-    "volume": "17",
-    "issue": "8",
-    "number": "e0273583",
-    "PMCID": "PMC9409587"
-   },
-   "doi": "10.1371/journal.pone.0273583",
-   "pmcid": "PMC9409587",
-   "title": "A network pharmacology-based approach to explore the therapeutic potential of Sceletium tortuosum in the treatment of neurodegenerative disorders",
-   "year": 2022,
-   "journal": "PloS one",
-   "kind": "other",
-   "people": true,
-   "near": 0.637,
-   "money": [
-    "The author(s) received no specific funding for this work."
-   ],
-   "design": {
-    "passage": 1,
-    "where": "Abstract",
-    "quote": "Hence, this study investigated two aspects–firstly, the abilities of neuroprotective sub-fractions from SCT on scavenging radicals, inhibiting some usual targets relevant to Alzheimer’s disease (AD) or Parkinson’s disease (PD), and secondly utilizing the network pharmacology related methods to search probable mechanisms using Surflex-Dock program to show the key targets and corresponding SCT constituents.",
-    "text": "A network pharmacology-based approach to explore the therapeutic potential of Sceletium tortuosum"
-   },
-   "findings": [
-    {
-     "passage": 32,
-     "where": "Results › SCT sub-fractions inhibit NMDAR",
-     "quote": "However, this effect is not significant enough to be considered as main mechanism that elicits antidepressant action of SCT.",
-     "text": "The inhibition of NMDAR-mediated current by SCT sub-fractions is not significant enough to be considered as the main mechanism for its antidepressant action.",
-     "id": "F4",
-     "second_hand": ""
-    },
-    {
-     "passage": 1,
-     "where": "Abstract",
-     "quote": "SCT extracts are reported to be neuroprotective and have efficacy in improving cognition.",
-     "text": "SCT extracts are reported to be neuroprotective and have efficacy in improving cognition.",
-     "id": "F5",
-     "second_hand": ""
-    },
-    {
-     "passage": 32,
-     "where": "Results › SCT sub-fractions inhibit NMDAR",
-     "quote": "Compared to Zembrin®, the more potent neuroprotective P5 and E1 fractions (compared with P6 and E3 in our previous study) showed potent inhibiting effect on NMDAR-mediated current.",
-     "text": "P5 and E1 fractions of SCT showed a potent inhibiting effect on NMDAR-mediated current.",
-     "id": "F6",
-     "second_hand": ""
-    }
-   ],
-   "limits": [
-    {
-     "passage": 42,
-     "where": "Discussion",
-     "quote": "However, the results of this study indicated that the influence on NMDAR of these two fractions may be a subsequent effect resulted from affecting other targets but not NMDAR.",
-     "text": "The study suggests that the influence on NMDAR may be a subsequent effect from affecting other targets, not a direct effect on NMDAR.",
-     "id": "L2",
-     "second_hand": ""
-    }
-   ],
+   "limits": [],
    "tag": "B"
   }
  ],
- "parts": [],
- "complete": false,
- "missing": "dose‑response and subjective experience details",
+ "parts": [
+  {
+   "part": "short",
+   "text": "Yes, kanna can have psychoactive effects, as it has attenuating effects on the threat circuitry of the human brain, though general subjective mood effects were not observed.",
+   "uses": [
+    "F2",
+    "F3"
+   ],
+   "rests_on": [
+    {
+     "label": "F2",
+     "ref": "terburg_2013",
+     "where": "Abstract",
+     "quote": "These results demonstrate, for the first time, the attenuating effects of S. tortuosum on the threat circuitry of the human brain a",
+     "sha": "89076b899c033ad3"
+    },
+    {
+     "label": "F3",
+     "ref": "terburg_2013",
+     "where": "DISCUSSION",
+     "quote": "Although we did not observe general subjective mood effects, the effects noted here arguably reflect a reduction of responsivity of the threat system related to the anxiolytic properties of S. tortuosum",
+     "sha": "354d675da7f1d2e8"
+    }
+   ]
+  },
+  {
+   "part": "but",
+   "text": "This holds for healthy participants, though general subjective mood effects were not observed.",
+   "uses": [
+    "F3"
+   ],
+   "rests_on": [
+    {
+     "label": "F3",
+     "ref": "terburg_2013",
+     "where": "DISCUSSION",
+     "quote": "Although we did not observe general subjective mood effects, the effects noted here arguably reflect a reduction of responsivity of the threat system related to the anxiolytic properties of S. tortuosum",
+     "sha": "354d675da7f1d2e8"
+    }
+   ]
+  },
+  {
+   "part": "how1",
+   "text": "A review of Sceletium tortuosum research examined its properties.",
+   "uses": [
+    "DA"
+   ],
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "manganyi_2021",
+     "where": "6. Conclusions and Future Prospects",
+     "quote": "In this review, we examined the uncharted territories of S. tortuosum research",
+     "sha": "c808689f61103043"
+    }
+   ],
+   "quote": "In this review, we examined the uncharted territories of S. tortuosum research",
+   "quote_ref": "manganyi_2021"
+  }
+ ],
+ "complete": true,
+ "missing": "",
  "wanted": [
   {
    "doi": "10.1016/j.jpba.2019.112945",
@@ -303,14 +307,6 @@
  ],
  "person": null,
  "history": [
-  {
-   "on": "2026-11-17",
-   "lane": 18,
-   "status": "none",
-   "why": "no source that can be read gave a finding for this question",
-   "short": "",
-   "complete": false
-  },
   {
    "on": "2026-11-17",
    "lane": 18,
@@ -350,6 +346,14 @@
    "why": "the second reader did not accept the answer",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-28",
+   "lane": 19,
+   "status": "none",
+   "why": "no draft passed: broken at try 3: short: its source gives this as a reputation or a belief (“traditional use”), and the sentence says it as what the drug does: say that it is a reputation, a traditional use or a belief, as the source does, or leave it out",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -358,13 +362,37 @@
    "read": "full",
    "kind": "review",
    "at": "10.3390/molecules26092557",
-   "kept": 0,
+   "kept": 1,
    "thrown": [
     {
      "kind": "finding",
-     "text": "The phytochemical profile of Sceletium tortuosum has been isolated and has identified psychoactive compounds.",
-     "quote": "The phytochemical profile of Sceletium tortuosum has been isolated and has identified psychoactive compounds.",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+     "text": "S. tortuosum (25 mg Zembrin®) had anti-anxiolytic effects in 20 young healthy volunteers",
+     "quote": "The results showed levels of anxiety were inferior in the Zembrin® group compared to the placebo group",
+     "why": "a number of the sentence is not in its quote"
+    },
+    {
+     "kind": "finding",
+     "text": "mesembrine isolated from S. tortuosum plants had agonist actions on various receptors",
+     "quote": "This might be responsible for the anti-anxiolytic properties in vivo animal models",
+     "why": "the sentence is not carried by its quote and passage"
+    },
+    {
+     "kind": "finding",
+     "text": "these compounds have potent 5-HT uptake inhibitory activity",
+     "quote": "compounds such as mesembrine, mesembrenol, and mesembranone are the key players",
+     "why": "the sentence is not carried by its quote and passage"
+    },
+    {
+     "kind": "limit",
+     "text": "most studies were not in humans",
+     "quote": "in vitro as well as animal and clinical studies",
+     "why": "the sentence is not carried by its quote and passage"
+    },
+    {
+     "kind": "limit",
+     "text": "the study was in a small group of young healthy people",
+     "quote": "20 young healthy volunteers",
+     "why": "the sentence is not carried by its quote and passage"
     }
    ]
   },
@@ -373,54 +401,44 @@
    "read": "full",
    "kind": "study",
    "at": "10.1038/npp.2013.183",
-   "kept": 3,
+   "kept": 2,
    "thrown": [
     {
+     "kind": "finding",
+     "text": "Amygdala reactivity to fearful faces under low perceptual load conditions was attenuated after a single 25 mg dose of Zembrin.",
+     "quote": "Amygdala reactivity to fearful faces under low perceptual load conditions was attenuated after a single 25 mg dose of Zembrin.",
+     "why": "it holds an amount or a time between uses"
+    },
+    {
      "kind": "limit",
-     "text": "The study could not separate the pharmacological actions of dual 5-HT reuptake and PDE4 inhibitors.",
-     "quote": "Although we cannot separate these pharmacological actions in the present results",
-     "why": "a number of the sentence is not in its quote"
+     "text": "",
+     "quote": "Most likely this is due to a ceiling effect in performance in the low-load condition, as the error rate in the current study (∼3%) was only half of the error rate in the earlier study (∼6%).",
+     "why": "no sentence"
     }
    ]
-  },
-  {
-   "title": "A network pharmacology-based approach to explore the therapeutic potential of Sceletium tortuosum in the treatment of neurodegenerative disorders",
-   "read": "full",
-   "kind": "other",
-   "at": "10.1371/journal.pone.0273583",
-   "kept": 3,
-   "thrown": []
-  },
-  {
-   "title": "Biomedical analysis of New Psychoactive Substances (NPS) of natural origin",
-   "read": "summary",
-   "kind": "review",
-   "at": "10.1016/j.jpba.2019.112945",
-   "kept": 0,
-   "thrown": []
   }
  ],
  "plan": {
   "short": [
-   "F3",
-   "F1"
+   "F2",
+   "F3"
   ],
   "direct": "Yes",
   "but": [
-   "L1"
+   "F3"
   ],
   "how": [
    [
     "DA",
-    "F1",
-    "F3"
+    "F1"
    ],
    [
     "DB",
-    "F5"
+    "F2",
+    "F3"
    ]
   ],
-  "unanswered": "dose‑response and subjective experience details"
+  "unanswered": ""
  },
  "tries": [
   {
@@ -429,36 +447,43 @@
    "parts": [
     {
      "part": "short",
-     "text": "Yes, kanna has psychoactive effects. It attenuated amygdala reactivity to facial fear in healthy participants.",
+     "text": "Yes, kanna has psychoactive effects, with compounds acting on the mind, and a study in 16 healthy adults found a smaller reaction to threat, but no general change in mood.",
      "rests_on": [
       {
-       "label": "F3",
+       "label": "F2",
        "ref": "terburg_2013",
        "where": "Abstract",
-       "quote": "The South African endemic plant Sceletium tortuosum has a long history of traditional use as a masticatory and medicine by San and Khoikhoi people and subsequently by European colonial farmers as a psychotropic in tincture form",
+       "quote": "These results demonstrate, for the first time, the attenuating effects of S. tortuosum on the threat circuitry of the human brain a",
        "sha": "89076b899c033ad3"
       },
       {
-       "label": "F1",
+       "label": "F3",
        "ref": "terburg_2013",
        "where": "DISCUSSION",
-       "quote": "amygdala reactivity to facial fear under low-load conditions was significantly attenuated after Zembrin administration",
+       "quote": "Although we did not observe general subjective mood effects, the effects noted here arguably reflect a reduction of responsivity of the threat system related to the anxiolytic properties of S. tortuosum",
        "sha": "354d675da7f1d2e8"
+      },
+      {
+       "label": "DB",
+       "ref": "terburg_2013",
+       "where": "Abstract",
+       "quote": "In a double-blind, placebo-controlled, cross-over design, 16 healthy participants were scanned during performance in a perceptual-load and an emotion-matching task.",
+       "sha": "89076b899c033ad3"
       }
      ],
      "ok": false,
      "by": "a rule",
-     "said": "a rule: its source gives this as a reputation or a belief (“traditional use”), and the sentence says it as what the drug does: say that it is a reputation, a traditional use or a belief, as the source does, or leave it out"
+     "said": "a rule: its source says “subjective mood effects”: that is what people perceived or said of themselves, not what was measured. Keep the word (“perceived”), or say that people said so"
     },
     {
      "part": "but",
-     "text": "The study may have had a ceiling effect in performance in the low-load condition.",
+     "text": "General subjective mood effects were not observed, though the effects noted arguably reflect a reduction of responsivity of the threat system.",
      "rests_on": [
       {
-       "label": "L1",
+       "label": "F3",
        "ref": "terburg_2013",
        "where": "DISCUSSION",
-       "quote": "Most likely this is due to a ceiling effect in performance in the low-load condition, as the error rate in the current study (∼3%) was only half of the error rate in the earlier study (∼6%)",
+       "quote": "Although we did not observe general subjective mood effects, the effects noted here arguably reflect a reduction of responsivity of the threat system related to the anxiolytic properties of S. tortuosum",
        "sha": "354d675da7f1d2e8"
       }
      ],
@@ -466,91 +491,93 @@
     },
     {
      "part": "how1",
-     "text": "A pharmaco-fMRI study in 16 healthy participants found Zembrin, an extract of kanna, attenuated amygdala reactivity to facial fear.",
+     "text": "A review of Sceletium tortuosum research found reduced stress in rats.",
      "rests_on": [
       {
        "label": "DA",
-       "ref": "terburg_2013",
-       "where": "Abstract",
-       "quote": "In a double-blind, placebo-controlled, cross-over design, 16 healthy participants were scanned during performance in a perceptual-load and an emotion-matching task.",
-       "sha": "89076b899c033ad3"
+       "ref": "manganyi_2021",
+       "where": "6. Conclusions and Future Prospects",
+       "quote": "In this review, we examined the uncharted territories of S. tortuosum research",
+       "sha": "c808689f61103043"
       },
       {
        "label": "F1",
-       "ref": "terburg_2013",
-       "where": "DISCUSSION",
-       "quote": "amygdala reactivity to facial fear under low-load conditions was significantly attenuated after Zembrin administration",
-       "sha": "354d675da7f1d2e8"
-      },
-      {
-       "label": "F3",
-       "ref": "terburg_2013",
-       "where": "Abstract",
-       "quote": "The South African endemic plant Sceletium tortuosum has a long history of traditional use as a masticatory and medicine by San and Khoikhoi people and subsequently by European colonial farmers as a psychotropic in tincture form",
-       "sha": "89076b899c033ad3"
+       "ref": "manganyi_2021",
+       "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.2. Anti-Stress Properties of Sceletium Plants",
+       "quote": "Behavior assessments showed reduced stress on lower dose Sceletium",
+       "sha": "f4eebcc792659366"
       }
      ],
      "ok": true
     },
     {
      "part": "how2",
-     "text": "A network pharmacology-based approach reported SCT extracts are neuroprotective and have efficacy in improving cognition.",
+     "text": "A double-blind, placebo-controlled study of 16 healthy participants found attenuating effects on the threat circuitry of the human brain.",
      "rests_on": [
       {
        "label": "DB",
-       "ref": "luo_2022",
+       "ref": "terburg_2013",
        "where": "Abstract",
-       "quote": "Hence, this study investigated two aspects–firstly, the abilities of neuroprotective sub-fractions from SCT on scavenging radicals, inhibiting some usual targets relevant to Alzheimer’s disease (AD) or Parkinson’s disease (PD), and secondly utilizing the network pharmacology related methods to search probable mechanisms using Surflex-Dock program to show the key targets and corresponding SCT constituents.",
-       "sha": "1b9e3787d1e3c65f"
+       "quote": "In a double-blind, placebo-controlled, cross-over design, 16 healthy participants were scanned during performance in a perceptual-load and an emotion-matching task.",
+       "sha": "89076b899c033ad3"
       },
       {
-       "label": "F5",
-       "ref": "luo_2022",
+       "label": "F2",
+       "ref": "terburg_2013",
        "where": "Abstract",
-       "quote": "SCT extracts are reported to be neuroprotective and have efficacy in improving cognition.",
-       "sha": "1b9e3787d1e3c65f"
+       "quote": "These results demonstrate, for the first time, the attenuating effects of S. tortuosum on the threat circuitry of the human brain a",
+       "sha": "89076b899c033ad3"
+      },
+      {
+       "label": "F3",
+       "ref": "terburg_2013",
+       "where": "DISCUSSION",
+       "quote": "Although we did not observe general subjective mood effects, the effects noted here arguably reflect a reduction of responsivity of the threat system related to the anxiolytic properties of S. tortuosum",
+       "sha": "354d675da7f1d2e8"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: its source says “subjective mood effects”: that is what people perceived or said of themselves, not what was measured. Keep the word (“perceived”), or say that people said so"
     }
    ]
   },
   {
    "try": 2,
-   "why": "a rule was broken: written again",
+   "why": "the short answer or the But was not accepted: written again",
    "parts": [
     {
      "part": "short",
-     "text": "Yes, kanna has psychoactive effects, as it attenuated amygdala reactivity to facial fear in healthy participants.",
+     "text": "Yes, kanna can have psychoactive effects, as it has compounds that act on the mind, and in one study, brain scans suggested a smaller reaction to threat, though people perceived no general change in mood.",
      "rests_on": [
       {
-       "label": "F3",
+       "label": "F2",
        "ref": "terburg_2013",
        "where": "Abstract",
-       "quote": "The South African endemic plant Sceletium tortuosum has a long history of traditional use as a masticatory and medicine by San and Khoikhoi people and subsequently by European colonial farmers as a psychotropic in tincture form",
+       "quote": "These results demonstrate, for the first time, the attenuating effects of S. tortuosum on the threat circuitry of the human brain a",
        "sha": "89076b899c033ad3"
       },
       {
-       "label": "F1",
+       "label": "F3",
        "ref": "terburg_2013",
        "where": "DISCUSSION",
-       "quote": "amygdala reactivity to facial fear under low-load conditions was significantly attenuated after Zembrin administration",
+       "quote": "Although we did not observe general subjective mood effects, the effects noted here arguably reflect a reduction of responsivity of the threat system related to the anxiolytic properties of S. tortuosum",
        "sha": "354d675da7f1d2e8"
       }
      ],
      "ok": false,
-     "by": "a rule",
-     "said": "a rule: its source gives this as a reputation or a belief (“traditional use”), and the sentence says it as what the drug does: say that it is a reputation, a traditional use or a belief, as the source does, or leave it out"
+     "by": "the second reader",
+     "said": "The passages do not say that kanna has compounds that act on the mind, so they do not support the sentence’s explanation of its psychoactive effects. The passages do report historical psychotropic use and a threat-circuitry finding."
     },
     {
      "part": "but",
-     "text": "The study may have had a ceiling effect in performance in the low-load condition.",
+     "text": "Though the effects noted arguably reflect a reduction of responsivity of the threat system, general subjective mood effects were not observed.",
      "rests_on": [
       {
-       "label": "L1",
+       "label": "F3",
        "ref": "terburg_2013",
        "where": "DISCUSSION",
-       "quote": "Most likely this is due to a ceiling effect in performance in the low-load condition, as the error rate in the current study (∼3%) was only half of the error rate in the earlier study (∼6%)",
+       "quote": "Although we did not observe general subjective mood effects, the effects noted here arguably reflect a reduction of responsivity of the threat system related to the anxiolytic properties of S. tortuosum",
        "sha": "354d675da7f1d2e8"
       }
      ],
@@ -558,141 +585,35 @@
     },
     {
      "part": "how1",
-     "text": "A pharmaco-fMRI study in 16 healthy participants found Zembrin, an extract of kanna, attenuated amygdala reactivity to facial fear.",
+     "text": "A review of Sceletium tortuosum research examined its biological and pharmaceutical properties.",
      "rests_on": [
       {
        "label": "DA",
-       "ref": "terburg_2013",
-       "where": "Abstract",
-       "quote": "In a double-blind, placebo-controlled, cross-over design, 16 healthy participants were scanned during performance in a perceptual-load and an emotion-matching task.",
-       "sha": "89076b899c033ad3"
-      },
-      {
-       "label": "F1",
-       "ref": "terburg_2013",
-       "where": "DISCUSSION",
-       "quote": "amygdala reactivity to facial fear under low-load conditions was significantly attenuated after Zembrin administration",
-       "sha": "354d675da7f1d2e8"
-      },
-      {
-       "label": "F3",
-       "ref": "terburg_2013",
-       "where": "Abstract",
-       "quote": "The South African endemic plant Sceletium tortuosum has a long history of traditional use as a masticatory and medicine by San and Khoikhoi people and subsequently by European colonial farmers as a psychotropic in tincture form",
-       "sha": "89076b899c033ad3"
+       "ref": "manganyi_2021",
+       "where": "6. Conclusions and Future Prospects",
+       "quote": "In this review, we examined the uncharted territories of S. tortuosum research",
+       "sha": "c808689f61103043"
       }
      ],
      "ok": true
     },
     {
      "part": "how2",
-     "text": "A network pharmacology-based approach reported SCT extracts are neuroprotective and have efficacy in improving cognition.",
+     "text": "A double-blind, placebo-controlled, cross-over design study of 16 healthy participants found S. tortuosum has attenuating effects on the threat circuitry of the human brain.",
      "rests_on": [
       {
        "label": "DB",
-       "ref": "luo_2022",
-       "where": "Abstract",
-       "quote": "Hence, this study investigated two aspects–firstly, the abilities of neuroprotective sub-fractions from SCT on scavenging radicals, inhibiting some usual targets relevant to Alzheimer’s disease (AD) or Parkinson’s disease (PD), and secondly utilizing the network pharmacology related methods to search probable mechanisms using Surflex-Dock program to show the key targets and corresponding SCT constituents.",
-       "sha": "1b9e3787d1e3c65f"
-      },
-      {
-       "label": "F5",
-       "ref": "luo_2022",
-       "where": "Abstract",
-       "quote": "SCT extracts are reported to be neuroprotective and have efficacy in improving cognition.",
-       "sha": "1b9e3787d1e3c65f"
-      }
-     ],
-     "ok": true
-    }
-   ]
-  },
-  {
-   "try": 3,
-   "why": "a rule was broken: written again",
-   "parts": [
-    {
-     "part": "short",
-     "text": "Yes, kanna has psychoactive effects, as it attenuated amygdala reactivity to facial fear in healthy participants.",
-     "rests_on": [
-      {
-       "label": "F3",
-       "ref": "terburg_2013",
-       "where": "Abstract",
-       "quote": "The South African endemic plant Sceletium tortuosum has a long history of traditional use as a masticatory and medicine by San and Khoikhoi people and subsequently by European colonial farmers as a psychotropic in tincture form",
-       "sha": "89076b899c033ad3"
-      },
-      {
-       "label": "F1",
-       "ref": "terburg_2013",
-       "where": "DISCUSSION",
-       "quote": "amygdala reactivity to facial fear under low-load conditions was significantly attenuated after Zembrin administration",
-       "sha": "354d675da7f1d2e8"
-      }
-     ],
-     "ok": false,
-     "by": "a rule",
-     "said": "a rule: its source gives this as a reputation or a belief (“traditional use”), and the sentence says it as what the drug does: say that it is a reputation, a traditional use or a belief, as the source does, or leave it out"
-    },
-    {
-     "part": "but",
-     "text": "The study may have had a ceiling effect in performance in the low-load condition.",
-     "rests_on": [
-      {
-       "label": "L1",
-       "ref": "terburg_2013",
-       "where": "DISCUSSION",
-       "quote": "Most likely this is due to a ceiling effect in performance in the low-load condition, as the error rate in the current study (∼3%) was only half of the error rate in the earlier study (∼6%)",
-       "sha": "354d675da7f1d2e8"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how1",
-     "text": "A pharmaco-fMRI study in 16 healthy participants found Zembrin, an extract of kanna, attenuated amygdala reactivity to facial fear.",
-     "rests_on": [
-      {
-       "label": "DA",
        "ref": "terburg_2013",
        "where": "Abstract",
        "quote": "In a double-blind, placebo-controlled, cross-over design, 16 healthy participants were scanned during performance in a perceptual-load and an emotion-matching task.",
        "sha": "89076b899c033ad3"
       },
       {
-       "label": "F1",
-       "ref": "terburg_2013",
-       "where": "DISCUSSION",
-       "quote": "amygdala reactivity to facial fear under low-load conditions was significantly attenuated after Zembrin administration",
-       "sha": "354d675da7f1d2e8"
-      },
-      {
-       "label": "F3",
+       "label": "F2",
        "ref": "terburg_2013",
        "where": "Abstract",
-       "quote": "The South African endemic plant Sceletium tortuosum has a long history of traditional use as a masticatory and medicine by San and Khoikhoi people and subsequently by European colonial farmers as a psychotropic in tincture form",
+       "quote": "These results demonstrate, for the first time, the attenuating effects of S. tortuosum on the threat circuitry of the human brain a",
        "sha": "89076b899c033ad3"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "A network pharmacology-based approach reported SCT extracts are neuroprotective and have efficacy in improving cognition.",
-     "rests_on": [
-      {
-       "label": "DB",
-       "ref": "luo_2022",
-       "where": "Abstract",
-       "quote": "Hence, this study investigated two aspects–firstly, the abilities of neuroprotective sub-fractions from SCT on scavenging radicals, inhibiting some usual targets relevant to Alzheimer’s disease (AD) or Parkinson’s disease (PD), and secondly utilizing the network pharmacology related methods to search probable mechanisms using Surflex-Dock program to show the key targets and corresponding SCT constituents.",
-       "sha": "1b9e3787d1e3c65f"
-      },
-      {
-       "label": "F5",
-       "ref": "luo_2022",
-       "where": "Abstract",
-       "quote": "SCT extracts are reported to be neuroprotective and have efficacy in improving cognition.",
-       "sha": "1b9e3787d1e3c65f"
       }
      ],
      "ok": true
@@ -700,6 +621,73 @@
    ]
   }
  ],
+ "dropped": [
+  {
+   "try": 2,
+   "part": "how3",
+   "text": "In this study, though people perceived no general subjective mood effects, the effects noted arguably reflect a reduction of responsivity of the threat system related to the anxiolytic properties of S. tortuosum.",
+   "rests_on": [
+    {
+     "label": "F3",
+     "ref": "terburg_2013",
+     "where": "DISCUSSION",
+     "quote": "Although we did not observe general subjective mood effects, the effects noted here arguably reflect a reduction of responsivity of the threat system related to the anxiolytic properties of S. tortuosum",
+     "sha": "354d675da7f1d2e8"
+    }
+   ],
+   "by": "a rule",
+   "said": "a rule: it copies 18 words of its source in a row (“arguably reflect a reduction of responsivity of the …”): say it in your own plain words; a source's words stand only in its quotation, 15 at most"
+  },
+  {
+   "try": 3,
+   "part": "how2",
+   "text": "A double-blind study of 16 healthy participants found attenuating effects on the threat circuitry of the human brain.",
+   "rests_on": [
+    {
+     "label": "DB",
+     "ref": "terburg_2013",
+     "where": "Abstract",
+     "quote": "In a double-blind, placebo-controlled, cross-over design, 16 healthy participants were scanned during performance in a perceptual-load and an emotion-matching task.",
+     "sha": "89076b899c033ad3"
+    },
+    {
+     "label": "F2",
+     "ref": "terburg_2013",
+     "where": "Abstract",
+     "quote": "These results demonstrate, for the first time, the attenuating effects of S. tortuosum on the threat circuitry of the human brain a",
+     "sha": "89076b899c033ad3"
+    },
+    {
+     "label": "F3",
+     "ref": "terburg_2013",
+     "where": "DISCUSSION",
+     "quote": "Although we did not observe general subjective mood effects, the effects noted here arguably reflect a reduction of responsivity of the threat system related to the anxiolytic properties of S. tortuosum",
+     "sha": "354d675da7f1d2e8"
+    }
+   ],
+   "by": "a rule",
+   "said": "a rule: its source says “subjective mood effects”: that is what people perceived or said of themselves, not what was measured. Keep the word (“perceived”), or say that people said so"
+  }
+ ],
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.3247,
+   "but": 0.6882,
+   "how1": 0.9729
+  },
+  "scores_quotes_alone": {
+   "short": 0.1328,
+   "but": 0.0353,
+   "how1": 0.9409
+  }
+ },
+ "with_checked": {
+  "differs": [],
+  "same": []
+ },
  "place": {
   "home": "new:Kanna",
   "also": [],
