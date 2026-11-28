@@ -15,134 +15,41 @@
  ],
  "drugs": [],
  "made": {
-  "on": "2026-11-27",
+  "on": "2026-11-28",
   "models": {
-   "reader": "openrouter:openai/gpt-oss-120b",
-   "writer": "openrouter:meta-llama/llama-3.3-70b-instruct",
+   "reader": "gemini:gemini-3.5-flash-lite",
+   "writer": "groq:qwen/qwen3.8-27b",
    "checker": "openrouter:openai/gpt-6-luna",
-   "planner": "openrouter:openai/gpt-oss-120b",
-   "team": "team R",
-   "reader_2": "openrouter:openai/gpt-oss-120b",
-   "reader_first": "gemini:gemma-4-31b-it"
+   "planner": "groq:openai/gpt-oss-120b",
+   "also1": "gemini:gemini-3.5-flash-lite",
+   "also2": "gemini:gemini-3.6-flash",
+   "team": "team I",
+   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "reader_3": "openrouter:openai/gpt-oss-120b",
+   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "45928586464",
-  "read_seconds": 23,
+  "run": "46085458053",
+  "read_seconds": 27,
   "from": {
-   "papers": 2,
+   "papers": 3,
    "summaries": 0,
    "official": 0
   },
   "neurons": 0.0,
-  "seconds": 98
+  "seconds": 154
  },
- "status": "published",
- "why": "passed every gate",
+ "status": "none",
+ "why": "the second reader did not accept the answer",
  "gates": {
-  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-120b read from there",
-  "read": "6 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 4 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "1 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 0 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
-  "mended": "the item that holds a number of a sentence was added to what the sentence rests on: but + DB (16)",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.12, but 0.14, how1 0.83, how2 0.97",
-  "check": "every sentence kept was accepted by the second reader (openrouter:openai/gpt-6-luna); it also found that the short answer answers the question and that the But is about that answer",
-  "rules": "nothing against it",
-  "checked": "set beside the checked claims of the same page: nothing against them"
+  "read": "5 findings kept from 3 sources (3 papers read in full, 0 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "0 review(s) or meta-analyses, 2 single studies in people, 0 case report(s) (which do not count), 1 other paper(s), 0 official page(s), 0 paper(s) read in summary only",
+  "mended": "the item that holds a number of a sentence was added to what the sentence rests on: short + DC (21)",
+  "panel": "further readers, each of which must accept every sentence too: gemini-3.5-flash-lite accepted 4 of 5; gemini-3.6-flash accepted 3 of 5",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.76, but 0.99, how1 0.66, how2 0.98, how3 0.66, how4 0.32",
+  "check": "short: NOT accepted: The study reports preliminary positive mood and sleep changes with Zembrin, not that kanna generally can change mood and sleep; it does not say people felt the changes.; but: accepted; how1: NOT accepted: The passage says positive changes were found; it does not state that Zembrin caused them.; how2: NOT accepted: The fearful-face result is attributed to a separate fMRI study discussed in the passage, not the cognition study in the abstract.; how3: accepted; how4: NOT accepted: This relies on the plant’s reported mood-elevating reputation, which the editor’s note says must not be used to rest an effect on."
  },
  "sources": [
-  {
-   "read": "full",
-   "ref": {
-    "id": "manganyi_2021",
-    "type": "article-journal",
-    "title": "A chewable cure “kanna”: Biological and pharmaceutical properties of sceletium tortuosum",
-    "author": [
-     {
-      "family": "Manganyi",
-      "given": "Madira Coutlyne"
-     },
-     {
-      "family": "Bezuidenhout",
-      "given": "Cornelius Carlos"
-     },
-     {
-      "family": "Regnier",
-      "given": "Thierry"
-     },
-     {
-      "family": "Ateba",
-      "given": "Collins Njie"
-     }
-    ],
-    "container-title": "Molecules",
-    "issued": {
-     "date-parts": [
-      [
-       2021
-      ]
-     ]
-    },
-    "DOI": "10.3390/molecules26092557",
-    "verification": {
-     "status": "metadata-verified",
-     "metadata_source": "crossref",
-     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
-     "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-27",
-     "retraction_check": {
-      "status": "clear",
-      "checked_on": "2026-11-27"
-     }
-    },
-    "volume": "26",
-    "issue": "9",
-    "number": "2557",
-    "PMCID": "PMC8124331"
-   },
-   "doi": "10.3390/molecules26092557",
-   "pmcid": "PMC8124331",
-   "title": "A Chewable Cure \"Kanna\": Biological and Pharmaceutical Properties of Sceletium tortuosum",
-   "year": 2021,
-   "journal": "Molecules (Basel, Switzerland)",
-   "kind": "review",
-   "people": true,
-   "near": 0.654,
-   "money": [
-    "AcknowledgmentsThe authors acknowledge their respective universities or research niche, Department of Biological and Environmental Sciences, Walter Sisulu University (M.C.M.), the Unit for Environmental Sciences and Management, Faculty of Natural and Agricultural Sciences, North-West University (C.C.B.), the Department of Biotechnology and Food Technology, Tshwane University of Technology, (T.R.), and the Food Security and Safety Niche Area, Faculty of Natural and Agricultural Sciences, North-West University (C.N.A.)."
-   ],
-   "design": {
-    "passage": 1,
-    "where": "Abstract",
-    "quote": "Thus, this review provides an extensive overview of the biological and p",
-    "text": "Review article summarizing biological and pharmaceutical properties of Sceletium tortuosum"
-   },
-   "findings": [
-    {
-     "passage": 1,
-     "where": "Abstract",
-     "quote": "promote a sense of well‑being by relieving stress with calming effects",
-     "text": "Kanna promotes a sense of well‑being and relieves stress with calming effects.",
-     "id": "F1",
-     "second_hand": ""
-    },
-    {
-     "passage": 22,
-     "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.3. Anti-Depressant Properties of Sceletium Plants",
-     "quote": "The plant improves mood, thus has anti-depression properties.",
-     "text": "Kanna improves mood and has anti‑depression properties.",
-     "id": "F2",
-     "second_hand": ""
-    },
-    {
-     "passage": 25,
-     "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.4. Anxiolytic Properties of Sceletium Plants",
-     "quote": "S. tortuosum displayed an anti-anxiety effect in zebrafish larvae.",
-     "text": "In zebrafish larvae, S. tortuosum displayed an anti‑anxiety effect.",
-     "id": "F3",
-     "second_hand": ""
-    }
-   ],
-   "limits": [],
-   "tag": "A"
-  },
   {
    "read": "full",
    "ref": {
@@ -197,10 +104,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-27",
+     "verified_on": "2026-11-28",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-27"
+      "checked_on": "2026-11-28"
      }
     },
     "volume": "38",
@@ -222,159 +129,281 @@
    "design": {
     "passage": 1,
     "where": "Abstract",
-    "quote": "In a double‑blind, placebo‑controlled, cross‑over design, 16 healthy participants were scanned during performance in a perceptual‑load and an emotion‑matching task.",
-    "text": "double‑blind, placebo‑controlled, cross‑over fMRI study in healthy humans"
+    "quote": "In a double-blind, placebo-controlled, cross-over design, 16 healthy participants were scanned during performance in a perceptual-load and an emotion-matching task.",
+    "text": "a double-blind, placebo-controlled, cross-over design studying 16 healthy participants"
    },
    "findings": [
     {
-     "passage": 21,
-     "where": "RESULTS › PLT",
-     "quote": "significant attenuation of amygdala activity after Zembrin administration on the contrast fear>neutral in the low‑load condition",
-     "text": "Zembrin attenuated amygdala activity to fearful faces under low perceptual load.",
-     "id": "F4",
-     "second_hand": ""
-    },
-    {
      "passage": 1,
      "where": "Abstract",
-     "quote": "Follow‑up connectivity analysis on the emotion‑matching task showed that amygdala–hypothalamus coupling was also reduced.",
-     "text": "Zembrin reduced amygdala–hypothalamus functional coupling during the emotion‑matching task.",
-     "id": "F5",
+     "quote": "Over the past decade, the plant has attracted increasing attention for its possible applications in promoting a sense of wellbeing and relieving stress in healthy individuals and for treating clinical anxiety and depression.",
+     "text": "The plant has attracted increasing attention for its possible applications in promoting a sense of wellbeing and relieving stress in healthy individuals and for treating clinical anxiety and depression.",
+     "id": "F1",
      "second_hand": ""
     },
     {
      "passage": 28,
      "where": "DISCUSSION",
-     "quote": "Although we did not observe general subjective mood effects, the effects noted here arguably reflect a reduction of responsivity of the threat system",
-     "text": "No general subjective mood effects were observed after Zembrin administration.",
-     "id": "F6",
+     "quote": "Although we did not observe general subjective mood effects, the effects noted here arguably reflect a reduction of responsivity of the threat system related to the anxiolytic properties of S. tortuosum",
+     "text": "Although general subjective mood effects were not observed, the noted effects arguably reflect a reduction of responsivity of the threat system related to the anxiolytic properties of S. tortuosum.",
+     "id": "F2",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "A"
+  },
+  {
+   "read": "full",
+   "ref": {
+    "id": "schrder_2026",
+    "type": "article-journal",
+    "title": "Mitigation of serotonin-caused suppression of osteoblast function by extracts of the psychoactive indigenous plant sceletium tortuosum",
+    "author": [
+     {
+      "family": "Schröder",
+      "given": "Heinz C."
+     },
+     {
+      "family": "Wiens",
+      "given": "Matthias"
+     },
+     {
+      "family": "Wang",
+      "given": "Shunfeng"
+     },
+     {
+      "family": "Neufurth",
+      "given": "Meik"
+     },
+     {
+      "family": "Louw",
+      "given": "Stefan"
+     },
+     {
+      "family": "Johnson",
+      "given": "Oluwagbenga"
+     },
+     {
+      "family": "Hoff",
+      "given": "Susanne"
+     },
+     {
+      "family": "Wang",
+      "given": "Xiaohong"
+     },
+     {
+      "family": "Müller",
+      "given": "Werner E. G."
+     },
+     {
+      "family": "Kapewangolo",
+      "given": "Petrina"
+     },
+     {
+      "family": "Shafombabi",
+      "given": "Fransina"
+     }
+    ],
+    "container-title": "BMC Complementary Medicine and Therapies",
+    "issued": {
+     "date-parts": [
+      [
+       2026
+      ]
+     ]
+    },
+    "DOI": "10.1186/s12906-026-05540-x",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-28",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-28"
+     }
+    },
+    "volume": "26",
+    "issue": "1",
+    "number": "255",
+    "PMCID": "PMC13499329"
+   },
+   "doi": "10.1186/s12906-026-05540-x",
+   "pmcid": "PMC13499329",
+   "title": "Mitigation of serotonin-caused suppression of osteoblast function by extracts of the psychoactive indigenous plant Sceletium tortuosum",
+   "year": 2026,
+   "journal": "BMC complementary medicine and therapies",
+   "kind": "other",
+   "people": false,
+   "near": 0.583,
+   "money": [
+    "AcknowledgementsNot applicable."
+   ],
+   "design": {
+    "passage": 2,
+    "where": "Abstract",
+    "quote": "Both aqueous and ethanolic extracts were prepared from S. tortuosum. Their effects on mineralization were studied using bone-forming SaOS-2 cells.",
+    "text": "an in vitro study of Sceletium tortuosum extracts on bone-forming SaOS-2 cells"
+   },
+   "findings": [
+    {
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "Sceletium tortuosum is an endemic plant in Southern Africa, traditionally used as kanna by the indigenous people and also exploited commercially due to its mood-elevating properties.",
+     "text": "Sceletium tortuosum is traditionally used as kanna by indigenous people and exploited commercially for its mood-elevating properties.",
+     "id": "F3",
      "second_hand": ""
     }
    ],
    "limits": [],
    "tag": "B"
+  },
+  {
+   "read": "full",
+   "ref": {
+    "id": "chiu_2014",
+    "type": "article-journal",
+    "title": "Proof-of-concept randomized controlled study of cognition effects of the proprietary extract sceletium tortuosum (zembrin) targeting phosphodiesterase-4 in cognitively healthy subjects: Implications for alzheimer’s dementia",
+    "author": [
+     {
+      "family": "Chiu",
+      "given": "Simon"
+     },
+     {
+      "family": "Gericke",
+      "given": "Nigel"
+     },
+     {
+      "family": "Farina-Woodbury",
+      "given": "Michel"
+     },
+     {
+      "family": "Badmaev",
+      "given": "Vladimir"
+     },
+     {
+      "family": "Raheb",
+      "given": "Hana"
+     },
+     {
+      "family": "Terpstra",
+      "given": "Kristen"
+     },
+     {
+      "family": "Antongiorgi",
+      "given": "Joalex"
+     },
+     {
+      "family": "Bureau",
+      "given": "Yves"
+     },
+     {
+      "family": "Cernovsky",
+      "given": "Zack"
+     },
+     {
+      "family": "Hou",
+      "given": "Jirui"
+     },
+     {
+      "family": "Sanchez",
+      "given": "Veronica"
+     },
+     {
+      "family": "Williams",
+      "given": "Marissa"
+     },
+     {
+      "family": "Copen",
+      "given": "John"
+     },
+     {
+      "family": "Husni",
+      "given": "Mariwan"
+     },
+     {
+      "family": "Goble",
+      "given": "Liz"
+     }
+    ],
+    "container-title": "Evidence-Based Complementary and Alternative Medicine",
+    "issued": {
+     "date-parts": [
+      [
+       2014
+      ]
+     ]
+    },
+    "DOI": "10.1155/2014/682014",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-28",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-28"
+     }
+    },
+    "volume": "2014",
+    "issue": "1",
+    "number": "682014",
+    "PMCID": "PMC4217361"
+   },
+   "doi": "10.1155/2014/682014",
+   "pmcid": "PMC4217361",
+   "title": "Proof-of-Concept Randomized Controlled Study of Cognition Effects of the Proprietary Extract Sceletium tortuosum (Zembrin) Targeting Phosphodiesterase-4 in Cognitively Healthy Subjects: Implications for Alzheimer's Dementia",
+   "year": 2014,
+   "journal": "Evidence-based complementary and alternative medicine : eCAM",
+   "kind": "other",
+   "people": true,
+   "near": 0.53,
+   "money": [
+    "Nigel Gericke B.Sc (Honors), MBBCh is the Director, Medical and Scientific, of HG&H Pharmaceuticals (Pty) Ltd., the company that has developed extract Sceletium tortuosum (Zembrin), and a trustee in a trust that owns a minor shareholding in HG&H Pharmaceuticals. Valdimir Badmeav, M.D. and Ph.D., was the past Director of Medical and Scientific Affairs for PL Thomas Ltd, the North American distributor of Zembrin (Zembrin)."
+   ],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "We chose the randomized double-blind placebo-controlled cross-over design in our study. We randomized normal healthy subjects (total n = 21) to receive either 25 mg capsule Zembrin or placebo capsule once daily for 3 weeks",
+    "text": "randomized double-blind placebo-controlled cross-over design study on cognitively healthy subjects"
+   },
+   "findings": [
+    {
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "Positive changes in mood and sleep were found.",
+     "text": "Positive changes in mood and sleep were found.",
+     "id": "F4",
+     "second_hand": ""
+    },
+    {
+     "passage": 25,
+     "where": "4. Discussion",
+     "quote": "Acute administration of Zembrin extract in normal healthy subjects dampened amygdala reactivity to fearful faces under low perceptual load conditions, along with reduced coupling of amygdala-hypothalamus as shown by follow-up connectivity analysis on the emotion-matching task.",
+     "text": "Acute administration of Zembrin extract in normal healthy subjects dampened amygdala reactivity to fearful faces under low perceptual load conditions, along with reduced coupling of amygdala-hypothalamus as shown by follow-up connectivity analysis on the emotion-matching task.",
+     "id": "F5",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 25,
+     "where": "4. Discussion",
+     "quote": "Our initial surreptitious findings of Zembrin in bringing about positive changes in sleep and mood are only preliminary and have to be interpreted with caution.",
+     "text": "The initial findings of Zembrin in bringing about positive changes in sleep and mood are only preliminary and have to be interpreted with caution.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "C"
   }
  ],
- "parts": [
-  {
-   "part": "short",
-   "text": "Yes, kanna can have psychoactive effects, as it contains compounds that act on the mind.",
-   "uses": [
-    "F1",
-    "F2"
-   ],
-   "rests_on": [
-    {
-     "label": "F1",
-     "ref": "manganyi_2021",
-     "where": "Abstract",
-     "quote": "promote a sense of well‑being by relieving stress with calming effects",
-     "sha": "926eab80cf3dad03"
-    },
-    {
-     "label": "F2",
-     "ref": "manganyi_2021",
-     "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.3. Anti-Depressant Properties of Sceletium Plants",
-     "quote": "The plant improves mood, thus has anti-depression properties.",
-     "sha": "a2a1a8fb7ba7f860"
-    }
-   ]
-  },
-  {
-   "part": "but",
-   "text": "No general subjective mood effects were observed in 16 healthy participants.",
-   "uses": [
-    "F6",
-    "DB"
-   ],
-   "rests_on": [
-    {
-     "label": "F6",
-     "ref": "terburg_2013",
-     "where": "DISCUSSION",
-     "quote": "Although we did not observe general subjective mood effects, the effects noted here arguably reflect a reduction of responsivity of the threat system",
-     "sha": "354d675da7f1d2e8"
-    },
-    {
-     "label": "DB",
-     "ref": "terburg_2013",
-     "where": "Abstract",
-     "quote": "In a double‑blind, placebo‑controlled, cross‑over design, 16 healthy participants were scanned during performance in a perceptual‑load and an emotion‑matching task.",
-     "sha": "89076b899c033ad3"
-    }
-   ]
-  },
-  {
-   "part": "how1",
-   "text": "A 2021 review summarizes biological and pharmaceutical properties of Sceletium tortuosum.",
-   "uses": [
-    "DA",
-    "F1",
-    "F2"
-   ],
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "manganyi_2021",
-     "where": "Abstract",
-     "quote": "Thus, this review provides an extensive overview of the biological and p",
-     "sha": "926eab80cf3dad03"
-    },
-    {
-     "label": "F1",
-     "ref": "manganyi_2021",
-     "where": "Abstract",
-     "quote": "promote a sense of well‑being by relieving stress with calming effects",
-     "sha": "926eab80cf3dad03"
-    },
-    {
-     "label": "F2",
-     "ref": "manganyi_2021",
-     "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.3. Anti-Depressant Properties of Sceletium Plants",
-     "quote": "The plant improves mood, thus has anti-depression properties.",
-     "sha": "a2a1a8fb7ba7f860"
-    }
-   ],
-   "quote": "Thus, this review provides an extensive overview of the biological and p",
-   "quote_ref": "manganyi_2021"
-  },
-  {
-   "part": "how2",
-   "text": "A 2013 study scanned 16 healthy participants during tasks after Zembrin administration.",
-   "uses": [
-    "DB",
-    "F4",
-    "F5"
-   ],
-   "rests_on": [
-    {
-     "label": "DB",
-     "ref": "terburg_2013",
-     "where": "Abstract",
-     "quote": "In a double‑blind, placebo‑controlled, cross‑over design, 16 healthy participants were scanned during performance in a perceptual‑load and an emotion‑matching task.",
-     "sha": "89076b899c033ad3"
-    },
-    {
-     "label": "F4",
-     "ref": "terburg_2013",
-     "where": "RESULTS › PLT",
-     "quote": "significant attenuation of amygdala activity after Zembrin administration on the contrast fear>neutral in the low‑load condition",
-     "sha": "e3fbfd9512c94396"
-    },
-    {
-     "label": "F5",
-     "ref": "terburg_2013",
-     "where": "Abstract",
-     "quote": "Follow‑up connectivity analysis on the emotion‑matching task showed that amygdala–hypothalamus coupling was also reduced.",
-     "sha": "89076b899c033ad3"
-    }
-   ],
-   "quote": "attenuation of amygdala activity after Zembrin administration on the contrast fear>neutral in the low-load condition",
-   "quote_ref": "terburg_2013"
-  }
- ],
- "complete": true,
- "missing": "",
+ "parts": [],
+ "complete": false,
+ "missing": "strength and consistency of psychoactive effects",
  "wanted": [
   {
    "doi": "10.1016/j.jpba.2019.112945",
@@ -425,6 +454,14 @@
    "why": "passed every gate",
    "short": "Yes, kanna promotes a sense of well-being and relieving stress with calming effects.",
    "complete": true
+  },
+  {
+   "on": "2026-11-27",
+   "lane": 19,
+   "status": "published",
+   "why": "passed every gate",
+   "short": "Yes, kanna can have psychoactive effects, as it contains compounds that act on the mind.",
+   "complete": true
   }
  ],
  "looked": [
@@ -433,19 +470,13 @@
    "read": "full",
    "kind": "review",
    "at": "10.3390/molecules26092557",
-   "kept": 3,
+   "kept": 0,
    "thrown": [
     {
-     "kind": "limit",
-     "text": "The anti‑stress effect was demonstrated only in male Wistar rats.",
-     "quote": "using male Wistar rats",
-     "why": "the sentence is not carried by its quote and passage"
-    },
-    {
-     "kind": "limit",
-     "text": "The anxiolytic effect was shown only in a zebrafish model.",
-     "quote": "A zebrafish model study was conducted on ethnopharmacological experiments to determine anxiolytic properties.",
-     "why": "the sentence is not carried by its quote and passage"
+     "kind": "finding",
+     "text": "The phytochemical profile of Sceletium tortuosum has been isolated and has identified psychoactive compounds.",
+     "quote": "The phytochemical profile of Sceletium tortuosum has been isolated and has identified psychoactive compounds.",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
     }
    ]
   },
@@ -454,33 +485,64 @@
    "read": "full",
    "kind": "study",
    "at": "10.1038/npp.2013.183",
-   "kept": 3,
+   "kept": 2,
    "thrown": [
     {
      "kind": "limit",
-     "text": "The study was conducted only with 16 healthy participants.",
-     "quote": "In a double‑blind, placebo‑controlled, cross‑over design, 16 healthy participants were scanned",
-     "why": "the sentence is not carried by its quote and passage"
-    },
-    {
-     "kind": "limit",
-     "text": "The authors could not separate the effects of PDE4 inhibition from 5‑HT reuptake inhibition.",
-     "quote": "Although we cannot separate these pharmacological actions in the present results",
-     "why": "a number of the sentence is not in its quote"
+     "text": "",
+     "quote": "Although we did not observe general subjective mood effects, the effects noted here arguably reflect a reduction of responsivity of the threat system related to the anxiolytic properties of S. tortuos",
+     "why": "no sentence"
     }
    ]
+  },
+  {
+   "title": "A network pharmacology-based approach to explore the therapeutic potential of Sceletium tortuosum in the treatment of neurodegenerative disorders",
+   "read": "full",
+   "kind": "other",
+   "at": "10.1371/journal.pone.0273583",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Mitigation of serotonin-caused suppression of osteoblast function by extracts of the psychoactive indigenous plant Sceletium tortuosum",
+   "read": "full",
+   "kind": "other",
+   "at": "10.1186/s12906-026-05540-x",
+   "kept": 1,
+   "thrown": []
+  },
+  {
+   "title": "Proof-of-Concept Randomized Controlled Study of Cognition Effects of the Proprietary Extract Sceletium tortuosum (Zembrin) Targeting Phosphodiesterase-4 in Cognitively Healthy Subjects: Implications for Alzheimer's Dementia",
+   "read": "full",
+   "kind": "other",
+   "at": "10.1155/2014/682014",
+   "kept": 2,
+   "thrown": []
+  },
+  {
+   "title": "Biomedical analysis of New Psychoactive Substances (NPS) of natural origin",
+   "read": "summary",
+   "kind": "review",
+   "at": "10.1016/j.jpba.2019.112945",
+   "kept": 0,
+   "thrown": []
   }
  ],
  "plan": {
   "short": [
-   "F1",
-   "F2"
+   "F4",
+   "F5"
   ],
   "direct": "Yes",
   "but": [
-   "F6"
+   "L1"
   ],
   "how": [
+   [
+    "DC",
+    "F4",
+    "F5"
+   ],
    [
     "DA",
     "F1",
@@ -488,27 +550,76 @@
    ],
    [
     "DB",
-    "F4",
-    "F5"
+    "F3"
    ]
   ],
-  "unanswered": ""
+  "unanswered": "strength and consistency of psychoactive effects"
+ },
+ "panel": {
+  "gemini:gemini-3.5-flash-lite": {
+   "short": [
+    true,
+    ""
+   ],
+   "but": [
+    true,
+    ""
+   ],
+   "how1": [
+    true,
+    ""
+   ],
+   "how2": [
+    true,
+    ""
+   ],
+   "how3": [
+    false,
+    "The passages do not state that a lab study on bone cells notes kanna is used for its mood-elevating properties; they mention the plant's traditional use and commercial exploitation in the abstract background, but the study itself investigat"
+   ]
+  },
+  "gemini:gemini-3.6-flash": {
+   "short": [
+    false,
+    "The passages for this sentence do not mention the word 'kanna'."
+   ],
+   "but": [
+    false,
+    "The passage specifies that their initial findings regarding Zembrin's positive changes in sleep and mood are preliminary, rather than making a general statement about 'these findings' without qualification."
+   ],
+   "how1": [
+    true,
+    ""
+   ],
+   "how2": [
+    true,
+    ""
+   ],
+   "how3": [
+    true,
+    ""
+   ]
+  }
  },
  "panel_gap": [],
  "own": {
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.1218,
-   "but": 0.1389,
-   "how1": 0.8315,
-   "how2": 0.9664
+   "short": 0.7628,
+   "but": 0.989,
+   "how1": 0.662,
+   "how2": 0.9776,
+   "how3": 0.6623,
+   "how4": 0.321
   },
   "scores_quotes_alone": {
-   "short": 0.0595,
-   "but": 0.0511,
-   "how1": 0.7587,
-   "how2": 0.9647
+   "short": 0.1556,
+   "but": 0.9896,
+   "how1": 0.2003,
+   "how2": 0.9889,
+   "how3": 0.2602,
+   "how4": 0.2518
   }
  },
  "tries": [
@@ -518,117 +629,453 @@
    "parts": [
     {
      "part": "short",
-     "text": "Yes, kanna can have psychoactive effects, as it contains compounds that act on the mind.",
+     "text": "Yes. In a study of 21 healthy people, Zembrin, an extract of kanna, brought positive changes in mood and sleep.",
      "rests_on": [
-      {
-       "label": "F1",
-       "ref": "manganyi_2021",
-       "where": "Abstract",
-       "quote": "promote a sense of well‑being by relieving stress with calming effects",
-       "sha": "926eab80cf3dad03"
-      },
-      {
-       "label": "F2",
-       "ref": "manganyi_2021",
-       "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.3. Anti-Depressant Properties of Sceletium Plants",
-       "quote": "The plant improves mood, thus has anti-depression properties.",
-       "sha": "a2a1a8fb7ba7f860"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passages describe mood and mental-health effects and compounds with uptake-inhibitory activity, but do not state that kanna has psychoactive effects or that its compounds act on the mind."
-    },
-    {
-     "part": "but",
-     "text": "No general subjective mood effects were observed in 16 healthy adults.",
-     "rests_on": [
-      {
-       "label": "F6",
-       "ref": "terburg_2013",
-       "where": "DISCUSSION",
-       "quote": "Although we did not observe general subjective mood effects, the effects noted here arguably reflect a reduction of responsivity of the threat system",
-       "sha": "354d675da7f1d2e8"
-      },
-      {
-       "label": "DB",
-       "ref": "terburg_2013",
-       "where": "Abstract",
-       "quote": "In a double‑blind, placebo‑controlled, cross‑over design, 16 healthy participants were scanned during performance in a perceptual‑load and an emotion‑matching task.",
-       "sha": "89076b899c033ad3"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passages say 16 healthy participants, not that they were adults."
-    },
-    {
-     "part": "how1",
-     "text": "A 2021 review found kanna has compounds that act on the mind.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "manganyi_2021",
-       "where": "Abstract",
-       "quote": "Thus, this review provides an extensive overview of the biological and p",
-       "sha": "926eab80cf3dad03"
-      },
-      {
-       "label": "F1",
-       "ref": "manganyi_2021",
-       "where": "Abstract",
-       "quote": "promote a sense of well‑being by relieving stress with calming effects",
-       "sha": "926eab80cf3dad03"
-      },
-      {
-       "label": "F2",
-       "ref": "manganyi_2021",
-       "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.3. Anti-Depressant Properties of Sceletium Plants",
-       "quote": "The plant improves mood, thus has anti-depression properties.",
-       "sha": "a2a1a8fb7ba7f860"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The review identifies compounds and reports biological, mood, and mental-health effects, but does not state that the compounds act on the mind."
-    },
-    {
-     "part": "how2",
-     "text": "A 2013 study of 16 healthy adults found no general change in mood, but brain scans suggested a smaller reaction to threat.",
-     "rests_on": [
-      {
-       "label": "DB",
-       "ref": "terburg_2013",
-       "where": "Abstract",
-       "quote": "In a double‑blind, placebo‑controlled, cross‑over design, 16 healthy participants were scanned during performance in a perceptual‑load and an emotion‑matching task.",
-       "sha": "89076b899c033ad3"
-      },
       {
        "label": "F4",
-       "ref": "terburg_2013",
-       "where": "RESULTS › PLT",
-       "quote": "significant attenuation of amygdala activity after Zembrin administration on the contrast fear>neutral in the low‑load condition",
-       "sha": "e3fbfd9512c94396"
+       "ref": "chiu_2014",
+       "where": "Abstract",
+       "quote": "Positive changes in mood and sleep were found.",
+       "sha": "3ee98d5d0e849718"
       },
       {
        "label": "F5",
+       "ref": "chiu_2014",
+       "where": "4. Discussion",
+       "quote": "Acute administration of Zembrin extract in normal healthy subjects dampened amygdala reactivity to fearful faces under low perceptual load conditions, along with reduced coupling of amygdala-hypothalamus as shown by follow-up connectivity analysis on the emotion-matching task.",
+       "sha": "2b29860244a31edc"
+      },
+      {
+       "label": "DC",
+       "ref": "chiu_2014",
+       "where": "Abstract",
+       "quote": "We chose the randomized double-blind placebo-controlled cross-over design in our study. We randomized normal healthy subjects (total n = 21) to receive either 25 mg capsule Zembrin or placebo capsule once daily for 3 weeks",
+       "sha": "3ee98d5d0e849718"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.6-flash) did not accept it: The passages for this sentence do not mention the word 'kanna'."
+    },
+    {
+     "part": "but",
+     "text": "These findings are preliminary and must be interpreted with caution.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "chiu_2014",
+       "where": "4. Discussion",
+       "quote": "Our initial surreptitious findings of Zembrin in bringing about positive changes in sleep and mood are only preliminary and have to be interpreted with caution.",
+       "sha": "2b29860244a31edc"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.6-flash) did not accept it: The passage specifies that their initial findings regarding Zembrin's positive changes in sleep and mood are preliminary, rather than making a general statement about 'these findings' without qualification."
+    },
+    {
+     "part": "how1",
+     "text": "A randomized study of 21 healthy people found positive changes in mood and sleep after taking Zembrin.",
+     "rests_on": [
+      {
+       "label": "DC",
+       "ref": "chiu_2014",
+       "where": "Abstract",
+       "quote": "We chose the randomized double-blind placebo-controlled cross-over design in our study. We randomized normal healthy subjects (total n = 21) to receive either 25 mg capsule Zembrin or placebo capsule once daily for 3 weeks",
+       "sha": "3ee98d5d0e849718"
+      },
+      {
+       "label": "F4",
+       "ref": "chiu_2014",
+       "where": "Abstract",
+       "quote": "Positive changes in mood and sleep were found.",
+       "sha": "3ee98d5d0e849718"
+      },
+      {
+       "label": "F5",
+       "ref": "chiu_2014",
+       "where": "4. Discussion",
+       "quote": "Acute administration of Zembrin extract in normal healthy subjects dampened amygdala reactivity to fearful faces under low perceptual load conditions, along with reduced coupling of amygdala-hypothalamus as shown by follow-up connectivity analysis on the emotion-matching task.",
+       "sha": "2b29860244a31edc"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A study of 16 healthy people found no general mood change, but brain scans showed a smaller reaction to threat.",
+     "rests_on": [
+      {
+       "label": "DA",
        "ref": "terburg_2013",
        "where": "Abstract",
-       "quote": "Follow‑up connectivity analysis on the emotion‑matching task showed that amygdala–hypothalamus coupling was also reduced.",
+       "quote": "In a double-blind, placebo-controlled, cross-over design, 16 healthy participants were scanned during performance in a perceptual-load and an emotion-matching task.",
        "sha": "89076b899c033ad3"
+      },
+      {
+       "label": "F1",
+       "ref": "terburg_2013",
+       "where": "Abstract",
+       "quote": "Over the past decade, the plant has attracted increasing attention for its possible applications in promoting a sense of wellbeing and relieving stress in healthy individuals and for treating clinical anxiety and depression.",
+       "sha": "89076b899c033ad3"
+      },
+      {
+       "label": "F2",
+       "ref": "terburg_2013",
+       "where": "DISCUSSION",
+       "quote": "Although we did not observe general subjective mood effects, the effects noted here arguably reflect a reduction of responsivity of the threat system related to the anxiolytic properties of S. tortuosum",
+       "sha": "354d675da7f1d2e8"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A lab study on bone cells notes kanna is used for its mood-elevating properties.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "schrder_2026",
+       "where": "Abstract",
+       "quote": "Both aqueous and ethanolic extracts were prepared from S. tortuosum. Their effects on mineralization were studied using bone-forming SaOS-2 cells.",
+       "sha": "f00b56ba11bfdc3c"
+      },
+      {
+       "label": "F3",
+       "ref": "schrder_2026",
+       "where": "Abstract",
+       "quote": "Sceletium tortuosum is an endemic plant in Southern Africa, traditionally used as kanna by the indigenous people and also exploited commercially due to its mood-elevating properties.",
+       "sha": "90f32a2531d35dbd"
       }
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "The study reports 16 healthy participants, but the passages do not say they were adults."
+     "said": "The passage reports mood elevation as a reason for the plant’s use, but the editor’s instruction says that reputation may be named only as a reputation, not presented as an effect."
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Yes. In a study of 21 healthy people, Zembrin, an extract of kanna, brought positive changes in mood and sleep.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "chiu_2014",
+       "where": "Abstract",
+       "quote": "Positive changes in mood and sleep were found.",
+       "sha": "3ee98d5d0e849718"
+      },
+      {
+       "label": "F5",
+       "ref": "chiu_2014",
+       "where": "4. Discussion",
+       "quote": "Acute administration of Zembrin extract in normal healthy subjects dampened amygdala reactivity to fearful faces under low perceptual load conditions, along with reduced coupling of amygdala-hypothalamus as shown by follow-up connectivity analysis on the emotion-matching task.",
+       "sha": "2b29860244a31edc"
+      },
+      {
+       "label": "DC",
+       "ref": "chiu_2014",
+       "where": "Abstract",
+       "quote": "We chose the randomized double-blind placebo-controlled cross-over design in our study. We randomized normal healthy subjects (total n = 21) to receive either 25 mg capsule Zembrin or placebo capsule once daily for 3 weeks",
+       "sha": "3ee98d5d0e849718"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "the word it opens with (“Yes”) is not the answer the passages bear out: The passages report positive mood and sleep changes, but call those findings preliminary and say they must be interpreted with caution. “Possibly” would be fairer than "
+    },
+    {
+     "part": "but",
+     "text": "The study says these initial findings on sleep and mood are preliminary and must be interpreted with caution.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "chiu_2014",
+       "where": "4. Discussion",
+       "quote": "Our initial surreptitious findings of Zembrin in bringing about positive changes in sleep and mood are only preliminary and have to be interpreted with caution.",
+       "sha": "2b29860244a31edc"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "A randomized study of 21 healthy subjects found positive changes in mood and sleep after taking Zembrin.",
+     "rests_on": [
+      {
+       "label": "DC",
+       "ref": "chiu_2014",
+       "where": "Abstract",
+       "quote": "We chose the randomized double-blind placebo-controlled cross-over design in our study. We randomized normal healthy subjects (total n = 21) to receive either 25 mg capsule Zembrin or placebo capsule once daily for 3 weeks",
+       "sha": "3ee98d5d0e849718"
+      },
+      {
+       "label": "F4",
+       "ref": "chiu_2014",
+       "where": "Abstract",
+       "quote": "Positive changes in mood and sleep were found.",
+       "sha": "3ee98d5d0e849718"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "In 16 healthy participants, Zembrin reduced brain reaction to threat, though no general mood changes were seen.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "terburg_2013",
+       "where": "Abstract",
+       "quote": "In a double-blind, placebo-controlled, cross-over design, 16 healthy participants were scanned during performance in a perceptual-load and an emotion-matching task.",
+       "sha": "89076b899c033ad3"
+      },
+      {
+       "label": "F2",
+       "ref": "terburg_2013",
+       "where": "DISCUSSION",
+       "quote": "Although we did not observe general subjective mood effects, the effects noted here arguably reflect a reduction of responsivity of the threat system related to the anxiolytic properties of S. tortuosum",
+       "sha": "354d675da7f1d2e8"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage narrows the finding to amygdala reactivity to fearful faces under low perceptual-load conditions after a single 25 mg dose; the sentence generalizes this to brain reaction to threat."
+    },
+    {
+     "part": "how3",
+     "text": "A lab study on bone cells notes kanna is used for its mood-elevating properties.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "schrder_2026",
+       "where": "Abstract",
+       "quote": "Both aqueous and ethanolic extracts were prepared from S. tortuosum. Their effects on mineralization were studied using bone-forming SaOS-2 cells.",
+       "sha": "f00b56ba11bfdc3c"
+      },
+      {
+       "label": "F3",
+       "ref": "schrder_2026",
+       "where": "Abstract",
+       "quote": "Sceletium tortuosum is an endemic plant in Southern Africa, traditionally used as kanna by the indigenous people and also exploited commercially due to its mood-elevating properties.",
+       "sha": "90f32a2531d35dbd"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The sentence relies on the plant’s mood-elevating reputation, which the editor’s note says not to use as evidence of an effect. The passage says the plant is commercially exploited due to those properties; it does not say kanna is used for "
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Yes, kanna can change mood and sleep. In one study, people felt positive changes, but the results are preliminary.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "chiu_2014",
+       "where": "Abstract",
+       "quote": "Positive changes in mood and sleep were found.",
+       "sha": "3ee98d5d0e849718"
+      },
+      {
+       "label": "F5",
+       "ref": "chiu_2014",
+       "where": "4. Discussion",
+       "quote": "Acute administration of Zembrin extract in normal healthy subjects dampened amygdala reactivity to fearful faces under low perceptual load conditions, along with reduced coupling of amygdala-hypothalamus as shown by follow-up connectivity analysis on the emotion-matching task.",
+       "sha": "2b29860244a31edc"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The study reports preliminary positive mood and sleep changes with Zembrin, not that kanna generally can change mood and sleep; it does not say people felt the changes."
+    },
+    {
+     "part": "but",
+     "text": "The findings are preliminary and must be interpreted with caution.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "chiu_2014",
+       "where": "4. Discussion",
+       "quote": "Our initial surreptitious findings of Zembrin in bringing about positive changes in sleep and mood are only preliminary and have to be interpreted with caution.",
+       "sha": "2b29860244a31edc"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "In a study of 21 healthy people, Zembrin (a kanna extract) caused positive changes in mood and sleep.",
+     "rests_on": [
+      {
+       "label": "DC",
+       "ref": "chiu_2014",
+       "where": "Abstract",
+       "quote": "We chose the randomized double-blind placebo-controlled cross-over design in our study. We randomized normal healthy subjects (total n = 21) to receive either 25 mg capsule Zembrin or placebo capsule once daily for 3 weeks",
+       "sha": "3ee98d5d0e849718"
+      },
+      {
+       "label": "F4",
+       "ref": "chiu_2014",
+       "where": "Abstract",
+       "quote": "Positive changes in mood and sleep were found.",
+       "sha": "3ee98d5d0e849718"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage says positive changes were found; it does not state that Zembrin caused them."
+    },
+    {
+     "part": "how2",
+     "text": "The same study found that Zembrin reduced brain reactions to fearful faces in healthy subjects.",
+     "rests_on": [
+      {
+       "label": "DC",
+       "ref": "chiu_2014",
+       "where": "Abstract",
+       "quote": "We chose the randomized double-blind placebo-controlled cross-over design in our study. We randomized normal healthy subjects (total n = 21) to receive either 25 mg capsule Zembrin or placebo capsule once daily for 3 weeks",
+       "sha": "3ee98d5d0e849718"
+      },
+      {
+       "label": "F5",
+       "ref": "chiu_2014",
+       "where": "4. Discussion",
+       "quote": "Acute administration of Zembrin extract in normal healthy subjects dampened amygdala reactivity to fearful faces under low perceptual load conditions, along with reduced coupling of amygdala-hypothalamus as shown by follow-up connectivity analysis on the emotion-matching task.",
+       "sha": "2b29860244a31edc"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The fearful-face result is attributed to a separate fMRI study discussed in the passage, not the cognition study in the abstract."
+    },
+    {
+     "part": "how3",
+     "text": "A study of 16 healthy people found no general mood changes, but brain scans showed less threat response.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "terburg_2013",
+       "where": "Abstract",
+       "quote": "In a double-blind, placebo-controlled, cross-over design, 16 healthy participants were scanned during performance in a perceptual-load and an emotion-matching task.",
+       "sha": "89076b899c033ad3"
+      },
+      {
+       "label": "F2",
+       "ref": "terburg_2013",
+       "where": "DISCUSSION",
+       "quote": "Although we did not observe general subjective mood effects, the effects noted here arguably reflect a reduction of responsivity of the threat system related to the anxiolytic properties of S. tortuosum",
+       "sha": "354d675da7f1d2e8"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how4",
+     "text": "A lab study on bone cells notes kanna is used for its mood-elevating properties.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "schrder_2026",
+       "where": "Abstract",
+       "quote": "Both aqueous and ethanolic extracts were prepared from S. tortuosum. Their effects on mineralization were studied using bone-forming SaOS-2 cells.",
+       "sha": "f00b56ba11bfdc3c"
+      },
+      {
+       "label": "F3",
+       "ref": "schrder_2026",
+       "where": "Abstract",
+       "quote": "Sceletium tortuosum is an endemic plant in Southern Africa, traditionally used as kanna by the indigenous people and also exploited commercially due to its mood-elevating properties.",
+       "sha": "90f32a2531d35dbd"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "This relies on the plant’s reported mood-elevating reputation, which the editor’s note says must not be used to rest an effect on."
     }
    ]
   }
  ],
- "with_checked": {
-  "differs": [],
-  "same": []
- },
+ "dropped": [
+  {
+   "try": 3,
+   "part": "how1",
+   "text": "In a study of 21 healthy people, Zembrin (a kanna extract) caused positive changes in mood and sleep.",
+   "rests_on": [
+    {
+     "label": "DC",
+     "ref": "chiu_2014",
+     "where": "Abstract",
+     "quote": "We chose the randomized double-blind placebo-controlled cross-over design in our study. We randomized normal healthy subjects (total n = 21) to receive either 25 mg capsule Zembrin or placebo capsule once daily for 3 weeks",
+     "sha": "3ee98d5d0e849718"
+    },
+    {
+     "label": "F4",
+     "ref": "chiu_2014",
+     "where": "Abstract",
+     "quote": "Positive changes in mood and sleep were found.",
+     "sha": "3ee98d5d0e849718"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The passage says positive changes were found; it does not state that Zembrin caused them."
+  },
+  {
+   "try": 3,
+   "part": "how2",
+   "text": "The same study found that Zembrin reduced brain reactions to fearful faces in healthy subjects.",
+   "rests_on": [
+    {
+     "label": "DC",
+     "ref": "chiu_2014",
+     "where": "Abstract",
+     "quote": "We chose the randomized double-blind placebo-controlled cross-over design in our study. We randomized normal healthy subjects (total n = 21) to receive either 25 mg capsule Zembrin or placebo capsule once daily for 3 weeks",
+     "sha": "3ee98d5d0e849718"
+    },
+    {
+     "label": "F5",
+     "ref": "chiu_2014",
+     "where": "4. Discussion",
+     "quote": "Acute administration of Zembrin extract in normal healthy subjects dampened amygdala reactivity to fearful faces under low perceptual load conditions, along with reduced coupling of amygdala-hypothalamus as shown by follow-up connectivity analysis on the emotion-matching task.",
+     "sha": "2b29860244a31edc"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The fearful-face result is attributed to a separate fMRI study discussed in the passage, not the cognition study in the abstract."
+  },
+  {
+   "try": 3,
+   "part": "how4",
+   "text": "A lab study on bone cells notes kanna is used for its mood-elevating properties.",
+   "rests_on": [
+    {
+     "label": "DB",
+     "ref": "schrder_2026",
+     "where": "Abstract",
+     "quote": "Both aqueous and ethanolic extracts were prepared from S. tortuosum. Their effects on mineralization were studied using bone-forming SaOS-2 cells.",
+     "sha": "f00b56ba11bfdc3c"
+    },
+    {
+     "label": "F3",
+     "ref": "schrder_2026",
+     "where": "Abstract",
+     "quote": "Sceletium tortuosum is an endemic plant in Southern Africa, traditionally used as kanna by the indigenous people and also exploited commercially due to its mood-elevating properties.",
+     "sha": "90f32a2531d35dbd"
+    }
+   ],
+   "by": "the second reader",
+   "said": "This relies on the plant’s reported mood-elevating reputation, which the editor’s note says must not be used to rest an effect on."
+  }
+ ],
  "place": {
   "home": "new:Kanna",
   "also": [],
