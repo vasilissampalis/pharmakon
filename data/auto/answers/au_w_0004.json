@@ -21,38 +21,43 @@
   "on": "2026-11-28",
   "models": {
    "reader": "gemini:gemini-3.5-flash-lite",
-   "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+   "writer": "groq:qwen/qwen3.8-27b",
    "checker": "openrouter:openai/gpt-6-luna",
    "planner": "groq:openai/gpt-oss-120b",
-   "team": "team B",
-   "reader_2": "groq:openai/gpt-oss-20b",
+   "also1": "gemini:gemini-3.5-flash-lite",
+   "also2": "gemini:gemini-3.6-flash",
+   "team": "team I",
+   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
    "reader_3": "openrouter:openai/gpt-oss-120b",
-   "reader_first": "@cf/meta/llama-4-scout-17b-16e-instruct"
+   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "46088120921",
+  "run": "46135719216",
   "read_by": {
-   "gemini-3.5-flash-lite": 5,
-   "llama-4-scout-17b-16e-instruct": 2
+   "gemini-3.5-flash-lite": 4,
+   "gemini-3.1-flash-lite": 3,
+   "gpt-oss-20b": 1
   },
-  "read_seconds": 56,
+  "read_seconds": 23,
   "from": {
-   "papers": 2,
+   "papers": 1,
    "summaries": 0,
-   "official": 2
+   "official": 0
   },
-  "neurons": 426.1,
-  "seconds": 121
+  "neurons": 0.0,
+  "seconds": 102
  },
- "status": "none",
- "why": "the second reader did not accept the answer",
+ "status": "published",
+ "why": "passed every gate",
  "gates": {
-  "reader": "llama-4-scout-17b-16e-instruct could not read on (the model service could not be reached: The read operation timed out): gemini-3.5-flash-lite read from there",
-  "read": "8 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 2 official page(s), 0 paper(s) read in summary only",
-  "told": "the writer was told what the readers said of the last draft that was not accepted: the short answer “Yes. Methamphetamine is considered a more potent derivative of amphetamine with a longer duration of action. Adderall is a mixture of amphetamine salts.”: the word it opens with (“Yes”) is not the answer the passages bear out: The passages support some differences, but the review i",
-  "rules": "1 How-do-we-know line(s) left out for a rule (how1: it says “both”, and the words it rests on carry no such word: say what the source says, in its own measure, or leave the word out)",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.77, but 0.76, how2 0.98, how3 0.06",
-  "check": "short: NOT accepted: the word it opens with (“Yes”) is not the answer the passages bear out: A flat “Yes” is not fair: the review says methamphetamine is considered more potent and lasts longer, rather than making an unqualified claim. A qualified opening such ; but: NOT accepted: it is about something else than the short answer (A flat “Yes” is not fair: the review says methamphetamine is considered more potent and lasts longer, rather than making an unqualified claim. A qualified opening such as “In some ways” would be fair. Sentence 2 restates the derivative rela); how2: accepted; how3: accepted"
+  "read": "10 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 3 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 0 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
+  "told": "the writer was told what the readers said of the last draft that was not accepted: the short answer “Yes. Methamphetamine is considered a more potent derivative of amphetamine, with a longer duration of action and increased ability to cross the blood-brain barrier.”: the word it opens with (“Yes”) is not the answer the passages bear out: A flat “Yes” is not fair: the review says m",
+  "rules": "1 How-do-we-know line(s) left out for a rule (how1: it says “all”, and the words it rests on carry no such word: say what the source says, in its own measure, or leave the word out)",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.68, but 0.13, how2 0.55, how3 0.83",
+  "check": "every sentence kept was accepted by the second reader (openrouter:openai/gpt-6-luna) and by gemini:gemini-3.5-flash-lite and by gemini:gemini-3.6-flash",
+  "but": "the writer's But was not accepted (The abstract describes a review of treatment trials and treatment-related outcomes, but it does not say the review did not address how the drugs feel or act in ): the code wrote the But itself, from what this answer rests on",
+  "checked": "set beside the checked claims of the same page: nothing against them"
  },
  "sources": [
   {
@@ -142,244 +147,105 @@
     {
      "passage": 80,
      "where": "Discussion › Limitations",
-     "quote": "because of the similarities in chemical structure and behavioural, psychological and physical effects of AMPH and MA, we have included studies of AMPH and MA, and studies that did not distinguish between AMPH and MA.",
-     "text": "Amphetamine and methamphetamine share similarities in chemical structure and in behavioural, psychological, and physical effects.",
+     "quote": "because of the similarities in chemical structure and behavioural, psychological and physical effects of AMPH and MA, we have included studies of AMPH and MA",
+     "text": "Amphetamine and methamphetamine share similarities in chemical structure and in behavioural, psychological and physical effects.",
      "id": "F3",
      "second_hand": ""
     }
    ],
    "limits": [],
    "tag": "A"
-  },
-  {
-   "read": "full",
-   "ref": {
-    "id": "zhao_2020",
-    "type": "article-journal",
-    "title": "TBHQ-overview of multiple mechanisms against oxidative stress for attenuating methamphetamine-induced neurotoxicity",
-    "author": [
-     {
-      "family": "Zhao",
-      "given": "Yuan-Ling"
-     },
-     {
-      "family": "Zhao",
-      "given": "Wei"
-     },
-     {
-      "family": "Liu",
-      "given": "Ming"
-     },
-     {
-      "family": "Liu",
-      "given": "Lian"
-     },
-     {
-      "family": "Wang",
-      "given": "Yun"
-     }
-    ],
-    "container-title": "Oxidative Medicine and Cellular Longevity",
-    "issued": {
-     "date-parts": [
-      [
-       2020
-      ]
-     ]
-    },
-    "DOI": "10.1155/2020/8874304",
-    "verification": {
-     "status": "metadata-verified",
-     "metadata_source": "crossref",
-     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
-     "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-28",
-     "retraction_check": {
-      "status": "clear",
-      "checked_on": "2026-11-28"
-     }
-    },
-    "volume": "2020",
-    "page": "1-10",
-    "PMCID": "PMC7735854"
-   },
-   "doi": "10.1155/2020/8874304",
-   "pmcid": "PMC7735854",
-   "title": "TBHQ-Overview of Multiple Mechanisms against Oxidative Stress for Attenuating Methamphetamine-Induced Neurotoxicity",
-   "year": 2020,
-   "journal": "Oxidative medicine and cellular longevity",
-   "kind": "review",
-   "people": true,
-   "near": 0.728,
-   "money": [
-    "AcknowledgmentsThis research was funded by the National Natural Science Foundation of China (No. 81973404, 81503058), Department of Education of Liaoning Province (No. JC2019034), Natural Science Foundation of Liaoning Province (No. 2014021065), and Department of Science and Technology of Liaoning Province (No. 20170520137)."
-   ],
-   "design": {
-    "passage": 1,
-    "where": "Abstract",
-    "quote": "This review summarized the mechanisms of methamphetamine-induced neurotoxicity including apoptosis and blood-brain barrier breakdown through oxidative stress and analyzed several possible antioxidative mechanisms of tert-butylhydroquinone (TBHQ) which is a kind of food additive with antioxidative effects.",
-    "text": "A review summarizing the mechanisms of methamphetamine-induced neurotoxicity and antioxidative mechanisms of TBHQ"
-   },
-   "findings": [
-    {
-     "passage": 1,
-     "where": "Abstract",
-     "quote": "Methamphetamine is a derivative of amphetamines, a highly addictive central stimulant with multiple systemic toxicity including the brain, heart, liver, lung, and spleen.",
-     "text": "Methamphetamine is a derivative of amphetamines and a highly addictive central stimulant with multiple systemic toxicities including the brain, heart, liver, lung, and spleen.",
-     "id": "F4",
-     "second_hand": ""
-    }
-   ],
-   "limits": [
-    {
-     "passage": 13,
-     "where": "4. Concluding Remarks",
-     "quote": "Many studies have confirmed that TBHQ can activate Nrf2 [,, ] and can play the role of antioxidative stress through Nrf2, but the specific mechanism is not very clear.",
-     "text": "The specific mechanism by which TBHQ plays the role of antioxidative stress through Nrf2 is not very clear.",
-     "id": "L1",
-     "second_hand": ""
-    }
-   ],
-   "tag": "B"
-  },
-  {
-   "read": "page",
-   "ref": {
-    "id": "adf_amphetamines",
-    "type": "webpage",
-    "title": "Amphetamines",
-    "author": [
-     {
-      "literal": "Alcohol and Drug Foundation"
-     }
-    ],
-    "issued": {
-     "date-parts": [
-      [
-       2025,
-       5,
-       18
-      ]
-     ]
-    },
-    "URL": "https://adf.org.au/drug-facts/amphetamines/",
-    "accessed": {
-     "date-parts": [
-      [
-       2026,
-       11,
-       28
-      ]
-     ]
-    },
-    "verification": {
-     "status": "made by code",
-     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-28"
-    }
-   },
-   "title": "Amphetamines",
-   "year": 2025,
-   "kind": "official",
-   "people": true,
-   "near": 0.679,
-   "name": "Alcohol and Drug Foundation",
-   "short": "Australia's Alcohol and Drug Foundation",
-   "tier": 2,
-   "address": "https://adf.org.au/drug-facts/amphetamines/",
-   "money": [],
-   "label": false,
-   "design": null,
-   "findings": [
-    {
-     "passage": 1,
-     "where": "What are amphetamines?",
-     "quote": "Some types of amphetamines, such as dexamphetamine, are prescribed by doctors to treat conditions such as attention deficit hyperactivity disorder (ADHD) and narcolepsy (a disorder that affects a person’s sleep cycle).",
-     "text": "Amphetamines, such as dexamphetamine, are prescribed to treat ADHD and narcolepsy.",
-     "id": "F5",
-     "second_hand": ""
-    },
-    {
-     "passage": 1,
-     "where": "What are amphetamines?",
-     "quote": "The most potent form is crystal methamphetamine (ice).",
-     "text": "Crystal methamphetamine is a potent form of amphetamines.",
-     "id": "F6",
-     "second_hand": ""
-    }
-   ],
-   "limits": [],
-   "tag": "C"
-  },
-  {
-   "read": "page",
-   "ref": {
-    "id": "camh_amphetamines",
-    "type": "webpage",
-    "title": "Amphetamines",
-    "author": [
-     {
-      "literal": "Centre for Addiction and Mental Health"
-     }
-    ],
-    "issued": {
-     "date-parts": [
-      []
-     ]
-    },
-    "URL": "https://www.camh.ca/en/health-info/mental-illness-and-addiction-index/amphetamines",
-    "accessed": {
-     "date-parts": [
-      [
-       2026,
-       11,
-       28
-      ]
-     ]
-    },
-    "verification": {
-     "status": "made by code",
-     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-28"
-    }
-   },
-   "title": "Amphetamines",
-   "year": null,
-   "kind": "official",
-   "people": true,
-   "near": 0.654,
-   "name": "Centre for Addiction and Mental Health",
-   "short": "Canada's Centre for Addiction and Mental Health, a teaching hospital",
-   "tier": 2,
-   "address": "https://www.camh.ca/en/health-info/mental-illness-and-addiction-index/amphetamines",
-   "money": [],
-   "label": false,
-   "design": null,
-   "findings": [
-    {
-     "passage": 1,
-     "where": "What is it?",
-     "quote": "Types of amphetamines: amphetamine, methamphetamine, dextroamphetamine.",
-     "text": "Amphetamine and methamphetamine are both types of amphetamines.",
-     "id": "F7",
-     "second_hand": ""
-    },
-    {
-     "passage": 3,
-     "where": "What does it look like?",
-     "quote": "Methamphetamine resembles shaved glass slivers or clear rock salt.",
-     "text": "Methamphetamine resembles shaved glass slivers or clear rock salt.",
-     "id": "F8",
-     "second_hand": ""
-    }
-   ],
-   "limits": [],
-   "tag": "D"
   }
  ],
- "parts": [],
+ "parts": [
+  {
+   "part": "short",
+   "text": "It depends. Methamphetamine is considered a more potent form of amphetamine that lasts longer and crosses into the brain more easily, but they share similar effects.",
+   "uses": [
+    "F2",
+    "F3"
+   ],
+   "rests_on": [
+    {
+     "label": "F2",
+     "ref": "siefried_2020",
+     "where": "Introduction",
+     "quote": "MA is considered a more potent derivative of AMPH, with a longer duration of action and increased ability to cross the blood–brain barrier",
+     "sha": "318f7d82df1c6d97"
+    },
+    {
+     "label": "F3",
+     "ref": "siefried_2020",
+     "where": "Discussion › Limitations",
+     "quote": "because of the similarities in chemical structure and behavioural, psychological and physical effects of AMPH and MA, we have included studies of AMPH and MA",
+     "sha": "a597a5f97a5d9911"
+    }
+   ]
+  },
+  {
+   "part": "but",
+   "text": "This rests on 1 review.",
+   "uses": [
+    "DA"
+   ],
+   "fixed": true,
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "siefried_2020",
+     "where": "Abstract",
+     "quote": "We systematically reviewed the peer-reviewed literature via the electronic databases PubMed, EMBASE, CINAHL and SCOPUS for randomised controlled trials reported in the English language examining a pharmacological treatment for AMPH/MA dependence or use disorder.",
+     "sha": "52c293ffa599352e"
+    }
+   ]
+  },
+  {
+   "part": "how2",
+   "text": "A 2020 review of trials on dependence treatments notes methamphetamine is considered more potent and lasts longer than amphetamine.",
+   "uses": [
+    "DA",
+    "F2"
+   ],
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "siefried_2020",
+     "where": "Abstract",
+     "quote": "We systematically reviewed the peer-reviewed literature via the electronic databases PubMed, EMBASE, CINAHL and SCOPUS for randomised controlled trials reported in the English language examining a pharmacological treatment for AMPH/MA dependence or use disorder.",
+     "sha": "52c293ffa599352e"
+    },
+    {
+     "label": "F2",
+     "ref": "siefried_2020",
+     "where": "Introduction",
+     "quote": "MA is considered a more potent derivative of AMPH, with a longer duration of action and increased ability to cross the blood–brain barrier",
+     "sha": "318f7d82df1c6d97"
+    }
+   ],
+   "quote": "MA is considered a more potent derivative of AMPH, with a longer duration of action",
+   "quote_ref": "siefried_2020"
+  },
+  {
+   "part": "how3",
+   "text": "The same review says the two drugs have similar chemical structures and behavioural, psychological, and physical effects.",
+   "uses": [
+    "F3"
+   ],
+   "rests_on": [
+    {
+     "label": "F3",
+     "ref": "siefried_2020",
+     "where": "Discussion › Limitations",
+     "quote": "because of the similarities in chemical structure and behavioural, psychological and physical effects of AMPH and MA, we have included studies of AMPH and MA",
+     "sha": "a597a5f97a5d9911"
+    }
+   ],
+   "quote": "psychological and physical effects of AMPH and MA, we have included studies of AMPH",
+   "quote_ref": "siefried_2020"
+  }
+ ],
  "complete": false,
- "missing": "",
+ "missing": "a paper that stands nearer the question could not be read",
  "wanted": [
   {
    "doi": "10.1007/bf03033567",
@@ -428,6 +294,14 @@
    "why": "the second reader did not accept the answer",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-28",
+   "lane": 19,
+   "status": "none",
+   "why": "the second reader did not accept the answer",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -441,6 +315,12 @@
     {
      "kind": "limit",
      "text": "",
+     "quote": "MA and AMPH may be knowingly or unknowingly consumed or co-consumed in uncertain concentrations, with variability over time and place.",
+     "why": "no sentence"
+    },
+    {
+     "kind": "limit",
+     "text": "",
      "quote": "there is little data on which to assess whether there are distinct differences in use disorders due to these two substances; further assessment is required.",
      "why": "no sentence"
     }
@@ -451,7 +331,22 @@
    "read": "full",
    "kind": "review",
    "at": "10.1155/2020/8874304",
-   "kept": 1,
+   "kept": 0,
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "Review paper on methamphetamine-induced neurotoxicity and antioxidant mechanisms",
+     "quote": "Methamphetamine is a derivative of amphetamines, a highly addictive central stimulant with multiple systemic toxicity including the brain, heart, liver, lung, and spleen.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
+  },
+  {
+   "title": "Recent advances in methamphetamine neurotoxicity mechanisms and its molecular pathophysiology",
+   "read": "full",
+   "kind": "review",
+   "at": "10.1155/2015/103969",
+   "kept": 2,
    "thrown": []
   },
   {
@@ -476,14 +371,7 @@
    "kind": "official",
    "at": "https://adf.org.au/drug-facts/amphetamines/",
    "kept": 2,
-   "thrown": [
-    {
-     "kind": "limit",
-     "text": "Amphetamines affect people differently based on various factors.",
-     "quote": "Amphetamines can affect everyone differently, based on: size, weight and health; whether the person is used to taking it; whether other drugs are taken around the same time; the amount taken; the stre",
-     "why": "the sentence is not carried by its quote and passage"
-    }
-   ]
+   "thrown": []
   },
   {
    "title": "Methamphetamine Hydrochloride",
@@ -498,30 +386,27 @@
    "read": "page",
    "kind": "official",
    "at": "https://www.camh.ca/en/health-info/mental-illness-and-addiction-index/amphetamines",
-   "kept": 2,
+   "kept": 3,
    "thrown": []
   }
  ],
  "plan": {
   "short": [
-   "F1",
-   "F2"
+   "F2",
+   "F3",
+   "F8",
+   "F1"
   ],
-  "direct": "Yes",
-  "but": [
-   "F2"
-  ],
+  "direct": "It depends",
+  "but": [],
   "how": [
    [
-    "F7"
+    "F8"
    ],
    [
     "DA",
-    "F1",
-    "F2"
-   ],
-   [
-    "F6"
+    "F2",
+    "F3"
    ]
   ],
   "unanswered": ""
@@ -530,50 +415,66 @@
   {
    "try": 1,
    "part": "how1",
-   "text": "Canada's Centre for Addiction and Mental Health, a teaching hospital says amphetamine and methamphetamine are both types of amphetamines.",
+   "text": "Canada's Centre for Addiction and Mental Health says amphetamine, methamphetamine, and dextroamphetamine are all stimulant drugs.",
    "rests_on": [
     {
-     "label": "F7",
+     "label": "F8",
      "ref": "camh_amphetamines",
      "where": "What is it?",
-     "quote": "Types of amphetamines: amphetamine, methamphetamine, dextroamphetamine.",
+     "quote": "Types of amphetamines: amphetamine, methamphetamine, dextroamphetamine. The different types of amphetamines—and related drugs such as methylphenidate (e.g., Ritalin)—are stimulant drugs.",
      "sha": "f62efd8c6b87b5e6"
     }
    ],
    "by": "a rule",
-   "said": "a rule: it says “both”, and the words it rests on carry no such word: say what the source says, in its own measure, or leave the word out"
+   "said": "a rule: it says “all”, and the words it rests on carry no such word: say what the source says, in its own measure, or leave the word out"
   },
   {
    "try": 2,
    "part": "how1",
-   "text": "Canada's Centre for Addiction and Mental Health, a teaching hospital says amphetamine and methamphetamine are both types of amphetamines.",
+   "text": "Canada's Centre for Addiction and Mental Health says amphetamine, methamphetamine, and dextroamphetamine are all stimulant drugs.",
    "rests_on": [
     {
-     "label": "F7",
+     "label": "F8",
      "ref": "camh_amphetamines",
      "where": "What is it?",
-     "quote": "Types of amphetamines: amphetamine, methamphetamine, dextroamphetamine.",
+     "quote": "Types of amphetamines: amphetamine, methamphetamine, dextroamphetamine. The different types of amphetamines—and related drugs such as methylphenidate (e.g., Ritalin)—are stimulant drugs.",
      "sha": "f62efd8c6b87b5e6"
     }
    ],
    "by": "a rule",
-   "said": "a rule: it says “both”, and the words it rests on carry no such word: say what the source says, in its own measure, or leave the word out"
+   "said": "a rule: it says “all”, and the words it rests on carry no such word: say what the source says, in its own measure, or leave the word out"
   },
   {
    "try": 3,
    "part": "how1",
-   "text": "Canada's Centre for Addiction and Mental Health, a teaching hospital says amphetamine and methamphetamine are both types of amphetamines.",
+   "text": "Canada's Centre for Addiction and Mental Health says amphetamine, methamphetamine, and dextroamphetamine are all stimulant drugs.",
    "rests_on": [
     {
-     "label": "F7",
+     "label": "F8",
      "ref": "camh_amphetamines",
      "where": "What is it?",
-     "quote": "Types of amphetamines: amphetamine, methamphetamine, dextroamphetamine.",
+     "quote": "Types of amphetamines: amphetamine, methamphetamine, dextroamphetamine. The different types of amphetamines—and related drugs such as methylphenidate (e.g., Ritalin)—are stimulant drugs.",
      "sha": "f62efd8c6b87b5e6"
     }
    ],
    "by": "a rule",
-   "said": "a rule: it says “both”, and the words it rests on carry no such word: say what the source says, in its own measure, or leave the word out"
+   "said": "a rule: it says “all”, and the words it rests on carry no such word: say what the source says, in its own measure, or leave the word out"
+  },
+  {
+   "try": 3,
+   "part": "but",
+   "text": "The review looked at treatments for dependence, not how the drugs feel or act in people.",
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "siefried_2020",
+     "where": "Abstract",
+     "quote": "We systematically reviewed the peer-reviewed literature via the electronic databases PubMed, EMBASE, CINAHL and SCOPUS for randomised controlled trials reported in the English language examining a pharmacological treatment for AMPH/MA dependence or use disorder.",
+     "sha": "52c293ffa599352e"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The abstract describes a review of treatment trials and treatment-related outcomes, but it does not say the review did not address how the drugs feel or act in people."
   }
  ],
  "panel_gap": [],
@@ -581,16 +482,16 @@
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.7667,
-   "but": 0.7597,
-   "how2": 0.9772,
-   "how3": 0.0632
+   "short": 0.6846,
+   "but": 0.1259,
+   "how2": 0.5495,
+   "how3": 0.8297
   },
   "scores_quotes_alone": {
-   "short": 0.4551,
-   "but": 0.6847,
-   "how2": 0.9525,
-   "how3": 0.1282
+   "short": 0.3832,
+   "but": 0.1243,
+   "how2": 0.1642,
+   "how3": 0.6463
   }
  },
  "tries": [
@@ -600,46 +501,44 @@
    "parts": [
     {
      "part": "short",
-     "text": "Yes. Methamphetamine is considered a more potent derivative of amphetamine, with a longer duration of action and increased ability to cross the blood-brain barrier.",
+     "text": "It depends. Methamphetamine is considered a more potent form of amphetamine that lasts longer and crosses into the brain more easily, but they share similar effects.",
      "rests_on": [
       {
-       "label": "F1",
+       "label": "F2",
        "ref": "siefried_2020",
        "where": "Introduction",
-       "quote": "Amphetamines refer to both amphetamine (AMPH) and the structurally similar methamphetamines (MA), both of which are used extra-medically.",
+       "quote": "MA is considered a more potent derivative of AMPH, with a longer duration of action and increased ability to cross the blood–brain barrier",
        "sha": "318f7d82df1c6d97"
       },
       {
-       "label": "F2",
+       "label": "F3",
        "ref": "siefried_2020",
-       "where": "Introduction",
-       "quote": "MA is considered a more potent derivative of AMPH, with a longer duration of action and increased ability to cross the blood–brain barrier",
-       "sha": "318f7d82df1c6d97"
+       "where": "Discussion › Limitations",
+       "quote": "because of the similarities in chemical structure and behavioural, psychological and physical effects of AMPH and MA, we have included studies of AMPH and MA",
+       "sha": "a597a5f97a5d9911"
       }
      ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "the word it opens with (“Yes”) is not the answer the passages bear out: “Yes” is too definite for the passage, which describes the drugs as structurally similar while also identifying differences; “Somewhat” would be fairer. Sentence 1 dire"
+     "ok": true
     },
     {
      "part": "but",
-     "text": "This holds for methamphetamine as a derivative of amphetamine.",
+     "text": "This is a review of trials, not a direct comparison of how the two drugs feel or act in people.",
      "rests_on": [
       {
-       "label": "F2",
+       "label": "DA",
        "ref": "siefried_2020",
-       "where": "Introduction",
-       "quote": "MA is considered a more potent derivative of AMPH, with a longer duration of action and increased ability to cross the blood–brain barrier",
-       "sha": "318f7d82df1c6d97"
+       "where": "Abstract",
+       "quote": "We systematically reviewed the peer-reviewed literature via the electronic databases PubMed, EMBASE, CINAHL and SCOPUS for randomised controlled trials reported in the English language examining a pharmacological treatment for AMPH/MA dependence or use disorder.",
+       "sha": "52c293ffa599352e"
       }
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "it is about something else than the short answer (“Yes” is too definite for the passage, which describes the drugs as structurally similar while also identifying differences; “Somewhat” would be fairer. Sentence 1 directly addresses the comparison. Sentence 2 restates the derivative relati)"
+     "said": "The passage says the review examined randomized trials of pharmacological treatments; it does not say the review was not a direct comparison of how the drugs feel or act in people."
     },
     {
      "part": "how2",
-     "text": "A systematic review of randomized controlled trials examined pharmacological treatments for amphetamine or methamphetamine dependence.",
+     "text": "A 2020 review of trials found methamphetamine is considered more potent, lasts longer, and crosses the blood-brain barrier more easily than amphetamine.",
      "rests_on": [
       {
        "label": "DA",
@@ -649,13 +548,6 @@
        "sha": "52c293ffa599352e"
       },
       {
-       "label": "F1",
-       "ref": "siefried_2020",
-       "where": "Introduction",
-       "quote": "Amphetamines refer to both amphetamine (AMPH) and the structurally similar methamphetamines (MA), both of which are used extra-medically.",
-       "sha": "318f7d82df1c6d97"
-      },
-      {
        "label": "F2",
        "ref": "siefried_2020",
        "where": "Introduction",
@@ -663,18 +555,20 @@
        "sha": "318f7d82df1c6d97"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "the second reader",
+     "said": "The potency, duration, and blood-brain-barrier claim appears in the review’s introduction. The passages do not say the reviewed trials found it."
     },
     {
      "part": "how3",
-     "text": "Australia's Alcohol and Drug Foundation says crystal methamphetamine is a potent form of amphetamines.",
+     "text": "The same review notes the two drugs have similar chemical structures and similar behavioural, psychological, and physical effects.",
      "rests_on": [
       {
-       "label": "F6",
-       "ref": "adf_amphetamines",
-       "where": "What are amphetamines?",
-       "quote": "The most potent form is crystal methamphetamine (ice).",
-       "sha": "214569e78967c5d1"
+       "label": "F3",
+       "ref": "siefried_2020",
+       "where": "Discussion › Limitations",
+       "quote": "because of the similarities in chemical structure and behavioural, psychological and physical effects of AMPH and MA, we have included studies of AMPH and MA",
+       "sha": "a597a5f97a5d9911"
       }
      ],
      "ok": true
@@ -687,46 +581,28 @@
    "parts": [
     {
      "part": "short",
-     "text": "Yes. Methamphetamine is considered a more potent derivative of amphetamine, with a longer duration of action and increased ability to cross the blood-brain barrier.",
+     "text": "It depends. Methamphetamine is considered a more potent form of amphetamine that lasts longer and crosses into the brain more easily, but they share similar effects.",
      "rests_on": [
       {
-       "label": "F1",
+       "label": "F2",
        "ref": "siefried_2020",
        "where": "Introduction",
-       "quote": "Amphetamines refer to both amphetamine (AMPH) and the structurally similar methamphetamines (MA), both of which are used extra-medically.",
+       "quote": "MA is considered a more potent derivative of AMPH, with a longer duration of action and increased ability to cross the blood–brain barrier",
        "sha": "318f7d82df1c6d97"
       },
       {
-       "label": "F2",
+       "label": "F3",
        "ref": "siefried_2020",
-       "where": "Introduction",
-       "quote": "MA is considered a more potent derivative of AMPH, with a longer duration of action and increased ability to cross the blood–brain barrier",
-       "sha": "318f7d82df1c6d97"
+       "where": "Discussion › Limitations",
+       "quote": "because of the similarities in chemical structure and behavioural, psychological and physical effects of AMPH and MA, we have included studies of AMPH and MA",
+       "sha": "a597a5f97a5d9911"
       }
      ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "the word it opens with (“Yes”) is not the answer the passages bear out: A qualified answer such as “Partly” is fair: the passage describes methamphetamine as related to amphetamine but considered more potent, longer-lasting, and more able t"
+     "ok": true
     },
     {
      "part": "but",
-     "text": "This holds for methamphetamine as a derivative of amphetamine, with a longer duration of action and increased ability to cross the blood-brain barrier.",
-     "rests_on": [
-      {
-       "label": "F2",
-       "ref": "siefried_2020",
-       "where": "Introduction",
-       "quote": "MA is considered a more potent derivative of AMPH, with a longer duration of action and increased ability to cross the blood–brain barrier",
-       "sha": "318f7d82df1c6d97"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "it is about something else than the short answer (A qualified answer such as “Partly” is fair: the passage describes methamphetamine as related to amphetamine but considered more potent, longer-lasting, and more able to cross the blood-brain barrier, so a flat “Yes” overstates the answer. )"
-    },
-    {
-     "part": "how2",
-     "text": "A systematic review of randomized controlled trials examined pharmacological treatments for amphetamine or methamphetamine dependence.",
+     "text": "The review looked at treatments for dependence, not how the drugs feel or act in people.",
      "rests_on": [
       {
        "label": "DA",
@@ -734,13 +610,22 @@
        "where": "Abstract",
        "quote": "We systematically reviewed the peer-reviewed literature via the electronic databases PubMed, EMBASE, CINAHL and SCOPUS for randomised controlled trials reported in the English language examining a pharmacological treatment for AMPH/MA dependence or use disorder.",
        "sha": "52c293ffa599352e"
-      },
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages say the review examined pharmacological treatments and treatment-related outcomes, but do not say it excluded how the drugs feel or act in people."
+    },
+    {
+     "part": "how2",
+     "text": "A 2020 review of trials for dependence says methamphetamine is considered more potent, lasts longer, and crosses into the brain more easily.",
+     "rests_on": [
       {
-       "label": "F1",
+       "label": "DA",
        "ref": "siefried_2020",
-       "where": "Introduction",
-       "quote": "Amphetamines refer to both amphetamine (AMPH) and the structurally similar methamphetamines (MA), both of which are used extra-medically.",
-       "sha": "318f7d82df1c6d97"
+       "where": "Abstract",
+       "quote": "We systematically reviewed the peer-reviewed literature via the electronic databases PubMed, EMBASE, CINAHL and SCOPUS for randomised controlled trials reported in the English language examining a pharmacological treatment for AMPH/MA dependence or use disorder.",
+       "sha": "52c293ffa599352e"
       },
       {
        "label": "F2",
@@ -754,101 +639,14 @@
     },
     {
      "part": "how3",
-     "text": "Australia's Alcohol and Drug Foundation says crystal methamphetamine is a potent form of amphetamines.",
+     "text": "The same review notes that amphetamine and methamphetamine have similar chemical structures and effects on behavior and body.",
      "rests_on": [
       {
-       "label": "F6",
-       "ref": "adf_amphetamines",
-       "where": "What are amphetamines?",
-       "quote": "The most potent form is crystal methamphetamine (ice).",
-       "sha": "214569e78967c5d1"
-      }
-     ],
-     "ok": true
-    }
-   ]
-  },
-  {
-   "try": 3,
-   "why": "the last draft: no answer",
-   "parts": [
-    {
-     "part": "short",
-     "text": "Yes. Methamphetamine is considered a more potent derivative of amphetamine, with a longer duration of action and increased ability to cross the blood-brain barrier.",
-     "rests_on": [
-      {
-       "label": "F1",
+       "label": "F3",
        "ref": "siefried_2020",
-       "where": "Introduction",
-       "quote": "Amphetamines refer to both amphetamine (AMPH) and the structurally similar methamphetamines (MA), both of which are used extra-medically.",
-       "sha": "318f7d82df1c6d97"
-      },
-      {
-       "label": "F2",
-       "ref": "siefried_2020",
-       "where": "Introduction",
-       "quote": "MA is considered a more potent derivative of AMPH, with a longer duration of action and increased ability to cross the blood–brain barrier",
-       "sha": "318f7d82df1c6d97"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "the word it opens with (“Yes”) is not the answer the passages bear out: A flat “Yes” is not fair: the review says methamphetamine is considered more potent and lasts longer, rather than making an unqualified claim. A qualified opening such "
-    },
-    {
-     "part": "but",
-     "text": "This holds for methamphetamine as a derivative of amphetamine.",
-     "rests_on": [
-      {
-       "label": "F2",
-       "ref": "siefried_2020",
-       "where": "Introduction",
-       "quote": "MA is considered a more potent derivative of AMPH, with a longer duration of action and increased ability to cross the blood–brain barrier",
-       "sha": "318f7d82df1c6d97"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "it is about something else than the short answer (A flat “Yes” is not fair: the review says methamphetamine is considered more potent and lasts longer, rather than making an unqualified claim. A qualified opening such as “In some ways” would be fair. Sentence 2 restates the derivative rela)"
-    },
-    {
-     "part": "how2",
-     "text": "A systematic review of randomized controlled trials examined pharmacological treatments for amphetamine or methamphetamine dependence.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "siefried_2020",
-       "where": "Abstract",
-       "quote": "We systematically reviewed the peer-reviewed literature via the electronic databases PubMed, EMBASE, CINAHL and SCOPUS for randomised controlled trials reported in the English language examining a pharmacological treatment for AMPH/MA dependence or use disorder.",
-       "sha": "52c293ffa599352e"
-      },
-      {
-       "label": "F1",
-       "ref": "siefried_2020",
-       "where": "Introduction",
-       "quote": "Amphetamines refer to both amphetamine (AMPH) and the structurally similar methamphetamines (MA), both of which are used extra-medically.",
-       "sha": "318f7d82df1c6d97"
-      },
-      {
-       "label": "F2",
-       "ref": "siefried_2020",
-       "where": "Introduction",
-       "quote": "MA is considered a more potent derivative of AMPH, with a longer duration of action and increased ability to cross the blood–brain barrier",
-       "sha": "318f7d82df1c6d97"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how3",
-     "text": "Australia's Alcohol and Drug Foundation says crystal methamphetamine is a potent form of amphetamines.",
-     "rests_on": [
-      {
-       "label": "F6",
-       "ref": "adf_amphetamines",
-       "where": "What are amphetamines?",
-       "quote": "The most potent form is crystal methamphetamine (ice).",
-       "sha": "214569e78967c5d1"
+       "where": "Discussion › Limitations",
+       "quote": "because of the similarities in chemical structure and behavioural, psychological and physical effects of AMPH and MA, we have included studies of AMPH and MA",
+       "sha": "a597a5f97a5d9911"
       }
      ],
      "ok": true
@@ -856,6 +654,10 @@
    ]
   }
  ],
+ "with_checked": {
+  "differs": [],
+  "same": []
+ },
  "place": {
   "home": "methamphetamine",
   "also": [

@@ -20,37 +20,41 @@
   "on": "2026-11-28",
   "models": {
    "reader": "gemini:gemini-3.5-flash-lite",
-   "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+   "writer": "groq:qwen/qwen3.8-27b",
    "checker": "openrouter:openai/gpt-6-luna",
    "planner": "groq:openai/gpt-oss-120b",
-   "team": "team B",
-   "reader_2": "groq:openai/gpt-oss-20b",
+   "also1": "gemini:gemini-3.5-flash-lite",
+   "also2": "gemini:gemini-3.6-flash",
+   "team": "team I",
+   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
    "reader_3": "openrouter:openai/gpt-oss-120b",
-   "reader_first": "@cf/meta/llama-4-scout-17b-16e-instruct"
+   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "46088120921",
+  "run": "46135719216",
   "read_by": {
-   "gemini-3.5-flash-lite": 4,
-   "llama-4-scout-17b-16e-instruct": 2
+   "gemini-3.5-flash-lite": 3,
+   "gemini-3.1-flash-lite": 2,
+   "gpt-oss-20b": 1
   },
-  "read_seconds": 52,
+  "read_seconds": 36,
   "from": {
    "papers": 2,
    "summaries": 2,
    "official": 2
   },
-  "neurons": 565.4,
-  "seconds": 127
+  "neurons": 0.0,
+  "seconds": 133
  },
  "status": "none",
- "why": "the second reader did not accept the answer",
+ "why": "the answer was not accepted: a further reader (gemini-3.6-flash) did not accept it: The passages mention 'cognitive empathy', but they do not state that this means 'the ability to read what others feel'.",
  "gates": {
-  "reader": "llama-4-scout-17b-16e-instruct could not read on (the model service could not be reached: The read operation timed out): gemini-3.5-flash-lite read from there",
-  "read": "14 findings kept from 6 sources (2 papers read in full, 2 official pages, 2 papers read in summary); 5 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "read": "13 findings kept from 6 sources (2 papers read in full, 2 official pages, 2 papers read in summary); 3 thrown away (the quote was not in the passage, or a number was not in the quote)",
   "sources": "0 review(s) or meta-analyses, 2 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 2 official page(s), 2 paper(s) read in summary only",
-  "told": "the writer was told what the readers said of the last draft that was not accepted: the short answer “Yes, people who use MDMA report feeling more empathetic and it increases emotional empathy in studies.”: The passages say MDMA increases empathy, but they do not say it increases emotional empathy in studies; that specific finding is not stated in these passages. | the But “This ma",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.39, but 0.23, how1 0.11, how2 0.97, how3 0.81, how4 0.97",
-  "check": "short: NOT accepted: The sentence presents increased empathy and emotional connection as an unqualified general fact. The editor's note requires distinguishing reported feelings from the placebo-controlled finding of increased emotional, but not cognitive, empa; but: NOT accepted: it is about something else than the short answer (A qualified answer is fair, not “Yes”: the passages report feelings of connection and describe increased emotional empathy, but do not establish that people are more loving rather than feeling that way. Sentence 2 concerns possible mechanis); how1: NOT accepted: The passage says MDMA can have varied effects that typically include heightened empathy; it does not establish that MDMA causes this effect as stated. The passage also does not identify Drug Science as a UK charity of scientists.; how2: NOT accepted: The passage narrows this to affection for people users are with and strangers around them; “others” leaves out that narrowing.; how3: accepted; how4: accepted"
+  "told": "the writer was told what the readers said of the last draft that was not accepted: the short answer “Yes, MDMA increases empathy and emotional connection, and people who use it often feel love and affection for others.”: The sentence presents increased empathy and emotional connection as an unqualified general fact. The editor's note requires distinguishing reported feelings from ",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.22, but 0.20, how1 0.05, how2 0.80, how3 0.98, how4 0.60",
+  "check": "short: NOT accepted: a further reader (gemini-3.6-flash) did not accept it: The passages mention 'cognitive empathy', but they do not state that this means 'the ability to read what others feel'.; but: NOT accepted: a further reader (gemini-3.6-flash) did not accept it: The passage discusses peripheral vs. central levels and plasma vs. CSF concentrations, but it does not specifically state 'blood' or 'in the brain'.; how1: NOT accepted: The passage does not identify Drug Science as a UK charity of scientists. It also describes effects that vary between people and are typically reported, rather than making the unqualified claim that MDMA causes them.; how2: NOT accepted: The passage connects emotional bonding to oxytocin’s rise alongside higher serotonin, but it does not say these levels are in the brain or describe oxytocin’s role as merely possible.; how3: accepted; how4: accepted",
+  "panel": "further readers, each of which must accept every sentence too: gemini-3.5-flash-lite accepted 5 of 6; gemini-3.6-flash accepted 2 of 6"
  },
  "sources": [
   {
@@ -127,39 +131,43 @@
     "This work was supported by the Netherlands Organization for Scientific Research (NWO), Grant number: 400-07-2013, awarded to JR and KK. The funders had no role in study design, data collection and analysis, decision to publish, or preparation of the manuscript.",
     "The authors would like to thank A. Kus, J. Schmidt, A. M. C. van Oers, C.-S. Kind, R. Scharf, L. W. Wesseldijk, R. M. van der Hoeven for helping out with the data collection, and C van Leeuwen for the medical supervision."
    ],
-   "design": {
-    "passage": 1,
-    "where": "Abstract",
-    "quote": "The design was placebo-controlled within-subject with 4 treatment conditions: MDMA (75 mg), with or without pindolol (20 mg), oxytocin nasal spray (40 IU+16 IU) or placebo. Participants were 20 healthy poly-drug MDMA users, aged between 18–26 years.",
-    "text": "placebo-controlled within-subject study of 20 healthy poly-drug MDMA users aged 18-26 years"
-   },
+   "design": null,
    "findings": [
+    {
+     "passage": 75,
+     "where": "Discussion",
+     "quote": "MDMA selectively enhances emotional empathy in humans.",
+     "text": "MDMA selectively enhances emotional empathy in humans.",
+     "id": "F1",
+     "second_hand": ""
+    },
     {
      "passage": 1,
      "where": "Abstract",
-     "quote": "Results showed that MDMA selectively affected emotional empathy and left cognitive empathy, trust and reciprocity unaffected.",
-     "text": "MDMA selectively affected emotional empathy and left cognitive empathy, trust and reciprocity unaffected.",
-     "id": "F1",
+     "quote": "left cognitive empathy, trust and reciprocity unaffected.",
+     "text": "MDMA does not affect cognitive empathy, trust or reciprocity.",
+     "id": "F2",
      "second_hand": ""
     },
     {
      "passage": 42,
      "where": "Results › Empathy tests and questionnaires › MET",
-     "quote": "Further analyses showed that under the influence of pindolol+MDMA (pexplicit =.014; pimplicit =.007) or MDMA (pexplicit =.018; pimplicit =.007), participants felt more concerned and more aroused by the emotional content of the pictures compared with placebo.",
-     "text": "Under the influence of pindolol plus MDMA or MDMA alone, participants felt more concerned and more aroused by the emotional content of the pictures compared with placebo.",
-     "id": "F2",
-     "second_hand": ""
-    },
-    {
-     "passage": 64,
-     "where": "Discussion",
-     "quote": "Oxytocin did not affect objective measures of empathy and social interaction; however, oxytocin increased participants' perception of emotional empathy as measured by the IRI questionnaire.",
-     "text": "Oxytocin did not affect objective measures of empathy and social interaction, but increased participants' perception of emotional empathy as measured by the IRI questionnaire.",
+     "quote": "a significant effect on Implicit (p =.026) Emotional Empathy.",
+     "text": "MDMA produces a significant increase in implicit emotional empathy.",
      "id": "F3",
      "second_hand": ""
     }
    ],
-   "limits": [],
+   "limits": [
+    {
+     "passage": 74,
+     "where": "Discussion",
+     "quote": "use of peripheral measures of oxytocin as it has been shown recently that there is a substantial lag of 60 minutes between the oxytocin peak at peripheral level and that at central level.",
+     "text": "Peripheral oxytocin measurements may not reflect central oxytocin activity due to a lag between peripheral and central peaks.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
    "tag": "A"
   },
   {
@@ -227,31 +235,31 @@
    "design": {
     "passage": 1,
     "where": "Abstract",
-    "quote": "Participants (n = 118) from six placebo-controlled within-subject studies",
-    "text": "A pooled sample of placebo-controlled studies"
+    "quote": "Participants (n = 118) from six placebo-controlled within-subject studies and two laboratories were included in the present pooled analysis.",
+    "text": "Pooled analysis of placebo-controlled studies on healthy volunteers"
    },
    "findings": [
     {
      "passage": 1,
      "where": "Abstract",
-     "quote": "MDMA increased emotional empathy at both doses without affecting cognitive empathy",
-     "text": "MDMA increased emotional empathy in people at both doses without affecting cognitive empathy.",
+     "quote": "We confirmed that MDMA increased emotional empathy at both doses without affecting cognitive empathy.",
+     "text": "MDMA increased emotional empathy at both doses without affecting cognitive empathy.",
      "id": "F4",
      "second_hand": ""
     },
     {
-     "passage": 32,
-     "where": "Discussion",
-     "quote": "MDMA enhanced both explicit and implicit EE, and this effect was especially evident for the positively valenced stimuli",
-     "text": "MDMA made people more emotionally empathetic, especially for positive emotions.",
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "This MDMA-related increase in empathy was most pronounced during presentation of positive emotions as compared with negative emotions.",
+     "text": "This MDMA-related increase in empathy was most pronounced during presentation of positive emotions as compared with negative emotions.",
      "id": "F5",
      "second_hand": ""
     },
     {
-     "passage": 33,
-     "where": "Discussion",
-     "quote": "MDMA appears to induce its empathogenic response repeatedly and irrespective of previous use",
-     "text": "MDMA's effect on emotional empathy in people happens repeatedly, regardless of previous MDMA use.",
+     "passage": 28,
+     "where": "Results › Correlations › MET, MDMA blood concentrations and MDMA dose (mg/kg)",
+     "quote": "concern for positive emotions (r110 = 0.26; p = 0.005) and arousal for positive emotions (r110 = 0.20; p = 0.04) increased with increasing MDMA concentrations.",
+     "text": "Concern for positive emotions and arousal for positive emotions increased with increasing MDMA concentrations.",
      "id": "F6",
      "second_hand": ""
     }
@@ -260,9 +268,9 @@
     {
      "passage": 33,
      "where": "Discussion",
-     "quote": "we did not include subjects with excessively high MDMA use as the range of previous use was 0 to 100 times",
-     "text": "The study did not include people with very high MDMA use (over 100 times).",
-     "id": "L1",
+     "quote": "However, it is important to note that we did not include subjects with excessively high MDMA use as the range of previous use was 0 to 100 times.",
+     "text": "The study did not include subjects with excessively high MDMA use as the range of previous use was 0 to 100 times.",
+     "id": "L2",
      "second_hand": ""
     }
    ],
@@ -316,38 +324,21 @@
     {
      "passage": 7,
      "where": "Mixing ecstasy with other drugs / How does it make you feel?",
-     "quote": "users often feel love and affection for the people they're with and the strangers around them",
-     "text": "People who use ecstasy often feel love and affection for the people they're with and the strangers around them.",
+     "quote": "‘loved up’ – users often feel love and affection for the people they're with and the strangers around them",
+     "text": "People who use ecstasy often feel love and affection for the people they are with and for strangers.",
      "id": "F7",
-     "second_hand": ""
-    },
-    {
-     "passage": 7,
-     "where": "Mixing ecstasy with other drugs / How does it make you feel?",
-     "quote": "Most people feel: very happy – hence the name; ‘loved up’",
-     "text": "Most people who use ecstasy feel very happy and 'loved up'.",
-     "id": "F8",
      "second_hand": ""
     },
     {
      "passage": 8,
      "where": "Mixing ecstasy with other drugs / How does it make people behave?",
-     "quote": "Lots of people feel very chatty and uninhibited on ecstasy, which makes them open up and talk about things they might not do normally",
-     "text": "Lots of people who use ecstasy feel very chatty and uninhibited, which makes them open up and talk about things they might not do normally.",
-     "id": "F9",
+     "quote": "Lots of people feel very chatty and uninhibited on ecstasy, which makes them open up and talk about things they might not do normally.",
+     "text": "People who use ecstasy often feel very chatty and uninhibited, which leads them to talk about things they might not normally discuss.",
+     "id": "F8",
      "second_hand": ""
     }
    ],
-   "limits": [
-    {
-     "passage": 7,
-     "where": "Mixing ecstasy with other drugs / How does it make you feel?",
-     "quote": "Some users have reported feelings of: anxiety; panic attacks; confused episodes; paranoia and even psychosis after taking ecstasy",
-     "text": "Some people who use ecstasy may experience negative effects such as anxiety, panic attacks, and psychosis.",
-     "id": "L2",
-     "second_hand": ""
-    }
-   ],
+   "limits": [],
    "tag": "C"
   },
   {
@@ -399,24 +390,24 @@
      "passage": 10,
      "where": "How might the drug make you feel?",
      "quote": "A vastly heightened sense of empathy and emotional connection with others. Perhaps the principle effect of the drug which most users report feeling. A direct consequence of the heightened levels of serotonin and possibly oxytocin in the brain.",
-     "text": "MDMA causes a vastly heightened sense of empathy and emotional connection with others as a direct consequence of heightened levels of serotonin and possibly oxytocin in the brain.",
-     "id": "F10",
+     "text": "MDMA causes a vastly heightened sense of empathy and emotional connection with others, which is a direct consequence of heightened levels of serotonin and possibly oxytocin in the brain.",
+     "id": "F9",
      "second_hand": ""
     },
     {
      "passage": 4,
      "where": "What is the science of MDMA?",
      "quote": "Oxytocin is the hormone most closely associated with love and emotional bonding, and its rise, alongside higher serotonin, is thought to be a big part of why users feel so much more emotionally connected to people around them while under the influence.",
-     "text": "The rise of oxytocin alongside higher serotonin is thought to be a big part of why users feel so much more emotionally connected to people around them while under the influence.",
-     "id": "F11",
+     "text": "The rise of oxytocin, which is the hormone most closely associated with love and emotional bonding, alongside higher serotonin, is thought to be a big part of why people who use the drug feel so much more emotionally connected to people around them while under the influence.",
+     "id": "F10",
      "second_hand": ""
     },
     {
      "passage": 4,
      "where": "What is the science of MDMA?",
      "quote": "Controlled research backs this up directly, finding that MDMA increases blood oxytocin (along with cortisol and prolactin) and measurably reduces activity in the brain's threat-detection centre, the amygdala",
-     "text": "Controlled research finds that MDMA increases blood oxytocin and measurably reduces activity in the brain's threat-detection centre, the amygdala.",
-     "id": "F12",
+     "text": "Controlled research backs this up directly by finding that MDMA increases blood oxytocin and measurably reduces activity in the brain's threat-detection centre, the amygdala.",
+     "id": "F11",
      "second_hand": ""
     }
    ],
@@ -477,8 +468,8 @@
      "passage": 1,
      "where": "Summary",
      "quote": "Ecstasy leads to feelings of euphoria, emotional empathy, and increased energy.",
-     "text": "Ecstasy leads to emotional empathy.",
-     "id": "F13",
+     "text": "Ecstasy leads to feelings of euphoria, emotional empathy, and increased energy.",
+     "id": "F12",
      "second_hand": ""
     }
    ],
@@ -549,15 +540,15 @@
     "passage": 1,
     "where": "Summary",
     "quote": "The aim of this review is to present the main interindividual determinants in MDMA pharmacodynamics.",
-    "text": "a review of the main interindividual determinants in MDMA pharmacodynamics"
+    "text": "a review presenting main interindividual determinants in MDMA pharmacodynamics"
    },
    "findings": [
     {
      "passage": 1,
      "where": "Summary",
      "quote": "MDMA produces characteristic amphetamine-like actions (euphoria, well-being), increases empathy, and induces pro-social effects that seem to motivate its recreational consumption and provide a basis for its potential therapeutic use.",
-     "text": "MDMA increases empathy and induces pro-social effects that appear to motivate its recreational consumption and provide a basis for its potential therapeutic use.",
-     "id": "F14",
+     "text": "MDMA increases empathy and induces pro-social effects along with producing euphoria and well-being.",
+     "id": "F13",
      "second_hand": ""
     }
    ],
@@ -566,7 +557,7 @@
      "passage": 2,
      "where": "Summary",
      "quote": "Very limited data on the relationship between race-ethnicity and MDMA effects are available.",
-     "text": "Very limited data are available on the relationship between race-ethnicity and MDMA effects.",
+     "text": "There are very limited data available on the relationship between race-ethnicity and the effects of MDMA.",
      "id": "L3",
      "second_hand": ""
     }
@@ -576,7 +567,7 @@
  ],
  "parts": [],
  "complete": false,
- "missing": "whether the increased empathy lasts after the drug wears off",
+ "missing": "whether the increased empathy persists after the drug wears off",
  "wanted": [
   {
    "doi": "10.2215/cjn.02080508",
@@ -633,6 +624,14 @@
    "why": "the second reader did not accept the answer",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-28",
+   "lane": 19,
+   "status": "none",
+   "why": "the second reader did not accept the answer",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -644,22 +643,16 @@
    "kept": 3,
    "thrown": [
     {
-     "kind": "finding",
-     "text": "MDMA at 75 mg selectively enhances emotional empathy in humans.",
-     "quote": "It was concluded that MDMA (75 mg) selectively enhances emotional empathy in humans.",
-     "why": "it holds an amount or a time between uses"
+     "kind": "text",
+     "text": "placebo-controlled within-subject study of 20 healthy poly-drug MDMA users aged 18–26",
+     "quote": "The design was placebo-controlled within-subject with 4 treatment conditions: MDMA (75 mg), with or without pindolol (20 mg), oxytocin nasal spray (40 IU+16 IU) or placebo.",
+     "why": "a number of the sentence is not in its quote"
     },
     {
      "kind": "limit",
-     "text": "",
-     "quote": "A potential limitation of the present study is that only single doses of the each drug were given and it is known that different doses can produce different subjective and behavioural effects",
-     "why": "no sentence"
-    },
-    {
-     "kind": "limit",
-     "text": "",
-     "quote": "The dose of MDMA used in the present study, i.e. 75 mg equals a 1.07 mg/kg dose, which lies in the range usually used in this type of research e.g.: 0.75–1.89 mg/kg,,, but more to the lower end. It is",
-     "why": "no sentence"
+     "text": "The study used only a single dose of each drug, limiting generalizability across doses.",
+     "quote": "only single doses of the each drug were given",
+     "why": "the sentence is not carried by its quote and passage"
     }
    ]
   },
@@ -669,21 +662,14 @@
    "kind": "other",
    "at": "10.1177/0269881117699617",
    "kept": 3,
-   "thrown": [
-    {
-     "kind": "limit",
-     "text": "Previous studies, not this one, found sex differences in subjective responses to MDMA.",
-     "quote": "previous studies found stronger positive and especially negative subjective responses to MDMA in women than men at doses adjusted for body weight",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
-    }
-   ]
+   "thrown": []
   },
   {
    "title": "Ecstasy",
    "read": "page",
    "kind": "official",
    "at": "https://www.talktofrank.com/drug/ecstasy",
-   "kept": 3,
+   "kept": 2,
    "thrown": []
   },
   {
@@ -703,8 +689,8 @@
    "thrown": [
     {
      "kind": "text",
-     "text": "a summary of a research paper",
-     "quote": "Ecstasy leads to feelings of euphoria, emotional empathy, and increased energy.",
+     "text": "A summary of a research paper regarding the effects of MDMA on the kidney.",
+     "quote": "Ecstasy (MDMA, 3,4-methylenedioxymethamphetamine) is commonly used by college-aged individuals. Ecstasy leads to feelings of euphoria, emotional empathy, and increased energy.",
      "why": "the sentence is not carried by its quote and passage"
     }
    ]
@@ -720,26 +706,25 @@
  ],
  "plan": {
   "short": [
-   "F10",
-   "F14"
+   "F9",
+   "F13"
   ],
-  "direct": "Yes",
+  "direct": "It can",
   "but": [
-   "F3"
+   "L1"
   ],
   "how": [
    [
+    "F9",
     "F10",
-    "F11",
-    "F12"
+    "F11"
    ],
    [
-    "F7",
-    "F8",
-    "F9"
+    "DF",
+    "F13"
    ],
    [
-    "F14"
+    "F1"
    ],
    [
     "F4",
@@ -747,27 +732,27 @@
     "F6"
    ]
   ],
-  "unanswered": "whether the increased empathy lasts after the drug wears off"
+  "unanswered": "whether the increased empathy persists after the drug wears off"
  },
  "panel_gap": [],
  "own": {
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.3909,
-   "but": 0.2308,
-   "how1": 0.1094,
-   "how2": 0.9688,
-   "how3": 0.8066,
-   "how4": 0.9747
+   "short": 0.2182,
+   "but": 0.2034,
+   "how1": 0.0461,
+   "how2": 0.8015,
+   "how3": 0.9781,
+   "how4": 0.5982
   },
   "scores_quotes_alone": {
-   "short": 0.7023,
-   "but": 0.0381,
-   "how1": 0.0374,
-   "how2": 0.9357,
-   "how3": 0.7047,
-   "how4": 0.9326
+   "short": 0.0591,
+   "but": 0.0814,
+   "how1": 0.0402,
+   "how2": 0.4182,
+   "how3": 0.9039,
+   "how4": 0.6898
   }
  },
  "tries": [
@@ -777,63 +762,61 @@
    "parts": [
     {
      "part": "short",
-     "text": "Yes, MDMA increases empathy and pro-social effects, and people who use it often feel love and affection for others.",
+     "text": "It can make people feel more empathic. In placebo-controlled studies, MDMA raised emotional empathy, but not cognitive empathy.",
      "rests_on": [
       {
-       "label": "F10",
+       "label": "F9",
        "ref": "drugscience_mdma",
        "where": "How might the drug make you feel?",
        "quote": "A vastly heightened sense of empathy and emotional connection with others. Perhaps the principle effect of the drug which most users report feeling. A direct consequence of the heightened levels of serotonin and possibly oxytocin in the brain.",
        "sha": "9eb185a31fd8c728"
       },
       {
-       "label": "F14",
+       "label": "F13",
        "ref": "papaseit_2018",
        "where": "Summary",
        "quote": "MDMA produces characteristic amphetamine-like actions (euphoria, well-being), increases empathy, and induces pro-social effects that seem to motivate its recreational consumption and provide a basis for its potential therapeutic use.",
        "sha": "0268a5b9bacb3a85"
       }
      ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passages support increased empathy and pro-social effects, and report heightened emotional connection, but they do not say that users often feel love and affection. This also repeats the kind of “loved up” claim the editor says to keep "
+     "ok": true
     },
     {
      "part": "but",
-     "text": "But oxytocin did not affect objective measures of empathy in a study.",
+     "text": "Peripheral oxytocin measurements may not reflect central oxytocin activity due to a lag between peaks.",
      "rests_on": [
       {
-       "label": "F3",
+       "label": "L1",
        "ref": "kuypers_2014",
        "where": "Discussion",
-       "quote": "Oxytocin did not affect objective measures of empathy and social interaction; however, oxytocin increased participants' perception of emotional empathy as measured by the IRI questionnaire.",
-       "sha": "da71fff315ce6d79"
+       "quote": "use of peripheral measures of oxytocin as it has been shown recently that there is a substantial lag of 60 minutes between the oxytocin peak at peripheral level and that at central level.",
+       "sha": "289b9626c93d4988"
       }
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "it is about something else than the short answer (A qualified opening such as “Partly” would be fair: the passages support increased emotional empathy, but do not establish that MDMA makes people more loving. Sentence 2 concerns oxytocin’s effect on objective empathy measures, not whether )"
+     "said": "it is about something else than the short answer (Sentence 1 directly answers the empathy part of the question with placebo-controlled findings. Sentence 2 concerns whether peripheral oxytocin measurements reflect central oxytocin activity; it does not qualify the empathy claim in sentence)"
     },
     {
      "part": "how1",
-     "text": "Drug Science, a UK charity of scientists says MDMA causes a heightened sense of empathy.",
+     "text": "Drug Science, a UK charity of scientists says MDMA causes a heightened sense of empathy and connection, linked to serotonin and possibly oxytocin.",
      "rests_on": [
       {
-       "label": "F10",
+       "label": "F9",
        "ref": "drugscience_mdma",
        "where": "How might the drug make you feel?",
        "quote": "A vastly heightened sense of empathy and emotional connection with others. Perhaps the principle effect of the drug which most users report feeling. A direct consequence of the heightened levels of serotonin and possibly oxytocin in the brain.",
        "sha": "9eb185a31fd8c728"
       },
       {
-       "label": "F11",
+       "label": "F10",
        "ref": "drugscience_mdma",
        "where": "What is the science of MDMA?",
        "quote": "Oxytocin is the hormone most closely associated with love and emotional bonding, and its rise, alongside higher serotonin, is thought to be a big part of why users feel so much more emotionally connected to people around them while under the influence.",
        "sha": "b159f53e04224baf"
       },
       {
-       "label": "F12",
+       "label": "F11",
        "ref": "drugscience_mdma",
        "where": "What is the science of MDMA?",
        "quote": "Controlled research backs this up directly, finding that MDMA increases blood oxytocin (along with cortisol and prolactin) and measurably reduces activity in the brain's threat-detection centre, the amygdala",
@@ -842,44 +825,21 @@
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "The passages do not identify Drug Science as a UK charity of scientists. They describe heightened empathy, but the sentence also repeats the kind of heightened-empathy wording the editor says to keep out."
+     "said": "The passages do not say Drug Science is a UK charity of scientists."
     },
     {
      "part": "how2",
-     "text": "FRANK says people who use ecstasy often feel love and affection for others.",
+     "text": "A 2018 review says MDMA increases empathy and pro-social effects, along with euphoria and well-being.",
      "rests_on": [
       {
-       "label": "F7",
-       "ref": "frank_ecstasy",
-       "where": "Mixing ecstasy with other drugs / How does it make you feel?",
-       "quote": "users often feel love and affection for the people they're with and the strangers around them",
-       "sha": "e8bd56ff9da3c586"
+       "label": "DF",
+       "ref": "papaseit_2018",
+       "where": "Summary",
+       "quote": "The aim of this review is to present the main interindividual determinants in MDMA pharmacodynamics.",
+       "sha": "0268a5b9bacb3a85"
       },
       {
-       "label": "F8",
-       "ref": "frank_ecstasy",
-       "where": "Mixing ecstasy with other drugs / How does it make you feel?",
-       "quote": "Most people feel: very happy – hence the name; ‘loved up’",
-       "sha": "e8bd56ff9da3c586"
-      },
-      {
-       "label": "F9",
-       "ref": "frank_ecstasy",
-       "where": "Mixing ecstasy with other drugs / How does it make people behave?",
-       "quote": "Lots of people feel very chatty and uninhibited on ecstasy, which makes them open up and talk about things they might not do normally",
-       "sha": "731c9acaa289c8b8"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "Although the FRANK passage says users often feel love and affection, this repeats the kind of “loved up” claim the editor says to keep out."
-    },
-    {
-     "part": "how3",
-     "text": "A 2018 review says MDMA increases empathy and pro-social effects.",
-     "rests_on": [
-      {
-       "label": "F14",
+       "label": "F13",
        "ref": "papaseit_2018",
        "where": "Summary",
        "quote": "MDMA produces characteristic amphetamine-like actions (euphoria, well-being), increases empathy, and induces pro-social effects that seem to motivate its recreational consumption and provide a basis for its potential therapeutic use.",
@@ -889,32 +849,50 @@
      "ok": true
     },
     {
+     "part": "how3",
+     "text": "A 2014 study found MDMA selectively enhances emotional empathy in humans.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "kuypers_2014",
+       "where": "Discussion",
+       "quote": "MDMA selectively enhances emotional empathy in humans.",
+       "sha": "a2c59b92fcd24cbe"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage limits this finding to a single 75 mg dose; the sentence omits that qualification."
+    },
+    {
      "part": "how4",
-     "text": "A 2017 study found MDMA increased emotional empathy in people.",
+     "text": "A 2017 study of healthy volunteers found MDMA increased emotional empathy, especially for positive emotions, without affecting cognitive empathy.",
      "rests_on": [
       {
        "label": "F4",
        "ref": "kuypers_2017",
        "where": "Abstract",
-       "quote": "MDMA increased emotional empathy at both doses without affecting cognitive empathy",
+       "quote": "We confirmed that MDMA increased emotional empathy at both doses without affecting cognitive empathy.",
        "sha": "2a82991c082fd9db"
       },
       {
        "label": "F5",
        "ref": "kuypers_2017",
-       "where": "Discussion",
-       "quote": "MDMA enhanced both explicit and implicit EE, and this effect was especially evident for the positively valenced stimuli",
-       "sha": "f378f0efed629fde"
+       "where": "Abstract",
+       "quote": "This MDMA-related increase in empathy was most pronounced during presentation of positive emotions as compared with negative emotions.",
+       "sha": "2a82991c082fd9db"
       },
       {
        "label": "F6",
        "ref": "kuypers_2017",
-       "where": "Discussion",
-       "quote": "MDMA appears to induce its empathogenic response repeatedly and irrespective of previous use",
-       "sha": "962eda1f234016a0"
+       "where": "Results › Correlations › MET, MDMA blood concentrations and MDMA dose (mg/kg)",
+       "quote": "concern for positive emotions (r110 = 0.26; p = 0.005) and arousal for positive emotions (r110 = 0.20; p = 0.04) increased with increasing MDMA concentrations.",
+       "sha": "022d805794af924a"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage reports the finding after single doses of 75 or 125 mg; the sentence omits that qualification."
     }
    ]
   },
@@ -924,107 +902,107 @@
    "parts": [
     {
      "part": "short",
-     "text": "It can make people feel more loving and empathetic, and increases emotional empathy in studies.",
+     "text": "It can make people feel more empathic. In placebo-controlled studies, MDMA raised emotional empathy but not cognitive empathy.",
      "rests_on": [
       {
-       "label": "F10",
+       "label": "F9",
        "ref": "drugscience_mdma",
        "where": "How might the drug make you feel?",
        "quote": "A vastly heightened sense of empathy and emotional connection with others. Perhaps the principle effect of the drug which most users report feeling. A direct consequence of the heightened levels of serotonin and possibly oxytocin in the brain.",
        "sha": "9eb185a31fd8c728"
       },
       {
-       "label": "F14",
+       "label": "F13",
        "ref": "papaseit_2018",
        "where": "Summary",
        "quote": "MDMA produces characteristic amphetamine-like actions (euphoria, well-being), increases empathy, and induces pro-social effects that seem to motivate its recreational consumption and provide a basis for its potential therapeutic use.",
        "sha": "0268a5b9bacb3a85"
+      },
+      {
+       "label": "F4",
+       "ref": "kuypers_2017",
+       "where": "Abstract",
+       "quote": "We confirmed that MDMA increased emotional empathy at both doses without affecting cognitive empathy.",
+       "sha": "2a82991c082fd9db"
       }
      ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passages for this sentence say MDMA increases empathy, but do not say that studies found an increase specifically in emotional empathy."
+     "ok": true
     },
     {
      "part": "but",
-     "text": "But oxytocin did not affect objective measures of empathy and social interaction.",
+     "text": "Peripheral oxytocin measurements may not reflect central oxytocin activity due to a lag between peaks.",
      "rests_on": [
       {
-       "label": "F3",
+       "label": "L1",
        "ref": "kuypers_2014",
        "where": "Discussion",
-       "quote": "Oxytocin did not affect objective measures of empathy and social interaction; however, oxytocin increased participants' perception of emotional empathy as measured by the IRI questionnaire.",
-       "sha": "da71fff315ce6d79"
+       "quote": "use of peripheral measures of oxytocin as it has been shown recently that there is a substantial lag of 60 minutes between the oxytocin peak at peripheral level and that at central level.",
+       "sha": "289b9626c93d4988"
       }
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "it is about something else than the short answer (Sentence 1 directly addresses whether MDMA has effects beyond a feeling, but its claim about emotional empathy in studies is not supported by its passages. Sentence 2 reports an oxytocin finding, not a limit on the MDMA effects described in)"
+     "said": "it is about something else than the short answer (Sentence 1 directly addresses whether MDMA has an empathy effect beyond just feeling more connected: it reports increased emotional empathy in placebo-controlled studies, without answering “Yes.” Sentence 2 concerns peripheral oxytocin meas)"
     },
     {
      "part": "how1",
-     "text": "Drug Science, a UK charity of scientists says MDMA causes a heightened sense of empathy.",
+     "text": "Drug Science, a UK charity of scientists says MDMA causes a heightened sense of empathy and connection.",
      "rests_on": [
       {
-       "label": "F10",
+       "label": "F9",
        "ref": "drugscience_mdma",
        "where": "How might the drug make you feel?",
        "quote": "A vastly heightened sense of empathy and emotional connection with others. Perhaps the principle effect of the drug which most users report feeling. A direct consequence of the heightened levels of serotonin and possibly oxytocin in the brain.",
        "sha": "9eb185a31fd8c728"
-      },
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage does not say Drug Science is a UK charity of scientists, and it describes heightened empathy and connection as effects that MDMA can have, not as an unqualified claim that MDMA causes them."
+    },
+    {
+     "part": "how2",
+     "text": "It says the rise of oxytocin and serotonin is thought to be a big part of why people feel connected.",
+     "rests_on": [
       {
-       "label": "F11",
+       "label": "F10",
        "ref": "drugscience_mdma",
        "where": "What is the science of MDMA?",
        "quote": "Oxytocin is the hormone most closely associated with love and emotional bonding, and its rise, alongside higher serotonin, is thought to be a big part of why users feel so much more emotionally connected to people around them while under the influence.",
        "sha": "b159f53e04224baf"
-      },
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage narrows this to users feeling more emotionally connected while under MDMA’s influence; the sentence leaves out that context."
+    },
+    {
+     "part": "how3",
+     "text": "Controlled research found MDMA increases blood oxytocin and reduces activity in the brain's threat-detection centre.",
+     "rests_on": [
       {
-       "label": "F12",
+       "label": "F11",
        "ref": "drugscience_mdma",
        "where": "What is the science of MDMA?",
        "quote": "Controlled research backs this up directly, finding that MDMA increases blood oxytocin (along with cortisol and prolactin) and measurably reduces activity in the brain's threat-detection centre, the amygdala",
        "sha": "b159f53e04224baf"
       }
      ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passages do not identify Drug Science as a UK charity of scientists. They also describe empathy as a typical effect that varies between people, rather than making the unqualified claim that MDMA causes it."
-    },
-    {
-     "part": "how2",
-     "text": "FRANK says people who use ecstasy often feel love and affection for those around them.",
-     "rests_on": [
-      {
-       "label": "F7",
-       "ref": "frank_ecstasy",
-       "where": "Mixing ecstasy with other drugs / How does it make you feel?",
-       "quote": "users often feel love and affection for the people they're with and the strangers around them",
-       "sha": "e8bd56ff9da3c586"
-      },
-      {
-       "label": "F8",
-       "ref": "frank_ecstasy",
-       "where": "Mixing ecstasy with other drugs / How does it make you feel?",
-       "quote": "Most people feel: very happy – hence the name; ‘loved up’",
-       "sha": "e8bd56ff9da3c586"
-      },
-      {
-       "label": "F9",
-       "ref": "frank_ecstasy",
-       "where": "Mixing ecstasy with other drugs / How does it make people behave?",
-       "quote": "Lots of people feel very chatty and uninhibited on ecstasy, which makes them open up and talk about things they might not do normally",
-       "sha": "731c9acaa289c8b8"
-      }
-     ],
      "ok": true
     },
     {
-     "part": "how3",
-     "text": "A 2018 review says MDMA increases empathy and induces pro-social effects.",
+     "part": "how4",
+     "text": "A 2018 review says MDMA increases empathy and induces pro-social effects along with euphoria and well-being.",
      "rests_on": [
       {
-       "label": "F14",
+       "label": "DF",
+       "ref": "papaseit_2018",
+       "where": "Summary",
+       "quote": "The aim of this review is to present the main interindividual determinants in MDMA pharmacodynamics.",
+       "sha": "0268a5b9bacb3a85"
+      },
+      {
+       "label": "F13",
        "ref": "papaseit_2018",
        "where": "Summary",
        "quote": "MDMA produces characteristic amphetamine-like actions (euphoria, well-being), increases empathy, and induces pro-social effects that seem to motivate its recreational consumption and provide a basis for its potential therapeutic use.",
@@ -1032,36 +1010,6 @@
       }
      ],
      "ok": true
-    },
-    {
-     "part": "how4",
-     "text": "A 2017 study found MDMA increased emotional empathy in people.",
-     "rests_on": [
-      {
-       "label": "F4",
-       "ref": "kuypers_2017",
-       "where": "Abstract",
-       "quote": "MDMA increased emotional empathy at both doses without affecting cognitive empathy",
-       "sha": "2a82991c082fd9db"
-      },
-      {
-       "label": "F5",
-       "ref": "kuypers_2017",
-       "where": "Discussion",
-       "quote": "MDMA enhanced both explicit and implicit EE, and this effect was especially evident for the positively valenced stimuli",
-       "sha": "f378f0efed629fde"
-      },
-      {
-       "label": "F6",
-       "ref": "kuypers_2017",
-       "where": "Discussion",
-       "quote": "MDMA appears to induce its empathogenic response repeatedly and irrespective of previous use",
-       "sha": "962eda1f234016a0"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The study was of healthy volunteers given single doses of 75 or 125 mg; the sentence omits these limits."
     }
    ]
   },
@@ -1071,148 +1019,113 @@
    "parts": [
     {
      "part": "short",
-     "text": "Yes, MDMA increases empathy and emotional connection, and people who use it often feel love and affection for others.",
+     "text": "It can make people feel more emotionally connected. In studies, MDMA raised emotional empathy, but not the ability to read what others feel.",
      "rests_on": [
       {
-       "label": "F10",
+       "label": "F9",
        "ref": "drugscience_mdma",
        "where": "How might the drug make you feel?",
        "quote": "A vastly heightened sense of empathy and emotional connection with others. Perhaps the principle effect of the drug which most users report feeling. A direct consequence of the heightened levels of serotonin and possibly oxytocin in the brain.",
        "sha": "9eb185a31fd8c728"
       },
       {
-       "label": "F14",
+       "label": "F13",
        "ref": "papaseit_2018",
        "where": "Summary",
        "quote": "MDMA produces characteristic amphetamine-like actions (euphoria, well-being), increases empathy, and induces pro-social effects that seem to motivate its recreational consumption and provide a basis for its potential therapeutic use.",
        "sha": "0268a5b9bacb3a85"
       },
       {
-       "label": "F7",
-       "ref": "frank_ecstasy",
-       "where": "Mixing ecstasy with other drugs / How does it make you feel?",
-       "quote": "users often feel love and affection for the people they're with and the strangers around them",
-       "sha": "e8bd56ff9da3c586"
+       "label": "F4",
+       "ref": "kuypers_2017",
+       "where": "Abstract",
+       "quote": "We confirmed that MDMA increased emotional empathy at both doses without affecting cognitive empathy.",
+       "sha": "2a82991c082fd9db"
       }
      ],
      "ok": false,
-     "by": "the second reader",
-     "said": "The sentence presents increased empathy and emotional connection as an unqualified general fact. The editor's note requires distinguishing reported feelings from the placebo-controlled finding of increased emotional, but not cognitive, empa"
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.6-flash) did not accept it: The passages mention 'cognitive empathy', but they do not state that this means 'the ability to read what others feel'."
     },
     {
      "part": "but",
-     "text": "But this may not be due to increased oxytocin levels or 5-HT1a receptor activation.",
+     "text": "Measuring oxytocin in blood may not show what is happening in the brain because of a time lag.",
      "rests_on": [
       {
-       "label": "F3",
+       "label": "L1",
        "ref": "kuypers_2014",
        "where": "Discussion",
-       "quote": "Oxytocin did not affect objective measures of empathy and social interaction; however, oxytocin increased participants' perception of emotional empathy as measured by the IRI questionnaire.",
-       "sha": "da71fff315ce6d79"
+       "quote": "use of peripheral measures of oxytocin as it has been shown recently that there is a substantial lag of 60 minutes between the oxytocin peak at peripheral level and that at central level.",
+       "sha": "289b9626c93d4988"
       }
      ],
      "ok": false,
-     "by": "the second reader",
-     "said": "it is about something else than the short answer (A qualified answer is fair, not “Yes”: the passages report feelings of connection and describe increased emotional empathy, but do not establish that people are more loving rather than feeling that way. Sentence 2 concerns possible mechanis)"
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.6-flash) did not accept it: The passage discusses peripheral vs. central levels and plasma vs. CSF concentrations, but it does not specifically state 'blood' or 'in the brain'."
     },
     {
      "part": "how1",
-     "text": "Drug Science, a UK charity of scientists says MDMA causes a heightened sense of empathy and emotional connection.",
+     "text": "Drug Science, a UK charity of scientists says MDMA causes a heightened sense of empathy and connection.",
      "rests_on": [
       {
-       "label": "F10",
+       "label": "F9",
        "ref": "drugscience_mdma",
        "where": "How might the drug make you feel?",
        "quote": "A vastly heightened sense of empathy and emotional connection with others. Perhaps the principle effect of the drug which most users report feeling. A direct consequence of the heightened levels of serotonin and possibly oxytocin in the brain.",
        "sha": "9eb185a31fd8c728"
-      },
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage does not identify Drug Science as a UK charity of scientists. It also describes effects that vary between people and are typically reported, rather than making the unqualified claim that MDMA causes them."
+    },
+    {
+     "part": "how2",
+     "text": "It says this is thought to be due to higher serotonin and possibly oxytocin in the brain.",
+     "rests_on": [
       {
-       "label": "F11",
+       "label": "F10",
        "ref": "drugscience_mdma",
        "where": "What is the science of MDMA?",
        "quote": "Oxytocin is the hormone most closely associated with love and emotional bonding, and its rise, alongside higher serotonin, is thought to be a big part of why users feel so much more emotionally connected to people around them while under the influence.",
        "sha": "b159f53e04224baf"
-      },
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage connects emotional bonding to oxytocin’s rise alongside higher serotonin, but it does not say these levels are in the brain or describe oxytocin’s role as merely possible."
+    },
+    {
+     "part": "how3",
+     "text": "Controlled research found MDMA increases blood oxytocin and reduces activity in the brain's threat-detection centre.",
+     "rests_on": [
       {
-       "label": "F12",
+       "label": "F11",
        "ref": "drugscience_mdma",
        "where": "What is the science of MDMA?",
        "quote": "Controlled research backs this up directly, finding that MDMA increases blood oxytocin (along with cortisol and prolactin) and measurably reduces activity in the brain's threat-detection centre, the amygdala",
        "sha": "b159f53e04224baf"
       }
      ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passage says MDMA can have varied effects that typically include heightened empathy; it does not establish that MDMA causes this effect as stated. The passage also does not identify Drug Science as a UK charity of scientists."
-    },
-    {
-     "part": "how2",
-     "text": "FRANK says people who use ecstasy often feel love and affection for others.",
-     "rests_on": [
-      {
-       "label": "F7",
-       "ref": "frank_ecstasy",
-       "where": "Mixing ecstasy with other drugs / How does it make you feel?",
-       "quote": "users often feel love and affection for the people they're with and the strangers around them",
-       "sha": "e8bd56ff9da3c586"
-      },
-      {
-       "label": "F8",
-       "ref": "frank_ecstasy",
-       "where": "Mixing ecstasy with other drugs / How does it make you feel?",
-       "quote": "Most people feel: very happy – hence the name; ‘loved up’",
-       "sha": "e8bd56ff9da3c586"
-      },
-      {
-       "label": "F9",
-       "ref": "frank_ecstasy",
-       "where": "Mixing ecstasy with other drugs / How does it make people behave?",
-       "quote": "Lots of people feel very chatty and uninhibited on ecstasy, which makes them open up and talk about things they might not do normally",
-       "sha": "731c9acaa289c8b8"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passage narrows this to affection for people users are with and strangers around them; “others” leaves out that narrowing."
-    },
-    {
-     "part": "how3",
-     "text": "A 2018 review says MDMA increases empathy and induces pro-social effects.",
-     "rests_on": [
-      {
-       "label": "F14",
-       "ref": "papaseit_2018",
-       "where": "Summary",
-       "quote": "MDMA produces characteristic amphetamine-like actions (euphoria, well-being), increases empathy, and induces pro-social effects that seem to motivate its recreational consumption and provide a basis for its potential therapeutic use.",
-       "sha": "0268a5b9bacb3a85"
-      }
-     ],
      "ok": true
     },
     {
      "part": "how4",
-     "text": "A 2017 study found MDMA increased emotional empathy in people without affecting cognitive empathy.",
+     "text": "A 2018 review says MDMA increases empathy and induces pro-social effects along with euphoria.",
      "rests_on": [
       {
-       "label": "F4",
-       "ref": "kuypers_2017",
-       "where": "Abstract",
-       "quote": "MDMA increased emotional empathy at both doses without affecting cognitive empathy",
-       "sha": "2a82991c082fd9db"
+       "label": "DF",
+       "ref": "papaseit_2018",
+       "where": "Summary",
+       "quote": "The aim of this review is to present the main interindividual determinants in MDMA pharmacodynamics.",
+       "sha": "0268a5b9bacb3a85"
       },
       {
-       "label": "F5",
-       "ref": "kuypers_2017",
-       "where": "Discussion",
-       "quote": "MDMA enhanced both explicit and implicit EE, and this effect was especially evident for the positively valenced stimuli",
-       "sha": "f378f0efed629fde"
-      },
-      {
-       "label": "F6",
-       "ref": "kuypers_2017",
-       "where": "Discussion",
-       "quote": "MDMA appears to induce its empathogenic response repeatedly and irrespective of previous use",
-       "sha": "962eda1f234016a0"
+       "label": "F13",
+       "ref": "papaseit_2018",
+       "where": "Summary",
+       "quote": "MDMA produces characteristic amphetamine-like actions (euphoria, well-being), increases empathy, and induces pro-social effects that seem to motivate its recreational consumption and provide a basis for its potential therapeutic use.",
+       "sha": "0268a5b9bacb3a85"
       }
      ],
      "ok": true
@@ -1220,66 +1133,92 @@
    ]
   }
  ],
+ "panel": {
+  "gemini:gemini-3.5-flash-lite": {
+   "short": [
+    true,
+    ""
+   ],
+   "but": [
+    true,
+    ""
+   ],
+   "how1": [
+    false,
+    "The passages do not state that Drug Science is a UK charity of scientists."
+   ],
+   "how2": [
+    true,
+    ""
+   ],
+   "how3": [
+    true,
+    ""
+   ],
+   "how4": [
+    true,
+    ""
+   ]
+  },
+  "gemini:gemini-3.6-flash": {
+   "short": [
+    false,
+    "The passages mention 'cognitive empathy', but they do not state that this means 'the ability to read what others feel'."
+   ],
+   "but": [
+    false,
+    "The passage discusses peripheral vs. central levels and plasma vs. CSF concentrations, but it does not specifically state 'blood' or 'in the brain'."
+   ],
+   "how1": [
+    false,
+    "The passages do not mention that Drug Science is a 'UK charity of scientists', nor do they state that MDMA definitely 'causes' these effects (stating instead that MDMA 'can' have them)."
+   ],
+   "how2": [
+    false,
+    "The passage stating that connection is 'thought to be' due to higher serotonin and oxytocin does not specify 'in the brain'."
+   ],
+   "how3": [
+    true,
+    ""
+   ],
+   "how4": [
+    true,
+    ""
+   ]
+  }
+ },
  "dropped": [
   {
    "try": 3,
    "part": "how1",
-   "text": "Drug Science, a UK charity of scientists says MDMA causes a heightened sense of empathy and emotional connection.",
+   "text": "Drug Science, a UK charity of scientists says MDMA causes a heightened sense of empathy and connection.",
    "rests_on": [
     {
-     "label": "F10",
+     "label": "F9",
      "ref": "drugscience_mdma",
      "where": "How might the drug make you feel?",
      "quote": "A vastly heightened sense of empathy and emotional connection with others. Perhaps the principle effect of the drug which most users report feeling. A direct consequence of the heightened levels of serotonin and possibly oxytocin in the brain.",
      "sha": "9eb185a31fd8c728"
-    },
-    {
-     "label": "F11",
-     "ref": "drugscience_mdma",
-     "where": "What is the science of MDMA?",
-     "quote": "Oxytocin is the hormone most closely associated with love and emotional bonding, and its rise, alongside higher serotonin, is thought to be a big part of why users feel so much more emotionally connected to people around them while under the influence.",
-     "sha": "b159f53e04224baf"
-    },
-    {
-     "label": "F12",
-     "ref": "drugscience_mdma",
-     "where": "What is the science of MDMA?",
-     "quote": "Controlled research backs this up directly, finding that MDMA increases blood oxytocin (along with cortisol and prolactin) and measurably reduces activity in the brain's threat-detection centre, the amygdala",
-     "sha": "b159f53e04224baf"
     }
    ],
    "by": "the second reader",
-   "said": "The passage says MDMA can have varied effects that typically include heightened empathy; it does not establish that MDMA causes this effect as stated. The passage also does not identify Drug Science as a UK charity of scientists."
+   "said": "The passage does not identify Drug Science as a UK charity of scientists. It also describes effects that vary between people and are typically reported, rather than making the unqualified claim that MDMA causes them."
   },
   {
    "try": 3,
    "part": "how2",
-   "text": "FRANK says people who use ecstasy often feel love and affection for others.",
+   "text": "It says this is thought to be due to higher serotonin and possibly oxytocin in the brain.",
    "rests_on": [
     {
-     "label": "F7",
-     "ref": "frank_ecstasy",
-     "where": "Mixing ecstasy with other drugs / How does it make you feel?",
-     "quote": "users often feel love and affection for the people they're with and the strangers around them",
-     "sha": "e8bd56ff9da3c586"
-    },
-    {
-     "label": "F8",
-     "ref": "frank_ecstasy",
-     "where": "Mixing ecstasy with other drugs / How does it make you feel?",
-     "quote": "Most people feel: very happy – hence the name; ‘loved up’",
-     "sha": "e8bd56ff9da3c586"
-    },
-    {
-     "label": "F9",
-     "ref": "frank_ecstasy",
-     "where": "Mixing ecstasy with other drugs / How does it make people behave?",
-     "quote": "Lots of people feel very chatty and uninhibited on ecstasy, which makes them open up and talk about things they might not do normally",
-     "sha": "731c9acaa289c8b8"
+     "label": "F10",
+     "ref": "drugscience_mdma",
+     "where": "What is the science of MDMA?",
+     "quote": "Oxytocin is the hormone most closely associated with love and emotional bonding, and its rise, alongside higher serotonin, is thought to be a big part of why users feel so much more emotionally connected to people around them while under the influence.",
+     "sha": "b159f53e04224baf"
     }
    ],
    "by": "the second reader",
-   "said": "The passage narrows this to affection for people users are with and strangers around them; “others” leaves out that narrowing."
+   "said": "The passage connects emotional bonding to oxytocin’s rise alongside higher serotonin, but it does not say these levels are in the brain or describe oxytocin’s role as merely possible."
   }
  ],
  "place": {
