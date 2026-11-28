@@ -17,40 +17,45 @@
   "psilocybin"
  ],
  "made": {
-  "on": "2026-11-27",
+  "on": "2026-11-28",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
-   "writer": "gemini:gemma-4-26b-a4b-it",
-   "checker": "groq:openai/gpt-oss-120b",
-   "planner": "gemini:gemma-4-31b-it",
+   "reader": "gemini:gemini-3.5-flash-lite",
+   "writer": "groq:qwen/qwen3.8-27b",
+   "checker": "openrouter:openai/gpt-6-luna",
+   "planner": "groq:openai/gpt-oss-120b",
    "also1": "gemini:gemini-3.5-flash-lite",
    "also2": "gemini:gemini-3.6-flash",
-   "team": "team K",
-   "reader_2": "gemini:gemini-3.5-flash-lite",
-   "reader_3": "openrouter:meta-llama/llama-3.3-70b-instruct",
+   "team": "team I",
+   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "reader_3": "openrouter:openai/gpt-oss-120b",
+   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
    "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "45995155899",
+  "run": "46134194114",
   "read_by": {
-   "gemini-3.1-flash-lite": 4,
-   "gemma-4-31b-it": 1
+   "gemini-3.5-flash-lite": 3,
+   "gemini-3.1-flash-lite": 2,
+   "gpt-oss-20b": 1
   },
-  "read_seconds": 100,
+  "read_seconds": 24,
   "from": {
    "papers": 2,
    "summaries": 0,
    "official": 1
   },
   "neurons": 0.0,
-  "seconds": 261
+  "seconds": 191
  },
- "status": "none",
- "why": "no draft passed: the form was wrong: no JSON",
+ "status": "published",
+ "why": "passed every gate",
  "gates": {
-  "time": "3 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "8 findings kept from 3 sources (2 papers read in full, 1 official pages, 0 papers read in summary); 3 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 1 official page(s), 0 paper(s) read in summary only",
-  "writer": "try 1: no JSON (how the reply ended: length; reasoned 0 characters, wrote 8898) try 2: no JSON (how the reply ended: length; reasoned 0 characters, wrote 9077)"
+  "read": "11 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 3 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 1 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
+  "panel": "further readers, each of which must accept every sentence too: gemini-3.5-flash-lite accepted 4 of 6; gemini-3.6-flash could not be asked: gemini could not be reached: The read operation timed out; gemini-3-flash-preview accepted 4 of 6",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.89, but 0.99, how1 0.30, how2 0.03, how3 0.78, how4 0.57",
+  "check": "every sentence kept was accepted by the second reader (openrouter:openai/gpt-6-luna) and by gemini:gemini-3.5-flash-lite and by gemini:gemini-3.6-flash; 3 How-do-we-know line(s) dropped",
+  "rules": "nothing against it",
+  "checked": "set beside the checked claims of the same page: nothing against them"
  },
  "sources": [
   {
@@ -115,10 +120,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-27",
+     "verified_on": "2026-11-28",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-27"
+      "checked_on": "2026-11-28"
      }
     },
     "volume": "14",
@@ -144,7 +149,7 @@
      "passage": 1,
      "where": "Abstract",
      "quote": "Psilocybin, commonly known as “magic mushrooms”, works at the serotonin receptor, 5-HT2A.",
-     "text": "Psilocybin works at the 5-HT2A serotonin receptor.",
+     "text": "Magic mushrooms, or psilocybin, work at the 5-HT2A serotonin receptor.",
      "id": "F1",
      "second_hand": ""
     },
@@ -152,7 +157,7 @@
      "passage": 17,
      "where": "3. Alternative Medications",
      "quote": "These chemical compounds have been known to act on the serotonergic 5-HT2A receptors. They play a role in learning, memory, hallucinations, and neurocognitive disorders. These activate many pathways which release oxytocin and acetylcholine.",
-     "text": "Psilocybin acts on serotonergic 5-HT2A receptors and activates pathways that release oxytocin and acetylcholine.",
+     "text": "These chemical compounds act on serotonergic 5-HT2A receptors, play a role in learning, memory, hallucinations, and neurocognitive disorders, and activate pathways that release oxytocin and acetylcholine.",
      "id": "F2",
      "second_hand": ""
     },
@@ -160,17 +165,17 @@
      "passage": 23,
      "where": "4. Mechanisms of Action",
      "quote": "In analyzing fMRI studies involving psilocybin, Carhart-Harris et al. proposed that they “disintegrate” brain networks and increase the connectivity established within networks.",
-     "text": "Psilocybin disintegrates brain networks and increases connectivity within networks.",
+     "text": "Psilocybin disintegrates brain networks and increases connectivity established within networks.",
      "id": "F3",
      "second_hand": ""
     }
    ],
    "limits": [
     {
-     "passage": 1,
-     "where": "Abstract",
-     "quote": "However, the studies that have looked at alternative plant-based medications such as THC, CBD, and psilocybin have been small in terms of their sample size and may not consider the demographic or genetic differences in the population",
-     "text": "Studies on these medications have small sample sizes and may not account for demographic or genetic differences.",
+     "passage": 41,
+     "where": "6. Conclusions",
+     "quote": "However, no firm conclusions can be drawn at this time as studies are limited in terms of their size and there are no data on the long-term safety of these drugs.",
+     "text": "No firm conclusions can be drawn because studies are limited in size and there are no long-term safety data for these drugs.",
      "id": "L1",
      "second_hand": ""
     }
@@ -203,10 +208,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-27",
+     "verified_on": "2026-11-28",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-27"
+      "checked_on": "2026-11-28"
      },
      "online_first_year": 2022
     },
@@ -230,33 +235,41 @@
    "design": {
     "passage": 1,
     "where": "Abstract",
-    "quote": "This review focuses on these stunning effects and summarizes our current knowledge on which behavioral, biochemical, neuroimaging, and electrophysiological data support that the intriguing effects of psychedelics on the human brain and mind are based on neural plasticity.",
-    "text": "A review of behavioral, biochemical, neuroimaging, and electrophysiological data regarding the effects of classical psychedelics on the human brain and mind."
+    "quote": "The serotonergic classical psychedelics include compounds that primarily activate the brain’s serotonin 2 A receptor (5-HT2AR), such as LSD, psilocybin, and DMT (ayahuasca).",
+    "text": "Review paper summarizing human studies of classical psychedelics"
    },
    "findings": [
     {
-     "passage": 1,
-     "where": "Abstract",
-     "quote": "The serotonergic classical psychedelics include compounds that primarily activate the brain’s serotonin 2 A receptor (5-HT2AR), such as LSD, psilocybin, and DMT (ayahuasca).",
-     "text": "Classical psychedelics like psilocybin primarily activate the serotonin 2 A receptor in the brain.",
+     "passage": 14,
+     "where": "Molecular, structural and functional neuroplasticity: Neuroimaging studies › Positron emission tomography (PET)",
+     "quote": "There is little doubt, however, that stimulation of the neocortical 5-HT2AR is a requirement for the psychedelic experience to occur.",
+     "text": "Stimulation of the neocortical 5-HT2AR is required for the psychedelic experience to occur.",
      "id": "F4",
      "second_hand": ""
     },
     {
-     "passage": 9,
-     "where": "Introduction",
-     "quote": "The findings point to psychedelics inducing molecular and cellular adaptations related to neuroplasticity and these are suggested to occur in parallel to and potentially underly the clinical effects of psychedelics.",
-     "text": "Psychedelics are suggested to induce molecular and cellular adaptations related to neuroplasticity that may underlie their clinical effects.",
+     "passage": 14,
+     "where": "Molecular, structural and functional neuroplasticity: Neuroimaging studies › Positron emission tomography (PET)",
+     "quote": "Blocking 5-HT2A/5-HT2C receptors with the 5-HT2AR antagonist ketanserin abolishes virtually all of the subjective effects of subsequently given psilocybin, LSD, and DMT in humans",
+     "text": "Blocking 5-HT2A/5-HT2C receptors with ketanserin abolishes virtually all subjective effects of psilocybin, LSD, and DMT in humans.",
      "id": "F5",
+     "second_hand": ""
+    },
+    {
+     "passage": 14,
+     "where": "Molecular, structural and functional neuroplasticity: Neuroimaging studies › Positron emission tomography (PET)",
+     "quote": "there is a tight correlation between plasma psilocin, cerebral 5-HT2AR occupancy as measured with PET, and the perceived intensity of the psychedelic experience.",
+     "text": "There is a tight correlation between plasma psilocin, cerebral 5-HT2AR occupancy, and perceived intensity of the psychedelic experience.",
+     "id": "F6",
      "second_hand": ""
     }
    ],
    "limits": [
     {
-     "passage": 9,
-     "where": "Introduction",
-     "quote": "The neurobiological mechanism behind the stunning psychological long-term action of classical psychedelics has recently become a key question, that mostly has been investigated in animal studies",
-     "text": "The neurobiological mechanism behind the long-term psychological effects of classical psychedelics has mostly been studied in animals.",
+     "passage": 23,
+     "where": "Summary and suggested future research",
+     "quote": "It should also be noted that neuroplasticity per se may not always be beneficial.",
+     "text": "Neuroplasticity induced by psychedelics may not always be beneficial.",
      "id": "L2",
      "second_hand": ""
     }
@@ -266,83 +279,170 @@
   {
    "read": "page",
    "ref": {
-    "id": "adf_psilocybin",
+    "id": "drugscience_psilocybin",
     "type": "webpage",
-    "title": "Psilocybin (magic mushrooms)",
+    "title": "Psilocybin",
     "author": [
      {
-      "literal": "Alcohol and Drug Foundation"
+      "literal": "Drug Science"
      }
     ],
     "issued": {
      "date-parts": [
-      [
-       2025,
-       3,
-       6
-      ]
+      []
      ]
     },
-    "URL": "https://adf.org.au/drug-facts/psilocybin/",
+    "URL": "https://www.drugscience.org.uk/drugs/psilocybin",
     "accessed": {
      "date-parts": [
       [
        2026,
        11,
-       27
+       28
       ]
      ]
     },
     "verification": {
      "status": "made by code",
      "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-27"
+     "verified_on": "2026-11-28"
     }
    },
-   "title": "Psilocybin (magic mushrooms)",
-   "year": 2025,
+   "title": "Psilocybin",
+   "year": null,
    "kind": "official",
    "people": true,
-   "near": 0.688,
-   "name": "Alcohol and Drug Foundation",
-   "short": "Australia's Alcohol and Drug Foundation",
+   "near": 0.617,
+   "name": "Drug Science",
+   "short": "Drug Science, a UK charity of scientists",
    "tier": 2,
-   "address": "https://adf.org.au/drug-facts/psilocybin/",
+   "address": "https://www.drugscience.org.uk/drugs/psilocybin",
    "money": [],
    "label": false,
    "design": null,
    "findings": [
     {
-     "passage": 1,
-     "where": "What are magic mushrooms?",
-     "quote": "When magic mushrooms are taken, the psilocybin is converted in the body to psilocin, which is the chemical with psychoactive properties.",
-     "text": "When magic mushrooms are taken, psilocybin is converted in the body to psilocin, which is the chemical with psychoactive properties.",
-     "id": "F6",
+     "passage": 5,
+     "where": "What is the science of Psilocybin?",
+     "quote": "Psilocin sits into these receptors and activates them, thereby producing the characteristic ‘trip’ of a magic mushroom experience, which can include changes in mood, imagination and perception.",
+     "text": "Psilocin sits into 5-HT2A receptors and activates them to produce the magic mushroom experience trip, which can include changes in mood, imagination and perception.",
+     "id": "F9",
      "second_hand": ""
     },
     {
-     "passage": 1,
-     "where": "What are magic mushrooms?",
-     "quote": "Psilocybin is a psychedelic, which means it can affect all the senses, impacting a person’s thinking, sense of time and emotions.",
-     "text": "Psilocybin is a psychedelic that can affect all the senses, impacting a person's emotions, thinking, and sense of time.",
-     "id": "F7",
+     "passage": 5,
+     "where": "What is the science of Psilocybin?",
+     "quote": "Recent research has also shown psilocin has an effect on a part of the brain known as the Default Mode Network (DMN).",
+     "text": "Recent research has also shown that psilocin has an effect on a part of the brain known as the Default Mode Network.",
+     "id": "F10",
      "second_hand": ""
     },
     {
-     "passage": 1,
-     "where": "What are magic mushrooms?",
-     "quote": "Psychedelics can also cause a person to hallucinate, seeing or hearing things that do not exist or are distorted.",
-     "text": "Psychedelics can cause a person to hallucinate, seeing or hearing things that are distorted or do not exist.",
-     "id": "F8",
+     "passage": 13,
+     "where": "How might the drug make you feel?",
+     "quote": "Given that psilocybin seems to connect parts of the brain in novel and interesting ways; different, fascinating, odd and sometimes scary ways of thinking can present themselves to the user.",
+     "text": "Psilocybin seems to connect parts of the brain in novel and interesting ways.",
+     "id": "F11",
      "second_hand": ""
     }
    ],
    "limits": [],
-   "tag": "C"
+   "tag": "D"
   }
  ],
- "parts": [],
- "complete": false,
+ "parts": [
+  {
+   "part": "short",
+   "text": "Psilocin sits into 5-HT2A receptors in the brain. This activates them, which can change mood, imagination, and perception.",
+   "uses": [
+    "F1",
+    "F9",
+    "F10",
+    "F4"
+   ],
+   "rests_on": [
+    {
+     "label": "F1",
+     "ref": "edinoff_2022",
+     "where": "Abstract",
+     "quote": "Psilocybin, commonly known as “magic mushrooms”, works at the serotonin receptor, 5-HT2A.",
+     "sha": "1a69f98b2351415f"
+    },
+    {
+     "label": "F9",
+     "ref": "drugscience_psilocybin",
+     "where": "What is the science of Psilocybin?",
+     "quote": "Psilocin sits into these receptors and activates them, thereby producing the characteristic ‘trip’ of a magic mushroom experience, which can include changes in mood, imagination and perception.",
+     "sha": "c720d275d011fc52"
+    },
+    {
+     "label": "F10",
+     "ref": "drugscience_psilocybin",
+     "where": "What is the science of Psilocybin?",
+     "quote": "Recent research has also shown psilocin has an effect on a part of the brain known as the Default Mode Network (DMN).",
+     "sha": "c720d275d011fc52"
+    },
+    {
+     "label": "F4",
+     "ref": "knudsen_2023",
+     "where": "Molecular, structural and functional neuroplasticity: Neuroimaging studies › Positron emission tomography (PET)",
+     "quote": "There is little doubt, however, that stimulation of the neocortical 5-HT2AR is a requirement for the psychedelic experience to occur.",
+     "sha": "bf1a256d1be599b2"
+    }
+   ]
+  },
+  {
+   "part": "but",
+   "text": "No firm conclusions can be drawn because studies are limited in size and there are no long-term safety data.",
+   "uses": [
+    "L1"
+   ],
+   "rests_on": [
+    {
+     "label": "L1",
+     "ref": "edinoff_2022",
+     "where": "6. Conclusions",
+     "quote": "However, no firm conclusions can be drawn at this time as studies are limited in terms of their size and there are no data on the long-term safety of these drugs.",
+     "sha": "5901c44d25fc0ec9"
+    }
+   ]
+  },
+  {
+   "part": "how3",
+   "text": "A 2022 review says researchers proposed psilocybin disintegrates brain networks and increases connectivity within them.",
+   "uses": [
+    "F1",
+    "F2",
+    "F3"
+   ],
+   "rests_on": [
+    {
+     "label": "F1",
+     "ref": "edinoff_2022",
+     "where": "Abstract",
+     "quote": "Psilocybin, commonly known as “magic mushrooms”, works at the serotonin receptor, 5-HT2A.",
+     "sha": "1a69f98b2351415f"
+    },
+    {
+     "label": "F2",
+     "ref": "edinoff_2022",
+     "where": "3. Alternative Medications",
+     "quote": "These chemical compounds have been known to act on the serotonergic 5-HT2A receptors. They play a role in learning, memory, hallucinations, and neurocognitive disorders. These activate many pathways which release oxytocin and acetylcholine.",
+     "sha": "45ac62803417b734"
+    },
+    {
+     "label": "F3",
+     "ref": "edinoff_2022",
+     "where": "4. Mechanisms of Action",
+     "quote": "In analyzing fMRI studies involving psilocybin, Carhart-Harris et al. proposed that they “disintegrate” brain networks and increase the connectivity established within networks.",
+     "sha": "afd3373d64630aff"
+    }
+   ],
+   "quote": "These chemical compounds have been known to act on the serotonergic 5-HT2A receptors",
+   "quote_ref": "edinoff_2022"
+  }
+ ],
+ "complete": true,
  "missing": "",
  "wanted": [
   {
@@ -384,6 +484,14 @@
    "why": "passed every gate",
    "short": "The body turns psilocybin into psilocin, which activates 5-HT2A receptors. This can connect brain parts in new ways and disintegrate brain networks.",
    "complete": true
+  },
+  {
+   "on": "2026-11-27",
+   "lane": 19,
+   "status": "none",
+   "why": "no draft passed: the form was wrong: no JSON",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -396,7 +504,7 @@
    "thrown": [
     {
      "kind": "text",
-     "text": "a narrative review of clinical evidence regarding alternative pain treatments",
+     "text": "a narrative review of clinical evidence evaluating alternative options for pain",
      "quote": "Alternative Options for Complex, Recurrent Pain States Using Cannabinoids, Psilocybin, and Ketamine: A Narrative Review of Clinical Evidence",
      "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
     }
@@ -407,21 +515,8 @@
    "read": "full",
    "kind": "review",
    "at": "10.1038/s41386-022-01361-x",
-   "kept": 2,
-   "thrown": [
-    {
-     "kind": "finding",
-     "text": "Stimulation of the neocortical serotonin 2 A receptor is required for the psychedelic experience to occur.",
-     "quote": "There is little doubt, however, that stimulation of the neocortical 5-HT2AR is a requirement for the psychedelic experience to occur.",
-     "why": "a number of the sentence is not in its quote"
-    },
-    {
-     "kind": "finding",
-     "text": "There is a tight correlation between the amount of psilocin in the plasma, the occupancy of serotonin 2 A receptors in the brain, and the perceived intensity of the psychedelic experience.",
-     "quote": "there is a tight correlation between plasma psilocin, cerebral 5-HT2AR occupancy as measured with PET, and the perceived intensity of the psychedelic experience.",
-     "why": "a number of the sentence is not in its quote"
-    }
-   ]
+   "kept": 3,
+   "thrown": []
   },
   {
    "title": "Psilocybin and psilocin (Magic mushrooms)",
@@ -436,7 +531,7 @@
    "read": "page",
    "kind": "official",
    "at": "https://adf.org.au/drug-facts/psilocybin/",
-   "kept": 3,
+   "kept": 2,
    "thrown": []
   },
   {
@@ -452,58 +547,222 @@
    "read": "page",
    "kind": "official",
    "at": "https://www.drugscience.org.uk/drugs/psilocybin",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
-  },
-  {
-   "title": "Psilocybin Mushrooms",
-   "read": "page",
-   "kind": "official",
-   "at": "https://thelevel.org.nz/drug-information/psilocybin-mushrooms",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
-  },
-  {
-   "title": "Psilocybin for Mental Health and Addiction: What You Need To Know",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.nccih.nih.gov/health/psilocybin-for-mental-health-and-addiction-what-you-need-to-know",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 3,
+   "thrown": [
+    {
+     "kind": "limit",
+     "text": "",
+     "quote": "Small amounts of related compounds, baeocystin and norbaeocystin, are also usually present, though their contribution to the overall effect is unclear.",
+     "why": "no sentence"
+    },
+    {
+     "kind": "limit",
+     "text": "",
+     "quote": "However, there are few studies showing what regular use of psilocybin does to the brain.",
+     "why": "no sentence"
+    }
+   ]
   }
  ],
  "plan": {
   "short": [
-   "F6",
    "F1",
-   "F3",
-   "F5"
+   "F9",
+   "F10",
+   "F4"
   ],
   "direct": "",
   "but": [
-   "L2"
+   "L1"
   ],
   "how": [
    [
-    "F6"
+    "F7",
+    "F8"
    ],
    [
-    "DB",
-    "F4",
-    "F5"
+    "F9",
+    "F10",
+    "F11"
    ],
    [
     "F1",
     "F2",
     "F3"
+   ],
+   [
+    "F4",
+    "F5",
+    "F6"
    ]
   ],
   "unanswered": ""
  },
- "soft": "the writer's reply was not in the form asked for",
+ "panel": {
+  "gemini:gemini-3.5-flash-lite": {
+   "short": [
+    true,
+    ""
+   ],
+   "but": [
+    true,
+    ""
+   ],
+   "how1": [
+    false,
+    "the passage does not mention Australia's Alcohol and Drug Foundation"
+   ],
+   "how2": [
+    false,
+    "the passage does not mention Drug Science, a UK charity of scientists"
+   ],
+   "how3": [
+    true,
+    ""
+   ],
+   "how4": [
+    true,
+    ""
+   ]
+  },
+  "gemini:gemini-3.6-flash": "could not be asked: gemini could not be reached: The read operation timed out",
+  "gemini:gemini-3-flash-preview": {
+   "short": [
+    true,
+    ""
+   ],
+   "but": [
+    true,
+    ""
+   ],
+   "how1": [
+    false,
+    "the sentence is more certain than the passage, which says psilocybin 'can' affect the senses"
+   ],
+   "how2": [
+    false,
+    "the passage does not state that Drug Science is a 'UK charity of scientists'"
+   ],
+   "how3": [
+    true,
+    ""
+   ],
+   "how4": [
+    true,
+    ""
+   ]
+  }
+ },
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.8851,
+   "but": 0.9851,
+   "how1": 0.3021,
+   "how2": 0.0315,
+   "how3": 0.7758,
+   "how4": 0.5738
+  },
+  "scores_quotes_alone": {
+   "short": 0.7943,
+   "but": 0.8716,
+   "how1": 0.1604,
+   "how2": 0.0104,
+   "how3": 0.7346,
+   "how4": 0.3003
+  }
+ },
+ "dropped": [
+  {
+   "try": 1,
+   "part": "how1",
+   "text": "Australia's Alcohol and Drug Foundation says the body turns psilocybin into psilocin, which affects all senses, thinking, and time.",
+   "rests_on": [
+    {
+     "label": "F7",
+     "ref": "adf_psilocybin",
+     "where": "What are magic mushrooms?",
+     "quote": "When magic mushrooms are taken, the psilocybin is converted in the body to psilocin, which is the chemical with psychoactive properties.",
+     "sha": "c5ac975ed3cd3663"
+    },
+    {
+     "label": "F8",
+     "ref": "adf_psilocybin",
+     "where": "What are magic mushrooms?",
+     "quote": "Psilocybin is a psychedelic, which means it can affect all the senses, impacting a person’s thinking, sense of time and emotions.",
+     "sha": "c5ac975ed3cd3663"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The passage says psilocybin can affect the senses, thinking, and sense of time, and that it is converted to psychoactive psilocin. It does not say psilocin affects those things."
+  },
+  {
+   "try": 1,
+   "part": "how2",
+   "text": "Drug Science, a UK charity of scientists, says psilocin activates 5-HT2A receptors and affects the Default Mode Network.",
+   "rests_on": [
+    {
+     "label": "F9",
+     "ref": "drugscience_psilocybin",
+     "where": "What is the science of Psilocybin?",
+     "quote": "Psilocin sits into these receptors and activates them, thereby producing the characteristic ‘trip’ of a magic mushroom experience, which can include changes in mood, imagination and perception.",
+     "sha": "c720d275d011fc52"
+    },
+    {
+     "label": "F10",
+     "ref": "drugscience_psilocybin",
+     "where": "What is the science of Psilocybin?",
+     "quote": "Recent research has also shown psilocin has an effect on a part of the brain known as the Default Mode Network (DMN).",
+     "sha": "c720d275d011fc52"
+    },
+    {
+     "label": "F11",
+     "ref": "drugscience_psilocybin",
+     "where": "How might the drug make you feel?",
+     "quote": "Given that psilocybin seems to connect parts of the brain in novel and interesting ways; different, fascinating, odd and sometimes scary ways of thinking can present themselves to the user.",
+     "sha": "bc351b3d618517c9"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The passages support the claims about psilocin and the receptors and Default Mode Network, but do not say Drug Science is a UK charity of scientists."
+  },
+  {
+   "try": 1,
+   "part": "how4",
+   "text": "A 2023 review says blocking 5-HT2A receptors stops the effects, and psilocin levels match the intensity of the experience.",
+   "rests_on": [
+    {
+     "label": "F4",
+     "ref": "knudsen_2023",
+     "where": "Molecular, structural and functional neuroplasticity: Neuroimaging studies › Positron emission tomography (PET)",
+     "quote": "There is little doubt, however, that stimulation of the neocortical 5-HT2AR is a requirement for the psychedelic experience to occur.",
+     "sha": "bf1a256d1be599b2"
+    },
+    {
+     "label": "F5",
+     "ref": "knudsen_2023",
+     "where": "Molecular, structural and functional neuroplasticity: Neuroimaging studies › Positron emission tomography (PET)",
+     "quote": "Blocking 5-HT2A/5-HT2C receptors with the 5-HT2AR antagonist ketanserin abolishes virtually all of the subjective effects of subsequently given psilocybin, LSD, and DMT in humans",
+     "sha": "bf1a256d1be599b2"
+    },
+    {
+     "label": "F6",
+     "ref": "knudsen_2023",
+     "where": "Molecular, structural and functional neuroplasticity: Neuroimaging studies › Positron emission tomography (PET)",
+     "quote": "there is a tight correlation between plasma psilocin, cerebral 5-HT2AR occupancy as measured with PET, and the perceived intensity of the psychedelic experience.",
+     "sha": "bf1a256d1be599b2"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The passage says ketanserin blocks 5-HT2A/5-HT2C receptors and abolishes virtually all subjective effects of subsequently given psychedelics in humans—not that blocking 5-HT2A receptors simply stops the effects. It reports a tight correlati"
+  }
+ ],
+ "with_checked": {
+  "differs": [],
+  "same": []
+ },
  "place": {
   "home": "psilocybin",
   "also": [],

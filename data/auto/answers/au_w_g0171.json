@@ -15,41 +15,42 @@
  ],
  "drugs": [],
  "made": {
-  "on": "2026-11-27",
+  "on": "2026-11-28",
   "models": {
-   "reader": "gemini:gemini-3.1-flash-lite",
-   "writer": "gemini:gemma-4-26b-a4b-it",
-   "checker": "groq:openai/gpt-oss-120b",
-   "planner": "gemini:gemma-4-31b-it",
+   "reader": "gemini:gemini-3.5-flash-lite",
+   "writer": "groq:qwen/qwen3.8-27b",
+   "checker": "openrouter:openai/gpt-6-luna",
+   "planner": "groq:openai/gpt-oss-120b",
    "also1": "gemini:gemini-3.5-flash-lite",
    "also2": "gemini:gemini-3.6-flash",
-   "team": "team K",
-   "reader_2": "gemini:gemini-3.5-flash-lite",
-   "reader_3": "openrouter:meta-llama/llama-3.3-70b-instruct",
-   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
-   "reader_first": "gemini:gemma-4-31b-it"
+   "team": "team I",
+   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "reader_3": "openrouter:openai/gpt-oss-120b",
+   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "45998182174",
+  "run": "46134194114",
   "read_by": {
-   "gemini-3.1-flash-lite": 8,
-   "gemini-3.5-flash-lite": 1
+   "gemini-3.1-flash-lite": 4,
+   "gemini-3.5-flash-lite": 4,
+   "gpt-oss-20b": 1
   },
-  "read_seconds": 78,
+  "read_seconds": 26,
   "from": {
-   "papers": 1,
+   "papers": 2,
    "summaries": 0,
    "official": 0
   },
   "neurons": 0.0,
-  "seconds": 400
+  "seconds": 105
  },
  "status": "none",
- "why": "no draft passed: the form was wrong: no JSON",
+ "why": "the second reader did not accept the answer",
  "gates": {
-  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.1-flash-lite read from there",
-  "read": "1 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 5 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 0 official page(s), 0 paper(s) read in summary only",
-  "writer": "try 1: no JSON (how the reply ended: length; reasoned 0 characters, wrote 9167) try 2: no JSON (how the reply ended: length; reasoned 0 characters, wrote 9175)"
+  "read": "2 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 3 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 0 official page(s), 0 paper(s) read in summary only",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.92, but 0.83, how1 0.89, how2 0.38",
+  "check": "short: NOT accepted: The review mentions barbiturates in passing as background; the sentence does not say that the association is mentioned in passing, as the editor requires.; but: NOT accepted: it is about something else than the short answer (The passages report an association between barbiturates and tolerance, but do not directly establish that people build up tolerance to them; “may” would be more cautious than “can.”); how1: NOT accepted: The review mentions barbiturates in passing as background; the sentence does not say that the association is mentioned in passing, as the editor requires.; how2: accepted"
  },
  "sources": [
   {
@@ -94,10 +95,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-27",
+     "verified_on": "2026-11-28",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-27"
+      "checked_on": "2026-11-28"
      }
     },
     "volume": "26",
@@ -118,25 +119,118 @@
     "passage": 1,
     "where": "Abstract",
     "quote": "This review is, therefore, intended to bring pharmacological data regarding to the effects of natural products on sleep duration and quality, mainly through the activation of GABAA receptors.",
-    "text": "a review of pharmacological data on natural products for insomnia"
+    "text": "A review of pharmacological data regarding the effects of natural products on sleep duration and quality"
    },
    "findings": [
     {
      "passage": 1,
      "where": "Abstract",
      "quote": "Although drugs such as barbiturates and benzodiazepines are often used for the treatment of insomnia, they are associated with various side effects such as habituations, tolerance and addiction.",
-     "text": "Barbiturates are associated with side effects including tolerance in people who use them for the treatment of insomnia.",
+     "text": "Barbiturates are associated with side effects such as habituations, tolerance and addiction.",
      "id": "F1",
      "second_hand": ""
     }
    ],
    "limits": [],
    "tag": "A"
+  },
+  {
+   "read": "full",
+   "ref": {
+    "id": "sacco_2025",
+    "type": "article-journal",
+    "title": "The role of toxicology investigations in overdose deaths",
+    "author": [
+     {
+      "family": "Sacco",
+      "given": "Matteo A"
+     },
+     {
+      "family": "Gualtieri",
+      "given": "Saverio"
+     },
+     {
+      "family": "Spiliopoulou",
+      "given": "Chara"
+     },
+     {
+      "family": "Tarallo",
+      "given": "Alessandro P"
+     },
+     {
+      "family": "Verrina",
+      "given": "Maria C"
+     },
+     {
+      "family": "Aquila",
+      "given": "Isabella"
+     }
+    ],
+    "container-title": "Cureus",
+    "issued": {
+     "date-parts": [
+      [
+       2025
+      ]
+     ]
+    },
+    "DOI": "10.7759/cureus.79352",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-28",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-28"
+     }
+    },
+    "PMCID": "PMC11929145"
+   },
+   "doi": "10.7759/cureus.79352",
+   "pmcid": "PMC11929145",
+   "title": "The Role of Toxicology Investigations in Overdose Deaths",
+   "year": 2025,
+   "journal": "Cureus",
+   "kind": "review",
+   "people": false,
+   "near": 0.363,
+   "money": [
+    "Conflicts of interest: In compliance with the ICMJE uniform disclosure form, all authors declare the following:Payment/services info: All authors have declared that no financial support was received from any organization for the submitted work.Financial relationships: All authors have declared that they have no financial relationships at present or within the previous three years with any organizations that might have an interest in the submitted work.Other relationships: All authors have declared that there are no other relationships or activities that could appear to have influenced the submitted work."
+   ],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "This study emphasizes the critical role of forensic toxicology in identifying overdose deaths, focusing on the molecular mechanisms of toxicity, post-mortem redistribution, and the interpretation of toxicological findings.",
+    "text": "a review of the role of toxicology investigations in overdose deaths"
+   },
+   "findings": [
+    {
+     "passage": 34,
+     "where": "Review",
+     "quote": "Individual tolerance levels and the presence of multiple substances further complicate interpretation. Toxicologists must critically consider these influences to ensure accurate and reliable results.",
+     "text": "Individual tolerance levels and the presence of multiple substances complicate the interpretation of drug concentrations in toxicology reports.",
+     "id": "F2",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 34,
+     "where": "Review",
+     "quote": "Interpreting drug concentrations in toxicology reports presents challenges due to factors such as body decomposition and postmortem redistribution of drugs.",
+     "text": "Interpreting drug concentrations in toxicology reports is challenged by factors like body decomposition and postmortem redistribution of drugs.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "B"
   }
  ],
  "parts": [],
  "complete": false,
- "missing": "",
+ "missing": "rate and timeline of tolerance development",
  "wanted": [
   {
    "doi": "10.1016/0024-3205(96)00199-3",
@@ -185,6 +279,14 @@
    "why": "passed every gate",
    "short": "Yes, barbiturates are associated with tolerance.",
    "complete": false
+  },
+  {
+   "on": "2026-11-27",
+   "lane": 19,
+   "status": "none",
+   "why": "no draft passed: the form was wrong: no JSON",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -218,14 +320,7 @@
    "kind": "review",
    "at": "10.4103/jrms.jrms_1114_21",
    "kept": 0,
-   "thrown": [
-    {
-     "kind": "text",
-     "text": "A systematic review and meta-analysis of randomized clinical trials comparing diazepam and phenobarbital for preventing recurrent febrile seizures in children under 6 years old.",
-     "quote": "In this systematic review study, literature published in English language were carefully searched in biological databases (Cochrane Library, Medline, Scopus, CINHAL, Psycoinfo, and Proquest) by Februa",
-     "why": "a number of the sentence is not in its quote"
-    }
-   ]
+   "thrown": []
   },
   {
    "title": "What is the Best Predictor of Phenobarbital Pharmacokinetics to Use for Initial Dosing in Neonates?",
@@ -274,7 +369,7 @@
    "thrown": [
     {
      "kind": "text",
-     "text": "An interventional cohort study of neonates receiving prolonged paracetamol treatment.",
+     "text": "Interventional cohort study of neonates",
      "quote": "Interventional cohort study of prolonged use (>72 hours) of paracetamol in neonates: protocol of the PARASHUTE study",
      "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
     }
@@ -285,15 +380,8 @@
    "read": "full",
    "kind": "review",
    "at": "10.7759/cureus.79352",
-   "kept": 0,
-   "thrown": [
-    {
-     "kind": "text",
-     "text": "A literature review of overdose deaths and toxicology investigations",
-     "quote": "From the literature review, it emerged that the use of substances of abuse represents a growing social problem in several countries worldwide.",
-     "why": "the sentence is not carried by its quote and passage"
-    }
-   ]
+   "kept": 1,
+   "thrown": []
   }
  ],
  "plan": {
@@ -301,16 +389,309 @@
    "F1"
   ],
   "direct": "Yes",
-  "but": [],
+  "but": [
+   "F2"
+  ],
   "how": [
    [
     "DA",
     "F1"
+   ],
+   [
+    "DB",
+    "F2"
    ]
   ],
-  "unanswered": ""
+  "unanswered": "rate and timeline of tolerance development"
  },
- "soft": "the writer's reply was not in the form asked for",
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.9207,
+   "but": 0.8255,
+   "how1": 0.8869,
+   "how2": 0.3769
+  },
+  "scores_quotes_alone": {
+   "short": 0.5931,
+   "but": 0.6371,
+   "how1": 0.9637,
+   "how2": 0.5675
+  }
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Yes. A review of natural sleep aids says barbiturates are associated with tolerance.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "hu_2018",
+       "where": "Abstract",
+       "quote": "Although drugs such as barbiturates and benzodiazepines are often used for the treatment of insomnia, they are associated with various side effects such as habituations, tolerance and addiction.",
+       "sha": "4d00485c826d6d85"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The source mentions barbiturates and tolerance only in passing, as background. The sentence does not say that, contrary to the editor’s instruction."
+    },
+    {
+     "part": "but",
+     "text": "Individual tolerance levels vary, and the presence of multiple substances complicates interpretation.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "sacco_2025",
+       "where": "Review",
+       "quote": "Individual tolerance levels and the presence of multiple substances further complicate interpretation. Toxicologists must critically consider these influences to ensure accurate and reliable results.",
+       "sha": "045810626823025a"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer (A more qualified answer such as “Possibly” is fair: the passage mentions an association with tolerance in passing, but does not directly establish that people build up tolerance to barbiturates. Sentence 2 concerns toxicology interpretation)"
+    },
+    {
+     "part": "how1",
+     "text": "A review of natural sleep aids says barbiturates are associated with tolerance and addiction.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "hu_2018",
+       "where": "Abstract",
+       "quote": "This review is, therefore, intended to bring pharmacological data regarding to the effects of natural products on sleep duration and quality, mainly through the activation of GABAA receptors.",
+       "sha": "4d00485c826d6d85"
+      },
+      {
+       "label": "F1",
+       "ref": "hu_2018",
+       "where": "Abstract",
+       "quote": "Although drugs such as barbiturates and benzodiazepines are often used for the treatment of insomnia, they are associated with various side effects such as habituations, tolerance and addiction.",
+       "sha": "4d00485c826d6d85"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A review of toxicology in overdose deaths says individual tolerance levels complicate interpretation.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "sacco_2025",
+       "where": "Abstract",
+       "quote": "This study emphasizes the critical role of forensic toxicology in identifying overdose deaths, focusing on the molecular mechanisms of toxicity, post-mortem redistribution, and the interpretation of toxicological findings.",
+       "sha": "4d06f37d84be3c28"
+      },
+      {
+       "label": "F2",
+       "ref": "sacco_2025",
+       "where": "Review",
+       "quote": "Individual tolerance levels and the presence of multiple substances further complicate interpretation. Toxicologists must critically consider these influences to ensure accurate and reliable results.",
+       "sha": "045810626823025a"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Yes. A review of natural sleep aids says, in passing, that barbiturates are associated with tolerance.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "hu_2018",
+       "where": "Abstract",
+       "quote": "Although drugs such as barbiturates and benzodiazepines are often used for the treatment of insomnia, they are associated with various side effects such as habituations, tolerance and addiction.",
+       "sha": "4d00485c826d6d85"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "the word it opens with (“Yes”) is not the answer the passages bear out: The passages say barbiturates are associated with tolerance, but do not establish that people build up tolerance to them. “Unclear” would be fairer than “Yes.”"
+    },
+    {
+     "part": "but",
+     "text": "The review only mentions this as background; it does not study how often or how fast tolerance builds.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "hu_2018",
+       "where": "Abstract",
+       "quote": "Although drugs such as barbiturates and benzodiazepines are often used for the treatment of insomnia, they are associated with various side effects such as habituations, tolerance and addiction.",
+       "sha": "4d00485c826d6d85"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The abstract does not say that the review did not study how often or how fast tolerance builds."
+    },
+    {
+     "part": "how1",
+     "text": "A 2018 review of natural sleep aids notes that barbiturates are linked to tolerance and addiction.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "hu_2018",
+       "where": "Abstract",
+       "quote": "This review is, therefore, intended to bring pharmacological data regarding to the effects of natural products on sleep duration and quality, mainly through the activation of GABAA receptors.",
+       "sha": "4d00485c826d6d85"
+      },
+      {
+       "label": "F1",
+       "ref": "hu_2018",
+       "where": "Abstract",
+       "quote": "Although drugs such as barbiturates and benzodiazepines are often used for the treatment of insomnia, they are associated with various side effects such as habituations, tolerance and addiction.",
+       "sha": "4d00485c826d6d85"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "It presents the review as noting the claim without saying it is mentioned in passing. The editor’s warning says that an unqualified presentation of a background mention is unsupported."
+    },
+    {
+     "part": "how2",
+     "text": "A 2025 review of overdose deaths says individual tolerance levels make it hard to read toxicology reports.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "sacco_2025",
+       "where": "Abstract",
+       "quote": "This study emphasizes the critical role of forensic toxicology in identifying overdose deaths, focusing on the molecular mechanisms of toxicity, post-mortem redistribution, and the interpretation of toxicological findings.",
+       "sha": "4d06f37d84be3c28"
+      },
+      {
+       "label": "F2",
+       "ref": "sacco_2025",
+       "where": "Review",
+       "quote": "Individual tolerance levels and the presence of multiple substances further complicate interpretation. Toxicologists must critically consider these influences to ensure accurate and reliable results.",
+       "sha": "045810626823025a"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "It can. A review of natural sleep aids says barbiturates are associated with tolerance.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "hu_2018",
+       "where": "Abstract",
+       "quote": "Although drugs such as barbiturates and benzodiazepines are often used for the treatment of insomnia, they are associated with various side effects such as habituations, tolerance and addiction.",
+       "sha": "4d00485c826d6d85"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The review mentions barbiturates in passing as background; the sentence does not say that the association is mentioned in passing, as the editor requires."
+    },
+    {
+     "part": "but",
+     "text": "Individual tolerance levels vary, which complicates how drug concentrations are interpreted in toxicology reports.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "sacco_2025",
+       "where": "Review",
+       "quote": "Individual tolerance levels and the presence of multiple substances further complicate interpretation. Toxicologists must critically consider these influences to ensure accurate and reliable results.",
+       "sha": "045810626823025a"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer (The passages report an association between barbiturates and tolerance, but do not directly establish that people build up tolerance to them; “may” would be more cautious than “can.”)"
+    },
+    {
+     "part": "how1",
+     "text": "A 2018 review of natural sleep aids notes that barbiturates are associated with tolerance and addiction.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "hu_2018",
+       "where": "Abstract",
+       "quote": "This review is, therefore, intended to bring pharmacological data regarding to the effects of natural products on sleep duration and quality, mainly through the activation of GABAA receptors.",
+       "sha": "4d00485c826d6d85"
+      },
+      {
+       "label": "F1",
+       "ref": "hu_2018",
+       "where": "Abstract",
+       "quote": "Although drugs such as barbiturates and benzodiazepines are often used for the treatment of insomnia, they are associated with various side effects such as habituations, tolerance and addiction.",
+       "sha": "4d00485c826d6d85"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The review mentions barbiturates in passing as background; the sentence does not say that the association is mentioned in passing, as the editor requires."
+    },
+    {
+     "part": "how2",
+     "text": "A 2025 review of overdose deaths says individual tolerance levels complicate the interpretation of toxicology findings.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "sacco_2025",
+       "where": "Abstract",
+       "quote": "This study emphasizes the critical role of forensic toxicology in identifying overdose deaths, focusing on the molecular mechanisms of toxicity, post-mortem redistribution, and the interpretation of toxicological findings.",
+       "sha": "4d06f37d84be3c28"
+      },
+      {
+       "label": "F2",
+       "ref": "sacco_2025",
+       "where": "Review",
+       "quote": "Individual tolerance levels and the presence of multiple substances further complicate interpretation. Toxicologists must critically consider these influences to ensure accurate and reliable results.",
+       "sha": "045810626823025a"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  }
+ ],
+ "dropped": [
+  {
+   "try": 3,
+   "part": "how1",
+   "text": "A 2018 review of natural sleep aids notes that barbiturates are associated with tolerance and addiction.",
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "hu_2018",
+     "where": "Abstract",
+     "quote": "This review is, therefore, intended to bring pharmacological data regarding to the effects of natural products on sleep duration and quality, mainly through the activation of GABAA receptors.",
+     "sha": "4d00485c826d6d85"
+    },
+    {
+     "label": "F1",
+     "ref": "hu_2018",
+     "where": "Abstract",
+     "quote": "Although drugs such as barbiturates and benzodiazepines are often used for the treatment of insomnia, they are associated with various side effects such as habituations, tolerance and addiction.",
+     "sha": "4d00485c826d6d85"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The review mentions barbiturates in passing as background; the sentence does not say that the association is mentioned in passing, as the editor requires."
+  }
+ ],
  "place": {
   "home": "new:Barbiturates",
   "also": [
