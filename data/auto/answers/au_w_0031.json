@@ -20,36 +20,41 @@
   "on": "2026-11-28",
   "models": {
    "reader": "gemini:gemini-3.5-flash-lite",
-   "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+   "writer": "groq:qwen/qwen3.8-27b",
    "checker": "openrouter:openai/gpt-6-luna",
    "planner": "groq:openai/gpt-oss-120b",
-   "team": "team B",
-   "reader_2": "groq:openai/gpt-oss-20b",
+   "also1": "gemini:gemini-3.5-flash-lite",
+   "also2": "gemini:gemini-3.6-flash",
+   "team": "team I",
+   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
    "reader_3": "openrouter:openai/gpt-oss-120b",
-   "reader_first": "@cf/meta/llama-4-scout-17b-16e-instruct"
+   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "46089075956",
+  "run": "46136504062",
   "read_by": {
-   "gemini-3.5-flash-lite": 7,
-   "llama-4-scout-17b-16e-instruct": 2
+   "gemini-3.5-flash-lite": 6,
+   "gemini-3.1-flash-lite": 3,
+   "gpt-oss-20b": 1
   },
-  "read_seconds": 66,
+  "read_seconds": 28,
   "from": {
    "papers": 2,
    "summaries": 0,
-   "official": 2
+   "official": 1
   },
-  "neurons": 392.1,
-  "seconds": 153
+  "neurons": 0.0,
+  "seconds": 92
  },
  "status": "none",
- "why": "the second reader did not accept the answer",
+ "why": "no draft passed: not accepted at try 2: a second reader did not accept short (It repeats the rejected framing by attributing anxiety, panic, and paranoia to cannabis itself rather than plainly to THC. The passages report near-panic anxiety in a THC study, but do not support the broad claim that cannabis causes parano); but (it is about something else than the short answer (Sentence 1 describes effects but does not explain why they happen. Sentence 2 concerns the effect of CBD reducing THC’s anxiogenic effects, not the claims in sentence 1.)). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
  "gates": {
-  "reader": "llama-4-scout-17b-16e-instruct could not read on (the model service could not be reached: The read operation timed out): gemini-3.5-flash-lite read from there",
-  "read": "10 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 2 official page(s), 0 paper(s) read in summary only",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.72, but 0.99, how1 0.71, how2 0.06, how3 0.08",
-  "check": "short: NOT accepted: The sentence again leads with THC rather than cannabis itself, contrary to the editor’s note. It also says THC is the “main part” of cannabis, which the passages do not state, and attributes paranoia to high-dose THC without preserving the ; but: NOT accepted: The passage says further investigation is needed to confirm that CBD reduces THC’s anxiogenic effect. That is not the high-dose THC effect described in sentence 1.; how1: NOT accepted: The passage says anxiety sometimes reached a near-panic state. The sentence omits “sometimes” and overstates that finding as THC causing near-panic states.; how2: accepted; how3: NOT accepted: The passage qualifies the increased risk as applying when high doses of dronabinol are abused or misused, and says paranoia may be one of several psychiatric adverse reactions. The sentence omits those qualifications; the passage also does "
+  "read": "8 findings kept from 3 sources (2 papers read in full, 1 official pages, 0 papers read in summary); 5 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 1 official page(s), 0 paper(s) read in summary only",
+  "told": "the writer was told what the readers said of the last draft that was not accepted: the short answer “THC, the main part of cannabis, can cause anxiety, panic or paranoia at high doses.”: The sentence again leads with THC rather than cannabis itself, contrary to the editor’s note. It also says THC is the “main part” of cannabis, which the passages do not state, and attributes paran",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.63, but 0.99, how1 0.74, how2 0.67, how3 0.09",
+  "check": "not accepted at try 2: a second reader did not accept short (It repeats the rejected framing by attributing anxiety, panic, and paranoia to cannabis itself rather than plainly to THC. The passages report near-panic anxiety in a THC study, but do not support the broad claim that cannabis causes parano); but (it is about something else than the short answer (Sentence 1 describes effects but does not explain why they happen. Sentence 2 concerns the effect of CBD reducing THC’s anxiogenic effects, not the claims in sentence 1.)). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
+  "rules": "broken at try 3: how1: words that are not person-first (“users”); short: it says “the main”, and the words it rests on carry no such word: say what the source says, in its own measure, or leave the word out"
  },
  "sources": [
   {
@@ -118,47 +123,30 @@
     "Grant money for the study was provided by the Center for Medical Cannabis Research at the University of California, San Diego (UCSD)."
    ],
    "design": {
-    "passage": 2,
+    "passage": 1,
     "where": "Abstract",
-    "quote": "Critical systematic review of published literature examining the relationship of CU/CUD to AD or state-anxiety, including case reports, literature reviews, observational studies, and preclinical and clinical studies.",
-    "text": "A critical systematic review of published literature examining the relationship of cannabis and cannabis use disorders to anxiety disorders or state-anxiety."
+    "quote": "Cannabis has been reported to have both anxiogenic and anxiolytic effects. Habitual cannabis use has been associated with anxiety disorders (AD).",
+    "text": "systematic review of literature on cannabis and anxiety"
    },
    "findings": [
-    {
-     "passage": 19,
-     "where": "Discussion",
-     "quote": "It’s important to note that cannabis has a dose-dependent relationship on anxiety; that is, low doses are anxiolytic and high doses are anxiogenic.",
-     "text": "Cannabis has a dose-dependent relationship on anxiety, meaning low doses are anxiolytic and high doses are anxiogenic.",
-     "id": "F1",
-     "second_hand": ""
-    },
-    {
-     "passage": 1,
-     "where": "Abstract",
-     "quote": "Cannabis has been reported to have both anxiogenic and anxiolytic effects.",
-     "text": "Cannabis has been reported to have both anxiogenic and anxiolytic effects.",
-     "id": "F2",
-     "second_hand": ""
-    },
     {
      "passage": 18,
      "where": "Discussion",
      "quote": "CBD has been shown to reduce THC-induced anxiety and experimentally induced anxiety, most likely due to agonist activity at the 5HT1A receptor.",
-     "text": "CBD has been shown to reduce THC-induced anxiety and experimentally induced anxiety, most likely due to agonist activity at the 5HT1A receptor.",
-     "id": "F3",
+     "text": "Cannabidiol (CBD) can reduce anxiety that is induced by THC, likely through agonist activity at the 5HT1A receptor.",
+     "id": "F1",
      "second_hand": ""
-    }
-   ],
-   "limits": [
+    },
     {
-     "passage": 6,
-     "where": "Introduction",
-     "quote": "However, there are a paucity of studies examining the effect of cannabis on anxiety, and the effect of anxiety on cannabis consumption.",
-     "text": "There are a paucity of studies examining the effect of cannabis on anxiety, and the effect of anxiety on cannabis consumption.",
-     "id": "L1",
+     "passage": 19,
+     "where": "Discussion",
+     "quote": "cannabis has a dose-dependent relationship on anxiety; that is, low doses are anxiolytic and high doses are anxiogenic.",
+     "text": "The paper states that low doses of cannabis are anxiolytic while high doses are anxiogenic.",
+     "id": "F2",
      "second_hand": ""
     }
    ],
+   "limits": [],
    "tag": "A"
   },
   {
@@ -230,31 +218,31 @@
     "passage": 2,
     "where": "Abstract",
     "quote": "To systematically review studies assessing cannabinoid interventions (e.g. THC or CBD or whole cannabis interventions) both in animals and humans, as well as recent epidemiological studies reporting on anxiolytic or anxiogenic effects from cannabis consumption.",
-    "text": "Systematic review of cannabinoid interventions in animals and humans, as well as recent epidemiological studies"
+    "text": "Systematic review of cannabinoid interventions in animals and humans, and epidemiological studies"
    },
    "findings": [
     {
      "passage": 47,
      "where": "Results › Acute human clinical trials",
      "quote": "THC was found to have a profound anxiogenic effect, with participants stating that they felt increasingly more tense, jittery and less in control as the dose was increased.",
-     "text": "THC was found to have a profound anxiogenic effect, causing participants to feel increasingly more tense, jittery, and less in control as the dose was increased.",
-     "id": "F4",
+     "text": "THC was found to have a profound anxiogenic effect, with participants stating that they felt increasingly more tense, jittery and less in control as the dose was increased.",
+     "id": "F3",
      "second_hand": ""
     },
     {
      "passage": 47,
      "where": "Results › Acute human clinical trials",
      "quote": "Karniol et al. (1974) also reported a strong anxiogenic reaction as a result of THC administration with subjects expressing that the feeling of anxiety sometimes reached a near panic state.",
-     "text": "THC administration resulted in a strong anxiogenic reaction where subjects expressed that the feeling of anxiety sometimes reached a near panic state.",
-     "id": "F5",
+     "text": "Karniol et al. reported a strong anxiogenic reaction as a result of THC administration with subjects expressing that the feeling of anxiety sometimes reached a near panic state.",
+     "id": "F4",
      "second_hand": ""
     },
     {
-     "passage": 1,
-     "where": "Abstract",
-     "quote": "In humans, Δ9-tetrahydrocannabinol (THC) has been associated with an anxiogenic response, while anxiolytic activity has been attributed mainly to cannabidiol (CBD).",
-     "text": "In humans, THC has been associated with an anxiogenic response.",
-     "id": "F6",
+     "passage": 52,
+     "where": "Discussion › Data synthesis",
+     "quote": "In humans, research has also shown that the anxiogenic effects of THC are greater among infrequent or non-users relative to frequent users, and ﻿high potency THC in cannabis products in particular, are thought to induce the development of psychotic-like symptoms or overt psychosis in vulnerable individuals.",
+     "text": "In humans, research has also shown that the anxiogenic effects of THC are greater among infrequent or non-users relative to frequent users, and high potency THC in cannabis products in particular, are thought to induce the development of psychotic-like symptoms or overt psychosis in vulnerable individuals.",
+     "id": "F5",
      "second_hand": ""
     }
    ],
@@ -264,98 +252,11 @@
      "where": "Discussion › Data synthesis",
      "quote": "However, further investigation is needed to categorically affirm this effect.",
      "text": "Further investigation is needed to categorically affirm this effect.",
-     "id": "L2",
+     "id": "L1",
      "second_hand": ""
     }
    ],
    "tag": "B"
-  },
-  {
-   "read": "page",
-   "ref": {
-    "id": "healthcanada_about",
-    "type": "webpage",
-    "title": "About cannabis",
-    "author": [
-     {
-      "literal": "Health Canada"
-     }
-    ],
-    "issued": {
-     "date-parts": [
-      [
-       2023,
-       11,
-       6
-      ]
-     ]
-    },
-    "URL": "https://www.canada.ca/en/health-canada/services/drugs-medication/cannabis/about.html",
-    "accessed": {
-     "date-parts": [
-      [
-       2026,
-       11,
-       28
-      ]
-     ]
-    },
-    "verification": {
-     "status": "made by code",
-     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-28"
-    },
-    "publisher": "Government of Canada"
-   },
-   "title": "About cannabis",
-   "year": 2023,
-   "kind": "official",
-   "people": true,
-   "near": 0.557,
-   "name": "Health Canada",
-   "short": "Health Canada",
-   "tier": 1,
-   "address": "https://www.canada.ca/en/health-canada/services/drugs-medication/cannabis/about.html",
-   "money": [],
-   "label": false,
-   "design": null,
-   "findings": [
-    {
-     "passage": 4,
-     "where": "Cannabis and its components / Chemical substances in cannabis / THC",
-     "quote": "THC has some therapeutic effects but it also has harmful effects.",
-     "text": "THC has harmful effects.",
-     "id": "F7",
-     "second_hand": ""
-    },
-    {
-     "passage": 4,
-     "where": "Cannabis and its components / Chemical substances in cannabis / THC",
-     "quote": "Harmful effects may be greater when the strength of THC is higher.",
-     "text": "Harmful effects of THC may be greater when THC strength is higher.",
-     "id": "F8",
-     "second_hand": ""
-    },
-    {
-     "passage": 6,
-     "where": "Cannabis and its components / Other intoxicating cannabinoids / CBD",
-     "quote": "There is some evidence that CBD may block or lower some of the effects of THC on the mind.",
-     "text": "CBD may block or lower some effects of THC on the mind.",
-     "id": "F9",
-     "second_hand": ""
-    }
-   ],
-   "limits": [
-    {
-     "passage": 5,
-     "where": "Cannabis and its components / Other intoxicating cannabinoids",
-     "quote": "While less researched and understood, the risks from consuming these other intoxicating cannabinoids are probably similar to the risks from consuming delta-9-THC.",
-     "text": "The risks of other intoxicating cannabinoids are not well researched.",
-     "id": "L3",
-     "second_hand": ""
-    }
-   ],
-   "tag": "C"
   },
   {
    "read": "page",
@@ -411,14 +312,39 @@
     {
      "passage": 16,
      "where": "Drug abuse and dependence",
-     "quote": "Ingestion of high doses of dronabinol increases the risk of psychiatric adverse reactions if abused or misused, while continued administration can lead to addiction. Psychiatric adverse reactions may include psychosis, hallucinations, depersonalization, mood alteration, and paranoia.",
-     "text": "Ingestion of high doses of dronabinol increases the risk of psychiatric adverse reactions if abused or misused, and these reactions may include paranoia and mood alteration.",
-     "id": "F10",
+     "quote": "Psychiatric adverse reactions may include psychosis, hallucinations, depersonalization, mood alteration, and paranoia.",
+     "text": "Psychiatric adverse reactions to dronabinol may include paranoia, mood alteration, depersonalization, hallucinations, and psychosis.",
+     "id": "F6",
+     "second_hand": ""
+    },
+    {
+     "passage": 16,
+     "where": "Drug abuse and dependence",
+     "quote": "Ingestion of high doses of dronabinol increases the risk of psychiatric adverse reactions if abused or misused",
+     "text": "Ingesting high doses of dronabinol increases the risk of psychiatric adverse reactions.",
+     "id": "F7",
+     "second_hand": ""
+    },
+    {
+     "passage": 10,
+     "where": "Warnings and precautions",
+     "quote": "Use of dronabinol capsules has been associated with cognitive impairment and altered mental state.",
+     "text": "Dronabinol capsules are associated with an altered mental state and cognitive impairment.",
+     "id": "F8",
      "second_hand": ""
     }
    ],
-   "limits": [],
-   "tag": "D"
+   "limits": [
+    {
+     "passage": 16,
+     "where": "Drug abuse and dependence",
+     "quote": "In an open-label study in patients with AIDS who received dronabinol capsules for up to five months, no abuse, or systematic change in personality or social functioning were observed",
+     "text": "In one open-label study of patients with AIDS, no systematic change in personality or social functioning was observed over five months.",
+     "id": "L2",
+     "second_hand": ""
+    }
+   ],
+   "tag": "C"
   }
  ],
  "parts": [],
@@ -472,6 +398,14 @@
    "why": "no draft passed: the form was wrong: no JSON",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-28",
+   "lane": 19,
+   "status": "none",
+   "why": "the second reader did not accept the answer",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -480,8 +414,33 @@
    "read": "full",
    "kind": "review",
    "at": "10.1159/000534855",
-   "kept": 3,
-   "thrown": []
+   "kept": 2,
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "The paper reports that frequent cannabis use is associated with increased state anxiety and that acute cannabis use can produce anxiogenic effects.",
+     "quote": "several studies support the idea that frequency of CU drives state-anxiety or AD incidence. This directional interpretation is consistent with several studies reporting the acute anxiogenic effects of",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    },
+    {
+     "kind": "finding",
+     "text": "The paper finds that the frequency of cannabis use is linked to higher levels of state anxiety and anxiety disorder incidence.",
+     "quote": "several studies support the idea that frequency of CU drives state-anxiety or AD incidence.",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    },
+    {
+     "kind": "limit",
+     "text": "The paper notes that studies on cannabis and anxiety are limited and have only recently increased due to changing legal contexts.",
+     "quote": "First, there are limited studies of cannabis on anxiety, and only recently (i.e., in the past 5–10 years) have more researchers attempts to study cannabis given the complex medicolegal environment sur",
+     "why": "the sentence is not carried by its quote and passage"
+    },
+    {
+     "kind": "limit",
+     "text": "The paper highlights heterogeneity in anxiety measurement tools across studies, which limits comparability.",
+     "quote": "Specifically, when anxiety, different measures of anxiety were used, including subjective reports of decreased anxiety, patient-reported outcome tools, and measures of sleep and mood.",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
   },
   {
    "title": "Cannabis, a cause for anxiety? A critical appraisal of the anxiogenic and anxiolytic properties",
@@ -512,15 +471,8 @@
    "read": "page",
    "kind": "official",
    "at": "https://www.canada.ca/en/health-canada/services/drugs-medication/cannabis/about.html",
-   "kept": 3,
-   "thrown": [
-    {
-     "kind": "limit",
-     "text": "There is only some evidence about CBD's effects.",
-     "quote": "There is some evidence",
-     "why": "the sentence is not carried by its quote and passage"
-    }
-   ]
+   "kept": 0,
+   "thrown": []
   },
   {
    "title": "About Cannabis",
@@ -544,38 +496,57 @@
    "kind": "official",
    "at": "https://www.nhs.uk/medicines/medical-cannabis/",
    "kept": 0,
-   "thrown": []
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "Medical cannabis can cause side effects such as a change in mood or behavior.",
+     "quote": "Depending on the type of medical cannabis you take, it's possible to develop side effects such as: ... a behavioural or mood change",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
   },
   {
    "title": "Dronabinol",
    "read": "page",
    "kind": "official",
    "at": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=fd8c5d57-0173-4f62-8ff0-d8147986a976",
-   "kept": 1,
+   "kept": 3,
+   "thrown": []
+  },
+  {
+   "title": "Cannabis",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.canada.ca/en/health-canada/services/drugs-medication/cannabis.html",
+   "kept": 0,
    "thrown": []
   }
  ],
  "plan": {
   "short": [
    "F5",
-   "F1",
-   "F8"
+   "F3",
+   "F6"
   ],
-  "direct": "",
+  "direct": "Sometimes",
   "but": [
-   "L2"
+   "L1"
   ],
   "how": [
    [
-    "F5",
+    "DB",
+    "F3",
     "F4",
-    "F6"
+    "F5"
    ],
    [
+    "F6",
+    "F7"
+   ],
+   [
+    "DA",
+    "F2",
     "F1"
-   ],
-   [
-    "F10"
    ]
   ],
   "unanswered": "individual susceptibility factors"
@@ -585,18 +556,18 @@
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.7177,
-   "but": 0.9874,
-   "how1": 0.7107,
-   "how2": 0.0629,
-   "how3": 0.0751
+   "short": 0.6311,
+   "but": 0.9852,
+   "how1": 0.7357,
+   "how2": 0.6694,
+   "how3": 0.0884
   },
   "scores_quotes_alone": {
-   "short": 0.1797,
-   "but": 0.976,
-   "how1": 0.9726,
-   "how2": 0.1581,
-   "how3": 0.0565
+   "short": 0.4918,
+   "but": 0.9725,
+   "how1": 0.789,
+   "how2": 0.5745,
+   "how3": 0.2475
   }
  },
  "tries": [
@@ -606,40 +577,40 @@
    "parts": [
     {
      "part": "short",
-     "text": "THC, the main part of cannabis, can cause anxiety, panic or paranoia. High doses are more likely to cause these problems.",
+     "text": "Sometimes cannabis causes anxiety, panic or paranoia. THC can make people feel tense or jittery, and high doses increase the risk of these reactions.",
      "rests_on": [
       {
        "label": "F5",
        "ref": "sharpe_2020",
+       "where": "Discussion › Data synthesis",
+       "quote": "In humans, research has also shown that the anxiogenic effects of THC are greater among infrequent or non-users relative to frequent users, and ﻿high potency THC in cannabis products in particular, are thought to induce the development of psychotic-like symptoms or overt psychosis in vulnerable individuals.",
+       "sha": "03f4870c1b673a2b"
+      },
+      {
+       "label": "F3",
+       "ref": "sharpe_2020",
        "where": "Results › Acute human clinical trials",
-       "quote": "Karniol et al. (1974) also reported a strong anxiogenic reaction as a result of THC administration with subjects expressing that the feeling of anxiety sometimes reached a near panic state.",
+       "quote": "THC was found to have a profound anxiogenic effect, with participants stating that they felt increasingly more tense, jittery and less in control as the dose was increased.",
        "sha": "08188796d32dc05d"
       },
       {
-       "label": "F1",
-       "ref": "beletsky_2024",
-       "where": "Discussion",
-       "quote": "It’s important to note that cannabis has a dose-dependent relationship on anxiety; that is, low doses are anxiolytic and high doses are anxiogenic.",
-       "sha": "3f837d57b482fb11"
-      },
-      {
-       "label": "F8",
-       "ref": "healthcanada_about",
-       "where": "Cannabis and its components / Chemical substances in cannabis / THC",
-       "quote": "Harmful effects may be greater when the strength of THC is higher.",
-       "sha": "05a5cd2d4e534d91"
+       "label": "F6",
+       "ref": "label_dronabinol",
+       "where": "Drug abuse and dependence",
+       "quote": "Psychiatric adverse reactions may include psychosis, hallucinations, depersonalization, mood alteration, and paranoia.",
+       "sha": "7eaa457811b9dd3f"
       }
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "The passages do not establish that THC is the “main part” of cannabis, or that THC specifically causes paranoia; the paranoia claim is about cannabis generally. The dose evidence supports higher doses being more anxiogenic, but not that the"
+     "said": "The passages report anxiety and near-panic reactions in particular THC studies, and paranoia among possible psychiatric adverse reactions to high-dose dronabinol if abused or misused. They do not support the broader claim that cannabis caus"
     },
     {
      "part": "but",
-     "text": "Further investigation is needed to confirm this effect.",
+     "text": "Further investigation is needed to categorically affirm this effect.",
      "rests_on": [
       {
-       "label": "L2",
+       "label": "L1",
        "ref": "sharpe_2020",
        "where": "Discussion › Data synthesis",
        "quote": "However, further investigation is needed to categorically affirm this effect.",
@@ -648,65 +619,95 @@
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "The passage says further investigation is needed to confirm that CBD reduces THC’s anxiogenic effect, not the high-dose effect described in sentence 1."
+     "said": "it is about something else than the short answer (Sentence 1 offers THC and dose as reasons for the reactions, so it addresses why they may occur. Sentence 2's source is discussing whether CBD reduces THC-induced anxiety; that does not limit the claims sentence 1 makes.)"
     },
     {
      "part": "how1",
-     "text": "A study found THC caused a strong anxiogenic reaction, with near panic states, in humans.",
+     "text": "A review of animal and human studies found THC caused strong anxiety, with some people feeling near panic as doses rose.",
      "rests_on": [
       {
-       "label": "F5",
+       "label": "DB",
        "ref": "sharpe_2020",
-       "where": "Results › Acute human clinical trials",
-       "quote": "Karniol et al. (1974) also reported a strong anxiogenic reaction as a result of THC administration with subjects expressing that the feeling of anxiety sometimes reached a near panic state.",
-       "sha": "08188796d32dc05d"
+       "where": "Abstract",
+       "quote": "To systematically review studies assessing cannabinoid interventions (e.g. THC or CBD or whole cannabis interventions) both in animals and humans, as well as recent epidemiological studies reporting on anxiolytic or anxiogenic effects from cannabis consumption.",
+       "sha": "05458d64d5dd83b9"
       },
       {
-       "label": "F4",
+       "label": "F3",
        "ref": "sharpe_2020",
        "where": "Results › Acute human clinical trials",
        "quote": "THC was found to have a profound anxiogenic effect, with participants stating that they felt increasingly more tense, jittery and less in control as the dose was increased.",
        "sha": "08188796d32dc05d"
       },
       {
-       "label": "F6",
+       "label": "F4",
        "ref": "sharpe_2020",
-       "where": "Abstract",
-       "quote": "In humans, Δ9-tetrahydrocannabinol (THC) has been associated with an anxiogenic response, while anxiolytic activity has been attributed mainly to cannabidiol (CBD).",
-       "sha": "c44ee17d88120e0f"
+       "where": "Results › Acute human clinical trials",
+       "quote": "Karniol et al. (1974) also reported a strong anxiogenic reaction as a result of THC administration with subjects expressing that the feeling of anxiety sometimes reached a near panic state.",
+       "sha": "08188796d32dc05d"
+      },
+      {
+       "label": "F5",
+       "ref": "sharpe_2020",
+       "where": "Discussion › Data synthesis",
+       "quote": "In humans, research has also shown that the anxiogenic effects of THC are greater among infrequent or non-users relative to frequent users, and ﻿high potency THC in cannabis products in particular, are thought to induce the development of psychotic-like symptoms or overt psychosis in vulnerable individuals.",
+       "sha": "03f4870c1b673a2b"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage reports increasing tension and jitteriness as THC doses rose in one study, and near-panic anxiety in a separate study. It does not say near-panic feelings occurred as doses rose, nor that animal and human studies together found "
     },
     {
      "part": "how2",
-     "text": "A review found low doses of cannabis are anxiolytic, but high doses are anxiogenic.",
+     "text": "The US label for dronabinol, a medicine made of THC, says high doses increase the risk of paranoia and psychosis.",
      "rests_on": [
       {
-       "label": "F1",
-       "ref": "beletsky_2024",
-       "where": "Discussion",
-       "quote": "It’s important to note that cannabis has a dose-dependent relationship on anxiety; that is, low doses are anxiolytic and high doses are anxiogenic.",
-       "sha": "3f837d57b482fb11"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how3",
-     "text": "The US label for dronabinol, a medicine made of THC, says high doses increase the risk of paranoia.",
-     "rests_on": [
-      {
-       "label": "F10",
+       "label": "F6",
        "ref": "label_dronabinol",
        "where": "Drug abuse and dependence",
-       "quote": "Ingestion of high doses of dronabinol increases the risk of psychiatric adverse reactions if abused or misused, while continued administration can lead to addiction. Psychiatric adverse reactions may include psychosis, hallucinations, depersonalization, mood alteration, and paranoia.",
+       "quote": "Psychiatric adverse reactions may include psychosis, hallucinations, depersonalization, mood alteration, and paranoia.",
+       "sha": "7eaa457811b9dd3f"
+      },
+      {
+       "label": "F7",
+       "ref": "label_dronabinol",
+       "where": "Drug abuse and dependence",
+       "quote": "Ingestion of high doses of dronabinol increases the risk of psychiatric adverse reactions if abused or misused",
        "sha": "7eaa457811b9dd3f"
       }
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "The passage says high doses increase the risk of psychiatric adverse reactions if dronabinol is abused or misused, and that these reactions may include paranoia. The sentence omits that condition and uncertainty; the passage also does not s"
+     "said": "The label passage says the risk applies if high doses are abused or misused, a qualification the sentence omits. It also does not say dronabinol is a medicine made of THC, as the editor's note requires when using the label."
+    },
+    {
+     "part": "how3",
+     "text": "A 2024 review says low doses of cannabis can reduce anxiety, while high doses can cause it. CBD may reduce THC-induced anxiety.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "beletsky_2024",
+       "where": "Abstract",
+       "quote": "Cannabis has been reported to have both anxiogenic and anxiolytic effects. Habitual cannabis use has been associated with anxiety disorders (AD).",
+       "sha": "dcfe056a9ff9c938"
+      },
+      {
+       "label": "F2",
+       "ref": "beletsky_2024",
+       "where": "Discussion",
+       "quote": "cannabis has a dose-dependent relationship on anxiety; that is, low doses are anxiolytic and high doses are anxiogenic.",
+       "sha": "3f837d57b482fb11"
+      },
+      {
+       "label": "F1",
+       "ref": "beletsky_2024",
+       "where": "Discussion",
+       "quote": "CBD has been shown to reduce THC-induced anxiety and experimentally induced anxiety, most likely due to agonist activity at the 5HT1A receptor.",
+       "sha": "c9419933f9701939"
+      }
+     ],
+     "ok": true
     }
    ]
   },
@@ -716,40 +717,40 @@
    "parts": [
     {
      "part": "short",
-     "text": "It can cause anxiety, panic or paranoia, especially at high doses.",
+     "text": "Sometimes cannabis causes anxiety, panic or paranoia. THC can make people feel tense or jittery, and high doses of dronabinol, a medicine made of THC, may lead to paranoia.",
      "rests_on": [
       {
        "label": "F5",
        "ref": "sharpe_2020",
+       "where": "Discussion › Data synthesis",
+       "quote": "In humans, research has also shown that the anxiogenic effects of THC are greater among infrequent or non-users relative to frequent users, and ﻿high potency THC in cannabis products in particular, are thought to induce the development of psychotic-like symptoms or overt psychosis in vulnerable individuals.",
+       "sha": "03f4870c1b673a2b"
+      },
+      {
+       "label": "F3",
+       "ref": "sharpe_2020",
        "where": "Results › Acute human clinical trials",
-       "quote": "Karniol et al. (1974) also reported a strong anxiogenic reaction as a result of THC administration with subjects expressing that the feeling of anxiety sometimes reached a near panic state.",
+       "quote": "THC was found to have a profound anxiogenic effect, with participants stating that they felt increasingly more tense, jittery and less in control as the dose was increased.",
        "sha": "08188796d32dc05d"
       },
       {
-       "label": "F1",
-       "ref": "beletsky_2024",
-       "where": "Discussion",
-       "quote": "It’s important to note that cannabis has a dose-dependent relationship on anxiety; that is, low doses are anxiolytic and high doses are anxiogenic.",
-       "sha": "3f837d57b482fb11"
-      },
-      {
-       "label": "F8",
-       "ref": "healthcanada_about",
-       "where": "Cannabis and its components / Chemical substances in cannabis / THC",
-       "quote": "Harmful effects may be greater when the strength of THC is higher.",
-       "sha": "05a5cd2d4e534d91"
+       "label": "F6",
+       "ref": "label_dronabinol",
+       "where": "Drug abuse and dependence",
+       "quote": "Psychiatric adverse reactions may include psychosis, hallucinations, depersonalization, mood alteration, and paranoia.",
+       "sha": "7eaa457811b9dd3f"
       }
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "The vague “It” does not plainly identify cannabis or THC, contrary to the editor’s instruction. Also, the passages do not establish that high doses of cannabis specifically cause paranoia; the FDA passage limits the paranoia risk to high-do"
+     "said": "It repeats the rejected framing by attributing anxiety, panic, and paranoia to cannabis itself rather than plainly to THC. The passages report near-panic anxiety in a THC study, but do not support the broad claim that cannabis causes parano"
     },
     {
      "part": "but",
-     "text": "Further investigation is needed to confirm this effect.",
+     "text": "Further investigation is needed to categorically affirm this effect.",
      "rests_on": [
       {
-       "label": "L2",
+       "label": "L1",
        "ref": "sharpe_2020",
        "where": "Discussion › Data synthesis",
        "quote": "However, further investigation is needed to categorically affirm this effect.",
@@ -758,131 +759,113 @@
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "it is about something else than the short answer (Sentence 1 says cannabis can cause these effects, but does not explain why. Sentence 2 concerns further confirmation that CBD reduces THC’s anxiogenic effect, not the claim in sentence 1.)"
+     "said": "it is about something else than the short answer (Sentence 1 describes effects but does not explain why they happen. Sentence 2 concerns the effect of CBD reducing THC’s anxiogenic effects, not the claims in sentence 1.)"
     },
     {
      "part": "how1",
-     "text": "THC, a part of cannabis, caused anxiety and near panic in studies.",
+     "text": "A 2020 review of animal and human studies found THC caused strong anxiety, with some people feeling near panic.",
      "rests_on": [
       {
-       "label": "F5",
+       "label": "DB",
        "ref": "sharpe_2020",
-       "where": "Results › Acute human clinical trials",
-       "quote": "Karniol et al. (1974) also reported a strong anxiogenic reaction as a result of THC administration with subjects expressing that the feeling of anxiety sometimes reached a near panic state.",
-       "sha": "08188796d32dc05d"
+       "where": "Abstract",
+       "quote": "To systematically review studies assessing cannabinoid interventions (e.g. THC or CBD or whole cannabis interventions) both in animals and humans, as well as recent epidemiological studies reporting on anxiolytic or anxiogenic effects from cannabis consumption.",
+       "sha": "05458d64d5dd83b9"
       },
       {
-       "label": "F4",
+       "label": "F3",
        "ref": "sharpe_2020",
        "where": "Results › Acute human clinical trials",
        "quote": "THC was found to have a profound anxiogenic effect, with participants stating that they felt increasingly more tense, jittery and less in control as the dose was increased.",
        "sha": "08188796d32dc05d"
       },
       {
-       "label": "F6",
+       "label": "F4",
        "ref": "sharpe_2020",
-       "where": "Abstract",
-       "quote": "In humans, Δ9-tetrahydrocannabinol (THC) has been associated with an anxiogenic response, while anxiolytic activity has been attributed mainly to cannabidiol (CBD).",
-       "sha": "c44ee17d88120e0f"
+       "where": "Results › Acute human clinical trials",
+       "quote": "Karniol et al. (1974) also reported a strong anxiogenic reaction as a result of THC administration with subjects expressing that the feeling of anxiety sometimes reached a near panic state.",
+       "sha": "08188796d32dc05d"
+      },
+      {
+       "label": "F5",
+       "ref": "sharpe_2020",
+       "where": "Discussion › Data synthesis",
+       "quote": "In humans, research has also shown that the anxiogenic effects of THC are greater among infrequent or non-users relative to frequent users, and ﻿high potency THC in cannabis products in particular, are thought to induce the development of psychotic-like symptoms or overt psychosis in vulnerable individuals.",
+       "sha": "03f4870c1b673a2b"
       }
      ],
      "ok": true
     },
     {
      "part": "how2",
-     "text": "A review found low doses of cannabis are anxiolytic, high doses anxiogenic.",
+     "text": "The US label for dronabinol says high doses may cause paranoia, mood changes, or psychosis.",
      "rests_on": [
       {
-       "label": "F1",
-       "ref": "beletsky_2024",
-       "where": "Discussion",
-       "quote": "It’s important to note that cannabis has a dose-dependent relationship on anxiety; that is, low doses are anxiolytic and high doses are anxiogenic.",
-       "sha": "3f837d57b482fb11"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how3",
-     "text": "The US label for dronabinol, a medicine made of THC, notes high doses may cause paranoia.",
-     "rests_on": [
-      {
-       "label": "F10",
+       "label": "F6",
        "ref": "label_dronabinol",
        "where": "Drug abuse and dependence",
-       "quote": "Ingestion of high doses of dronabinol increases the risk of psychiatric adverse reactions if abused or misused, while continued administration can lead to addiction. Psychiatric adverse reactions may include psychosis, hallucinations, depersonalization, mood alteration, and paranoia.",
+       "quote": "Psychiatric adverse reactions may include psychosis, hallucinations, depersonalization, mood alteration, and paranoia.",
+       "sha": "7eaa457811b9dd3f"
+      },
+      {
+       "label": "F7",
+       "ref": "label_dronabinol",
+       "where": "Drug abuse and dependence",
+       "quote": "Ingestion of high doses of dronabinol increases the risk of psychiatric adverse reactions if abused or misused",
        "sha": "7eaa457811b9dd3f"
       }
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "The FDA passage says the risk applies if high-dose dronabinol is abused or misused; the sentence leaves out that condition. The passage also does not state that dronabinol is made of THC."
+     "said": "The label says high doses increase the risk of psychiatric adverse reactions if dronabinol is abused or misused. The sentence omits that condition and overstates the passage as saying high doses may cause these reactions generally."
+    },
+    {
+     "part": "how3",
+     "text": "A 2024 review says low doses of cannabis can reduce anxiety, while high doses can increase it.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "beletsky_2024",
+       "where": "Abstract",
+       "quote": "Cannabis has been reported to have both anxiogenic and anxiolytic effects. Habitual cannabis use has been associated with anxiety disorders (AD).",
+       "sha": "dcfe056a9ff9c938"
+      },
+      {
+       "label": "F2",
+       "ref": "beletsky_2024",
+       "where": "Discussion",
+       "quote": "cannabis has a dose-dependent relationship on anxiety; that is, low doses are anxiolytic and high doses are anxiogenic.",
+       "sha": "3f837d57b482fb11"
+      },
+      {
+       "label": "F1",
+       "ref": "beletsky_2024",
+       "where": "Discussion",
+       "quote": "CBD has been shown to reduce THC-induced anxiety and experimentally induced anxiety, most likely due to agonist activity at the 5HT1A receptor.",
+       "sha": "c9419933f9701939"
+      }
+     ],
+     "ok": true
     }
    ]
   },
   {
    "try": 3,
-   "why": "the last draft: no answer",
+   "why": "a rule was broken: written again",
    "parts": [
     {
      "part": "short",
-     "text": "THC, the main part of cannabis, can cause anxiety, panic or paranoia at high doses.",
+     "text": "Sometimes THC, the main active part of cannabis, can cause anxiety, panic or paranoia. This is more likely in people who do not use it often.",
      "rests_on": [
       {
        "label": "F5",
-       "ref": "sharpe_2020",
-       "where": "Results › Acute human clinical trials",
-       "quote": "Karniol et al. (1974) also reported a strong anxiogenic reaction as a result of THC administration with subjects expressing that the feeling of anxiety sometimes reached a near panic state.",
-       "sha": "08188796d32dc05d"
-      },
-      {
-       "label": "F1",
-       "ref": "beletsky_2024",
-       "where": "Discussion",
-       "quote": "It’s important to note that cannabis has a dose-dependent relationship on anxiety; that is, low doses are anxiolytic and high doses are anxiogenic.",
-       "sha": "3f837d57b482fb11"
-      },
-      {
-       "label": "F8",
-       "ref": "healthcanada_about",
-       "where": "Cannabis and its components / Chemical substances in cannabis / THC",
-       "quote": "Harmful effects may be greater when the strength of THC is higher.",
-       "sha": "05a5cd2d4e534d91"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The sentence again leads with THC rather than cannabis itself, contrary to the editor’s note. It also says THC is the “main part” of cannabis, which the passages do not state, and attributes paranoia to high-dose THC without preserving the "
-    },
-    {
-     "part": "but",
-     "text": "Further investigation is needed to confirm this effect.",
-     "rests_on": [
-      {
-       "label": "L2",
        "ref": "sharpe_2020",
        "where": "Discussion › Data synthesis",
-       "quote": "However, further investigation is needed to categorically affirm this effect.",
-       "sha": "4dade14e489b95b1"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passage says further investigation is needed to confirm that CBD reduces THC’s anxiogenic effect. That is not the high-dose THC effect described in sentence 1."
-    },
-    {
-     "part": "how1",
-     "text": "A study found THC caused near panic states in humans.",
-     "rests_on": [
-      {
-       "label": "F5",
-       "ref": "sharpe_2020",
-       "where": "Results › Acute human clinical trials",
-       "quote": "Karniol et al. (1974) also reported a strong anxiogenic reaction as a result of THC administration with subjects expressing that the feeling of anxiety sometimes reached a near panic state.",
-       "sha": "08188796d32dc05d"
+       "quote": "In humans, research has also shown that the anxiogenic effects of THC are greater among infrequent or non-users relative to frequent users, and ﻿high potency THC in cannabis products in particular, are thought to induce the development of psychotic-like symptoms or overt psychosis in vulnerable individuals.",
+       "sha": "03f4870c1b673a2b"
       },
       {
-       "label": "F4",
+       "label": "F3",
        "ref": "sharpe_2020",
        "where": "Results › Acute human clinical trials",
        "quote": "THC was found to have a profound anxiogenic effect, with participants stating that they felt increasingly more tense, jittery and less in control as the dose was increased.",
@@ -890,95 +873,117 @@
       },
       {
        "label": "F6",
-       "ref": "sharpe_2020",
-       "where": "Abstract",
-       "quote": "In humans, Δ9-tetrahydrocannabinol (THC) has been associated with an anxiogenic response, while anxiolytic activity has been attributed mainly to cannabidiol (CBD).",
-       "sha": "c44ee17d88120e0f"
+       "ref": "label_dronabinol",
+       "where": "Drug abuse and dependence",
+       "quote": "Psychiatric adverse reactions may include psychosis, hallucinations, depersonalization, mood alteration, and paranoia.",
+       "sha": "7eaa457811b9dd3f"
       }
      ],
      "ok": false,
-     "by": "the second reader",
-     "said": "The passage says anxiety sometimes reached a near-panic state. The sentence omits “sometimes” and overstates that finding as THC causing near-panic states."
+     "by": "a rule",
+     "said": "a rule: it says “the main”, and the words it rests on carry no such word: say what the source says, in its own measure, or leave the word out"
+    },
+    {
+     "part": "but",
+     "text": "Further investigation is needed to categorically affirm this effect.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "sharpe_2020",
+       "where": "Discussion › Data synthesis",
+       "quote": "However, further investigation is needed to categorically affirm this effect.",
+       "sha": "4dade14e489b95b1"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "A 2020 review of animal and human studies found THC caused tension and near-panic states, especially in infrequent users.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "sharpe_2020",
+       "where": "Abstract",
+       "quote": "To systematically review studies assessing cannabinoid interventions (e.g. THC or CBD or whole cannabis interventions) both in animals and humans, as well as recent epidemiological studies reporting on anxiolytic or anxiogenic effects from cannabis consumption.",
+       "sha": "05458d64d5dd83b9"
+      },
+      {
+       "label": "F3",
+       "ref": "sharpe_2020",
+       "where": "Results › Acute human clinical trials",
+       "quote": "THC was found to have a profound anxiogenic effect, with participants stating that they felt increasingly more tense, jittery and less in control as the dose was increased.",
+       "sha": "08188796d32dc05d"
+      },
+      {
+       "label": "F4",
+       "ref": "sharpe_2020",
+       "where": "Results › Acute human clinical trials",
+       "quote": "Karniol et al. (1974) also reported a strong anxiogenic reaction as a result of THC administration with subjects expressing that the feeling of anxiety sometimes reached a near panic state.",
+       "sha": "08188796d32dc05d"
+      },
+      {
+       "label": "F5",
+       "ref": "sharpe_2020",
+       "where": "Discussion › Data synthesis",
+       "quote": "In humans, research has also shown that the anxiogenic effects of THC are greater among infrequent or non-users relative to frequent users, and ﻿high potency THC in cannabis products in particular, are thought to induce the development of psychotic-like symptoms or overt psychosis in vulnerable individuals.",
+       "sha": "03f4870c1b673a2b"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: words that are not person-first (“users”)"
     },
     {
      "part": "how2",
-     "text": "A review found low cannabis doses are calming and high doses are not.",
+     "text": "The US label for dronabinol, a medicine made of THC, says high doses may increase the risk of paranoia and psychosis.",
      "rests_on": [
       {
-       "label": "F1",
-       "ref": "beletsky_2024",
-       "where": "Discussion",
-       "quote": "It’s important to note that cannabis has a dose-dependent relationship on anxiety; that is, low doses are anxiolytic and high doses are anxiogenic.",
-       "sha": "3f837d57b482fb11"
+       "label": "F6",
+       "ref": "label_dronabinol",
+       "where": "Drug abuse and dependence",
+       "quote": "Psychiatric adverse reactions may include psychosis, hallucinations, depersonalization, mood alteration, and paranoia.",
+       "sha": "7eaa457811b9dd3f"
+      },
+      {
+       "label": "F7",
+       "ref": "label_dronabinol",
+       "where": "Drug abuse and dependence",
+       "quote": "Ingestion of high doses of dronabinol increases the risk of psychiatric adverse reactions if abused or misused",
+       "sha": "7eaa457811b9dd3f"
       }
      ],
      "ok": true
     },
     {
      "part": "how3",
-     "text": "The US label for dronabinol, a medicine made of THC, says high doses increase paranoia risk.",
+     "text": "A 2024 review says low doses of cannabis can reduce anxiety, while high doses can increase it. CBD may reduce THC-induced anxiety.",
      "rests_on": [
       {
-       "label": "F10",
-       "ref": "label_dronabinol",
-       "where": "Drug abuse and dependence",
-       "quote": "Ingestion of high doses of dronabinol increases the risk of psychiatric adverse reactions if abused or misused, while continued administration can lead to addiction. Psychiatric adverse reactions may include psychosis, hallucinations, depersonalization, mood alteration, and paranoia.",
-       "sha": "7eaa457811b9dd3f"
+       "label": "DA",
+       "ref": "beletsky_2024",
+       "where": "Abstract",
+       "quote": "Cannabis has been reported to have both anxiogenic and anxiolytic effects. Habitual cannabis use has been associated with anxiety disorders (AD).",
+       "sha": "dcfe056a9ff9c938"
+      },
+      {
+       "label": "F2",
+       "ref": "beletsky_2024",
+       "where": "Discussion",
+       "quote": "cannabis has a dose-dependent relationship on anxiety; that is, low doses are anxiolytic and high doses are anxiogenic.",
+       "sha": "3f837d57b482fb11"
+      },
+      {
+       "label": "F1",
+       "ref": "beletsky_2024",
+       "where": "Discussion",
+       "quote": "CBD has been shown to reduce THC-induced anxiety and experimentally induced anxiety, most likely due to agonist activity at the 5HT1A receptor.",
+       "sha": "c9419933f9701939"
       }
      ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passage qualifies the increased risk as applying when high doses of dronabinol are abused or misused, and says paranoia may be one of several psychiatric adverse reactions. The sentence omits those qualifications; the passage also does "
+     "ok": true
     }
    ]
-  }
- ],
- "dropped": [
-  {
-   "try": 3,
-   "part": "how1",
-   "text": "A study found THC caused near panic states in humans.",
-   "rests_on": [
-    {
-     "label": "F5",
-     "ref": "sharpe_2020",
-     "where": "Results › Acute human clinical trials",
-     "quote": "Karniol et al. (1974) also reported a strong anxiogenic reaction as a result of THC administration with subjects expressing that the feeling of anxiety sometimes reached a near panic state.",
-     "sha": "08188796d32dc05d"
-    },
-    {
-     "label": "F4",
-     "ref": "sharpe_2020",
-     "where": "Results › Acute human clinical trials",
-     "quote": "THC was found to have a profound anxiogenic effect, with participants stating that they felt increasingly more tense, jittery and less in control as the dose was increased.",
-     "sha": "08188796d32dc05d"
-    },
-    {
-     "label": "F6",
-     "ref": "sharpe_2020",
-     "where": "Abstract",
-     "quote": "In humans, Δ9-tetrahydrocannabinol (THC) has been associated with an anxiogenic response, while anxiolytic activity has been attributed mainly to cannabidiol (CBD).",
-     "sha": "c44ee17d88120e0f"
-    }
-   ],
-   "by": "the second reader",
-   "said": "The passage says anxiety sometimes reached a near-panic state. The sentence omits “sometimes” and overstates that finding as THC causing near-panic states."
-  },
-  {
-   "try": 3,
-   "part": "how3",
-   "text": "The US label for dronabinol, a medicine made of THC, says high doses increase paranoia risk.",
-   "rests_on": [
-    {
-     "label": "F10",
-     "ref": "label_dronabinol",
-     "where": "Drug abuse and dependence",
-     "quote": "Ingestion of high doses of dronabinol increases the risk of psychiatric adverse reactions if abused or misused, while continued administration can lead to addiction. Psychiatric adverse reactions may include psychosis, hallucinations, depersonalization, mood alteration, and paranoia.",
-     "sha": "7eaa457811b9dd3f"
-    }
-   ],
-   "by": "the second reader",
-   "said": "The passage qualifies the increased risk as applying when high doses of dronabinol are abused or misused, and says paranoia may be one of several psychiatric adverse reactions. The sentence omits those qualifications; the passage also does "
   }
  ],
  "place": {

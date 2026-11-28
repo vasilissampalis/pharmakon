@@ -21,38 +21,39 @@
   "on": "2026-11-28",
   "models": {
    "reader": "gemini:gemini-3.5-flash-lite",
-   "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+   "writer": "groq:qwen/qwen3.8-27b",
    "checker": "openrouter:openai/gpt-6-luna",
-   "planner": "@cf/openai/gpt-oss-120b",
-   "team": "team B",
-   "reader_2": "groq:openai/gpt-oss-20b",
+   "planner": "groq:openai/gpt-oss-120b",
+   "also1": "gemini:gemini-3.5-flash-lite",
+   "also2": "gemini:gemini-3.6-flash",
+   "team": "team I",
+   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
    "reader_3": "openrouter:openai/gpt-oss-120b",
-   "reader_first": "@cf/meta/llama-4-scout-17b-16e-instruct"
+   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "46089075956",
+  "run": "46136504062",
   "read_by": {
-   "gemini-3.5-flash-lite": 2,
-   "llama-4-scout-17b-16e-instruct": 2
+   "gemini-3.5-flash-lite": 3,
+   "gpt-oss-20b": 1
   },
-  "read_seconds": 38,
+  "read_seconds": 36,
   "from": {
    "papers": 2,
    "summaries": 0,
    "official": 2
   },
-  "neurons": 758.8,
-  "seconds": 107
+  "neurons": 0.0,
+  "seconds": 114
  },
  "status": "none",
  "why": "the second reader did not accept the answer",
  "gates": {
-  "reader": "llama-4-scout-17b-16e-instruct could not read on (the model service could not be reached: The read operation timed out): gemini-3.5-flash-lite read from there",
-  "read": "11 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 6 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "read": "10 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 5 thrown away (the quote was not in the passage, or a number was not in the quote)",
   "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 1 other paper(s), 2 official page(s), 0 paper(s) read in summary only",
-  "told": "the writer was told what the readers said of the last draft that was not accepted: the short answer “Opioid withdrawal causes nausea, vomiting, diarrhea, and anxiety, and can reach peak intensity 1–3 days after stopping short-acting opioids.”: The symptoms are stated in the introduction, but the 1–3-day timing comes from a methods section describing DSM-5 criteria and the study’s ",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.91, but 0.88, how1 0.83, how2 0.93, how3 0.94",
-  "check": "short: NOT accepted: it does not answer the question itself (Sentence 1 describes what opioid withdrawal can be like, but does not say when it is at its worst. Sentence 2 discusses factors affecting severity and duration, not a limit or doubt about the symptoms listed in sentence 1.); but: NOT accepted: it is about something else than the short answer (Sentence 1 describes what opioid withdrawal can be like, but does not say when it is at its worst. Sentence 2 discusses factors affecting severity and duration, not a limit or doubt about the symptoms listed in sentence 1.); how1: NOT accepted: The methods passage says the review searched for studies of adults treated for opioid withdrawal symptoms; it does not report that the review found distressing symptoms. The introduction describes withdrawal symptoms as distressing, but tha; how2: accepted; how3: accepted",
-  "rules": "broken at try 2: but: it copies 20 words of its source in a row (“the severity of withdrawal and how long it …”): say it in your own plain words; a source's words stand only in its quotation, 15 at most; short: it says “worst”, and the words it rests on carry no such word: say what the source says, in its own measure, or leave the word out"
+  "told": "the writer was told what the readers said of the last draft that was not accepted: the short answer “Opioid withdrawal causes nausea, vomiting, diarrhea, muscle pain, anxiety, and intense cravings.”: it does not answer the question itself (Sentence 1 describes what opioid withdrawal can be like, but does not say when it is at its worst. Sentence 2 discusses factors affecting sever",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.67, but 0.79, how1 0.88, how2 0.80, how3 0.47, how4 0.31",
+  "check": "short: NOT accepted: The timing is stated in a methods passage. The editor’s instruction requires saying that the study states it while describing the scale it used; the sentence does not include that qualification.; but: accepted; how1: NOT accepted: The passage specifies “widespread or increased pain”; saying simply “pain” omits that narrowing.; how2: NOT accepted: The passage specifies physical and mental health; “health” omits that narrowing.; how3: NOT accepted: The passage says withdrawal follows cessation of opioid receptor activity after weeks to months of agonism. The sentence omits that qualification.; how4: NOT accepted: The timing is stated in a methods passage. The editor’s instruction requires saying that the study states it while describing the scale it used; the sentence does not include that qualification."
  },
  "sources": [
   {
@@ -130,31 +131,43 @@
    "money": [
     "The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper."
    ],
-   "design": {
-    "passage": 2,
-    "where": "Abstract",
-    "quote": "We searched the scientific databases MEDLINE, Embase, CINAHL, PsycInfo, Web of Science Core Collection, and the Cochrane Library for studies with adults whose opioid withdrawal symptoms were treated with SAFAOs.",
-    "text": "Systematic review of literature on adults whose opioid withdrawal symptoms were treated with short-acting, full agonist opioids."
-   },
+   "design": null,
    "findings": [
     {
      "passage": 5,
      "where": "Introduction",
-     "quote": "OWS occurs following the abrupt or gradual cessation of opioid receptor activity after weeks to months of agonism, resulting in distressing symptoms such as nausea, vomiting, diarrhea, muscle pain, anxiety, and intense cravings.",
-     "text": "Opioid withdrawal syndrome occurs after the abrupt or gradual cessation of opioid receptor activity following weeks to months of agonism, resulting in distressing symptoms like nausea, vomiting, diarrhea, muscle pain, anxiety, and intense cravings.",
+     "quote": "Opioid withdrawal syndrome (OWS) is a significant barrier to treatment engagement and retention for individuals with opioid use disorder (OUD). OWS occurs following the abrupt or gradual cessation of opioid receptor activity after weeks to months of agonism, resulting in distressing symptoms such as nausea, vomiting, diarrhea, muscle pain, anxiety, and intense cravings.",
+     "text": "Opioid withdrawal syndrome causes nausea, vomiting, diarrhea, muscle pain, anxiety, and intense cravings.",
      "id": "F1",
      "second_hand": ""
     },
     {
-     "passage": 5,
+     "passage": 6,
      "where": "Introduction",
-     "quote": "Patients also report fentanyl withdrawal to have a faster onset, higher severity, and longer duration than other opioids, resulting in inadequately controlled OWS despite MOUD and self-directed discharge from hospital.",
-     "text": "Patients report that fentanyl withdrawal has a faster onset, higher severity, and longer duration than other opioids.",
+     "quote": "In response to these challenges, the use of short‑acting full‑agonist opioids (SAFAOs) have been proposed to alleviate withdrawal symptoms.",
+     "text": "Short‑acting full‑agonist opioids are proposed to alleviate opioid withdrawal symptoms.",
      "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 24,
+     "where": "Conclusion",
+     "quote": "Our results suggest that in‑hospital use of SAFAOs has the potential to improve withdrawal symptoms and reduce the risk for patient‑initiated discharges.",
+     "text": "In‑hospital use of short‑acting full‑agonist opioids can improve withdrawal symptoms and reduce patient‑initiated discharges.",
+     "id": "F3",
      "second_hand": ""
     }
    ],
-   "limits": [],
+   "limits": [
+    {
+     "passage": 6,
+     "where": "Introduction",
+     "quote": "However, the clinical adoption of SAFAOs remains inconsistent due to remaining concerns over their misuse potential, the absence of standardized dosing protocols, and ongoing debates regarding their safety.",
+     "text": "The clinical adoption of short‑acting full‑agonist opioids is inconsistent because of concerns about misuse potential, lack of standardized dosing protocols, and safety debates.",
+     "id": "L1",
+     "second_hand": "Emerging evidence suggests that SAFAOs may also serve as a bridge to MOUD by stabilizing patients during the acute withdrawal phase."
+    }
+   ],
    "tag": "A"
   },
   {
@@ -225,25 +238,17 @@
    "design": {
     "passage": 1,
     "where": "Abstract",
-    "quote": "Trauma ICU patients may require high and/or prolonged doses of opioids and/or benzodiazepines as part of their treatment.",
+    "quote": "Trauma ICU patients may require high and/or prolonged doses of opioids and/or benzodiazepines as part of their treatment. These medications may contribute to drug physical dependence, a response manifested by withdrawal syndrome. We aimed to identify risk factors, symptoms, and clinical variables associated with probable withdrawal syndrome.",
     "text": "A prospective exploratory study of trauma ICU patients who received opioids and/or benzodiazepines."
    },
    "findings": [
     {
      "passage": 14,
      "where": "MATERIALS AND METHODS › Instruments",
-     "quote": "Withdrawal signs and symptoms may begin to appear within 6–12 hours for short-acting opioids (peak intensity 1–3 d)",
-     "text": "Withdrawal signs and symptoms for short-acting opioids may begin to appear within 6 to 12 hours, with peak intensity at 1 to 3 days.",
-     "id": "F3",
-     "second_hand": "(the paper's methods, where it tells how the study was done: what it says there is not what it found)"
-    },
-    {
-     "passage": 6,
-     "where": "Text",
-     "quote": "abrupt or gradual drug withdrawal causes unpleasant physical symptoms",
-     "text": "Abrupt or gradual drug withdrawal causes unpleasant physical symptoms.",
+     "quote": "Withdrawal signs and symptoms may begin to appear within 6–12 hours for short-acting opioids (peak intensity 1–3 d) and 6–8 hours for benzodiazepine (peak in intensity 2 d).",
+     "text": "Withdrawal signs and symptoms for short-acting opioids may begin to appear within 6–12 hours with a peak intensity of 1–3 days.",
      "id": "F4",
-     "second_hand": ""
+     "second_hand": "(the paper's methods, where it tells how the study was done: what it says there is not what it found)"
     },
     {
      "passage": 29,
@@ -251,6 +256,14 @@
      "quote": "They included restlessness, high blood pressure, lacrimation, diarrhea, agitation, and hallucinations.",
      "text": "Signs and symptoms of opioid-associated withdrawal syndrome included restlessness, high blood pressure, lacrimation, diarrhea, agitation, and hallucinations.",
      "id": "F5",
+     "second_hand": ""
+    },
+    {
+     "passage": 6,
+     "where": "Text",
+     "quote": "Once drug dependence has developed, patients are then at risk for withdrawal syndrome (WS), a group of serious physical and psychologic symptoms that occur upon the abrupt discontinuation of these medications.",
+     "text": "Once drug dependence has developed, patients are at risk for withdrawal syndrome, which is a group of serious physical and psychologic symptoms occurring upon abrupt discontinuation of these medications.",
+     "id": "F6",
      "second_hand": ""
     }
    ],
@@ -311,15 +324,7 @@
      "passage": 9,
      "where": "Substance use disorder",
      "quote": "Physical withdrawal effects may include: chills; diarrhea; insomnia; sweating; body aches; nervousness; widespread or increased pain; irritability and agitation; nausea and stomach pain",
-     "text": "Physical withdrawal effects may include chills, diarrhea, insomnia, sweating, body aches, nervousness, widespread or increased pain, irritability and agitation, nausea and stomach pain.",
-     "id": "F6",
-     "second_hand": ""
-    },
-    {
-     "passage": 7,
-     "where": "Long-term effects of opioids",
-     "quote": "You are likely to experience withdrawal symptoms when you lower your opioid dose quickly or you suddenly stop taking it.",
-     "text": "You are likely to experience withdrawal symptoms when you lower your opioid dose quickly or you suddenly stop taking it.",
+     "text": "Physical withdrawal effects of opioids may include chills, diarrhea, insomnia, sweating, body aches, nervousness, widespread or increased pain, irritability and agitation, nausea, and stomach pain.",
      "id": "F7",
      "second_hand": ""
     },
@@ -327,7 +332,7 @@
      "passage": 9,
      "where": "Substance use disorder",
      "quote": "The severity of withdrawal and how long it lasts depend on: how much drug was taken; which opioid was used; how long the drug was used",
-     "text": "The severity of withdrawal and how long it lasts depend on how much drug was taken, which opioid was used, and how long the drug was used.",
+     "text": "The severity and duration of opioid withdrawal depend on how much drug was taken, which opioid was used, and how long the drug was used.",
      "id": "F8",
      "second_hand": ""
     }
@@ -385,43 +390,26 @@
      "passage": 27,
      "where": "Cutting down / How do you manage withdrawal from heroin?",
      "quote": "How unpleasant your withdrawal symptoms are depends on how long you have used for, how much you use, how you use, and your physical and mental health.",
-     "text": "The unpleasantness of withdrawal symptoms depends on how long people have used, how much they use, how they use, and their physical and mental health.",
+     "text": "How unpleasant your withdrawal symptoms are depends on how long you have used for, how much you use, how you use, and your physical and mental health.",
      "id": "F9",
      "second_hand": ""
     },
     {
-     "passage": 18,
-     "where": "Comedowns / What do comedowns from heroin feel like, and how can you feel better?",
-     "quote": "If you use heroin often and are cutting down, you may find your comedown symptoms are more severe, this is likely because you are experiencing withdrawal.",
-     "text": "People who use heroin often and are cutting down may find their comedown symptoms are more severe, likely because they are experiencing withdrawal.",
+     "passage": 27,
+     "where": "Cutting down / How do you manage withdrawal from heroin?",
+     "quote": "You might: Have nausea, constipation, diarrhea stomach aches or changes in appetite; Feel tired or lethargic",
+     "text": "You might experience nausea, constipation, diarrhea, stomach aches, changes in appetite, or feel tired or lethargic.",
      "id": "F10",
      "second_hand": ""
-    },
-    {
-     "passage": 29,
-     "where": "Cutting down / How do you manage withdrawal from heroin?",
-     "quote": "If you're showing signs of bowel obstruction (very sore stomach, feeling of fullness, unable to poo), become severely dehydrated, have a high fever, experience suicidal thoughts or attempt suicide, have seizures, experience delirium or psychosis, become unresponsive or lose consciousness, these are signs you could be experiencing severe heroin withdrawal syndrome.",
-     "text": "Signs of severe heroin withdrawal syndrome include bowel obstruction, severe dehydration, high fever, suicidal thoughts, seizures, delirium, psychosis, and loss of consciousness.",
-     "id": "F11",
-     "second_hand": ""
     }
    ],
-   "limits": [
-    {
-     "passage": 29,
-     "where": "Cutting down / How do you manage withdrawal from heroin?",
-     "quote": "If you're showing signs of bowel obstruction (very sore stomach, feeling of fullness, unable to poo), become severely dehydrated, have a high fever, experience suicidal thoughts or attempt suicide, have seizures, experience delirium or psychosis, become unresponsive or lose consciousness, these are signs you could be experiencing severe heroin withdrawal syndrome.",
-     "text": "The list of signs of severe heroin withdrawal syndrome may not be exhaustive.",
-     "id": "L1",
-     "second_hand": ""
-    }
-   ],
+   "limits": [],
    "tag": "D"
   }
  ],
  "parts": [],
  "complete": false,
- "missing": "",
+ "missing": "overall duration of withdrawal",
  "wanted": [
   {
    "doi": "10.1093/ajhp/zxz105",
@@ -462,6 +450,14 @@
    "why": "the second reader did not accept the answer",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-28",
+   "lane": 19,
+   "status": "none",
+   "why": "the second reader did not accept the answer",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -470,19 +466,19 @@
    "read": "full",
    "kind": "review",
    "at": "10.1016/j.abrep.2026.100691",
-   "kept": 2,
+   "kept": 3,
    "thrown": [
     {
-     "kind": "limit",
-     "text": "",
-     "quote": "However, the clinical adoption of SAFAOs remains inconsistent due to remaining concerns over their misuse potential, the absence of standardized dosing protocols, and ongoing debates regarding their s",
-     "why": "no sentence"
+     "kind": "text",
+     "text": "Systematic review of short‑acting full agonist opioids for opioid withdrawal",
+     "quote": "We searched the scientific databases MEDLINE, Embase, CINAHL, PsycInfo, Web of Science Core Collection, and the Cochrane Library for studies with adults whose opioid withdrawal symptoms were treated w",
+     "why": "the sentence is not carried by its quote and passage"
     },
     {
      "kind": "limit",
-     "text": "",
-     "quote": "This method is thereby increasingly used across varied clinical settings, despite a lack of robust evidence supporting its safety and efficacy and a corresponding lack of guidance regarding their inte",
-     "why": "no sentence"
+     "text": "Adverse events were only reported in patients who continued unprescribed opioid use.",
+     "quote": "Incidence rates of adverse events were low and those reported were generally mild and unrelated to the fentanyl titrations, only occurring in patients with continued unprescribed opioid use.",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
     }
    ]
   },
@@ -496,13 +492,13 @@
     {
      "kind": "limit",
      "text": "",
-     "quote": "The effect of WS on patient recovery and prolonged ICU stay is unclear.",
+     "quote": "Taking DSM-5 criteria into account and given that the checklist has not undergone a formal validation process, we developed the following categories for our patients",
      "why": "no sentence"
     },
     {
      "kind": "limit",
      "text": "",
-     "quote": "Taking DSM-5 criteria into account and given that the checklist has not undergone a formal validation process, we developed the following categories for our patients",
+     "quote": "WS literature in adults has generally not reported the specific sign and symptoms that commonly occur.",
      "why": "no sentence"
     }
    ]
@@ -512,7 +508,7 @@
    "read": "page",
    "kind": "official",
    "at": "https://www.canada.ca/en/health-canada/services/opioids/about-opioids.html",
-   "kept": 3,
+   "kept": 2,
    "thrown": []
   },
   {
@@ -520,28 +516,21 @@
    "read": "page",
    "kind": "official",
    "at": "https://thelevel.org.nz/drug-information/heroin",
-   "kept": 3,
+   "kept": 2,
    "thrown": [
     {
      "kind": "finding",
-     "text": "Withdrawal symptoms start between 24-48 hours after using and can last for a few weeks.",
+     "text": "Many people find that withdrawal symptoms start between 24-48 hours after using and can last for a few weeks.",
      "quote": "Many people find that withdrawal symptoms start between 24-48 hours after using and can last for a few weeks.",
      "why": "it holds an amount or a time between uses"
-    },
-    {
-     "kind": "limit",
-     "text": "The unpleasantness of withdrawal symptoms depends on individual factors, which may vary.",
-     "quote": "How unpleasant your withdrawal symptoms are depends on how long you have used for, how much you use, how you use, and your physical and mental health.",
-     "why": "the sentence is not carried by its quote and passage"
     }
    ]
   }
  ],
  "plan": {
   "short": [
-   "F1",
-   "F3",
-   "F6"
+   "F7",
+   "F4"
   ],
   "direct": "",
   "but": [
@@ -549,38 +538,41 @@
   ],
   "how": [
    [
-    "DA",
+    "F7"
+   ],
+   [
+    "F9",
+    "F10"
+   ],
+   [
     "F1"
    ],
    [
-    "F6",
-    "F8"
-   ],
-   [
-    "DB",
-    "F3",
+    "F4",
     "F5"
    ]
   ],
-  "unanswered": ""
+  "unanswered": "overall duration of withdrawal"
  },
  "panel_gap": [],
  "own": {
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.9062,
-   "but": 0.8837,
-   "how1": 0.8285,
-   "how2": 0.9287,
-   "how3": 0.9427
+   "short": 0.6743,
+   "but": 0.7915,
+   "how1": 0.8792,
+   "how2": 0.8004,
+   "how3": 0.4665,
+   "how4": 0.3057
   },
   "scores_quotes_alone": {
-   "short": 0.763,
-   "but": 0.6885,
-   "how1": 0.7785,
-   "how2": 0.9727,
-   "how3": 0.941
+   "short": 0.7845,
+   "but": 0.7097,
+   "how1": 0.5649,
+   "how2": 0.681,
+   "how3": 0.4732,
+   "how4": 0.4803
   }
  },
  "tries": [
@@ -590,77 +582,31 @@
    "parts": [
     {
      "part": "short",
-     "text": "Opioid withdrawal can cause nausea, vomiting, diarrhea, and anxiety. Physical withdrawal effects may include chills and sweating.",
+     "text": "Opioid withdrawal may include chills, diarrhea, and body aches. For short-acting opioids, symptoms can peak in intensity 1 to 3 days after stopping.",
      "rests_on": [
       {
-       "label": "F1",
-       "ref": "azar_2026",
-       "where": "Introduction",
-       "quote": "OWS occurs following the abrupt or gradual cessation of opioid receptor activity after weeks to months of agonism, resulting in distressing symptoms such as nausea, vomiting, diarrhea, muscle pain, anxiety, and intense cravings.",
-       "sha": "1d4b96707428a697"
-      },
-      {
-       "label": "F6",
+       "label": "F7",
        "ref": "healthcanada_about-opioids",
        "where": "Substance use disorder",
        "quote": "Physical withdrawal effects may include: chills; diarrhea; insomnia; sweating; body aches; nervousness; widespread or increased pain; irritability and agitation; nausea and stomach pain",
        "sha": "2775f8f8032fde7c"
+      },
+      {
+       "label": "F4",
+       "ref": "arroyonovoa_2020",
+       "where": "MATERIALS AND METHODS › Instruments",
+       "quote": "Withdrawal signs and symptoms may begin to appear within 6–12 hours for short-acting opioids (peak intensity 1–3 d) and 6–8 hours for benzodiazepine (peak in intensity 2 d).",
+       "sha": "695c9ee5629c3be7"
       }
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "it does not answer the question itself (Sentence 1 describes what withdrawal can be like but does not address when it is at its worst. Sentence 2 gives factors related to withdrawal severity, rather than limiting a claim sentence 1 makes about symptoms.)"
+     "said": "The listed symptoms are supported, but the timing is presented as a general statement. Its passage is from a methods section; under the editor’s note, the sentence would need to say that the 2020 study states this timing while describing th"
     },
     {
      "part": "but",
-     "text": "The severity of withdrawal depends on how much drug was taken and how long it was used.",
+     "text": "The severity and duration of withdrawal depend on how much drug was taken, which opioid was used, and how long it was used.",
      "rests_on": [
-      {
-       "label": "F8",
-       "ref": "healthcanada_about-opioids",
-       "where": "Substance use disorder",
-       "quote": "The severity of withdrawal and how long it lasts depend on: how much drug was taken; which opioid was used; how long the drug was used",
-       "sha": "2775f8f8032fde7c"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "it is about something else than the short answer (Sentence 1 describes what withdrawal can be like but does not address when it is at its worst. Sentence 2 gives factors related to withdrawal severity, rather than limiting a claim sentence 1 makes about symptoms.)"
-    },
-    {
-     "part": "how1",
-     "text": "A systematic review of adults with opioid withdrawal symptoms found distressing symptoms like nausea and anxiety.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "azar_2026",
-       "where": "Abstract",
-       "quote": "We searched the scientific databases MEDLINE, Embase, CINAHL, PsycInfo, Web of Science Core Collection, and the Cochrane Library for studies with adults whose opioid withdrawal symptoms were treated with SAFAOs.",
-       "sha": "b43ddc9df5fffe99"
-      },
-      {
-       "label": "F1",
-       "ref": "azar_2026",
-       "where": "Introduction",
-       "quote": "OWS occurs following the abrupt or gradual cessation of opioid receptor activity after weeks to months of agonism, resulting in distressing symptoms such as nausea, vomiting, diarrhea, muscle pain, anxiety, and intense cravings.",
-       "sha": "1d4b96707428a697"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The introduction describes symptoms as background, but the passages do not report that the systematic review found them; the methods passage only gives the search scope."
-    },
-    {
-     "part": "how2",
-     "text": "Health Canada says physical withdrawal effects may include chills and sweating.",
-     "rests_on": [
-      {
-       "label": "F6",
-       "ref": "healthcanada_about-opioids",
-       "where": "Substance use disorder",
-       "quote": "Physical withdrawal effects may include: chills; diarrhea; insomnia; sweating; body aches; nervousness; widespread or increased pain; irritability and agitation; nausea and stomach pain",
-       "sha": "2775f8f8032fde7c"
-      },
       {
        "label": "F8",
        "ref": "healthcanada_about-opioids",
@@ -672,15 +618,68 @@
      "ok": true
     },
     {
-     "part": "how3",
-     "text": "A prospective exploratory study of trauma ICU patients described withdrawal signs and symptoms.",
+     "part": "how1",
+     "text": "Health Canada says physical withdrawal effects may include chills, diarrhea, insomnia, sweating, body aches, nervousness, pain, irritability, agitation, nausea, and stomach pain.",
      "rests_on": [
       {
-       "label": "DB",
+       "label": "F7",
+       "ref": "healthcanada_about-opioids",
+       "where": "Substance use disorder",
+       "quote": "Physical withdrawal effects may include: chills; diarrhea; insomnia; sweating; body aches; nervousness; widespread or increased pain; irritability and agitation; nausea and stomach pain",
+       "sha": "2775f8f8032fde7c"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage specifies “widespread or increased pain.” Saying simply “pain” drops that qualifier and broadens the claim."
+    },
+    {
+     "part": "how2",
+     "text": "The NZ Drug Foundation says how unpleasant symptoms are depends on use length, amount, method, and health. People might feel nausea, constipation, diarrhea, or tired.",
+     "rests_on": [
+      {
+       "label": "F9",
+       "ref": "thelevel_heroin",
+       "where": "Cutting down / How do you manage withdrawal from heroin?",
+       "quote": "How unpleasant your withdrawal symptoms are depends on how long you have used for, how much you use, how you use, and your physical and mental health.",
+       "sha": "12e3e8c5e7c5e1c1"
+      },
+      {
+       "label": "F10",
+       "ref": "thelevel_heroin",
+       "where": "Cutting down / How do you manage withdrawal from heroin?",
+       "quote": "You might: Have nausea, constipation, diarrhea stomach aches or changes in appetite; Feel tired or lethargic",
+       "sha": "12e3e8c5e7c5e1c1"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2026 review says opioid withdrawal causes nausea, vomiting, diarrhea, muscle pain, anxiety, and intense cravings after stopping opioid use.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "azar_2026",
+       "where": "Introduction",
+       "quote": "Opioid withdrawal syndrome (OWS) is a significant barrier to treatment engagement and retention for individuals with opioid use disorder (OUD). OWS occurs following the abrupt or gradual cessation of opioid receptor activity after weeks to months of agonism, resulting in distressing symptoms such as nausea, vomiting, diarrhea, muscle pain, anxiety, and intense cravings.",
+       "sha": "1d4b96707428a697"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage limits this account to withdrawal following weeks to months of opioid-receptor agonism. The sentence omits that qualifier."
+    },
+    {
+     "part": "how4",
+     "text": "A 2020 study of trauma ICU patients describes that short-acting opioid withdrawal signs may begin in 6 to 12 hours and peak in 1 to 3 days.",
+     "rests_on": [
+      {
+       "label": "F4",
        "ref": "arroyonovoa_2020",
-       "where": "Abstract",
-       "quote": "Trauma ICU patients may require high and/or prolonged doses of opioids and/or benzodiazepines as part of their treatment.",
-       "sha": "c531a017d1e916d3"
+       "where": "MATERIALS AND METHODS › Instruments",
+       "quote": "Withdrawal signs and symptoms may begin to appear within 6–12 hours for short-acting opioids (peak intensity 1–3 d) and 6–8 hours for benzodiazepine (peak in intensity 2 d).",
+       "sha": "695c9ee5629c3be7"
       },
       {
        "label": "F5",
@@ -690,47 +689,42 @@
        "sha": "a10f3905cb0f27ff"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage is in a methods section. The sentence does not say that the study states the timing while describing the scale or criteria it used, as the editor’s note requires."
     }
    ]
   },
   {
    "try": 2,
-   "why": "a rule was broken: written again",
+   "why": "the short answer or the But was not accepted: written again",
    "parts": [
     {
      "part": "short",
-     "text": "Opioid withdrawal can cause nausea, vomiting, diarrhea, muscle pain, anxiety, and intense cravings. It can be at its worst 1 to 3 days after stopping short-acting opioids.",
+     "text": "Opioid withdrawal may include chills, diarrhea, and body aches. A 2020 study states symptoms for short-acting opioids peak in 1 to 3 days.",
      "rests_on": [
       {
-       "label": "F1",
-       "ref": "azar_2026",
-       "where": "Introduction",
-       "quote": "OWS occurs following the abrupt or gradual cessation of opioid receptor activity after weeks to months of agonism, resulting in distressing symptoms such as nausea, vomiting, diarrhea, muscle pain, anxiety, and intense cravings.",
-       "sha": "1d4b96707428a697"
-      },
-      {
-       "label": "F3",
-       "ref": "arroyonovoa_2020",
-       "where": "MATERIALS AND METHODS › Instruments",
-       "quote": "Withdrawal signs and symptoms may begin to appear within 6–12 hours for short-acting opioids (peak intensity 1–3 d)",
-       "sha": "695c9ee5629c3be7"
-      },
-      {
-       "label": "F6",
+       "label": "F7",
        "ref": "healthcanada_about-opioids",
        "where": "Substance use disorder",
        "quote": "Physical withdrawal effects may include: chills; diarrhea; insomnia; sweating; body aches; nervousness; widespread or increased pain; irritability and agitation; nausea and stomach pain",
        "sha": "2775f8f8032fde7c"
+      },
+      {
+       "label": "F4",
+       "ref": "arroyonovoa_2020",
+       "where": "MATERIALS AND METHODS › Instruments",
+       "quote": "Withdrawal signs and symptoms may begin to appear within 6–12 hours for short-acting opioids (peak intensity 1–3 d) and 6–8 hours for benzodiazepine (peak in intensity 2 d).",
+       "sha": "695c9ee5629c3be7"
       }
      ],
      "ok": false,
-     "by": "a rule",
-     "said": "a rule: it says “worst”, and the words it rests on carry no such word: say what the source says, in its own measure, or leave the word out"
+     "by": "the second reader",
+     "said": "The symptom examples are supported, but the timing is taken from a methods section and is presented as a finding. The editor’s note requires saying that the study states this while describing the scale it used, or using a source about withd"
     },
     {
      "part": "but",
-     "text": "The severity of withdrawal and how long it lasts depend on how much drug was taken, which opioid was used, and how long the drug was used.",
+     "text": "Health Canada says severity and duration depend on how much, which opioid, and how long it was used.",
      "rests_on": [
       {
        "label": "F8",
@@ -740,68 +734,70 @@
        "sha": "2775f8f8032fde7c"
       }
      ],
-     "ok": false,
-     "by": "a rule",
-     "said": "a rule: it copies 20 words of its source in a row (“the severity of withdrawal and how long it …”): say it in your own plain words; a source's words stand only in its quotation, 15 at most"
+     "ok": true
     },
     {
      "part": "how1",
-     "text": "A systematic review of literature on adults whose opioid withdrawal symptoms were treated with short-acting, full agonist opioids found distressing symptoms like nausea and anxiety.",
+     "text": "Health Canada says physical effects may include chills, diarrhea, insomnia, sweating, body aches, and stomach pain.",
      "rests_on": [
       {
-       "label": "DA",
-       "ref": "azar_2026",
-       "where": "Abstract",
-       "quote": "We searched the scientific databases MEDLINE, Embase, CINAHL, PsycInfo, Web of Science Core Collection, and the Cochrane Library for studies with adults whose opioid withdrawal symptoms were treated with SAFAOs.",
-       "sha": "b43ddc9df5fffe99"
-      },
-      {
-       "label": "F1",
-       "ref": "azar_2026",
-       "where": "Introduction",
-       "quote": "OWS occurs following the abrupt or gradual cessation of opioid receptor activity after weeks to months of agonism, resulting in distressing symptoms such as nausea, vomiting, diarrhea, muscle pain, anxiety, and intense cravings.",
-       "sha": "1d4b96707428a697"
+       "label": "F7",
+       "ref": "healthcanada_about-opioids",
+       "where": "Substance use disorder",
+       "quote": "Physical withdrawal effects may include: chills; diarrhea; insomnia; sweating; body aches; nervousness; widespread or increased pain; irritability and agitation; nausea and stomach pain",
+       "sha": "2775f8f8032fde7c"
       }
      ],
      "ok": true
     },
     {
      "part": "how2",
-     "text": "Health Canada says physical withdrawal effects may include chills, diarrhea, and nausea, and that severity depends on the amount and duration of opioid use.",
+     "text": "The NZ Drug Foundation says how unpleasant symptoms are depends on use length, amount, and health.",
      "rests_on": [
       {
-       "label": "F6",
-       "ref": "healthcanada_about-opioids",
-       "where": "Substance use disorder",
-       "quote": "Physical withdrawal effects may include: chills; diarrhea; insomnia; sweating; body aches; nervousness; widespread or increased pain; irritability and agitation; nausea and stomach pain",
-       "sha": "2775f8f8032fde7c"
+       "label": "F9",
+       "ref": "thelevel_heroin",
+       "where": "Cutting down / How do you manage withdrawal from heroin?",
+       "quote": "How unpleasant your withdrawal symptoms are depends on how long you have used for, how much you use, how you use, and your physical and mental health.",
+       "sha": "12e3e8c5e7c5e1c1"
       },
       {
-       "label": "F8",
-       "ref": "healthcanada_about-opioids",
-       "where": "Substance use disorder",
-       "quote": "The severity of withdrawal and how long it lasts depend on: how much drug was taken; which opioid was used; how long the drug was used",
-       "sha": "2775f8f8032fde7c"
+       "label": "F10",
+       "ref": "thelevel_heroin",
+       "where": "Cutting down / How do you manage withdrawal from heroin?",
+       "quote": "You might: Have nausea, constipation, diarrhea stomach aches or changes in appetite; Feel tired or lethargic",
+       "sha": "12e3e8c5e7c5e1c1"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage also says symptoms depend on how you use heroin and specifies physical and mental health; the sentence omits those details."
     },
     {
      "part": "how3",
-     "text": "A prospective exploratory study of trauma ICU patients who received opioids found signs and symptoms of opioid-associated withdrawal syndrome, including restlessness and diarrhea.",
+     "text": "A 2026 review says withdrawal causes nausea, vomiting, diarrhea, muscle pain, anxiety, and intense cravings.",
      "rests_on": [
       {
-       "label": "DB",
-       "ref": "arroyonovoa_2020",
-       "where": "Abstract",
-       "quote": "Trauma ICU patients may require high and/or prolonged doses of opioids and/or benzodiazepines as part of their treatment.",
-       "sha": "c531a017d1e916d3"
-      },
+       "label": "F1",
+       "ref": "azar_2026",
+       "where": "Introduction",
+       "quote": "Opioid withdrawal syndrome (OWS) is a significant barrier to treatment engagement and retention for individuals with opioid use disorder (OUD). OWS occurs following the abrupt or gradual cessation of opioid receptor activity after weeks to months of agonism, resulting in distressing symptoms such as nausea, vomiting, diarrhea, muscle pain, anxiety, and intense cravings.",
+       "sha": "1d4b96707428a697"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage describes these symptoms following abrupt or gradual cessation after weeks to months of opioid agonism. The sentence leaves out that scope and presents the claim generally."
+    },
+    {
+     "part": "how4",
+     "text": "A 2020 study of trauma ICU patients states short-acting opioid withdrawal peaks in 1 to 3 days.",
+     "rests_on": [
       {
-       "label": "F3",
+       "label": "F4",
        "ref": "arroyonovoa_2020",
        "where": "MATERIALS AND METHODS › Instruments",
-       "quote": "Withdrawal signs and symptoms may begin to appear within 6–12 hours for short-acting opioids (peak intensity 1–3 d)",
+       "quote": "Withdrawal signs and symptoms may begin to appear within 6–12 hours for short-acting opioids (peak intensity 1–3 d) and 6–8 hours for benzodiazepine (peak in intensity 2 d).",
        "sha": "695c9ee5629c3be7"
       },
       {
@@ -812,7 +808,9 @@
        "sha": "a10f3905cb0f27ff"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "the second reader",
+     "said": "This again presents timing stated in a methods section as a finding. It does not say the study states the timing while describing the scale it used, as the editor’s note requires."
     }
    ]
   },
@@ -822,77 +820,31 @@
    "parts": [
     {
      "part": "short",
-     "text": "Opioid withdrawal causes nausea, vomiting, diarrhea, muscle pain, anxiety, and intense cravings.",
+     "text": "Opioid withdrawal may include chills, diarrhea, and body aches. A 2020 study states symptoms for short-acting opioids peak in 1 to 3 days.",
      "rests_on": [
       {
-       "label": "F1",
-       "ref": "azar_2026",
-       "where": "Introduction",
-       "quote": "OWS occurs following the abrupt or gradual cessation of opioid receptor activity after weeks to months of agonism, resulting in distressing symptoms such as nausea, vomiting, diarrhea, muscle pain, anxiety, and intense cravings.",
-       "sha": "1d4b96707428a697"
-      },
-      {
-       "label": "F6",
+       "label": "F7",
        "ref": "healthcanada_about-opioids",
        "where": "Substance use disorder",
        "quote": "Physical withdrawal effects may include: chills; diarrhea; insomnia; sweating; body aches; nervousness; widespread or increased pain; irritability and agitation; nausea and stomach pain",
        "sha": "2775f8f8032fde7c"
+      },
+      {
+       "label": "F4",
+       "ref": "arroyonovoa_2020",
+       "where": "MATERIALS AND METHODS › Instruments",
+       "quote": "Withdrawal signs and symptoms may begin to appear within 6–12 hours for short-acting opioids (peak intensity 1–3 d) and 6–8 hours for benzodiazepine (peak in intensity 2 d).",
+       "sha": "695c9ee5629c3be7"
       }
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "it does not answer the question itself (Sentence 1 describes what opioid withdrawal can be like, but does not say when it is at its worst. Sentence 2 discusses factors affecting severity and duration, not a limit or doubt about the symptoms listed in sentence 1.)"
+     "said": "The timing is stated in a methods passage. The editor’s instruction requires saying that the study states it while describing the scale it used; the sentence does not include that qualification."
     },
     {
      "part": "but",
-     "text": "Withdrawal severity and length vary by dose, opioid, and use duration.",
+     "text": "Health Canada says the severity and duration depend on how much drug was taken, which opioid was used, and how long it was used.",
      "rests_on": [
-      {
-       "label": "F8",
-       "ref": "healthcanada_about-opioids",
-       "where": "Substance use disorder",
-       "quote": "The severity of withdrawal and how long it lasts depend on: how much drug was taken; which opioid was used; how long the drug was used",
-       "sha": "2775f8f8032fde7c"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "it is about something else than the short answer (Sentence 1 describes what opioid withdrawal can be like, but does not say when it is at its worst. Sentence 2 discusses factors affecting severity and duration, not a limit or doubt about the symptoms listed in sentence 1.)"
-    },
-    {
-     "part": "how1",
-     "text": "A systematic review of adults with opioid withdrawal symptoms found distressing symptoms.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "azar_2026",
-       "where": "Abstract",
-       "quote": "We searched the scientific databases MEDLINE, Embase, CINAHL, PsycInfo, Web of Science Core Collection, and the Cochrane Library for studies with adults whose opioid withdrawal symptoms were treated with SAFAOs.",
-       "sha": "b43ddc9df5fffe99"
-      },
-      {
-       "label": "F1",
-       "ref": "azar_2026",
-       "where": "Introduction",
-       "quote": "OWS occurs following the abrupt or gradual cessation of opioid receptor activity after weeks to months of agonism, resulting in distressing symptoms such as nausea, vomiting, diarrhea, muscle pain, anxiety, and intense cravings.",
-       "sha": "1d4b96707428a697"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The methods passage says the review searched for studies of adults treated for opioid withdrawal symptoms; it does not report that the review found distressing symptoms. The introduction describes withdrawal symptoms as distressing, but tha"
-    },
-    {
-     "part": "how2",
-     "text": "Health Canada says physical withdrawal effects include chills and sweating.",
-     "rests_on": [
-      {
-       "label": "F6",
-       "ref": "healthcanada_about-opioids",
-       "where": "Substance use disorder",
-       "quote": "Physical withdrawal effects may include: chills; diarrhea; insomnia; sweating; body aches; nervousness; widespread or increased pain; irritability and agitation; nausea and stomach pain",
-       "sha": "2775f8f8032fde7c"
-      },
       {
        "label": "F8",
        "ref": "healthcanada_about-opioids",
@@ -904,15 +856,70 @@
      "ok": true
     },
     {
-     "part": "how3",
-     "text": "A prospective exploratory study of trauma ICU patients described opioid withdrawal signs and symptoms.",
+     "part": "how1",
+     "text": "Health Canada says physical withdrawal effects may include chills, diarrhea, insomnia, sweating, body aches, nervousness, pain, irritability, nausea, and stomach pain.",
      "rests_on": [
       {
-       "label": "DB",
+       "label": "F7",
+       "ref": "healthcanada_about-opioids",
+       "where": "Substance use disorder",
+       "quote": "Physical withdrawal effects may include: chills; diarrhea; insomnia; sweating; body aches; nervousness; widespread or increased pain; irritability and agitation; nausea and stomach pain",
+       "sha": "2775f8f8032fde7c"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage specifies “widespread or increased pain”; saying simply “pain” omits that narrowing."
+    },
+    {
+     "part": "how2",
+     "text": "The NZ Drug Foundation says how unpleasant symptoms are depends on use length, amount, method, and health. People might feel nausea, tired, or have stomach aches.",
+     "rests_on": [
+      {
+       "label": "F9",
+       "ref": "thelevel_heroin",
+       "where": "Cutting down / How do you manage withdrawal from heroin?",
+       "quote": "How unpleasant your withdrawal symptoms are depends on how long you have used for, how much you use, how you use, and your physical and mental health.",
+       "sha": "12e3e8c5e7c5e1c1"
+      },
+      {
+       "label": "F10",
+       "ref": "thelevel_heroin",
+       "where": "Cutting down / How do you manage withdrawal from heroin?",
+       "quote": "You might: Have nausea, constipation, diarrhea stomach aches or changes in appetite; Feel tired or lethargic",
+       "sha": "12e3e8c5e7c5e1c1"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage specifies physical and mental health; “health” omits that narrowing."
+    },
+    {
+     "part": "how3",
+     "text": "A 2026 review says opioid withdrawal causes nausea, vomiting, diarrhea, muscle pain, anxiety, and intense cravings after stopping opioid use.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "azar_2026",
+       "where": "Introduction",
+       "quote": "Opioid withdrawal syndrome (OWS) is a significant barrier to treatment engagement and retention for individuals with opioid use disorder (OUD). OWS occurs following the abrupt or gradual cessation of opioid receptor activity after weeks to months of agonism, resulting in distressing symptoms such as nausea, vomiting, diarrhea, muscle pain, anxiety, and intense cravings.",
+       "sha": "1d4b96707428a697"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage says withdrawal follows cessation of opioid receptor activity after weeks to months of agonism. The sentence omits that qualification."
+    },
+    {
+     "part": "how4",
+     "text": "A 2020 study of trauma ICU patients states that for short-acting opioids, withdrawal signs may begin in 6 to 12 hours and peak in 1 to 3 days.",
+     "rests_on": [
+      {
+       "label": "F4",
        "ref": "arroyonovoa_2020",
-       "where": "Abstract",
-       "quote": "Trauma ICU patients may require high and/or prolonged doses of opioids and/or benzodiazepines as part of their treatment.",
-       "sha": "c531a017d1e916d3"
+       "where": "MATERIALS AND METHODS › Instruments",
+       "quote": "Withdrawal signs and symptoms may begin to appear within 6–12 hours for short-acting opioids (peak intensity 1–3 d) and 6–8 hours for benzodiazepine (peak in intensity 2 d).",
+       "sha": "695c9ee5629c3be7"
       },
       {
        "label": "F5",
@@ -922,7 +929,9 @@
        "sha": "a10f3905cb0f27ff"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "the second reader",
+     "said": "The timing is stated in a methods passage. The editor’s instruction requires saying that the study states it while describing the scale it used; the sentence does not include that qualification."
     }
    ]
   }
@@ -931,25 +940,80 @@
   {
    "try": 3,
    "part": "how1",
-   "text": "A systematic review of adults with opioid withdrawal symptoms found distressing symptoms.",
+   "text": "Health Canada says physical withdrawal effects may include chills, diarrhea, insomnia, sweating, body aches, nervousness, pain, irritability, nausea, and stomach pain.",
    "rests_on": [
     {
-     "label": "DA",
-     "ref": "azar_2026",
-     "where": "Abstract",
-     "quote": "We searched the scientific databases MEDLINE, Embase, CINAHL, PsycInfo, Web of Science Core Collection, and the Cochrane Library for studies with adults whose opioid withdrawal symptoms were treated with SAFAOs.",
-     "sha": "b43ddc9df5fffe99"
+     "label": "F7",
+     "ref": "healthcanada_about-opioids",
+     "where": "Substance use disorder",
+     "quote": "Physical withdrawal effects may include: chills; diarrhea; insomnia; sweating; body aches; nervousness; widespread or increased pain; irritability and agitation; nausea and stomach pain",
+     "sha": "2775f8f8032fde7c"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The passage specifies “widespread or increased pain”; saying simply “pain” omits that narrowing."
+  },
+  {
+   "try": 3,
+   "part": "how2",
+   "text": "The NZ Drug Foundation says how unpleasant symptoms are depends on use length, amount, method, and health. People might feel nausea, tired, or have stomach aches.",
+   "rests_on": [
+    {
+     "label": "F9",
+     "ref": "thelevel_heroin",
+     "where": "Cutting down / How do you manage withdrawal from heroin?",
+     "quote": "How unpleasant your withdrawal symptoms are depends on how long you have used for, how much you use, how you use, and your physical and mental health.",
+     "sha": "12e3e8c5e7c5e1c1"
     },
+    {
+     "label": "F10",
+     "ref": "thelevel_heroin",
+     "where": "Cutting down / How do you manage withdrawal from heroin?",
+     "quote": "You might: Have nausea, constipation, diarrhea stomach aches or changes in appetite; Feel tired or lethargic",
+     "sha": "12e3e8c5e7c5e1c1"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The passage specifies physical and mental health; “health” omits that narrowing."
+  },
+  {
+   "try": 3,
+   "part": "how3",
+   "text": "A 2026 review says opioid withdrawal causes nausea, vomiting, diarrhea, muscle pain, anxiety, and intense cravings after stopping opioid use.",
+   "rests_on": [
     {
      "label": "F1",
      "ref": "azar_2026",
      "where": "Introduction",
-     "quote": "OWS occurs following the abrupt or gradual cessation of opioid receptor activity after weeks to months of agonism, resulting in distressing symptoms such as nausea, vomiting, diarrhea, muscle pain, anxiety, and intense cravings.",
+     "quote": "Opioid withdrawal syndrome (OWS) is a significant barrier to treatment engagement and retention for individuals with opioid use disorder (OUD). OWS occurs following the abrupt or gradual cessation of opioid receptor activity after weeks to months of agonism, resulting in distressing symptoms such as nausea, vomiting, diarrhea, muscle pain, anxiety, and intense cravings.",
      "sha": "1d4b96707428a697"
     }
    ],
    "by": "the second reader",
-   "said": "The methods passage says the review searched for studies of adults treated for opioid withdrawal symptoms; it does not report that the review found distressing symptoms. The introduction describes withdrawal symptoms as distressing, but tha"
+   "said": "The passage says withdrawal follows cessation of opioid receptor activity after weeks to months of agonism. The sentence omits that qualification."
+  },
+  {
+   "try": 3,
+   "part": "how4",
+   "text": "A 2020 study of trauma ICU patients states that for short-acting opioids, withdrawal signs may begin in 6 to 12 hours and peak in 1 to 3 days.",
+   "rests_on": [
+    {
+     "label": "F4",
+     "ref": "arroyonovoa_2020",
+     "where": "MATERIALS AND METHODS › Instruments",
+     "quote": "Withdrawal signs and symptoms may begin to appear within 6–12 hours for short-acting opioids (peak intensity 1–3 d) and 6–8 hours for benzodiazepine (peak in intensity 2 d).",
+     "sha": "695c9ee5629c3be7"
+    },
+    {
+     "label": "F5",
+     "ref": "arroyonovoa_2020",
+     "where": "DISCUSSION",
+     "quote": "They included restlessness, high blood pressure, lacrimation, diarrhea, agitation, and hallucinations.",
+     "sha": "a10f3905cb0f27ff"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The timing is stated in a methods passage. The editor’s instruction requires saying that the study states it while describing the scale it used; the sentence does not include that qualification."
   }
  ],
  "place": {
