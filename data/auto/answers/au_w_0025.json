@@ -19,40 +19,36 @@
  "made": {
   "on": "2026-11-28",
   "models": {
-   "reader": "gemini:gemini-3.5-flash-lite",
+   "reader": "gemini:gemma-4-31b-it",
    "writer": "gemini:gemma-4-26b-a4b-it",
    "checker": "openrouter:openai/gpt-6-luna",
    "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3.5-flash-lite",
-   "also2": "gemini:gemini-3.6-flash",
-   "team": "team K",
-   "reader_2": "gemini:gemini-3.5-flash-lite",
+   "also1": "gemini:gemini-3.1-flash-lite",
+   "team": "team Z",
+   "reader_2": "gemini:gemini-3.1-flash-lite",
    "reader_3": "openrouter:openai/gpt-oss-120b",
-   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
-   "reader_first": "gemini:gemma-4-31b-it"
+   "also1_else": "gemini:gemini-3.5-flash-lite|gemini:gemma-4-31b-it"
   },
-  "run": "46147514155",
+  "run": "46148344123",
   "read_by": {
-   "gemini-3.5-flash-lite": 9,
-   "gemini-3.1-flash-lite": 2
+   "gemini-3.5-flash-lite": 17,
+   "gpt-oss-20b": 2
   },
-  "read_seconds": 100,
+  "read_seconds": 73,
   "from": {
    "papers": 1,
    "summaries": 0,
    "official": 0
   },
   "neurons": 0.0,
-  "seconds": 313
+  "seconds": 303
  },
  "status": "none",
  "why": "no draft passed: the form was wrong: no JSON",
  "gates": {
-  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.5-flash-lite read from there",
-  "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "1 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "read": "1 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
   "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 0 official page(s), 0 paper(s) read in summary only",
-  "writer": "try 1: no JSON (how the reply ended: length; reasoned 0 characters, wrote 9203) try 2: no JSON (how the reply ended: length; reasoned 0 characters, wrote 8882)"
+  "writer": "try 1: no JSON (how the reply ended: length; reasoned 0 characters, wrote 9642) try 2: no JSON (how the reply ended: length; reasoned 0 characters, wrote 8216)"
  },
  "sources": [
   {
@@ -105,14 +101,14 @@
     "passage": 1,
     "where": "Abstract",
     "quote": "In this review, the author describes these potential benefits and explores the relatives risks of MDMA-assisted psychotherapy in the context of his experience as a child and ad",
-    "text": "a review describing potential benefits and relative risks of MDMA-assisted psychotherapy"
+    "text": "A review of clinical research and potential benefits and risks of MDMA-assisted psychotherapy by a child psychiatrist"
    },
    "findings": [
     {
      "passage": 19,
      "where": "Postecstasy Come Down: Is it Due to MDMA?",
      "quote": "Anecdotally many recreational ecstasy users take 5-hydroxytryptophan as a reliever of post-MDMA low affect but the effect remains entirely untested in controlled experimental conditions with pure MDMA.",
-     "text": "The effect of 5-hydroxytryptophan taken as a reliever of post-MDMA low affect remains entirely untested in controlled experimental conditions with pure MDMA.",
+     "text": "Many recreational ecstasy users anecdotally take 5-hydroxytryptophan to relieve post-MDMA low affect, but this effect remains entirely untested in controlled experimental conditions with pure MDMA.",
      "id": "F1",
      "second_hand": ""
     }
@@ -123,7 +119,7 @@
  ],
  "parts": [],
  "complete": false,
- "missing": "the effect of vitamins",
+ "missing": "protection from brain effects and the role of vitamins",
  "wanted": [
   {
    "doi": "10.1016/s0074-7742(09)88006-9",
@@ -180,6 +176,14 @@
    "why": "no draft passed: broken at try 3: short: its source gives this as a reputation or a belief (“Anecdotally”), and the sentence says it as what the drug does: say that it is a reputation, a traditional use or a belief, as the source does, or leave it out; but: its source gives this as a reputation or a belief (“Anecdotally”), and the sentence says it as what the drug does: say that it is a reputation, a traditional use or a belief, as the source does, or leave it out; how2: its source gives this as a reputation or a belief (“Anecdotally”), and the sentence says it as what the drug does: say that it is a reputation, a traditional use or a belief, as the source does, or leave it out",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-28",
+   "lane": 19,
+   "status": "none",
+   "why": "no draft passed: the form was wrong: no JSON",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -232,9 +236,9 @@
    "thrown": [
     {
      "kind": "limit",
-     "text": "",
-     "quote": "Anecdotally many recreational ecstasy users take 5-hydroxytryptophan as a reliever of post-MDMA low affect but the effect remains entirely untested in controlled experimental conditions with pure MDMA",
-     "why": "no sentence"
+     "text": "The effect of 5-hydroxytryptophan remains entirely untested in controlled experimental conditions with pure MDMA.",
+     "quote": "the effect remains entirely untested in controlled experimental conditions with pure MDMA.",
+     "why": "a number of the sentence is not in its quote"
     }
    ]
   },
@@ -276,14 +280,7 @@
    "kind": "review",
    "at": "10.1186/s40337-025-01409-5",
    "kept": 0,
-   "thrown": [
-    {
-     "kind": "text",
-     "text": "A research paper exploring MDMA assisted therapy in eating disorders",
-     "quote": "Exploring MDMA assisted therapy in eating disorders: mechanisms, clinical evidence, and future directions (2025)",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
-    }
-   ]
+   "thrown": []
   },
   {
    "title": "Side-effects of mdma-assisted psychotherapy: a systematic review and meta-analysis",
@@ -291,8 +288,63 @@
    "kind": "review",
    "at": "10.1038/s41386-024-01865-8",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
+  },
+  {
+   "title": "MDMA",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.drugscience.org.uk/drugs/mdma",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "MDMA",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.canada.ca/en/health-canada/services/substance-use/controlled-illegal-drugs/ecstasy.html",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "MDMA",
+   "read": "page",
+   "kind": "official",
+   "at": "https://thelevel.org.nz/drug-information/mdma",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "MDMA (ecstasy)",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.betterhealth.vic.gov.au/health/healthyliving/mdma-ecstasy",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Ecstasy",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.talktofrank.com/drug/ecstasy",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "20140 Ecstasy",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.camh.ca/en/health-info/mental-illness-and-addiction-index/ecstasy",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "GHB/GBL",
+   "read": "page",
+   "kind": "official",
+   "at": "https://thelevel.org.nz/drug-information/ghbgbl",
+   "kept": 0,
+   "thrown": []
   }
  ],
  "plan": {
@@ -300,14 +352,16 @@
    "F1"
   ],
   "direct": "Not known",
-  "but": [],
+  "but": [
+   "F1"
+  ],
   "how": [
    [
     "DA",
     "F1"
    ]
   ],
-  "unanswered": "the effect of vitamins"
+  "unanswered": "protection from brain effects and the role of vitamins"
  },
  "soft": "the writer's reply was not in the form asked for",
  "place": {
