@@ -19,98 +19,42 @@
  "made": {
   "on": "2026-11-28",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
-   "writer": "openrouter:meta-llama/llama-3.3-70b-instruct",
+   "reader": "gemini:gemini-3.5-flash-lite",
+   "writer": "gemini:gemma-4-26b-a4b-it",
    "checker": "openrouter:openai/gpt-6-luna",
-   "planner": "openrouter:openai/gpt-oss-120b",
-   "team": "team R",
-   "reader_2": "openrouter:openai/gpt-oss-120b"
+   "planner": "gemini:gemma-4-31b-it",
+   "also1": "gemini:gemini-3.5-flash-lite",
+   "also2": "gemini:gemini-3.6-flash",
+   "team": "team K",
+   "reader_2": "gemini:gemini-3.5-flash-lite",
+   "reader_3": "openrouter:openai/gpt-oss-120b",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "46146766276",
+  "run": "46147514155",
   "read_by": {
-   "gemini-3.5-flash-lite": 7,
-   "gemini-3.1-flash-lite": 6
+   "gemini-3.5-flash-lite": 9,
+   "gemini-3.1-flash-lite": 2
   },
-  "read_seconds": 53,
+  "read_seconds": 100,
   "from": {
-   "papers": 2,
+   "papers": 1,
    "summaries": 0,
    "official": 0
   },
   "neurons": 0.0,
-  "seconds": 71
+  "seconds": 313
  },
  "status": "none",
- "why": "no draft passed: broken at try 3: short: its source gives this as a reputation or a belief (“Anecdotally”), and the sentence says it as what the drug does: say that it is a reputation, a traditional use or a belief, as the source does, or leave it out; but: its source gives this as a reputation or a belief (“Anecdotally”), and the sentence says it as what the drug does: say that it is a reputation, a traditional use or a belief, as the source does, or leave it out; how2: its source gives this as a reputation or a belief (“Anecdotally”), and the sentence says it as what the drug does: say that it is a reputation, a traditional use or a belief, as the source does, or leave it out",
+ "why": "no draft passed: the form was wrong: no JSON",
  "gates": {
-  "read": "2 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 0 official page(s), 0 paper(s) read in summary only",
-  "rules": "broken at try 3: short: its source gives this as a reputation or a belief (“Anecdotally”), and the sentence says it as what the drug does: say that it is a reputation, a traditional use or a belief, as the source does, or leave it out; but: its source gives this as a reputation or a belief (“Anecdotally”), and the sentence says it as what the drug does: say that it is a reputation, a traditional use or a belief, as the source does, or leave it out; how2: its source gives this as a reputation or a belief (“Anecdotally”), and the sentence says it as what the drug does: say that it is a reputation, a traditional use or a belief, as the source does, or leave it out"
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.5-flash-lite read from there",
+  "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
+  "read": "1 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 other paper(s), 0 official page(s), 0 paper(s) read in summary only",
+  "writer": "try 1: no JSON (how the reply ended: length; reasoned 0 characters, wrote 9203) try 2: no JSON (how the reply ended: length; reasoned 0 characters, wrote 8882)"
  },
  "sources": [
-  {
-   "read": "full",
-   "ref": {
-    "id": "meyer_2013",
-    "type": "article-journal",
-    "title": "3,4-methylenedioxymethamphetamine (MDMA): Current perspectives",
-    "author": [
-     {
-      "family": "Meyer",
-      "given": "Jerry"
-     }
-    ],
-    "container-title": "Substance Abuse and Rehabilitation",
-    "issued": {
-     "date-parts": [
-      [
-       2013
-      ]
-     ]
-    },
-    "DOI": "10.2147/sar.s37258",
-    "verification": {
-     "status": "metadata-verified",
-     "metadata_source": "crossref",
-     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
-     "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-28",
-     "retraction_check": {
-      "status": "clear",
-      "checked_on": "2026-11-28"
-     }
-    },
-    "page": "83",
-    "PMCID": "PMC3931692"
-   },
-   "doi": "10.2147/sar.s37258",
-   "pmcid": "PMC3931692",
-   "title": "3,4-methylenedioxymethamphetamine (MDMA): current perspectives",
-   "year": 2013,
-   "journal": "Substance abuse and rehabilitation",
-   "kind": "review",
-   "people": true,
-   "near": 0.596,
-   "money": [],
-   "design": {
-    "passage": 4,
-    "where": "Introduction",
-    "quote": "The present review offers a critical perspective on the current status of MDMA with particular emphasis on the abovementioned controversies.",
-    "text": "a review of research on MDMA in humans and animal models"
-   },
-   "findings": [
-    {
-     "passage": 35,
-     "where": "Effects of repeated or high-dose MDMA/ecstasy use › Neurotoxicity",
-     "quote": "blockade of SERT with an SSRI attenuates or even blocks MDMA-induced neurotoxicity.",
-     "text": "In laboratory studies, blocking the serotonin transporter with an SSRI reduces or prevents MDMA-induced neurotoxicity.",
-     "id": "F1",
-     "second_hand": ""
-    }
-   ],
-   "limits": [],
-   "tag": "A"
-  },
   {
    "read": "full",
    "ref": {
@@ -161,34 +105,25 @@
     "passage": 1,
     "where": "Abstract",
     "quote": "In this review, the author describes these potential benefits and explores the relatives risks of MDMA-assisted psychotherapy in the context of his experience as a child and ad",
-    "text": "a review of the potential benefits and risks of MDMA-assisted psychotherapy"
+    "text": "a review describing potential benefits and relative risks of MDMA-assisted psychotherapy"
    },
    "findings": [
     {
      "passage": 19,
      "where": "Postecstasy Come Down: Is it Due to MDMA?",
      "quote": "Anecdotally many recreational ecstasy users take 5-hydroxytryptophan as a reliever of post-MDMA low affect but the effect remains entirely untested in controlled experimental conditions with pure MDMA.",
-     "text": "The effect of taking 5-hydroxytryptophan supplements to relieve low affect after using MDMA remains entirely untested in controlled experimental conditions.",
-     "id": "F2",
+     "text": "The effect of 5-hydroxytryptophan taken as a reliever of post-MDMA low affect remains entirely untested in controlled experimental conditions with pure MDMA.",
+     "id": "F1",
      "second_hand": ""
     }
    ],
-   "limits": [
-    {
-     "passage": 19,
-     "where": "Postecstasy Come Down: Is it Due to MDMA?",
-     "quote": "Anecdotally many recreational ecstasy users take 5-hydroxytryptophan as a reliever of post-MDMA low affect but the effect remains entirely untested in controlled experimental conditions with pure MDMA.",
-     "text": "The effectiveness of 5-hydroxytryptophan supplements for post-MDMA low affect has not been tested in controlled experimental conditions.",
-     "id": "L1",
-     "second_hand": ""
-    }
-   ],
-   "tag": "B"
+   "limits": [],
+   "tag": "A"
   }
  ],
  "parts": [],
  "complete": false,
- "missing": "effects of vitamins",
+ "missing": "the effect of vitamins",
  "wanted": [
   {
    "doi": "10.1016/s0074-7742(09)88006-9",
@@ -237,6 +172,14 @@
    "why": "no source that can be read gave a finding for this question (4 source(s) could not be fetched just now, 4 of them for want of time: tried again in the next run)",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-28",
+   "lane": 19,
+   "status": "none",
+   "why": "no draft passed: broken at try 3: short: its source gives this as a reputation or a belief (“Anecdotally”), and the sentence says it as what the drug does: say that it is a reputation, a traditional use or a belief, as the source does, or leave it out; but: its source gives this as a reputation or a belief (“Anecdotally”), and the sentence says it as what the drug does: say that it is a reputation, a traditional use or a belief, as the source does, or leave it out; how2: its source gives this as a reputation or a belief (“Anecdotally”), and the sentence says it as what the drug does: say that it is a reputation, a traditional use or a belief, as the source does, or leave it out",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -261,15 +204,8 @@
    "read": "full",
    "kind": "review",
    "at": "10.2147/sar.s37258",
-   "kept": 1,
-   "thrown": [
-    {
-     "kind": "limit",
-     "text": "It is currently unproven whether the aftereffects of MDMA use in humans are caused by temporary serotonin depletion due to the difficulty of performing neurochemical measurements in living people.",
-     "quote": "because of the limitations associated with performing neurochemical measurements in living human subjects, this hypothesis remains unproven at the present time.",
-     "why": "the sentence is not carried by its quote and passage"
-    }
-   ]
+   "kept": 0,
+   "thrown": []
   },
   {
    "title": "Pharmacogenomics of 3,4-Methylenedioxymethamphetamine (MDMA): A Narrative Review of the Literature",
@@ -293,289 +229,87 @@
    "kind": "review",
    "at": "10.1007/s13311-017-0531-1",
    "kept": 1,
-   "thrown": []
+   "thrown": [
+    {
+     "kind": "limit",
+     "text": "",
+     "quote": "Anecdotally many recreational ecstasy users take 5-hydroxytryptophan as a reliever of post-MDMA low affect but the effect remains entirely untested in controlled experimental conditions with pure MDMA",
+     "why": "no sentence"
+    }
+   ]
   },
   {
-   "title": "MDMA",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.drugscience.org.uk/drugs/mdma",
+   "title": "MDMA for the Treatment of Negative Symptoms in Schizophrenia",
+   "read": "full",
+   "kind": "review",
+   "at": "10.3390/jcm11123255",
    "kept": 0,
    "thrown": []
   },
   {
-   "title": "MDMA",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.canada.ca/en/health-canada/services/substance-use/controlled-illegal-drugs/ecstasy.html",
+   "title": "Rare but relevant: MDMA and hyponatraemia",
+   "read": "full",
+   "kind": "review",
+   "at": "10.1111/add.70255",
    "kept": 0,
    "thrown": []
   },
   {
-   "title": "MDMA",
-   "read": "page",
-   "kind": "official",
-   "at": "https://thelevel.org.nz/drug-information/mdma",
+   "title": "MDMA-assisted psychotherapy for the treatment of PTSD: A systematic review and meta-analysis of randomized controlled trials (RCTs)",
+   "read": "full",
+   "kind": "review",
+   "at": "10.1002/npr2.12485",
    "kept": 0,
    "thrown": []
   },
   {
-   "title": "MDMA (ecstasy)",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.betterhealth.vic.gov.au/health/healthyliving/mdma-ecstasy",
+   "title": "A Review of 3,4-methylenedioxymethamphetamine (MDMA)-Assisted Psychotherapy",
+   "read": "full",
+   "kind": "review",
+   "at": "10.3389/fpsyt.2019.00138",
    "kept": 0,
    "thrown": []
   },
   {
-   "title": "Ecstasy",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.talktofrank.com/drug/ecstasy",
+   "title": "Exploring MDMA assisted therapy in eating disorders: mechanisms, clinical evidence, and future directions",
+   "read": "full",
+   "kind": "review",
+   "at": "10.1186/s40337-025-01409-5",
    "kept": 0,
-   "thrown": []
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "A research paper exploring MDMA assisted therapy in eating disorders",
+     "quote": "Exploring MDMA assisted therapy in eating disorders: mechanisms, clinical evidence, and future directions (2025)",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
   },
   {
-   "title": "20140 Ecstasy",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.camh.ca/en/health-info/mental-illness-and-addiction-index/ecstasy",
+   "title": "Side-effects of mdma-assisted psychotherapy: a systematic review and meta-analysis",
+   "read": "full",
+   "kind": "review",
+   "at": "10.1038/s41386-024-01865-8",
    "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "GHB/GBL",
-   "read": "page",
-   "kind": "official",
-   "at": "https://thelevel.org.nz/drug-information/ghbgbl",
-   "kept": 0,
-   "thrown": []
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
   }
  ],
  "plan": {
   "short": [
-   "F2"
+   "F1"
   ],
   "direct": "Not known",
-  "but": [
-   "L1"
-  ],
+  "but": [],
   "how": [
    [
-    "F2",
-    "L1"
+    "DA",
+    "F1"
    ]
   ],
-  "unanswered": "effects of vitamins"
+  "unanswered": "the effect of vitamins"
  },
- "tries": [
-  {
-   "try": 1,
-   "why": "a rule was broken: written again",
-   "parts": [
-    {
-     "part": "short",
-     "text": "Not known if 5-HTP or vitamins protect from MDMA's comedown or brain effects.",
-     "rests_on": [
-      {
-       "label": "F2",
-       "ref": "sessa_2017",
-       "where": "Postecstasy Come Down: Is it Due to MDMA?",
-       "quote": "Anecdotally many recreational ecstasy users take 5-hydroxytryptophan as a reliever of post-MDMA low affect but the effect remains entirely untested in controlled experimental conditions with pure MDMA.",
-       "sha": "2d9bf7af31de540c"
-      }
-     ],
-     "ok": false,
-     "by": "a rule",
-     "said": "a rule: its source gives this as a reputation or a belief (“Anecdotally”), and the sentence says it as what the drug does: say that it is a reputation, a traditional use or a belief, as the source does, or leave it out"
-    },
-    {
-     "part": "but",
-     "text": "Effectiveness of 5-HTP for post-MDMA low affect has not been tested in controlled conditions.",
-     "rests_on": [
-      {
-       "label": "L1",
-       "ref": "sessa_2017",
-       "where": "Postecstasy Come Down: Is it Due to MDMA?",
-       "quote": "Anecdotally many recreational ecstasy users take 5-hydroxytryptophan as a reliever of post-MDMA low affect but the effect remains entirely untested in controlled experimental conditions with pure MDMA.",
-       "sha": "2d9bf7af31de540c"
-      }
-     ],
-     "ok": false,
-     "by": "a rule",
-     "said": "a rule: its source gives this as a reputation or a belief (“Anecdotally”), and the sentence says it as what the drug does: say that it is a reputation, a traditional use or a belief, as the source does, or leave it out"
-    },
-    {
-     "part": "how1",
-     "text": "A 2017 review says 5-HTP's effect on post-MDMA low affect is untested.",
-     "rests_on": [
-      {
-       "label": "F2",
-       "ref": "sessa_2017",
-       "where": "Postecstasy Come Down: Is it Due to MDMA?",
-       "quote": "Anecdotally many recreational ecstasy users take 5-hydroxytryptophan as a reliever of post-MDMA low affect but the effect remains entirely untested in controlled experimental conditions with pure MDMA.",
-       "sha": "2d9bf7af31de540c"
-      }
-     ],
-     "ok": false,
-     "by": "a rule",
-     "said": "a rule: its source gives this as a reputation or a belief (“Anecdotally”), and the sentence says it as what the drug does: say that it is a reputation, a traditional use or a belief, as the source does, or leave it out"
-    },
-    {
-     "part": "how2",
-     "text": "The review notes a lack of controlled experimental conditions.",
-     "rests_on": [
-      {
-       "label": "L1",
-       "ref": "sessa_2017",
-       "where": "Postecstasy Come Down: Is it Due to MDMA?",
-       "quote": "Anecdotally many recreational ecstasy users take 5-hydroxytryptophan as a reliever of post-MDMA low affect but the effect remains entirely untested in controlled experimental conditions with pure MDMA.",
-       "sha": "2d9bf7af31de540c"
-      }
-     ],
-     "ok": false,
-     "by": "a rule",
-     "said": "a rule: its source gives this as a reputation or a belief (“Anecdotally”), and the sentence says it as what the drug does: say that it is a reputation, a traditional use or a belief, as the source does, or leave it out"
-    }
-   ]
-  },
-  {
-   "try": 2,
-   "why": "a rule was broken: written again",
-   "parts": [
-    {
-     "part": "short",
-     "text": "Not known if 5-HTP supplements protect from MDMA's comedown or brain effects.",
-     "rests_on": [
-      {
-       "label": "F2",
-       "ref": "sessa_2017",
-       "where": "Postecstasy Come Down: Is it Due to MDMA?",
-       "quote": "Anecdotally many recreational ecstasy users take 5-hydroxytryptophan as a reliever of post-MDMA low affect but the effect remains entirely untested in controlled experimental conditions with pure MDMA.",
-       "sha": "2d9bf7af31de540c"
-      }
-     ],
-     "ok": false,
-     "by": "a rule",
-     "said": "a rule: its source gives this as a reputation or a belief (“Anecdotally”), and the sentence says it as what the drug does: say that it is a reputation, a traditional use or a belief, as the source does, or leave it out"
-    },
-    {
-     "part": "but",
-     "text": "The effectiveness has not been tested in controlled experimental conditions.",
-     "rests_on": [
-      {
-       "label": "L1",
-       "ref": "sessa_2017",
-       "where": "Postecstasy Come Down: Is it Due to MDMA?",
-       "quote": "Anecdotally many recreational ecstasy users take 5-hydroxytryptophan as a reliever of post-MDMA low affect but the effect remains entirely untested in controlled experimental conditions with pure MDMA.",
-       "sha": "2d9bf7af31de540c"
-      }
-     ],
-     "ok": false,
-     "by": "a rule",
-     "said": "a rule: its source gives this as a reputation or a belief (“Anecdotally”), and the sentence says it as what the drug does: say that it is a reputation, a traditional use or a belief, as the source does, or leave it out"
-    },
-    {
-     "part": "how1",
-     "text": "A 2017 review says 5-HTP is used to relieve post-MDMA low affect, but this is untested.",
-     "rests_on": [
-      {
-       "label": "F2",
-       "ref": "sessa_2017",
-       "where": "Postecstasy Come Down: Is it Due to MDMA?",
-       "quote": "Anecdotally many recreational ecstasy users take 5-hydroxytryptophan as a reliever of post-MDMA low affect but the effect remains entirely untested in controlled experimental conditions with pure MDMA.",
-       "sha": "2d9bf7af31de540c"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "The review notes a lack of testing in controlled conditions.",
-     "rests_on": [
-      {
-       "label": "L1",
-       "ref": "sessa_2017",
-       "where": "Postecstasy Come Down: Is it Due to MDMA?",
-       "quote": "Anecdotally many recreational ecstasy users take 5-hydroxytryptophan as a reliever of post-MDMA low affect but the effect remains entirely untested in controlled experimental conditions with pure MDMA.",
-       "sha": "2d9bf7af31de540c"
-      }
-     ],
-     "ok": false,
-     "by": "a rule",
-     "said": "a rule: its source gives this as a reputation or a belief (“Anecdotally”), and the sentence says it as what the drug does: say that it is a reputation, a traditional use or a belief, as the source does, or leave it out"
-    }
-   ]
-  },
-  {
-   "try": 3,
-   "why": "a rule was broken: written again",
-   "parts": [
-    {
-     "part": "short",
-     "text": "Not known if 5-HTP or vitamins protect from MDMA's comedown or brain effects.",
-     "rests_on": [
-      {
-       "label": "F2",
-       "ref": "sessa_2017",
-       "where": "Postecstasy Come Down: Is it Due to MDMA?",
-       "quote": "Anecdotally many recreational ecstasy users take 5-hydroxytryptophan as a reliever of post-MDMA low affect but the effect remains entirely untested in controlled experimental conditions with pure MDMA.",
-       "sha": "2d9bf7af31de540c"
-      }
-     ],
-     "ok": false,
-     "by": "a rule",
-     "said": "a rule: its source gives this as a reputation or a belief (“Anecdotally”), and the sentence says it as what the drug does: say that it is a reputation, a traditional use or a belief, as the source does, or leave it out"
-    },
-    {
-     "part": "but",
-     "text": "Effectiveness of 5-hydroxytryptophan supplements not tested in controlled conditions.",
-     "rests_on": [
-      {
-       "label": "L1",
-       "ref": "sessa_2017",
-       "where": "Postecstasy Come Down: Is it Due to MDMA?",
-       "quote": "Anecdotally many recreational ecstasy users take 5-hydroxytryptophan as a reliever of post-MDMA low affect but the effect remains entirely untested in controlled experimental conditions with pure MDMA.",
-       "sha": "2d9bf7af31de540c"
-      }
-     ],
-     "ok": false,
-     "by": "a rule",
-     "said": "a rule: its source gives this as a reputation or a belief (“Anecdotally”), and the sentence says it as what the drug does: say that it is a reputation, a traditional use or a belief, as the source does, or leave it out"
-    },
-    {
-     "part": "how1",
-     "text": "A 2017 review says 5-hydroxytryptophan is used to relieve post-MDMA low affect, but is untested.",
-     "rests_on": [
-      {
-       "label": "F2",
-       "ref": "sessa_2017",
-       "where": "Postecstasy Come Down: Is it Due to MDMA?",
-       "quote": "Anecdotally many recreational ecstasy users take 5-hydroxytryptophan as a reliever of post-MDMA low affect but the effect remains entirely untested in controlled experimental conditions with pure MDMA.",
-       "sha": "2d9bf7af31de540c"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "The review notes a limit: no controlled experimental conditions with pure MDMA.",
-     "rests_on": [
-      {
-       "label": "L1",
-       "ref": "sessa_2017",
-       "where": "Postecstasy Come Down: Is it Due to MDMA?",
-       "quote": "Anecdotally many recreational ecstasy users take 5-hydroxytryptophan as a reliever of post-MDMA low affect but the effect remains entirely untested in controlled experimental conditions with pure MDMA.",
-       "sha": "2d9bf7af31de540c"
-      }
-     ],
-     "ok": false,
-     "by": "a rule",
-     "said": "a rule: its source gives this as a reputation or a belief (“Anecdotally”), and the sentence says it as what the drug does: say that it is a reputation, a traditional use or a belief, as the source does, or leave it out"
-    }
-   ]
-  }
- ],
+ "soft": "the writer's reply was not in the form asked for",
  "place": {
   "home": "new:Nootropics and supplements",
   "also": [
